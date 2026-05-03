@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="white"/>
+  <g filter="url(#shadow)">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Broken swing frame -->
+      <path d="M10 8 L32 4 L54 8" stroke="#1a1a1a" stroke-width="3"/>
+      <line x1="10" y1="8" x2="10" y2="44" stroke="#1a1a1a" stroke-width="3"/>
+      <line x1="54" y1="8" x2="54" y2="44" stroke="#1a1a1a" stroke-width="3"/>
+      <!-- Broken swing rope -->
+      <line x1="24" y1="8" x2="24" y2="24" stroke="#1a1a1a" stroke-width="2"/>
+      <line x1="24" y1="28" x2="22" y2="36" stroke="#1a1a1a" stroke-width="2" stroke-dasharray="3 2"/>
+      <!-- OK swing -->
+      <line x1="40" y1="8" x2="40" y2="32" stroke="#1a1a1a" stroke-width="2"/>
+      <rect x="36" y="32" width="8" height="3" rx="1" fill="#1a1a1a"/>
+      <!-- Danger crack -->
+      <path d="M22 24 L26 26 L20 30 L28 32" stroke="#16A34A" stroke-width="2.5"/>
+      <!-- Warning X -->
+      <line x1="18" y1="16" x2="30" y2="28" stroke="#16A34A" stroke-width="2" opacity="0.5"/>
+      <line x1="30" y1="16" x2="18" y2="28" stroke="#16A34A" stroke-width="2" opacity="0.5"/>
+      <!-- Bottom bar -->
+      <rect x="12" y="54" width="40" height="4" rx="2" fill="#16A34A"/>
+    </g>
+  </g>
+</svg>

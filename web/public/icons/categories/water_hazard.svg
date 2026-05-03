@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="white"/>
+  <g filter="url(#shadow)">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Child figure -->
+      <circle cx="24" cy="14" r="6" fill="#1a1a1a"/>
+      <path d="M24 20 L24 32 M24 24 L18 30 M24 24 L30 30" stroke="#1a1a1a" stroke-width="2.5"/>
+      <!-- Water edge -->
+      <path d="M4 36 L36 36 L40 40 L44 36 L60 36" stroke="#0284C7" stroke-width="2"/>
+      <!-- Water -->
+      <path d="M36 36 Q42 32 48 36 Q54 40 60 36 L60 50 L36 50 Z" fill="#0284C7" opacity="0.3"/>
+      <path d="M36 42 Q42 38 48 42 Q54 46 60 42" stroke="#0284C7" stroke-width="2"/>
+      <!-- Danger: child foot near edge -->
+      <line x1="24" y1="32" x2="22" y2="38" stroke="#1a1a1a" stroke-width="2.5"/>
+      <line x1="24" y1="32" x2="30" y2="36" stroke="#1a1a1a" stroke-width="2.5"/>
+      <!-- Warning -->
+      <path d="M44 20 L40 28 L48 28 Z" fill="#0284C7"/>
+      <line x1="44" y1="22" x2="44" y2="26" stroke="white" stroke-width="1.5"/>
+      <circle cx="44" cy="27" r="0.8" fill="white"/>
+      <!-- Bottom bar -->
+      <rect x="12" y="54" width="40" height="4" rx="2" fill="#0284C7"/>
+    </g>
+  </g>
+</svg>

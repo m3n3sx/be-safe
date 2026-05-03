@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="white"/>
+  <g filter="url(#shadow)">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Cloud -->
+      <path d="M16 28 C16 22 22 18 28 20 C30 14 38 12 42 16 C48 16 52 20 52 26 C52 32 48 34 44 34 L20 34 C14 34 12 30 16 28Z" fill="#1a1a1a"/>
+      <!-- Lightning bolt -->
+      <polygon points="30,34 26,44 32,44 28,56 40,42 34,42 38,34" fill="#0EA5E9"/>
+      <!-- Rain drops -->
+      <line x1="18" y1="38" x2="16" y2="44" stroke="#0EA5E9" stroke-width="2" opacity="0.5"/>
+      <line x1="46" y1="38" x2="44" y2="44" stroke="#0EA5E9" stroke-width="2" opacity="0.5"/>
+      <line x1="50" y1="36" x2="48" y2="42" stroke="#0EA5E9" stroke-width="2" opacity="0.5"/>
+      <!-- Bottom bar -->
+      <rect x="12" y="54" width="40" height="4" rx="2" fill="#0EA5E9"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="white"/>
+  <g filter="url(#shadow)">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Fist -->
+      <path d="M32 8 C24 8 18 14 18 22 L18 30 C18 32 20 34 22 34 L22 22 C22 20 24 18 26 18 C28 18 28 20 28 22 L28 34" stroke="#1a1a1a" stroke-width="2.5" fill="#1a1a1a"/>
+      <path d="M28 18 C28 16 30 14 32 14 C34 14 34 16 34 18 L34 34" stroke="#1a1a1a" stroke-width="2.5" fill="#1a1a1a"/>
+      <path d="M34 16 C34 14 36 12 38 12 C40 12 40 14 40 16 L40 30" stroke="#1a1a1a" stroke-width="2.5" fill="#1a1a1a"/>
+      <path d="M40 18 C40 16 42 14 44 14 C46 14 46 16 46 18 L46 28 C46 28 46 34 42 38 L38 42 C36 44 34 46 34 50 L24 50 C24 46 22 42 20 40 L18 36" stroke="#1a1a1a" stroke-width="2.5" fill="#1a1a1a"/>
+      <!-- Impact lines -->
+      <line x1="10" y1="16" x2="6" y2="12" stroke="#EF4444" stroke-width="3"/>
+      <line x1="12" y1="8" x2="8" y2="4" stroke="#EF4444" stroke-width="3"/>
+      <line x1="48" y1="8" x2="54" y2="4" stroke="#EF4444" stroke-width="3"/>
+      <line x1="50" y1="16" x2="56" y2="12" stroke="#EF4444" stroke-width="3"/>
+      <!-- Bottom bar -->
+      <rect x="12" y="54" width="40" height="4" rx="2" fill="#EF4444"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="256" height="256">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="white"/>
+  <g filter="url(#shadow)">
+    <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Ice crystal / snowflake -->
+      <line x1="32" y1="6" x2="32" y2="48" stroke="#1a1a1a" stroke-width="3"/>
+      <line x1="10" y1="27" x2="54" y2="27" stroke="#1a1a1a" stroke-width="3"/>
+      <line x1="16" y1="12" x2="48" y2="42" stroke="#1a1a1a" stroke-width="3"/>
+      <line x1="48" y1="12" x2="16" y2="42" stroke="#1a1a1a" stroke-width="3"/>
+      <!-- Crystal branches -->
+      <line x1="32" y1="12" x2="28" y2="8" stroke="#06B6D4" stroke-width="2"/>
+      <line x1="32" y1="12" x2="36" y2="8" stroke="#06B6D4" stroke-width="2"/>
+      <line x1="32" y1="42" x2="28" y2="46" stroke="#06B6D4" stroke-width="2"/>
+      <line x1="32" y1="42" x2="36" y2="46" stroke="#06B6D4" stroke-width="2"/>
+      <line x1="16" y1="27" x2="12" y2="23" stroke="#06B6D4" stroke-width="2"/>
+      <line x1="16" y1="27" x2="12" y2="31" stroke="#06B6D4" stroke-width="2"/>
+      <line x1="48" y1="27" x2="52" y2="23" stroke="#06B6D4" stroke-width="2"/>
+      <line x1="48" y1="27" x2="52" y2="31" stroke="#06B6D4" stroke-width="2"/>
+      <!-- Center -->
+      <circle cx="32" cy="27" r="4" fill="#06B6D4"/>
+      <!-- Bottom bar -->
+      <rect x="12" y="54" width="40" height="4" rx="2" fill="#06B6D4"/>
+    </g>
+  </g>
+</svg>
