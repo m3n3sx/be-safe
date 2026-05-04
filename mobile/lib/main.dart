@@ -126,3 +126,4 @@ class _AuthGateState extends State<_AuthGate> {
     return auth.isLoggedIn ? const MapScreen() : const LoginScreen();
   }
 }
+// CI test
