@@ -1,0 +1,78 @@
+name: Build & Deploy APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - 'backend/**'
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, '[skip ci]') == false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+          channel: stable
+
+      - name: Build APK
+        working-directory: mobile
+        run: |
+          flutter pub get
+          flutter build apk --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: beSafe-apk
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Deploy to VPS
+        env:
+          VPS_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$VPS_KEY" > ~/.ssh/vps_key
+          chmod 600 ~/.ssh/vps_key
+          # Upload APK
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/vps_key \
+            mobile/build/app/outputs/flutter-apk/app-release.apk \
+            ubuntu@$VPS_HOST:/home/ubuntu/alertmap/AlertMap.apk
+          # Bump version & restart backend
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/vps_key ubuntu@$VPS_HOST \
+            "cd /home/ubuntu/alertmap && node -e \"
+              const fs = require('fs');
+              const f = 'src/index.js';
+              let c = fs.readFileSync(f,'utf8');
+              const m = c.match(/version: (\\d+)/);
+              if(m) { const v = parseInt(m[1])+1; c = c.replace(/version: \\d+/, 'version: '+v); fs.writeFileSync(f,c); console.log('Version bumped to '+v); }
+            \" && pm2 restart alertmap"
+
+  deploy-backend:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, '[skip ci]') == false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy backend to VPS
+        env:
+          VPS_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$VPS_KEY" > ~/.ssh/vps_key
+          chmod 600 ~/.ssh/vps_key
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/vps_key -r \
+            backend/src/* ubuntu@$VPS_HOST:/home/ubuntu/alertmap/src/
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/vps_key ubuntu@$VPS_HOST \
+            "pm2 restart alertmap"
