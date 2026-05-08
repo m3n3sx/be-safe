@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Alertmap</string>
+	<string>be:Safe</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>alertmap</string>
+	<string>beSafe</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -44,6 +44,39 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+
+	<!-- Permissions — wymagane przez pakiety Flutter -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>be:Safe używa lokalizacji aby pokazywać zagrożenia w Twojej okolicy i ostrzegać przed nimi.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>be:Safe potrzebuje dostępu do lokalizacji w tle, aby powiadamiać Cię o zagrożeniach oraz (dla rodziców) śledzić położenie dzieci.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>be:Safe potrzebuje dostępu do lokalizacji w tle aby ostrzegać przed zagrożeniami i wspierać tryb rodzinny.</string>
+
+	<key>NSContactsUsageDescription</key>
+	<string>be:Safe używa kontaktów tylko aby pomóc Ci zaprosić znajomych do grupy rodzinnej.</string>
+
+	<key>NSCameraUsageDescription</key>
+	<string>Kamera jest używana tylko gdy dodajesz zdjęcie do zgłoszenia zagrożenia.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Galeria jest otwierana gdy chcesz dołączyć zdjęcie do zgłoszenia zagrożenia.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Zezwól na zapis zrzutów alertów do galerii.</string>
+
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>be:Safe wysyła powiadomienia o zagrożeniach wokół Ciebie.</string>
+
+	<!-- Background modes — potrzebne dla FCM i background location -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+		<string>location</string>
+	</array>
+
+	<!-- Google Maps SDK needs this on iOS -->
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>
 </plist>

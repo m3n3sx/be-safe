@@ -1,0 +1,99 @@
+name: Build iOS (unsigned)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/build-ios.yml'
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-14
+    if: contains(github.event.head_commit.message, '[skip ci]') == false
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.3'
+          channel: stable
+          cache: true
+
+      - name: Show Flutter environment
+        run: flutter doctor -v
+
+      - name: Install Flutter dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: (Optional) Setup GoogleService-Info.plist for iOS Firebase
+        env:
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+        run: |
+          if [ -n "$GOOGLE_SERVICE_INFO_PLIST" ]; then
+            echo "$GOOGLE_SERVICE_INFO_PLIST" > mobile/ios/Runner/GoogleService-Info.plist
+            echo "GoogleService-Info.plist zainstalowany."
+          else
+            echo "Brak secret GOOGLE_SERVICE_INFO_PLIST — build iOS bez FCM (działa, tylko bez push)."
+          fi
+
+      - name: CocoaPods install
+        working-directory: mobile/ios
+        run: |
+          pod repo update
+          pod install --verbose
+
+      - name: Build iOS (unsigned, release)
+        working-directory: mobile
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        run: |
+          flutter build ios --release --no-codesign --dart-define=SENTRY_DSN=${SENTRY_DSN:-}
+
+      - name: Package as IPA (unsigned)
+        working-directory: mobile
+        run: |
+          APP_PATH="build/ios/iphoneos/Runner.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "ERROR: $APP_PATH nie istnieje"
+            ls -la build/ios/iphoneos/ || true
+            exit 1
+          fi
+          mkdir -p build/ios/Payload
+          cp -R "$APP_PATH" build/ios/Payload/
+          cd build/ios
+          zip -r9 beSafe-unsigned.ipa Payload
+          ls -la beSafe-unsigned.ipa
+
+      - name: Upload unsigned IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: beSafe-ios-unsigned
+          path: mobile/build/ios/beSafe-unsigned.ipa
+          retention-days: 14
+
+      - name: Upload Runner.app (for Appetize.io)
+        uses: actions/upload-artifact@v4
+        with:
+          name: beSafe-ios-runner-app
+          path: mobile/build/ios/iphoneos/Runner.app
+          retention-days: 14
+
+      - name: Summary
+        run: |
+          echo "## Build iOS unsigned — zakończony ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Artefakty:" >> $GITHUB_STEP_SUMMARY
+          echo "- **beSafe-ios-unsigned** — .ipa (unsigned, nie zainstalujesz na realnym iPhone bez resignowania)" >> $GITHUB_STEP_SUMMARY
+          echo "- **beSafe-ios-runner-app** — Runner.app do uploadu na https://appetize.io" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Jak testować:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Pobierz \`beSafe-ios-runner-app\` z sekcji Artifacts poniżej" >> $GITHUB_STEP_SUMMARY
+          echo "2. Rozpakuj zip — dostaniesz \`Runner.app\` (folder)" >> $GITHUB_STEP_SUMMARY
+          echo "3. Zaloguj się na https://appetize.io → Upload → wybierz \`Runner.app\`" >> $GITHUB_STEP_SUMMARY
+          echo "4. Dostaniesz link z emulatorem iPhone'a w przeglądarce" >> $GITHUB_STEP_SUMMARY
