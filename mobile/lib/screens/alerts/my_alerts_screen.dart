@@ -62,7 +62,24 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(S.get('my_alerts'))),
       body: _loading ? const Center(child: CircularProgressIndicator())
-        : _alerts.isEmpty ? Center(child: Text(S.get('no_alerts')))
+        : _alerts.isEmpty ? Center(child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Icon(Icons.inbox_outlined, size: 80, color: Colors.grey.shade400),
+              const SizedBox(height: 16),
+              Text(S.get('no_alerts'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 8),
+              Text('Twoje zgłoszenia pojawią się tutaj',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey.shade600)),
+              const SizedBox(height: 24),
+              FilledButton.icon(
+                onPressed: () => Navigator.pushNamed(context, '/map'),
+                icon: const Icon(Icons.warning_amber),
+                label: const Text('Zgłoś zagrożenie'),
+              ),
+            ]),
+          ))
         : RefreshIndicator(onRefresh: _load, child: ListView.builder(
           itemCount: _alerts.length,
           itemBuilder: (_, i) {

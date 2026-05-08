@@ -115,6 +115,24 @@ router.post('/me/share-location', async (req, res) => {
   res.status(201).json({ url: `https://alert.u235.pl/track/${rows[0].token}`, expires_at: rows[0].expires_at });
 });
 
+// GDPR data export — zwraca wszystkie dane użytkownika w JSON
+router.get('/me/export', async (req, res) => {
+  const uid = req.user.id;
+  const user = (await db.query(`SELECT id, email, username, avatar_url, alert_radius_m, reputation_score, is_child, email_verified, referral_code, created_at FROM users WHERE id = $1`, [uid])).rows[0];
+  const alerts = (await db.query(`SELECT id, category, title, description, ST_Y(location::geometry) AS lat, ST_X(location::geometry) AS lng, radius_m, status, created_at, expires_at FROM alerts WHERE author_id = $1`, [uid])).rows;
+  const votes = (await db.query(`SELECT alert_id, vote, created_at FROM alert_votes WHERE user_id = $1`, [uid])).rows;
+  const comments = (await db.query(`SELECT alert_id, content, created_at FROM alert_comments WHERE user_id = $1`, [uid])).rows;
+  const locationHistory = (await db.query(`SELECT ST_Y(location::geometry) AS lat, ST_X(location::geometry) AS lng, recorded_at FROM location_history WHERE user_id = $1 ORDER BY recorded_at DESC LIMIT 10000`, [uid])).rows;
+  const groups = (await db.query(`SELECT g.id, g.name, g.invite_code, m.role, m.joined_at FROM family_members m JOIN family_groups g ON g.id = m.group_id WHERE m.user_id = $1`, [uid])).rows;
+
+  res.setHeader('Content-Disposition', `attachment; filename=besafe-export-${uid}.json`);
+  res.json({
+    exported_at: new Date().toISOString(),
+    notice: 'Export danych osobowych zgodnie z RODO art. 20',
+    user, alerts, votes, comments, location_history: locationHistory, family_groups: groups,
+  });
+});
+
 router.post('/me/delete', async (req, res) => {
   const { password } = req.body;
   const { rows } = await db.query(`SELECT password_hash FROM users WHERE id = $1`, [req.user.id]);

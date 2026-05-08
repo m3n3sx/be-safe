@@ -15,10 +15,12 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoggedIn => _user != null;
   bool get loading => _loading;
 
-  Future<bool> register(String email, String password, String username) async {
+  Future<bool> register(String email, String password, String username, {String? referralCode}) async {
     _loading = true; notifyListeners();
     try {
-      final res = await _api.post('/auth/register', {'email': email, 'password': password, 'username': username});
+      final body = <String, dynamic>{'email': email, 'password': password, 'username': username};
+      if (referralCode != null && referralCode.trim().isNotEmpty) body['referral_code'] = referralCode.trim().toUpperCase();
+      final res = await _api.post('/auth/register', body);
       if (res['token'] != null) {
         await _api.setToken(res['token']);
         _user = User.fromJson(res['user']);
@@ -43,17 +45,33 @@ class AuthProvider extends ChangeNotifier {
     } finally { _loading = false; notifyListeners(); }
   }
 
-  Future<bool> loginWithGoogle() async {
+  Future<bool> demoLogin() async {
     _loading = true; notifyListeners();
+    try {
+      final res = await _api.post('/auth/demo', {});
+      if (res['token'] != null) {
+        await _api.setToken(res['token']);
+        _user = User.fromJson(res['user']);
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (_) { return false; }
+    finally { _loading = false; notifyListeners(); }
+  }
+
+  Future<bool> loginWithGoogle({String? referralCode}) async {    _loading = true; notifyListeners();
     try {
       try { await _googleSignIn.disconnect(); } catch (_) {}
       final account = await _googleSignIn.signIn();
       if (account == null) { _loading = false; notifyListeners(); return false; }
-      final res = await _api.post('/auth/google', {
+      final body = <String, dynamic>{
         'email': account.email,
         'display_name': account.displayName ?? account.email.split('@')[0],
         'avatar_url': account.photoUrl,
-      });
+      };
+      if (referralCode != null && referralCode.trim().isNotEmpty) body['referral_code'] = referralCode.trim().toUpperCase();
+      final res = await _api.post('/auth/google', body);
       if (res['token'] != null) {
         await _api.setToken(res['token']);
         final u = res['user'];

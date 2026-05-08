@@ -146,6 +146,28 @@ router.post('/resend-verification', auth, async (req, res) => {
 });
 
 // ------ REFRESH ------
+// Demo mode — szybki login bez rejestracji (użytkownik tymczasowy)
+router.post('/demo', async (req, res) => {
+  try {
+    const crypto = require('crypto');
+    const suffix = crypto.randomBytes(4).toString('hex');
+    const email = `demo-${suffix}@besafe.demo`;
+    const username = `Gość${suffix.substring(0, 4).toUpperCase()}`;
+    const hash = await bcrypt.hash(crypto.randomBytes(16).toString('hex'), 10);
+    const code = genReferralCode();
+
+    const { rows } = await db.query(
+      `INSERT INTO users (email, password_hash, username, email_verified, referral_code, alert_radius_m)
+       VALUES ($1, $2, $3, TRUE, $4, 5000)
+       RETURNING id, email, username, email_verified, referral_code`,
+      [email, hash, username, code]
+    );
+    res.status(201).json({ token: signToken(rows[0]), user: { ...rows[0], is_demo: true } });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 router.post('/refresh', auth, (req, res) => {
   res.json({ token: signToken(req.user) });
 });

@@ -98,6 +98,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () => Navigator.pushNamed(context, '/my-alerts'),
         ),
         ListTile(
+          leading: const Icon(Icons.card_giftcard, color: Colors.amber),
+          title: const Text('Zaproś znajomych'),
+          subtitle: const Text('Twój kod polecający'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.pushNamed(context, '/referral'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.emergency, color: Colors.red),
+          title: const Text('Numery alarmowe'),
+          subtitle: const Text('112, 997, 998, 999, 986...'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.pushNamed(context, '/emergency'),
+        ),
+        ListTile(
           leading: const Icon(Icons.family_restroom),
           title: Text(S.get('family_groups')),
           trailing: const Icon(Icons.chevron_right),

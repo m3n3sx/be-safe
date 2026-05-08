@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../models/alert.dart';
 import '../../providers/alert_provider.dart';
 import '../../services/api_service.dart';
@@ -48,7 +49,19 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(title: Text(a.category.label)),
+      appBar: AppBar(title: Text(a.category.label), actions: [
+        IconButton(
+          icon: const Icon(Icons.share),
+          onPressed: () => Share.share(
+            '⚠️ ${a.title}\n\n${a.description ?? ""}\n\nLokalizacja: https://www.google.com/maps?q=${a.location.latitude},${a.location.longitude}\n\nZgłoszone przez be:Safe — https://alert.u235.pl',
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.flag_outlined),
+          tooltip: 'Zgłoś nadużycie',
+          onPressed: () => _reportAlert(),
+        ),
+      ]),
       body: Column(children: [
         Expanded(child: ListView(children: [
           // Map
@@ -210,6 +223,32 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
     if (d.inDays > 0) return '${d.inDays}d';
     if (d.inHours > 0) return '${d.inHours}h';
     return '${d.inMinutes}min';
+  }
+
+  Future<void> _reportAlert() async {
+    final reason = await showDialog<String>(context: context, builder: (ctx) => SimpleDialog(
+      title: const Text('Zgłoś nadużycie'),
+      children: [
+        for (final r in [
+          ('spam', 'Spam / reklama'),
+          ('fake', 'Fałszywe zgłoszenie'),
+          ('offensive', 'Treść obraźliwa'),
+          ('illegal', 'Treść niezgodna z prawem'),
+          ('other', 'Inne'),
+        ])
+          SimpleDialogOption(
+            onPressed: () => Navigator.pop(ctx, r.$1),
+            child: Text(r.$2),
+          ),
+      ],
+    ));
+    if (reason == null || !mounted) return;
+    try {
+      await context.read<ApiService>().post('/alerts/${widget.alert.id}/report', {'reason': reason});
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Zgłoszenie wysłane. Dziękujemy!')));
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Już zgłoszone lub błąd')));
+    }
   }
 
   void _vote(String type) async {
