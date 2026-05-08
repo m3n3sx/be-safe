@@ -31,6 +31,21 @@ jobs:
         working-directory: mobile
         run: flutter pub get
 
+      - name: Set iOS platform in Podfile to 14.0
+        working-directory: mobile/ios
+        run: |
+          if [ -f Podfile ]; then
+            # Odkomentuj i ustaw wersję platformy na 14.0 (firebase_* wymaga ≥13)
+            sed -i '' "s/# platform :ios, '[0-9.]*'/platform :ios, '14.0'/" Podfile || true
+            sed -i '' "s/platform :ios, '[0-9.]*'/platform :ios, '14.0'/" Podfile || true
+            echo "=== Podfile po modyfikacji ==="
+            head -20 Podfile
+          else
+            echo "Podfile not found after flutter pub get — iOS platform nie wygenerowany?"
+            ls -la
+            exit 1
+          fi
+
       - name: (Optional) Setup GoogleService-Info.plist for iOS Firebase
         env:
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
