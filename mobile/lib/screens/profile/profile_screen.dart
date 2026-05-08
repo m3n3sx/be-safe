@@ -127,6 +127,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () => Navigator.pushNamed(context, '/referral'),
         ),
         ListTile(
+          leading: const Icon(Icons.emoji_events, color: Colors.orange),
+          title: const Text('Odznaki'),
+          subtitle: const Text('Twoje osiągnięcia'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.pushNamed(context, '/badges'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.article, color: Colors.blue),
+          title: const Text('Aktualności'),
+          subtitle: const Text('Porady i newsy'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.pushNamed(context, '/news'),
+        ),
+        ListTile(
           leading: const Icon(Icons.emergency, color: Colors.red),
           title: const Text('Numery alarmowe'),
           subtitle: const Text('112, 997, 998, 999, 986...'),

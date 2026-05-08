@@ -30,6 +30,7 @@ app.use('/api/v1/auth', require('./routes/auth'));
 app.use('/api/v1/users', require('./routes/users'));
 app.use('/api/v1/alerts', require('./routes/alerts'));
 app.use('/api/v1/events', require('./routes/events'));
+app.use('/api/v1', require('./routes/community'));
 app.use('/api/v1/family', require('./routes/family'));
 
 app.get('/health', (_, res) => res.json({ status: 'ok', time: new Date().toISOString() }));

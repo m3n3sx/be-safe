@@ -25,6 +25,8 @@ import 'screens/profile/ranking_screen.dart';
 import 'screens/legal/legal_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
 import 'screens/profile/referral_screen.dart';
+import 'screens/profile/badges_screen.dart';
+import 'screens/community/news_screen.dart';
 import 'screens/emergency/emergency_numbers_screen.dart';
 
 import 'services/i18n.dart';
@@ -109,6 +111,8 @@ class AlertMapApp extends StatelessWidget {
               '/terms' => const LegalScreen(type: 'terms'),
               '/privacy' => const LegalScreen(type: 'privacy'),
               '/referral' => const ReferralScreen(),
+              '/badges' => const BadgesScreen(),
+              '/news' => const NewsScreen(),
               '/emergency' => const EmergencyNumbersScreen(),
               _ => const MapScreen(),
             });
