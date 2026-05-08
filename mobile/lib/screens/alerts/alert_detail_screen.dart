@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -267,6 +268,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
   }
 
   Future<void> _reportAlert() async {
+    HapticFeedback.lightImpact();
     final reason = await showDialog<String>(context: context, builder: (ctx) => SimpleDialog(
       title: const Text('Zgłoś nadużycie'),
       children: [
@@ -293,6 +295,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
   }
 
   void _vote(String type) async {
+    HapticFeedback.lightImpact();
     try {
       await context.read<AlertProvider>().vote(widget.alert.id, type);
       if (mounted) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(type == 'confirm' ? 'Potwierdzono zagrożenie' : 'Oznaczono jako nieaktualne'))); Navigator.pop(context); }

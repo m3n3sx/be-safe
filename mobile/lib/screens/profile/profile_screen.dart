@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
@@ -65,6 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // Check-in button — quick safety button
         SizedBox(width: double.infinity, child: FilledButton.icon(
           onPressed: () async {
+            HapticFeedback.mediumImpact();
             try {
               await context.read<ApiService>().post('/users/me/checkin', {'status': 'safe'});
               if (context.mounted) {

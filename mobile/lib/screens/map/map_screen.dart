@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as gcm;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -13,6 +14,14 @@ import '../../services/i18n.dart';
 import '../alerts/create_alert_screen.dart';
 import '../alerts/alert_detail_screen.dart';
 
+/// Wrapper for AlertModel to satisfy ClusterItem contract.
+class _ClusterableAlert with gcm.ClusterItem {
+  final AlertModel alert;
+  _ClusterableAlert(this.alert);
+
+  @override
+  LatLng get location => alert.location;
+}
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -29,6 +38,11 @@ class _MapScreenState extends State<MapScreen> {
   List<Map<String, dynamic>> _children = [];
   final Map<String, BitmapDescriptor> _childIconCache = {};
 
+  // Clustering state
+  gcm.ClusterManager<_ClusterableAlert>? _clusterManager;
+  Set<Marker> _clusterMarkers = {};
+  String _lastAlertsFingerprint = '';
+
   @override
   void initState() {
     super.initState();
@@ -37,9 +51,70 @@ class _MapScreenState extends State<MapScreen> {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ));
+    _clusterManager = gcm.ClusterManager<_ClusterableAlert>(
+      const [],
+      _updateClusterMarkers,
+      markerBuilder: _buildClusterMarker,
+      stopClusteringZoom: 16.0,
+    );
     _initLocation();
     _precacheIcons();
     _loadFamilyChildren();
+  }
+
+  void _updateClusterMarkers(Set<Marker> markers) {
+    if (mounted) setState(() => _clusterMarkers = markers);
+  }
+
+  Future<Marker> _buildClusterMarker(gcm.Cluster<_ClusterableAlert> cluster) async {
+    if (cluster.isMultiple) {
+      return Marker(
+        markerId: MarkerId(cluster.getId()),
+        position: cluster.location,
+        icon: await _createClusterBitmap(cluster.count),
+        onTap: () {
+          HapticFeedback.selectionClick();
+          _mapController?.animateCamera(CameraUpdate.newLatLngZoom(cluster.location, 15));
+        },
+      );
+    }
+    // Single item → render as alert pin with category color.
+    final a = cluster.items.first.alert;
+    return Marker(
+      markerId: MarkerId(a.id),
+      position: a.location,
+      icon: _iconCache[a.category] ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      onTap: () {
+        HapticFeedback.selectionClick();
+        Navigator.push(context, MaterialPageRoute(builder: (_) => AlertDetailScreen(alert: a)));
+      },
+    );
+  }
+
+  Future<BitmapDescriptor> _createClusterBitmap(int count) async {
+    final dpr = MediaQuery.of(context).devicePixelRatio;
+    final size = (56.0 * dpr).roundToDouble();
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+
+    final outer = Paint()..color = Colors.red.withValues(alpha: 0.35)..isAntiAlias = true;
+    final inner = Paint()..color = Colors.red.shade700..isAntiAlias = true;
+    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, outer);
+    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.6, inner);
+
+    final tp = TextPainter(
+      text: TextSpan(
+        text: count > 99 ? '99+' : '$count',
+        style: TextStyle(fontSize: 18 * dpr, fontWeight: FontWeight.w800, color: Colors.white, height: 1),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    tp.paint(canvas, Offset((size - tp.width) / 2, (size - tp.height) / 2));
+
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(size.toInt(), size.toInt());
+    final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
+    return BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: 56, height: 56);
   }
 
   Future<void> _precacheIcons() async {
@@ -138,37 +213,59 @@ class _MapScreenState extends State<MapScreen> {
     if (_showAlertList || _showFilters) setState(() { _showAlertList = false; _showFilters = false; });
   }
 
+  /// Push current alerts into the ClusterManager if the list has changed.
+  void _syncClusterItems(List<AlertModel> alerts) {
+    final fp = alerts.map((a) => a.id).join(',');
+    if (fp == _lastAlertsFingerprint) return;
+    _lastAlertsFingerprint = fp;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _clusterManager?.setItems(alerts.map(_ClusterableAlert.new).toList());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final alertProv = context.watch<AlertProvider>();
     final alerts = alertProv.alerts;
+    _syncClusterItems(alerts);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cs = Theme.of(context).colorScheme;
+    final width = MediaQuery.of(context).size.width;
+    final isTablet = width >= 600;
+    final showSidePane = width >= 900;
 
-    return Scaffold(
-      body: Stack(children: [
-        GoogleMap(
-          initialCameraPosition: CameraPosition(target: _currentPos, zoom: 15),
-          onMapCreated: (c) => _mapController = c,
-          onTap: (_) => _dismissOverlays(),
-          myLocationEnabled: true, myLocationButtonEnabled: false,
-          zoomControlsEnabled: false, mapToolbarEnabled: false,
-          markers: {
-            ...alerts.map((a) => Marker(markerId: MarkerId(a.id), position: a.location,
-              icon: _iconCache[a.category] ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AlertDetailScreen(alert: a))))),
-            ..._children.map((c) => Marker(markerId: MarkerId('child_${c['user_id']}'), position: LatLng(c['lat'], c['lng']),
-              icon: _childIconCache[c['username']] ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-              onTap: () => _mapController?.animateCamera(CameraUpdate.newLatLngZoom(LatLng(c['lat'], c['lng']), 17)))),
-          },
-          circles: {
-            ...alerts.map((a) => Circle(circleId: CircleId(a.id), center: a.location, radius: a.radiusM.toDouble(),
-              fillColor: Colors.red.withValues(alpha: 0.12), strokeColor: Colors.redAccent.withValues(alpha: 0.5), strokeWidth: 1)),
-            ..._children.map((c) => Circle(circleId: CircleId('child_${c['user_id']}'), center: LatLng(c['lat'], c['lng']),
-              radius: 150, fillColor: cs.primary.withValues(alpha: 0.08), strokeColor: cs.primary.withValues(alpha: 0.4), strokeWidth: 2)),
-          },
-          style: isDark ? _darkMapStyle : _lightMapStyle,
-          padding: const EdgeInsets.only(bottom: 120),
+    final mapStack = Stack(children: [
+        Semantics(
+          label: 'Mapa z alertami bezpieczeństwa',
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(target: _currentPos, zoom: 15),
+            onMapCreated: (c) {
+              _mapController = c;
+              _clusterManager?.setMapId(c.mapId);
+            },
+            onCameraMove: (pos) => _clusterManager?.onCameraMove(pos),
+            onCameraIdle: () => _clusterManager?.updateMap(),
+            onTap: (_) => _dismissOverlays(),
+            myLocationEnabled: true, myLocationButtonEnabled: false,
+            zoomControlsEnabled: false, mapToolbarEnabled: false,
+            markers: {
+              ..._clusterMarkers,
+              ..._children.map((c) => Marker(markerId: MarkerId('child_${c['user_id']}'), position: LatLng(c['lat'], c['lng']),
+                icon: _childIconCache[c['username']] ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  _mapController?.animateCamera(CameraUpdate.newLatLngZoom(LatLng(c['lat'], c['lng']), 17));
+                })),
+            },
+            circles: {
+              ...alerts.map((a) => Circle(circleId: CircleId(a.id), center: a.location, radius: a.radiusM.toDouble(),
+                fillColor: Colors.red.withValues(alpha: 0.12), strokeColor: Colors.redAccent.withValues(alpha: 0.5), strokeWidth: 1)),
+              ..._children.map((c) => Circle(circleId: CircleId('child_${c['user_id']}'), center: LatLng(c['lat'], c['lng']),
+                radius: 150, fillColor: cs.primary.withValues(alpha: 0.08), strokeColor: cs.primary.withValues(alpha: 0.4), strokeWidth: 2)),
+            },
+            style: isDark ? _darkMapStyle : _lightMapStyle,
+            padding: const EdgeInsets.only(bottom: 120),
+          ),
         ),
 
         // Search bar
@@ -182,10 +279,18 @@ class _MapScreenState extends State<MapScreen> {
                   hintText: S.get('search_location'), hintStyle: TextStyle(color: Colors.grey.shade400),
                   prefixIcon: Icon(Icons.search, color: cs.primary),
                   suffixIcon: Row(mainAxisSize: MainAxisSize.min, children: [
-                    IconButton(icon: Icon(Icons.tune, color: _showFilters ? cs.primary : Colors.grey.shade400),
-                      onPressed: () => setState(() { _showFilters = !_showFilters; _showAlertList = false; })),
-                    IconButton(icon: Icon(Icons.my_location, color: cs.primary),
-                      onPressed: () { _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_currentPos, 15)); alertProv.loadNearby(_currentPos, radiusM: 10000); }),
+                    Semantics(
+                      label: 'Filtry kategorii alertów',
+                      button: true,
+                      child: IconButton(icon: Icon(Icons.tune, color: _showFilters ? cs.primary : Colors.grey.shade400),
+                        onPressed: () => setState(() { _showFilters = !_showFilters; _showAlertList = false; })),
+                    ),
+                    Semantics(
+                      label: 'Wycentruj mapę na moją lokalizację',
+                      button: true,
+                      child: IconButton(icon: Icon(Icons.my_location, color: cs.primary),
+                        onPressed: () { _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_currentPos, 15)); alertProv.loadNearby(_currentPos, radiusM: 10000); }),
+                    ),
                   ]),
                   border: InputBorder.none, contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
@@ -211,8 +316,8 @@ class _MapScreenState extends State<MapScreen> {
           ]),
         ),
 
-        // Alert list
-        if (_showAlertList) Positioned(bottom: 130, left: 16, right: 16,
+        // Alert list (overlay on mobile; hidden on tablets where side pane takes over)
+        if (_showAlertList && !showSidePane) Positioned(bottom: 130, left: 16, right: 16,
           child: Container(
             constraints: const BoxConstraints(maxHeight: 250),
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
@@ -226,7 +331,11 @@ class _MapScreenState extends State<MapScreen> {
                     leading: Icon(a.category.iconData, color: a.category.color, size: 28),
                     title: Text(a.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
                     subtitle: Text('${a.category.label} • ${a.distanceM?.round() ?? '?'}m', style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
-                    onTap: () { setState(() => _showAlertList = false); _mapController?.animateCamera(CameraUpdate.newLatLngZoom(a.location, 17)); },
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      setState(() => _showAlertList = false);
+                      _mapController?.animateCamera(CameraUpdate.newLatLngZoom(a.location, 17));
+                    },
                   );
                 },
               ),
@@ -236,16 +345,21 @@ class _MapScreenState extends State<MapScreen> {
 
         // "Zgłoś" button — RED
         Positioned(bottom: 8, left: 16, right: 16,
-          child: ElevatedButton.icon(
-            onPressed: () async {
-              await Navigator.push(context, MaterialPageRoute(builder: (_) => CreateAlertScreen(position: _currentPos)));
-              alertProv.loadNearby(_currentPos, radiusM: 10000);
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade700, foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)), elevation: 4),
-            icon: const Icon(Icons.warning_amber_rounded),
-            label: Text(S.get('report'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+          child: Semantics(
+            button: true,
+            label: 'Zgłoś zagrożenie w twojej okolicy',
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                HapticFeedback.mediumImpact();
+                await Navigator.push(context, MaterialPageRoute(builder: (_) => CreateAlertScreen(position: _currentPos)));
+                alertProv.loadNearby(_currentPos, radiusM: 10000);
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade700, foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)), elevation: 4),
+              icon: const Icon(Icons.warning_amber_rounded),
+              label: Text(S.get('report'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            ),
           ),
         ),
 
@@ -254,7 +368,10 @@ class _MapScreenState extends State<MapScreen> {
           child: Column(mainAxisSize: MainAxisSize.min, children: _children.map((c) => Padding(
             padding: const EdgeInsets.only(bottom: 10),
             child: GestureDetector(
-              onTap: () => _mapController?.animateCamera(CameraUpdate.newLatLngZoom(LatLng(c['lat'], c['lng']), 16)),
+              onTap: () {
+                HapticFeedback.selectionClick();
+                _mapController?.animateCamera(CameraUpdate.newLatLngZoom(LatLng(c['lat'], c['lng']), 16));
+              },
               child: Column(mainAxisSize: MainAxisSize.min, children: [
                 Container(width: 46, height: 46,
                   decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white,
@@ -272,41 +389,105 @@ class _MapScreenState extends State<MapScreen> {
         ),
 
         if (alertProv.loading) Positioned(top: 120, left: 0, right: 0, child: Center(child: CircularProgressIndicator(color: cs.primary))),
-      ]),
+      ]);
 
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: cs.primary,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white60,
-        currentIndex: 0,
-        onTap: (i) {
-          if (i == 0) { _dismissOverlays(); return; }
-          if (i == 1) { setState(() { _showAlertList = !_showAlertList; _showFilters = false; }); return; }
-          if (i == 2) { _sendSOS(); return; }
-          if (i == 3) Navigator.pushNamed(context, '/family');
-          if (i == 4) Navigator.pushNamed(context, '/profile');
-        },
-        items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
-          BottomNavigationBarItem(
-            icon: alerts.isEmpty ? const Icon(Icons.notifications_none) : Badge(
-              label: Text('${alerts.length}', style: const TextStyle(color: Colors.white, fontSize: 9)),
-              backgroundColor: Colors.red, child: const Icon(Icons.notifications_active)),
-            label: 'Alerty'),
-          BottomNavigationBarItem(
-            icon: Container(width: 56, height: 56,
+    return Scaffold(
+      body: Row(children: [
+        if (isTablet) _buildNavigationRail(cs, alerts),
+        Expanded(child: mapStack),
+        if (showSidePane) SizedBox(
+          width: 320,
+          child: _AlertSidePane(
+            alerts: alerts,
+            onAlertTap: (a) {
+              HapticFeedback.selectionClick();
+              _mapController?.animateCamera(CameraUpdate.newLatLngZoom(a.location, 17));
+            },
+          ),
+        ),
+      ]),
+      bottomNavigationBar: isTablet ? null : _buildBottomNav(cs, alerts),
+    );
+  }
+
+  Widget _buildNavigationRail(ColorScheme cs, List<AlertModel> alerts) {
+    return NavigationRail(
+      backgroundColor: cs.primary,
+      selectedIndex: 0,
+      onDestinationSelected: (i) {
+        if (i == 0) { _dismissOverlays(); return; }
+        if (i == 1) { setState(() { _showAlertList = !_showAlertList; _showFilters = false; }); return; }
+        if (i == 2) { _sendSOS(); return; }
+        if (i == 3) Navigator.pushNamed(context, '/family');
+        if (i == 4) Navigator.pushNamed(context, '/profile');
+      },
+      labelType: NavigationRailLabelType.all,
+      unselectedLabelTextStyle: const TextStyle(color: Colors.white60, fontSize: 11),
+      selectedLabelTextStyle: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+      unselectedIconTheme: const IconThemeData(color: Colors.white60),
+      selectedIconTheme: const IconThemeData(color: Colors.white),
+      destinations: [
+        const NavigationRailDestination(icon: Icon(Icons.map), label: Text('Mapa')),
+        NavigationRailDestination(
+          icon: alerts.isEmpty ? const Icon(Icons.notifications_none) : Badge(
+            label: Text('${alerts.length}', style: const TextStyle(color: Colors.white, fontSize: 9)),
+            backgroundColor: Colors.red, child: const Icon(Icons.notifications_active)),
+          label: const Text('Alerty'),
+        ),
+        NavigationRailDestination(
+          icon: Semantics(
+            button: true,
+            label: 'Przycisk SOS — wysyła alarmowe powiadomienie',
+            child: Container(width: 52, height: 52,
+              decoration: BoxDecoration(color: Colors.red.shade700, shape: BoxShape.circle),
+              child: const Center(child: Text('SOS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))),
+          ),
+          label: const Text(''),
+        ),
+        const NavigationRailDestination(icon: Icon(Icons.family_restroom), label: Text('Rodzina')),
+        const NavigationRailDestination(icon: Icon(Icons.person), label: Text('Profil')),
+      ],
+    );
+  }
+
+  Widget _buildBottomNav(ColorScheme cs, List<AlertModel> alerts) {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: cs.primary,
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white60,
+      currentIndex: 0,
+      onTap: (i) {
+        if (i == 0) { _dismissOverlays(); return; }
+        if (i == 1) { setState(() { _showAlertList = !_showAlertList; _showFilters = false; }); return; }
+        if (i == 2) { _sendSOS(); return; }
+        if (i == 3) Navigator.pushNamed(context, '/family');
+        if (i == 4) Navigator.pushNamed(context, '/profile');
+      },
+      items: [
+        const BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
+        BottomNavigationBarItem(
+          icon: alerts.isEmpty ? const Icon(Icons.notifications_none) : Badge(
+            label: Text('${alerts.length}', style: const TextStyle(color: Colors.white, fontSize: 9)),
+            backgroundColor: Colors.red, child: const Icon(Icons.notifications_active)),
+          label: 'Alerty'),
+        BottomNavigationBarItem(
+          icon: Semantics(
+            button: true,
+            label: 'Przycisk SOS — wysyła alarmowe powiadomienie',
+            child: Container(width: 56, height: 56,
               decoration: BoxDecoration(color: Colors.red.shade700, shape: BoxShape.circle),
               child: const Center(child: Text('SOS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)))),
-            label: ''),
-          const BottomNavigationBarItem(icon: Icon(Icons.family_restroom), label: 'Rodzina'),
-          const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        ],
-      ),
+          ),
+          label: ''),
+        const BottomNavigationBarItem(icon: Icon(Icons.family_restroom), label: 'Rodzina'),
+        const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+      ],
     );
   }
 
   Future<void> _sendSOS() async {
+    await HapticFeedback.heavyImpact();
     final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
       title: const Row(children: [Icon(Icons.sos, color: Colors.red), SizedBox(width: 8), Text('SOS')]),
       content: Text(S.get('sos_confirm')),
@@ -317,6 +498,7 @@ class _MapScreenState extends State<MapScreen> {
       ],
     ));
     if (ok != true || !mounted) return;
+    await HapticFeedback.vibrate();
     await context.read<ApiService>().post('/alerts', {
       'category': 'aggression', 'title': '🆘 SOS — Potrzebuję pomocy!',
       'description': 'Automatyczny alert SOS wysłany z aplikacji be:Safe.',
@@ -368,4 +550,58 @@ class _MapScreenState extends State<MapScreen> {
     {"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]},
     {"featureType":"poi.business","stylers":[{"visibility":"off"}]}
   ]''';
+}
+
+/// Persistent right-hand pane showing the alert list on tablets (width >= 900).
+class _AlertSidePane extends StatelessWidget {
+  final List<AlertModel> alerts;
+  final void Function(AlertModel) onAlertTap;
+
+  const _AlertSidePane({required this.alerts, required this.onAlertTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(left: BorderSide(color: Colors.grey.shade300)),
+      ),
+      child: Column(children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          width: double.infinity,
+          color: cs.primaryContainer,
+          child: Text(
+            'Aktywne alerty (${alerts.length})',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+        ),
+        Expanded(
+          child: alerts.isEmpty
+              ? Center(
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Icon(Icons.shield_outlined, size: 60, color: Colors.grey.shade400),
+                    const SizedBox(height: 12),
+                    const Text('Brak alertów w okolicy'),
+                  ]),
+                )
+              : ListView.separated(
+                  itemCount: alerts.length,
+                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  itemBuilder: (_, i) {
+                    final a = alerts[i];
+                    return ListTile(
+                      leading: Icon(a.category.iconData, color: a.category.color, size: 32),
+                      title: Text(a.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 2, overflow: TextOverflow.ellipsis),
+                      subtitle: Text('${a.category.label} • ${a.distanceM?.round() ?? '?'}m',
+                        style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                      onTap: () => onAlertTap(a),
+                    );
+                  },
+                ),
+        ),
+      ]),
+    );
+  }
 }

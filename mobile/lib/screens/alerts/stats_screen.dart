@@ -4,6 +4,7 @@ import '../../models/alert.dart';
 import '../../services/api_service.dart';
 import '../../services/i18n.dart';
 import '../../services/location_service.dart';
+import '../../widgets/shimmer_loader.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -32,7 +33,20 @@ class _StatsScreenState extends State<StatsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(S.get('stats'))),
-      body: _loading ? const Center(child: CircularProgressIndicator()) : ListView(padding: const EdgeInsets.all(16), children: [
+      body: _loading ? ListView(padding: const EdgeInsets.all(16), children: const [
+          Row(children: [
+            Expanded(child: ShimmerCard(height: 80)),
+            Expanded(child: ShimmerCard(height: 80)),
+            Expanded(child: ShimmerCard(height: 80)),
+          ]),
+          SizedBox(height: 16),
+          ShimmerLoader(height: 18, width: 200),
+          SizedBox(height: 16),
+          ShimmerCard(height: 40),
+          ShimmerCard(height: 40),
+          ShimmerCard(height: 40),
+          ShimmerCard(height: 40),
+        ]) : ListView(padding: const EdgeInsets.all(16), children: [
         // Summary cards
         Row(children: [
           _card(S.get('today'), '${_totals?['today'] ?? 0}', Colors.red),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
+import '../../widgets/shimmer_loader.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -29,7 +30,13 @@ class _NewsScreenState extends State<NewsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Aktualności')),
       body: _loading
-        ? const Center(child: CircularProgressIndicator())
+        ? ListView(children: const [
+            SizedBox(height: 8),
+            ShimmerCard(height: 110),
+            ShimmerCard(height: 110),
+            ShimmerCard(height: 110),
+            ShimmerCard(height: 110),
+          ])
         : _posts.isEmpty
           ? Center(child: Column(mainAxisSize: MainAxisSize.min, children: [
               Icon(Icons.article_outlined, size: 80, color: Colors.grey.shade400),

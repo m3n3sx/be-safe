@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../models/alert.dart';
 import '../../services/api_service.dart';
 import '../../services/i18n.dart';
+import '../../widgets/shimmer_loader.dart';
 import 'alert_detail_screen.dart';
 
 class MyAlertsScreen extends StatefulWidget {
@@ -61,7 +62,14 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(S.get('my_alerts'))),
-      body: _loading ? const Center(child: CircularProgressIndicator())
+      body: _loading ? ListView(children: const [
+          SizedBox(height: 8),
+          ShimmerListTile(),
+          ShimmerListTile(),
+          ShimmerListTile(),
+          ShimmerListTile(),
+          ShimmerListTile(),
+        ])
         : _alerts.isEmpty ? Center(child: Padding(
             padding: const EdgeInsets.all(32),
             child: Column(mainAxisSize: MainAxisSize.min, children: [

@@ -1,6 +1,6 @@
 # be:Safe — Plan kontynuacji dla przyszłych sesji AI
 
-> **Ostatnia aktualizacja:** 2026-05-08
+> **Ostatnia aktualizacja:** 2026-05-08 (po Sesji 2: UX Polish)
 > **Autor planu:** Kiro (poprzednia sesja)
 > **Dla kogo:** kolejne sesje AI lub developerzy podejmujący projekt
 
@@ -46,14 +46,15 @@ Czytaj też `FULL_DOCUMENTATION.md` — pełny opis architektury.
 | Battery alerts | ✅ | Auto co 10min, alert rodzicom <=15% |
 | Location history timeline | ✅ | Screen z polyline + date picker |
 | 6 motywów kolorystycznych | ✅ | W ustawieniach |
+| Community badges | ✅ | 10 odznak (user_badges table, /me/badges endpoint, BadgesScreen grid) |
+| News / blog feed | ✅ | posts table + /posts endpoint + NewsScreen z ModalBottomSheet |
+| Shimmer loading states | ✅ | `shimmer` pakiet + widget `ShimmerLoader/ListTile/Card/Grid`; zamiast `CircularProgressIndicator` w listach (news, badges, ranking, my_alerts, referral, stats) |
+| Haptic feedback | ✅ | Wbudowany `flutter/services.HapticFeedback` — SOS (heavy+vibrate), check-in (medium), Zgłoś (medium), vote/report (light), tap markerów (selection) |
+| Marker clustering na mapie | ✅ | `google_maps_cluster_manager_2` — klaster bitmap (czerwony okrąg z licznikiem) do zoom 16, powyżej indywidualne piny |
+| Accessibility (Semantics) | ✅ | Wrappers na mapie, SOS, Zgłoś, filtry, my_location |
+| Tablet layout | ✅ | `width >= 600` → NavigationRail zamiast BottomNavigationBar; `width >= 900` → dodatkowy 320px `_AlertSidePane` z listą alertów |
 
 ### Do zrobienia ❌ (priorytet: od góry)
-
-**5. Community (~3h)**
-- [ ] Gamification — system odznak: 10 zgłoszeń → "Strażnik miasta", 50 → "Veteran", etc.
-- [ ] Newsy / blog — ekran z artykułami bezpieczeństwa (backend posts table + mobile feed)
-- [ ] Live chat na alertach (upgrade komentarzy do realtime przez socket.io)
-- [ ] Grupy sąsiedzkie (zbyt złożone, może zostawić)
 
 **6. Integracje oficjalne (~1-2h)**
 - [ ] GDDKiA — ostrzeżenia drogowe. API: brak publicznego; można scrape'ować https://www.gddkia.gov.pl/ lub RSS
@@ -66,12 +67,9 @@ Czytaj też `FULL_DOCUMENTATION.md` — pełny opis architektury.
 - [ ] Donations (Patronite / BuyMeACoffee link)
 - [ ] Backend: tabela `subscriptions`, webhook Google Play, feature gates
 
-**8. UX polish (~2h)**
-- [ ] Shimmer loading (pakiet `shimmer`) zamiast CircularProgressIndicator
-- [ ] Haptics (pakiet `gaimon`) przy interakcjach: tap alert, SOS, check-in
-- [ ] Clustering markerów na mapie (pakiet `google_maps_cluster_manager` lub własne przy zoom)
-- [ ] Accessibility — dodać `Semantics()` wrappers, testować z TalkBack
-- [ ] Tablet layout — Scaffold z NavigationRail gdy szerokość > 600px
+**8. Community — do dokończenia (~1-2h)**
+- [ ] Live chat na alertach (upgrade komentarzy do realtime przez socket.io)
+- [ ] Grupy sąsiedzkie (zbyt złożone, może zostawić)
 
 **9. Reliability (~3h)**
 - [ ] Offline cache map tiles — pakiet `flutter_map_tile_caching` LUB wykorzystać Google Maps offline API (tylko Android)
@@ -292,26 +290,18 @@ for r in json.load(sys.stdin)['workflow_runs']:
 
 ## 🎯 PRIORITY DLA NASTĘPNYCH SESJI
 
-### Sesja 1 (najbliższa): Community (~3h)
-1. Tabela `user_badges` — odznaki za aktywność
-2. Backend endpoint `/users/me/badges` + auto-grant logic
-3. Mobile: screen `BadgesScreen` z listą + empty state
-4. Tabela `posts` — blog posts
-5. Endpoint `/posts` — CRUD (tylko admin może tworzyć)
-6. Mobile: screen `NewsScreen` z feedem
+### ✅ Sesja 1 (done): Community
+Zrobione — badges (10 sztuk, backend+UI), posts/news z bottomsheet detail, seed danych.
 
-### Sesja 2: UX Polish (~2h)
-1. `shimmer` pakiet — loading states
-2. `gaimon` / `haptic_feedback` pakiet
-3. Clustering markerów (jest pakiet `google_maps_cluster_manager`)
-4. `Semantics` wrappers
-5. Tablet layout (MediaQuery-based)
+### ✅ Sesja 2 (done): UX Polish
+Zrobione — shimmer loading states, HapticFeedback wbudowany, marker clustering (google_maps_cluster_manager_2), Semantics wrappers, responsive tablet layout (NavigationRail + side pane).
 
-### Sesja 3: Reliability (~3h)
+### Sesja 3 (następna): Reliability (~3h)
 1. `flutter_background_service` — location tracking gdy apka killed
 2. Foreground Service notification (Android wymóg)
 3. Offline map cache (eksperymentuj z `flutter_map_tile_caching`)
 4. `CacheService` rozbudowa z TTL per region
+5. `retry` policy w `ApiService` — auto-retry dla 5xx i sieciowych błędów
 
 ### Sesja 4: GDDKiA (~1h)
 - Scrapowanie RSS https://www.gddkia.gov.pl/ — sprawdzić czy jest
@@ -325,6 +315,10 @@ for r in json.load(sys.stdin)['workflow_runs']:
 4. `in_app_purchase` Flutter package
 5. Backend webhook dla Google Play
 6. Pricing screen w apce
+
+### Sesja 6: Community enhancements
+- Live chat na alertach (socket.io realtime komentarzy)
+- (opcjonalnie) Grupy sąsiedzkie
 
 ### Dalej: Ekspansja
 - Integracja z Policją / Strażą Miejską (wymaga kontaktów)

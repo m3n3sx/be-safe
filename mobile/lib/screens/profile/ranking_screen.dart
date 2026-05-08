@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
+import '../../widgets/shimmer_loader.dart';
 
 class RankingScreen extends StatefulWidget {
   const RankingScreen({super.key});
@@ -24,7 +25,15 @@ class _RankingScreenState extends State<RankingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Ranking użytkowników')),
-      body: _loading ? const Center(child: CircularProgressIndicator())
+      body: _loading ? ListView(children: const [
+          SizedBox(height: 8),
+          ShimmerListTile(),
+          ShimmerListTile(),
+          ShimmerListTile(),
+          ShimmerListTile(),
+          ShimmerListTile(),
+          ShimmerListTile(),
+        ])
         : _ranking.isEmpty ? const Center(child: Text('Brak danych'))
         : ListView.builder(
           itemCount: _ranking.length,

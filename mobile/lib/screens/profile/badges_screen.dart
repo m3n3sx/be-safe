@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
+import '../../widgets/shimmer_loader.dart';
 
 class BadgesScreen extends StatefulWidget {
   const BadgesScreen({super.key});
@@ -31,7 +32,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Odznaki')),
       body: _loading
-        ? const Center(child: CircularProgressIndicator())
+        ? const ShimmerGrid(count: 9)
         : RefreshIndicator(
             onRefresh: _load,
             child: ListView(padding: const EdgeInsets.all(16), children: [

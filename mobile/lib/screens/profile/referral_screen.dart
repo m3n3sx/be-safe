@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
+import '../../widgets/shimmer_loader.dart';
 
 class ReferralScreen extends StatefulWidget {
   const ReferralScreen({super.key});
@@ -40,7 +40,19 @@ class _ReferralScreenState extends State<ReferralScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Zaproś znajomych')),
       body: _loading
-        ? const Center(child: CircularProgressIndicator())
+        ? Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(children: const [
+              SizedBox(height: 32),
+              ShimmerLoader(width: 80, height: 80, borderRadius: BorderRadius.all(Radius.circular(40))),
+              SizedBox(height: 24),
+              ShimmerLoader(width: 220, height: 60, borderRadius: BorderRadius.all(Radius.circular(16))),
+              SizedBox(height: 24),
+              ShimmerLoader(width: 200, height: 200, borderRadius: BorderRadius.all(Radius.circular(16))),
+              SizedBox(height: 24),
+              ShimmerCard(height: 90),
+            ]),
+          )
         : SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Column(children: [
