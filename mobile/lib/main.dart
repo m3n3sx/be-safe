@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'providers/auth_provider.dart';
 import 'providers/alert_provider.dart';
@@ -8,6 +10,8 @@ import 'services/api_service.dart';
 import 'services/socket_service.dart';
 import 'services/background_service.dart';
 import 'services/update_service.dart';
+import 'services/analytics.dart';
+import 'services/fcm_service.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/map/map_screen.dart';
 import 'screens/family/family_screen.dart';
@@ -18,13 +22,31 @@ import 'screens/settings/settings_screen.dart';
 import 'screens/alerts/my_alerts_screen.dart';
 import 'screens/alerts/stats_screen.dart';
 import 'screens/profile/ranking_screen.dart';
+import 'screens/legal/legal_screen.dart';
+import 'screens/onboarding/onboarding_screen.dart';
 
 import 'services/i18n.dart';
+
+// Sentry DSN — wstaw swój z sentry.io (Project Settings → Client Keys)
+// Jeśli pusty, Sentry jest wyłączony (development mode)
+const String _sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await S.load();
-  runApp(const AlertMapApp());
+
+  if (_sentryDsn.isNotEmpty) {
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = _sentryDsn;
+        options.tracesSampleRate = 0.2; // 20% tras dla performance monitoring
+        options.debug = false;
+      },
+      appRunner: () => runApp(const AlertMapApp()),
+    );
+  } else {
+    runApp(const AlertMapApp());
+  }
 }
 
 class AlertMapApp extends StatelessWidget {
@@ -35,6 +57,8 @@ class AlertMapApp extends StatelessWidget {
     final api = ApiService();
     final socket = SocketService();
     final bg = BackgroundService(api, socket);
+    Analytics.init(api);
+    Analytics.track('app_open');
 
     return MultiProvider(
       providers: [
@@ -47,16 +71,19 @@ class AlertMapApp extends StatelessWidget {
       ],
       child: Consumer<ThemeProvider>(
         builder: (_, themeProv, __) => DynamicColorBuilder(
-          builder: (lightDynamic, darkDynamic) => MaterialApp(
+          builder: (lightDynamic, darkDynamic) {
+          // Use dynamic color only if user hasn't picked a custom theme
+          final useSystem = themeProv.themeId == 'blue' && lightDynamic != null;
+          return MaterialApp(
           title: 'be:Safe',
           debugShowCheckedModeBanner: false,
           themeMode: themeProv.mode,
           theme: ThemeData(
-            colorScheme: lightDynamic?.harmonized() ?? ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.light),
+            colorScheme: useSystem ? lightDynamic!.harmonized() : ColorScheme.fromSeed(seedColor: themeProv.seedColor, brightness: Brightness.light),
             useMaterial3: true,
           ),
           darkTheme: ThemeData(
-            colorScheme: darkDynamic?.harmonized() ?? ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark),
+            colorScheme: useSystem && darkDynamic != null ? darkDynamic!.harmonized() : ColorScheme.fromSeed(seedColor: themeProv.seedColor, brightness: Brightness.dark),
             useMaterial3: true,
           ),
           home: const _AuthGate(),
@@ -77,10 +104,12 @@ class AlertMapApp extends StatelessWidget {
               '/stats' => const StatsScreen(),
               '/ranking' => const RankingScreen(),
               '/login' => const LoginScreen(),
+              '/terms' => const LegalScreen(type: 'terms'),
+              '/privacy' => const LegalScreen(type: 'privacy'),
               _ => const MapScreen(),
             });
           },
-        )),
+        );}),
       ),
     );
   }
@@ -93,6 +122,7 @@ class _AuthGate extends StatefulWidget {
 
 class _AuthGateState extends State<_AuthGate> {
   bool _servicesStarted = false;
+  bool? _onboardingDone;
 
   @override
   void initState() {
@@ -100,6 +130,12 @@ class _AuthGateState extends State<_AuthGate> {
     WidgetsBinding.instance.addPostFrameCallback((_) => UpdateService.checkForUpdate(context));
     final auth = context.read<AuthProvider>();
     auth.addListener(() => _handleAuth(auth));
+    _loadOnboarding();
+  }
+
+  Future<void> _loadOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) setState(() => _onboardingDone = prefs.getBool('onboarding_done') ?? false);
   }
 
   void _handleAuth(AuthProvider auth) {
@@ -107,6 +143,9 @@ class _AuthGateState extends State<_AuthGate> {
       final token = context.read<ApiService>().token;
       if (token != null) {
         _servicesStarted = true;
+        final api = context.read<ApiService>();
+        Analytics.track('login_success');
+        FcmService.init(api);
         context.read<BackgroundService>().init().then((_) {
           context.read<BackgroundService>().startTracking(token);
           context.read<AlertProvider>().connectSocket(token);
@@ -123,6 +162,8 @@ class _AuthGateState extends State<_AuthGate> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
+    if (_onboardingDone == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    if (!_onboardingDone!) return OnboardingScreen(onComplete: () => setState(() => _onboardingDone = true));
     return auth.isLoggedIn ? const MapScreen() : const LoginScreen();
   }
 }

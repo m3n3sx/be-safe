@@ -5,6 +5,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../services/api_service.dart';
 import '../../services/i18n.dart';
+import '../../services/i18n.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -62,6 +63,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           trailing: const Icon(Icons.chevron_right),
           onTap: () => _showThemePicker(theme),
         ),
+        ListTile(
+          leading: const Icon(Icons.color_lens),
+          title: const Text('Kolor motywu'),
+          subtitle: Text(appThemes.firstWhere((t) => t.id == theme.themeId, orElse: () => appThemes[0]).name),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => _showColorPicker(theme),
+        ),
 
         // === POWIADOMIENIA ===
         _header(S.get('notifications')),
@@ -118,6 +126,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // === INNE ===
         _header(S.get('other')),
         ListTile(
+          leading: const Icon(Icons.description_outlined),
+          title: const Text('Regulamin'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.pushNamed(context, '/terms'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.privacy_tip_outlined),
+          title: const Text('Polityka prywatności'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.pushNamed(context, '/privacy'),
+        ),
+        ListTile(
           leading: const Icon(Icons.info_outline),
           title: Text(S.get('app_version')),
           subtitle: const Text('4'),
@@ -168,6 +188,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ]),
           ),
       ],
+    ));
+  }
+
+  void _showColorPicker(ThemeProvider theme) {
+    showDialog(context: context, builder: (ctx) => SimpleDialog(
+      title: const Text('Kolor motywu'),
+      children: appThemes.map((t) => SimpleDialogOption(
+        onPressed: () { theme.setThemeColor(t.id); Navigator.pop(ctx); },
+        child: Row(children: [
+          Container(width: 24, height: 24, decoration: BoxDecoration(color: t.seedColor, shape: BoxShape.circle,
+            border: theme.themeId == t.id ? Border.all(color: Colors.black, width: 2) : null)),
+          const SizedBox(width: 12),
+          Text('${t.emoji} ${t.name}', style: TextStyle(fontWeight: theme.themeId == t.id ? FontWeight.bold : FontWeight.normal)),
+        ]),
+      )).toList(),
     ));
   }
 

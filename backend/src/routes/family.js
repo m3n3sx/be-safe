@@ -62,7 +62,7 @@ router.post('/groups/join', async (req, res) => {
 
 router.get('/groups/:id/members', memberOf, async (req, res) => {
   const { rows } = await db.query(
-    `SELECT m.user_id, u.username, m.role, m.tracking_enabled,
+    `SELECT m.user_id, u.username, u.avatar_url, m.role, m.tracking_enabled,
             ST_Y(u.last_location::geometry) AS lat, ST_X(u.last_location::geometry) AS lng,
             u.last_location_at
      FROM family_members m JOIN users u ON m.user_id = u.id WHERE m.group_id = $1`,

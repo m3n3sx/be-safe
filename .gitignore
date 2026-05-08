@@ -51,3 +51,5 @@ Thumbs.db
 
 # AGENTS.md (auto-generated)
 **/AGENTS.md
+mobile/android/app/google-services.json
+alert.md

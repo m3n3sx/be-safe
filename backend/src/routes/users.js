@@ -1,8 +1,29 @@
 const router = require('express').Router();
 const db = require('../config/db');
 const auth = require('../middleware/auth');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: (_, __, cb) => cb(null, uploadDir),
+    filename: (_, file, cb) => cb(null, `avatar-${Date.now()}${path.extname(file.originalname)}`),
+  }),
+  limits: { fileSize: 2 * 1024 * 1024 },
+});
 
 router.use(auth);
+
+// Upload avatar for any user (parent can set child avatar)
+router.post('/:id/avatar', upload.single('avatar'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'File required' });
+  const avatar_url = `/uploads/${req.file.filename}`;
+  await db.query(`UPDATE users SET avatar_url = $1 WHERE id = $2`, [avatar_url, req.params.id]);
+  res.json({ avatar_url });
+});
 
 router.get('/ranking', async (req, res) => {
   const { rows } = await db.query(
@@ -17,7 +38,10 @@ router.get('/ranking', async (req, res) => {
 
 router.get('/me', async (req, res) => {
   const { rows } = await db.query(
-    `SELECT id, email, username, avatar_url, alert_radius_m, reputation_score, is_child, created_at FROM users WHERE id = $1`,
+    `SELECT u.id, u.email, u.username, u.avatar_url, u.alert_radius_m, u.reputation_score,
+            u.is_child, u.email_verified, u.referral_code, u.created_at,
+            (SELECT COUNT(*)::int FROM users WHERE referred_by = u.id) AS referrals_count
+     FROM users u WHERE u.id = $1`,
     [req.user.id]
   );
   res.json(rows[0] || {});
@@ -102,6 +126,22 @@ router.post('/me/delete', async (req, res) => {
   await db.query(`DELETE FROM alerts WHERE author_id = $1`, [req.user.id]);
   await db.query(`DELETE FROM family_members WHERE user_id = $1`, [req.user.id]);
   await db.query(`DELETE FROM users WHERE id = $1`, [req.user.id]);
+  res.json({ ok: true });
+});
+
+// Block a user
+router.post('/:id/block', async (req, res) => {
+  try {
+    await db.query(`INSERT INTO user_blocks (blocker_id, blocked_id) VALUES ($1, $2)`, [req.user.id, req.params.id]);
+    res.json({ ok: true });
+  } catch (e) {
+    if (e.code === '23505') return res.json({ ok: true, already: true });
+    res.status(500).json({ error: e.message });
+  }
+});
+
+router.delete('/:id/block', async (req, res) => {
+  await db.query(`DELETE FROM user_blocks WHERE blocker_id = $1 AND blocked_id = $2`, [req.user.id, req.params.id]);
   res.json({ ok: true });
 });
 

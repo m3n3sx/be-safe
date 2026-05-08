@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 
@@ -87,6 +88,14 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
     _load();
   }
 
+  Future<void> _uploadChildAvatar(String userId) async {
+    final picked = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 512, imageQuality: 80);
+    if (picked == null) return;
+    // Upload as avatar for child user
+    await context.read<ApiService>().multipart('/users/$userId/avatar', {}, filePath: picked.path, fileField: 'avatar');
+    _load();
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -147,11 +156,20 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
           child: ListView(children: [
             const Padding(padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
               child: Text('Członkowie', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
-            ..._members.map((m) => ListTile(
-              leading: Icon(m['role'] == 'parent' ? Icons.person : Icons.child_care,
-                color: m['role'] == 'parent' ? Colors.blue : Colors.green),
-              title: Text(m['username'] ?? 'Nieznany'),
-              subtitle: Text(m['role'] == 'parent' ? 'Rodzic' : 'Dziecko'),
+            ..._members.map((m) {
+              final avatarUrl = m['avatar_url'] as String?;
+              return ListTile(
+                leading: GestureDetector(
+                  onTap: m['role'] == 'child' ? () => _uploadChildAvatar(m['user_id']) : null,
+                  child: CircleAvatar(
+                    backgroundColor: m['role'] == 'parent' ? Colors.blue.shade100 : Colors.green.shade100,
+                    backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
+                    child: avatarUrl == null ? Icon(m['role'] == 'parent' ? Icons.person : Icons.child_care,
+                      color: m['role'] == 'parent' ? Colors.blue : Colors.green) : null,
+                  ),
+                ),
+                title: Text(m['username'] ?? 'Nieznany'),
+                subtitle: Text(m['role'] == 'parent' ? 'Rodzic' : 'Dziecko'),
               trailing: m['role'] == 'child' ? Switch(
                 value: m['tracking_enabled'] ?? true,
                 onChanged: (v) async {
@@ -162,7 +180,8 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
                   _load();
                 },
               ) : null,
-            )),
+            );
+            }),
             if (_geofences.isNotEmpty) ...[
               const Padding(padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
                 child: Text('Bezpieczne strefy', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),

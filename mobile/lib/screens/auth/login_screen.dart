@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: auth.loading ? null : _submit,
-                  style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(16), backgroundColor: Colors.red.shade700),
+                  style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(16), backgroundColor: const Color(0xFF2979FF)),
                   child: auth.loading
                       ? const CircularProgressIndicator(color: Colors.white)
                       : Text(_isRegister ? S.get('register') : S.get('login'), style: const TextStyle(fontSize: 16, color: Colors.white)),

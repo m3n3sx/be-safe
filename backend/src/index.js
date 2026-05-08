@@ -29,6 +29,7 @@ app.use(rateLimit({ windowMs: 60000, max: 100, ...rlOpts }));
 app.use('/api/v1/auth', require('./routes/auth'));
 app.use('/api/v1/users', require('./routes/users'));
 app.use('/api/v1/alerts', require('./routes/alerts'));
+app.use('/api/v1/events', require('./routes/events'));
 app.use('/api/v1/family', require('./routes/family'));
 
 app.get('/health', (_, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
@@ -147,6 +148,11 @@ setInterval(async () => {
   );
   for (const r of rows) io.emit('alert:expired', { alert_id: r.id });
 }, 60000);
+
+// IMGW weather warnings sync every 15 min
+const { syncWarnings } = require('./services/imgw');
+syncWarnings(io); // Initial sync on startup
+setInterval(() => syncWarnings(io), 15 * 60 * 1000);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`AlertMap API running on :${PORT}`));

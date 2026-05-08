@@ -7,7 +7,7 @@ class AuthProvider extends ChangeNotifier {
   final ApiService _api;
   User? _user;
   bool _loading = false;
-  final _googleSignIn = GoogleSignIn(scopes: ['email']);
+  final _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
 
   AuthProvider(this._api);
 

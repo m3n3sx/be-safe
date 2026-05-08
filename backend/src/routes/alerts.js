@@ -246,4 +246,29 @@ router.post('/:id/comments', async (req, res) => {
   res.status(201).json(rows[0]);
 });
 
+// ------ MODERATION / REPORTS ------
+router.post('/:id/report', async (req, res) => {
+  const { reason, details } = req.body;
+  if (!reason) return res.status(400).json({ error: 'Reason required' });
+
+  try {
+    await db.query(
+      `INSERT INTO alert_reports (alert_id, reporter_id, reason, details) VALUES ($1, $2, $3, $4)`,
+      [req.params.id, req.user.id, reason, details || null]
+    );
+    // Auto-hide po 3+ zgłoszeniach
+    const { rows } = await db.query(
+      `SELECT COUNT(*)::int AS cnt FROM alert_reports WHERE alert_id = $1`,
+      [req.params.id]
+    );
+    if (rows[0].cnt >= 3) {
+      await db.query(`UPDATE alerts SET status = 'hidden' WHERE id = $1`, [req.params.id]);
+    }
+    res.json({ ok: true, reports: rows[0].cnt });
+  } catch (e) {
+    if (e.code === '23505') return res.status(409).json({ error: 'Already reported' });
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = router;
