@@ -53,3 +53,4 @@ Thumbs.db
 **/AGENTS.md
 mobile/android/app/google-services.json
 alert.md
+backend/firebase-admin.json
