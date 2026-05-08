@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:async';
+import 'package:battery_plus/battery_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,8 @@ class BackgroundService {
   final _notifications = FlutterLocalNotificationsPlugin();
   StreamSubscription<Position>? _locationSub;
   Timer? _pollTimer;
+  Timer? _batteryTimer;
+  final _battery = Battery();
   final Set<String> _notifiedAlertIds = {};
 
   BackgroundService(this._api, this._socket);
@@ -70,6 +73,17 @@ class BackgroundService {
 
     // Polling — co 60s sprawdza nowe alerty (działa nawet gdy WebSocket padnie)
     _startPolling();
+
+    // Battery reporting — co 10 min
+    _reportBattery();
+    _batteryTimer = Timer.periodic(const Duration(minutes: 10), (_) => _reportBattery());
+  }
+
+  Future<void> _reportBattery() async {
+    try {
+      final level = await _battery.batteryLevel;
+      await _api.put('/users/me/battery', {'level': level});
+    } catch (_) {}
   }
 
   void _startPolling() {
@@ -105,6 +119,7 @@ class BackgroundService {
   void stopTracking() {
     _locationSub?.cancel();
     _pollTimer?.cancel();
+    _batteryTimer?.cancel();
     _socket.disconnect();
   }
 

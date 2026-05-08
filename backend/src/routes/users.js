@@ -147,6 +147,66 @@ router.post('/me/delete', async (req, res) => {
   res.json({ ok: true });
 });
 
+// Check-in — "Jestem bezpieczny"
+router.post('/me/checkin', async (req, res) => {
+  const { status, message, lat, lng, battery_level } = req.body;
+  const loc = (lat != null && lng != null) ? `ST_MakePoint(${lng}, ${lat})::geography` : 'NULL';
+  await db.query(
+    `INSERT INTO user_checkins (user_id, status, message, location, battery_level)
+     VALUES ($1, $2, $3, ${loc}, $4)`,
+    [req.user.id, status || 'safe', message || null, battery_level]
+  );
+  // Notify family parents via socket
+  const io = req.app.get('io');
+  if (io) {
+    const { rows: groups } = await db.query(
+      `SELECT m2.user_id AS parent_id, u.username
+       FROM family_members m1
+       JOIN family_members m2 ON m1.group_id = m2.group_id
+       JOIN users u ON u.id = $1
+       WHERE m1.user_id = $1 AND m2.role = 'parent'`,
+      [req.user.id]
+    );
+    for (const g of groups) {
+      io.to(`user:${g.parent_id}`).emit('family:checkin', {
+        user_id: req.user.id, username: g.username, status: status || 'safe', message,
+      });
+    }
+  }
+  res.json({ ok: true });
+});
+
+// Battery update — z apki przesyłane w tle
+router.put('/me/battery', async (req, res) => {
+  const { level } = req.body;
+  if (typeof level !== 'number' || level < 0 || level > 100) {
+    return res.status(400).json({ error: 'Invalid battery level' });
+  }
+  await db.query(
+    `UPDATE users SET last_battery_level = $1, last_battery_at = NOW() WHERE id = $2`,
+    [level, req.user.id]
+  );
+  // Alert parents gdy < 15%
+  if (level <= 15) {
+    const io = req.app.get('io');
+    if (io) {
+      const { rows: parents } = await db.query(
+        `SELECT m2.user_id AS parent_id, u.username FROM family_members m1
+         JOIN family_members m2 ON m1.group_id = m2.group_id
+         JOIN users u ON u.id = $1
+         WHERE m1.user_id = $1 AND m1.role = 'child' AND m2.role = 'parent'`,
+        [req.user.id]
+      );
+      for (const p of parents) {
+        io.to(`user:${p.parent_id}`).emit('family:low_battery', {
+          user_id: req.user.id, username: p.username, level,
+        });
+      }
+    }
+  }
+  res.json({ ok: true });
+});
+
 // Block a user
 router.post('/:id/block', async (req, res) => {
   try {

@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
+import 'location_history_screen.dart';
 
 class FamilyGroupScreen extends StatefulWidget {
   final String groupId;
@@ -170,16 +171,29 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
                 ),
                 title: Text(m['username'] ?? 'Nieznany'),
                 subtitle: Text(m['role'] == 'parent' ? 'Rodzic' : 'Dziecko'),
-              trailing: m['role'] == 'child' ? Switch(
-                value: m['tracking_enabled'] ?? true,
-                onChanged: (v) async {
-                  await context.read<ApiService>().patch(
-                    '/family/groups/${widget.groupId}/members/${m['user_id']}',
-                    {'tracking_enabled': v},
-                  );
-                  _load();
-                },
-              ) : null,
+              trailing: m['role'] == 'child' ? Row(mainAxisSize: MainAxisSize.min, children: [
+                IconButton(
+                  icon: const Icon(Icons.history, size: 22),
+                  tooltip: 'Historia tras',
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(
+                    builder: (_) => LocationHistoryScreen(
+                      groupId: widget.groupId,
+                      userId: m['user_id'],
+                      userName: m['username'] ?? 'Dziecko',
+                    ),
+                  )),
+                ),
+                Switch(
+                  value: m['tracking_enabled'] ?? true,
+                  onChanged: (v) async {
+                    await context.read<ApiService>().patch(
+                      '/family/groups/${widget.groupId}/members/${m['user_id']}',
+                      {'tracking_enabled': v},
+                    );
+                    _load();
+                  },
+                ),
+              ]) : null,
             );
             }),
             if (_geofences.isNotEmpty) ...[

@@ -62,6 +62,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _saving ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)) : Text(S.get('save_radius')),
         ),
         const SizedBox(height: 32),
+        // Check-in button — quick safety button
+        SizedBox(width: double.infinity, child: FilledButton.icon(
+          onPressed: () async {
+            try {
+              await context.read<ApiService>().post('/users/me/checkin', {'status': 'safe'});
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('✅ Powiadomiono rodzinę że jesteś bezpieczny/a'),
+                  backgroundColor: Colors.green,
+                ));
+              }
+            } catch (_) {}
+          },
+          icon: const Icon(Icons.check_circle),
+          label: const Text('Jestem bezpieczny/a', style: TextStyle(fontSize: 16)),
+          style: FilledButton.styleFrom(
+            backgroundColor: Colors.green,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+          ),
+        )),
+        const SizedBox(height: 16),
         const Divider(),
         ListTile(
           leading: const Icon(Icons.leaderboard),
