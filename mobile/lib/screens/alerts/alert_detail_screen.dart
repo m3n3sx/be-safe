@@ -96,7 +96,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
               _infoChip(context, Icons.access_time, '${_fmt(timeAgo)} ${S.get('ago')}'),
               _infoChip(context, Icons.timer_outlined, '${S.get('expires_in')} ${_fmt(expiresIn)}'),
               if (a.distanceM != null) _infoChip(context, Icons.near_me, '${a.distanceM!.round()}m'),
-              _infoChip(context, Icons.person_outline, a.authorUsername),
+              _authorChip(context, a),
             ]),
             const SizedBox(height: 16),
 
@@ -178,6 +178,47 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
             _sending
               ? const SizedBox(width: 40, height: 40, child: Padding(padding: EdgeInsets.all(8), child: CircularProgressIndicator(strokeWidth: 2)))
               : IconButton.filled(onPressed: _addComment, icon: const Icon(Icons.send, size: 20)),
+          ]),
+        ),
+      ]),
+    );
+  }
+
+  Widget _authorChip(BuildContext context, AlertModel a) {
+    final cs = Theme.of(context).colorScheme;
+    final repColor = a.authorReputation >= 200 ? Colors.green : (a.authorReputation >= 100 ? Colors.amber : Colors.red);
+    final badgeColor = a.authorVerified ? cs.primary : null;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: badgeColor?.withValues(alpha: 0.1) ?? cs.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(20),
+        border: a.authorVerified ? Border.all(color: cs.primary, width: 1.5) : null,
+      ),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        if (a.authorVerified) ...[
+          Icon(Icons.verified, size: 14, color: cs.primary),
+          const SizedBox(width: 4),
+        ] else
+          Icon(Icons.person_outline, size: 14, color: cs.onSurfaceVariant),
+        const SizedBox(width: 4),
+        Text(a.authorUsername, style: TextStyle(
+          color: a.authorVerified ? cs.primary : cs.onSurfaceVariant,
+          fontSize: 12,
+          fontWeight: a.authorVerified ? FontWeight.bold : FontWeight.normal,
+        )),
+        if (a.authorRole != null) ...[
+          const SizedBox(width: 4),
+          Text('· ${a.authorRole}', style: TextStyle(fontSize: 11, color: cs.primary)),
+        ],
+        const SizedBox(width: 6),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+          decoration: BoxDecoration(color: repColor.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Icon(Icons.star, size: 10, color: repColor),
+            const SizedBox(width: 2),
+            Text('${a.authorReputation}', style: TextStyle(fontSize: 10, color: repColor, fontWeight: FontWeight.bold)),
           ]),
         ),
       ]),

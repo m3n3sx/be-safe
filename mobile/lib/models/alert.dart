@@ -96,12 +96,17 @@ class AlertModel {
   final DateTime expiresAt;
   final DateTime createdAt;
   final String authorUsername;
+  final int authorReputation;
+  final bool authorVerified;
+  final String? authorRole;
+  final String? authorAvatarUrl;
 
   AlertModel({
     required this.id, this.authorId = '', required this.category, required this.title,
     this.description, this.photoUrl, required this.location, this.radiusM = 100,
     this.confirms = 0, this.denies = 0, this.distanceM,
     required this.expiresAt, required this.createdAt, required this.authorUsername,
+    this.authorReputation = 100, this.authorVerified = false, this.authorRole, this.authorAvatarUrl,
   });
 
   factory AlertModel.fromJson(Map<String, dynamic> j) => AlertModel(
@@ -124,6 +129,10 @@ class AlertModel {
     expiresAt: DateTime.parse(j['expires_at']),
     createdAt: DateTime.parse(j['created_at']),
     authorUsername: j['author']?['username'] ?? j['author_username'] ?? 'Anonim',
+    authorReputation: (j['author']?['reputation_score'] as num?)?.toInt() ?? 100,
+    authorVerified: j['author']?['is_verified'] == true,
+    authorRole: j['author']?['verified_role'] as String?,
+    authorAvatarUrl: j['author']?['avatar_url'] as String?,
   );
 
   Map<String, dynamic> toJson() => {

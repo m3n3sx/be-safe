@@ -106,7 +106,7 @@ router.get('/nearby', async (req, res) => {
   if (!lat || !lng) return res.status(400).json({ error: 'lat and lng required' });
 
   let q = `SELECT ${ALERT_COLS}, ST_Distance(a.location, ST_MakePoint($2, $1)::geography) AS distance_m,
-            json_build_object('username', u.username, 'reputation_score', u.reputation_score) AS author
+            json_build_object('username', u.username, 'reputation_score', u.reputation_score, 'is_verified', u.is_verified, 'verified_role', u.verified_role, 'avatar_url', u.avatar_url) AS author
             FROM alerts a JOIN users u ON a.author_id = u.id
             WHERE a.status = 'active' AND a.expires_at > NOW()
             AND ST_DWithin(a.location, ST_MakePoint($2, $1)::geography, $3)`;
@@ -124,7 +124,7 @@ router.get('/nearby', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { rows } = await db.query(
-    `SELECT ${ALERT_COLS}, json_build_object('username', u.username, 'reputation_score', u.reputation_score) AS author
+    `SELECT ${ALERT_COLS}, json_build_object('username', u.username, 'reputation_score', u.reputation_score, 'is_verified', u.is_verified, 'verified_role', u.verified_role, 'avatar_url', u.avatar_url) AS author
      FROM alerts a JOIN users u ON a.author_id = u.id WHERE a.id = $1`,
     [req.params.id]
   );
