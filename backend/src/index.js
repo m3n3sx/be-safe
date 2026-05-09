@@ -71,7 +71,7 @@ update();setInterval(update,10000);
 </script></body></html>`);
 });
 
-app.get('/version', (_, res) => res.json({ version: 12, url: 'https://alert.u235.pl/download' }));
+app.get('/version', (_, res) => res.json({ version: 21, url: 'https://alert.u235.pl/download' }));
 
 app.get('/download', (_, res) => {
   const path = require('path');
