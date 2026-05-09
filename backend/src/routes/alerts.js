@@ -241,9 +241,31 @@ router.post('/:id/comments', async (req, res) => {
   );
   rows[0].author = { id: req.user.id, username: req.user.email };
   // Get username
-  const { rows: u } = await db.query(`SELECT username FROM users WHERE id = $1`, [req.user.id]);
-  if (u[0]) rows[0].author.username = u[0].username;
+  const { rows: u } = await db.query(`SELECT username, avatar_url FROM users WHERE id = $1`, [req.user.id]);
+  if (u[0]) {
+    rows[0].author.username = u[0].username;
+    rows[0].author.avatar_url = u[0].avatar_url;
+  }
+  // Broadcast to everyone currently viewing this alert's comments
+  req.app.get('io')?.to(`alert:${req.params.id}`).emit('comment:new', {
+    alert_id: req.params.id,
+    ...rows[0],
+  });
   res.status(201).json(rows[0]);
+});
+
+router.delete('/:id/comments/:commentId', async (req, res) => {
+  const { id, commentId } = req.params;
+  const { rowCount } = await db.query(
+    `DELETE FROM alert_comments WHERE id = $1 AND user_id = $2 AND alert_id = $3`,
+    [commentId, req.user.id, id]
+  );
+  if (!rowCount) return res.status(404).json({ error: 'Not found or not owner' });
+  req.app.get('io')?.to(`alert:${id}`).emit('comment:deleted', {
+    alert_id: id,
+    comment_id: commentId,
+  });
+  res.json({ ok: true });
 });
 
 // ------ MODERATION / REPORTS ------

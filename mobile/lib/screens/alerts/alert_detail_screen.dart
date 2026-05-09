@@ -6,6 +6,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../models/alert.dart';
 import '../../providers/alert_provider.dart';
 import '../../services/api_service.dart';
+import '../../services/socket_service.dart';
 import '../../services/i18n.dart';
 
 class AlertDetailScreen extends StatefulWidget {
@@ -17,15 +18,63 @@ class AlertDetailScreen extends StatefulWidget {
 class _AlertDetailScreenState extends State<AlertDetailScreen> {
   List<Map<String, dynamic>> _comments = [];
   final _commentCtrl = TextEditingController();
+  final ScrollController _commentsScroll = ScrollController();
   bool _sending = false;
+  void Function()? _unsubscribeChat;
 
   @override
-  void initState() { super.initState(); _loadComments(); }
+  void initState() {
+    super.initState();
+    _loadComments();
+    // Subskrybuj realtime chat
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final socket = context.read<SocketService>();
+      _unsubscribeChat = socket.subscribeToAlert(
+        widget.alert.id,
+        onNewComment: (c) {
+          if (!mounted) return;
+          // Deduplikacja po id
+          if (_comments.any((x) => x['id'] == c['id'])) return;
+          setState(() => _comments.add(c));
+          _scrollToBottom();
+        },
+        onCommentDeleted: (c) {
+          if (!mounted) return;
+          setState(() => _comments.removeWhere((x) => x['id'] == c['comment_id']));
+        },
+      );
+    });
+  }
+
+  void _scrollToBottom() {
+    if (!_commentsScroll.hasClients) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_commentsScroll.hasClients) {
+        _commentsScroll.animateTo(
+          _commentsScroll.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _unsubscribeChat?.call();
+    _commentCtrl.dispose();
+    _commentsScroll.dispose();
+    super.dispose();
+  }
 
   Future<void> _loadComments() async {
     try {
       final res = await context.read<ApiService>().get('/alerts/${widget.alert.id}/comments');
-      if (res['comments'] != null && mounted) setState(() => _comments = List<Map<String, dynamic>>.from(res['comments']));
+      if (res['comments'] != null && mounted) {
+        setState(() => _comments = List<Map<String, dynamic>>.from(res['comments']));
+        _scrollToBottom();
+      }
     } catch (_) {}
   }
 
@@ -34,7 +83,14 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
     setState(() => _sending = true);
     try {
       final res = await context.read<ApiService>().post('/alerts/${widget.alert.id}/comments', {'content': _commentCtrl.text.trim()});
-      if (res['id'] != null) { _commentCtrl.clear(); _loadComments(); }
+      if (res['id'] != null) {
+        _commentCtrl.clear();
+        // Optimistic add — broadcast też przyjdzie, ale dedup po id
+        if (!_comments.any((x) => x['id'] == res['id'])) {
+          setState(() => _comments.add(res));
+          _scrollToBottom();
+        }
+      }
     } catch (_) {
     } finally { if (mounted) setState(() => _sending = false); }
   }
@@ -64,7 +120,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
         ),
       ]),
       body: Column(children: [
-        Expanded(child: ListView(children: [
+        Expanded(child: ListView(controller: _commentsScroll, children: [
           // Map
           ClipRRect(
             borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),

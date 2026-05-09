@@ -92,6 +92,26 @@ io.use((socket, next) => {
 io.on('connection', (socket) => {
   socket.join(`user:${socket.user.id}`);
 
+  // Join/leave a specific alert's comments room for live chat.
+  socket.on('alert:join', (alertId) => {
+    if (typeof alertId === 'string' && alertId.length < 64) {
+      socket.join(`alert:${alertId}`);
+    }
+  });
+  socket.on('alert:leave', (alertId) => {
+    if (typeof alertId === 'string') socket.leave(`alert:${alertId}`);
+  });
+
+  // Realtime typing indicator (optional — emits to all other listeners in the alert room).
+  socket.on('alert:typing', ({ alert_id, is_typing }) => {
+    if (typeof alert_id !== 'string') return;
+    socket.to(`alert:${alert_id}`).emit('alert:typing', {
+      alert_id,
+      user_id: socket.user.id,
+      is_typing: !!is_typing,
+    });
+  });
+
   socket.on('location:update', async ({ lat, lng }) => {
     await db.query(
       `UPDATE users SET last_location = ST_MakePoint($2, $1)::geography, last_location_at = NOW() WHERE id = $3`,
@@ -154,6 +174,11 @@ setInterval(async () => {
 const { syncWarnings } = require('./services/imgw');
 syncWarnings(io); // Initial sync on startup
 setInterval(() => syncWarnings(io), 15 * 60 * 1000);
+
+// GDDKiA road incidents sync every 30 min
+const { syncGddkia } = require('./services/gddkia');
+syncGddkia(io);
+setInterval(() => syncGddkia(io), 30 * 60 * 1000);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`AlertMap API running on :${PORT}`));

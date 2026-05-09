@@ -34,6 +34,16 @@ class AlertProvider extends ChangeNotifier {
 
   Future<void> loadNearby(LatLng pos, {int radiusM = 2000}) async {
     _loading = true; notifyListeners();
+
+    // 1. Seed UI z cache (jeśli świeży) — natychmiastowa odpowiedź offline / slow network
+    try {
+      final cached = await CacheService.getCachedAlertsForRegion(pos);
+      if (cached != null && cached.isNotEmpty) {
+        _alerts = cached;
+        notifyListeners();
+      }
+    } catch (_) {}
+
     try {
       final res = await _api.get('/alerts/nearby', {
         'lat': pos.latitude.toString(),
@@ -42,10 +52,13 @@ class AlertProvider extends ChangeNotifier {
       });
       if (res['alerts'] != null) {
         _alerts = (res['alerts'] as List).map((a) => AlertModel.fromJson(a)).toList();
-        CacheService.cacheAlerts(_alerts).catchError((_) {});
+        CacheService.cacheAlertsForRegion(pos, _alerts).catchError((_) {});
+      } else if (res['error'] != null && _alerts.isEmpty) {
+        // Fallback: retry-wyczerpany / sieć leży → weź z legacy globalnego cache
+        try { _alerts = await CacheService.getCachedAlerts(); } catch (_) {}
       }
     } catch (_) {
-      // Offline — load from cache
+      // Offline / exception — fallback do legacy cache
       if (_alerts.isEmpty) {
         try { _alerts = await CacheService.getCachedAlerts(); } catch (_) {}
       }

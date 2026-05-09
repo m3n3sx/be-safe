@@ -32,19 +32,46 @@ jobs:
             echo "$GOOGLE_SERVICES_JSON" > mobile/android/app/google-services.json
           fi
 
-      - name: Build APK
+      - name: Setup release keystore (optional — needed for Play Store)
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > mobile/android/upload-keystore.jks
+            cat > mobile/android/key.properties <<EOF
+          storeFile=upload-keystore.jks
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          keyPassword=$ANDROID_KEY_PASSWORD
+          EOF
+            echo "Keystore configured — builds will be signed for Play Store."
+          else
+            echo "No ANDROID_KEYSTORE_BASE64 secret — builds will use debug signing."
+          fi
+
+      - name: Build APK & AAB
         working-directory: mobile
         env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           flutter pub get
           flutter build apk --release --dart-define=SENTRY_DSN=$SENTRY_DSN
+          flutter build appbundle --release --dart-define=SENTRY_DSN=$SENTRY_DSN
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: beSafe-apk
           path: mobile/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Upload AAB artifact (for Google Play Console)
+        uses: actions/upload-artifact@v4
+        with:
+          name: beSafe-aab
+          path: mobile/build/app/outputs/bundle/release/app-release.aab
 
       - name: Deploy to VPS
         env:

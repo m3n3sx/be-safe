@@ -1,9 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
   static const baseUrl = 'https://alert.u235.pl/api/v1';
+  static const Duration _timeout = Duration(seconds: 15);
+  static const int _maxRetries = 3;
+
   String? _token;
 
   Future<void> loadToken() async {
@@ -23,30 +29,109 @@ class ApiService {
     try { return jsonDecode(res.body); } catch (_) { return {'error': 'Invalid response'}; }
   }
 
+  /// Retry helper with exponential backoff.
+  /// Retries on: timeouts, connection errors, 5xx, 429.
+  /// Only applied to idempotent methods (GET) by default.
+  Future<http.Response> _send(Future<http.Response> Function() sendOnce, {bool idempotent = false}) async {
+    int attempt = 0;
+    dynamic lastError;
+    while (attempt < _maxRetries) {
+      attempt++;
+      try {
+        final res = await sendOnce().timeout(_timeout);
+        // Retry on transient server errors for idempotent requests only
+        if (idempotent && (res.statusCode == 429 || (res.statusCode >= 500 && res.statusCode < 600))) {
+          if (attempt < _maxRetries) {
+            await _backoff(attempt);
+            continue;
+          }
+        }
+        return res;
+      } on TimeoutException catch (e) {
+        lastError = e;
+        if (!idempotent || attempt >= _maxRetries) rethrow;
+        debugPrint('[api] timeout attempt $attempt, retrying...');
+      } on SocketException catch (e) {
+        lastError = e;
+        if (!idempotent || attempt >= _maxRetries) rethrow;
+        debugPrint('[api] network error attempt $attempt: ${e.message}, retrying...');
+      } on http.ClientException catch (e) {
+        lastError = e;
+        if (!idempotent || attempt >= _maxRetries) rethrow;
+        debugPrint('[api] client error attempt $attempt: ${e.message}, retrying...');
+      }
+      await _backoff(attempt);
+    }
+    throw lastError ?? Exception('Request failed after $_maxRetries attempts');
+  }
+
+  Future<void> _backoff(int attempt) async {
+    // 400ms, 800ms, 1600ms + jitter
+    final base = 400 * (1 << (attempt - 1));
+    final jitter = base ~/ 4;
+    final delay = base + (DateTime.now().microsecondsSinceEpoch % (jitter * 2)) - jitter;
+    await Future.delayed(Duration(milliseconds: delay));
+  }
+
   Future<Map<String, dynamic>> post(String path, Map<String, dynamic> body) async {
-    final res = await http.post(Uri.parse('$baseUrl$path'), headers: _headers, body: jsonEncode(body));
-    return _decode(res);
+    try {
+      final res = await _send(
+        () => http.post(Uri.parse('$baseUrl$path'), headers: _headers, body: jsonEncode(body)),
+        idempotent: false,
+      );
+      return _decode(res);
+    } catch (e) {
+      return {'error': 'Network error: $e'};
+    }
   }
 
   Future<Map<String, dynamic>> get(String path, [Map<String, String>? params]) async {
-    final uri = Uri.parse('$baseUrl$path').replace(queryParameters: params);
-    final res = await http.get(uri, headers: _headers);
-    return _decode(res);
+    try {
+      final uri = Uri.parse('$baseUrl$path').replace(queryParameters: params);
+      final res = await _send(
+        () => http.get(uri, headers: _headers),
+        idempotent: true,
+      );
+      return _decode(res);
+    } catch (e) {
+      return {'error': 'Network error: $e'};
+    }
   }
 
   Future<Map<String, dynamic>> patch(String path, Map<String, dynamic> body) async {
-    final res = await http.patch(Uri.parse('$baseUrl$path'), headers: _headers, body: jsonEncode(body));
-    return _decode(res);
+    try {
+      final res = await _send(
+        () => http.patch(Uri.parse('$baseUrl$path'), headers: _headers, body: jsonEncode(body)),
+        idempotent: true,
+      );
+      return _decode(res);
+    } catch (e) {
+      return {'error': 'Network error: $e'};
+    }
   }
 
   Future<Map<String, dynamic>> put(String path, Map<String, dynamic> body) async {
-    final res = await http.put(Uri.parse('$baseUrl$path'), headers: _headers, body: jsonEncode(body));
-    return _decode(res);
+    try {
+      final res = await _send(
+        () => http.put(Uri.parse('$baseUrl$path'), headers: _headers, body: jsonEncode(body)),
+        idempotent: true,
+      );
+      return _decode(res);
+    } catch (e) {
+      return {'error': 'Network error: $e'};
+    }
   }
 
   Future<Map<String, dynamic>> delete(String path) async {
-    final res = await http.delete(Uri.parse('$baseUrl$path'), headers: _headers);
-    return _decode(res);
+    try {
+      final res = await _send(
+        () => http.delete(Uri.parse('$baseUrl$path'), headers: _headers),
+        idempotent: true,
+      );
+      return _decode(res);
+    } catch (e) {
+      return {'error': 'Network error: $e'};
+    }
   }
 
   Future<Map<String, dynamic>> multipart(String path, Map<String, String> fields, {String? filePath, String fileField = 'photo'}) async {
@@ -54,9 +139,13 @@ class ApiService {
     if (_token != null) req.headers['Authorization'] = 'Bearer $_token';
     req.fields.addAll(fields);
     if (filePath != null) req.files.add(await http.MultipartFile.fromPath(fileField, filePath));
-    final streamed = await req.send();
-    final body = await streamed.stream.bytesToString();
-    return jsonDecode(body);
+    try {
+      final streamed = await req.send().timeout(const Duration(seconds: 60));
+      final body = await streamed.stream.bytesToString();
+      return jsonDecode(body);
+    } catch (e) {
+      return {'error': 'Upload error: $e'};
+    }
   }
 
   Future<void> setToken(String token) async {
