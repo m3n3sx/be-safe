@@ -20,7 +20,7 @@ REGULAMIN APLIKACJI be:Safe
 
 §1. Postanowienia ogólne
 1. Aplikacja be:Safe (dalej „Aplikacja") jest społecznościową aplikacją mobilną umożliwiającą zgłaszanie zagrożeń bezpieczeństwa oraz śledzenie lokalizacji członków rodziny.
-2. Operatorem Aplikacji jest właściciel strony alert.u235.pl (dalej „Operator").
+2. Operatorem Aplikacji jest właściciel strony besafe.org.pl (dalej „Operator").
 3. Korzystanie z Aplikacji oznacza akceptację niniejszego Regulaminu.
 
 §2. Wymagania techniczne
@@ -76,9 +76,9 @@ Data ostatniej aktualizacji: 2026-05-07
 POLITYKA PRYWATNOŚCI APLIKACJI be:Safe
 
 §1. Administrator danych
-Administratorem danych osobowych użytkowników Aplikacji be:Safe jest właściciel strony alert.u235.pl (dalej „Administrator").
+Administratorem danych osobowych użytkowników Aplikacji be:Safe jest właściciel strony besafe.org.pl (dalej „Administrator").
 
-Kontakt: privacy@alert.u235.pl
+Kontakt: privacy@besafe.org.pl
 
 §2. Dane zbierane przez Aplikację
 W ramach Aplikacji przetwarzamy następujące dane:

@@ -4,7 +4,7 @@ typedef CommentHandler = void Function(Map<String, dynamic>);
 typedef TypingHandler = void Function(Map<String, dynamic>);
 
 class SocketService {
-  static const serverUrl = 'https://alert.u235.pl';
+  static const serverUrl = 'https://besafe.org.pl';
   io.Socket? _socket;
 
   // Per-alert listener callbacks. Keyed by alert id so we can register/unregister

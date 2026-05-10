@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const baseUrl = 'https://alert.u235.pl/api/v1';
+  static const baseUrl = 'https://besafe.org.pl/api/v1';
   static const Duration _timeout = Duration(seconds: 15);
   static const int _maxRetries = 3;
 

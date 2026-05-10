@@ -110,7 +110,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
         IconButton(
           icon: const Icon(Icons.share),
           onPressed: () => Share.share(
-            '⚠️ ${a.title}\n\n${a.description ?? ""}\n\nLokalizacja: https://www.google.com/maps?q=${a.location.latitude},${a.location.longitude}\n\nZgłoszone przez be:Safe — https://alert.u235.pl',
+            '⚠️ ${a.title}\n\n${a.description ?? ""}\n\nLokalizacja: https://www.google.com/maps?q=${a.location.latitude},${a.location.longitude}\n\nZgłoszone przez be:Safe — https://besafe.org.pl',
           ),
         ),
         IconButton(

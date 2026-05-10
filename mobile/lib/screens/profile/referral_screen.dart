@@ -34,7 +34,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final code = _code ?? '...';
-    final shareUrl = 'https://alert.u235.pl?ref=$code';
+    final shareUrl = 'https://besafe.org.pl?ref=$code';
     final shareText = 'Dołącz do be:Safe — aplikacji bezpieczeństwa społeczności! Użyj mojego kodu polecającego: $code\n\n$shareUrl';
 
     return Scaffold(
