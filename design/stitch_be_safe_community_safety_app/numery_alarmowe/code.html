@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Numery alarmowe - be:Safe</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-container": "#217128",
+                      "on-tertiary": "#ffffff",
+                      "primary-container": "#e9003a",
+                      "on-tertiary-container": "#f4fffb",
+                      "outline": "#936e6d",
+                      "tertiary-fixed-dim": "#6ad9c8",
+                      "on-secondary-fixed-variant": "#005312",
+                      "surface-dim": "#dadada",
+                      "surface-tint": "#bf002e",
+                      "primary": "#ba002c",
+                      "tertiary-fixed": "#88f5e3",
+                      "surface-container": "#eeeeee",
+                      "on-primary-fixed": "#400009",
+                      "inverse-primary": "#ffb3b3",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-container": "#008376",
+                      "on-tertiary-fixed": "#00201c",
+                      "on-background": "#1a1c1c",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#e8bcbb",
+                      "on-secondary-fixed": "#002204",
+                      "inverse-on-surface": "#f1f1f1",
+                      "surface-bright": "#f9f9f9",
+                      "background": "#f9f9f9",
+                      "tertiary": "#00685d",
+                      "on-primary-fixed-variant": "#920021",
+                      "secondary-fixed-dim": "#88d982",
+                      "primary-fixed": "#ffdad9",
+                      "on-surface-variant": "#5e3f3e",
+                      "secondary": "#1b6d24",
+                      "secondary-fixed": "#a3f69c",
+                      "on-error": "#ffffff",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-primary-container": "#fffbff",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#2f3131",
+                      "surface-variant": "#e2e2e2",
+                      "on-surface": "#1a1c1c",
+                      "on-error-container": "#93000a",
+                      "error-container": "#ffdad6",
+                      "surface": "#f9f9f9",
+                      "primary-fixed-dim": "#ffb3b3",
+                      "surface-container-low": "#f3f3f3",
+                      "on-tertiary-fixed-variant": "#005047",
+                      "surface-container-high": "#e8e8e8",
+                      "error": "#ba1a1a",
+                      "secondary-container": "#a0f399"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-sm": "4px",
+                      "gutter": "16px",
+                      "margin-desktop": "24px",
+                      "base": "8px",
+                      "stack-md": "12px",
+                      "stack-lg": "24px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "title-lg": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-lg": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-lg": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim docked full-width top-0 bg-surface dark:bg-surface-dim flat no shadows flex justify-between items-center px-margin-mobile h-16 w-full z-40 sticky top-0">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 text-on-surface">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md font-bold text-on-surface">Numery alarmowe</span>
+<div class="w-10"></div> <!-- Spacer for center alignment -->
+</header>
+<main class="pb-24">
+<!-- Warning Banner -->
+<div class="bg-error text-on-error p-gutter mx-margin-mobile md:mx-margin-desktop mt-stack-md rounded-lg shadow-sm flex items-start gap-stack-sm">
+<span class="material-symbols-outlined mt-1" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<p class="font-body-md text-body-md">W sytuacji zagrożenia życia dzwoń pod 112 — apka NIE zastępuje numerów alarmowych.</p>
+</div>
+<div class="px-margin-mobile md:px-margin-desktop mt-stack-lg max-w-3xl mx-auto space-y-stack-lg">
+<!-- Category: Ogólne -->
+<section>
+<h2 class="font-title-lg text-title-lg text-on-surface-variant mb-stack-md">Ogólne</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-lg text-headline-lg text-primary block">112</span>
+<span class="font-body-lg text-body-lg text-on-surface mt-stack-sm block">Numer alarmowy</span>
+</div>
+<span class="material-symbols-outlined text-primary bg-primary-fixed p-2 rounded-full" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+</div>
+</section>
+<!-- Category: Służby -->
+<section>
+<h2 class="font-title-lg text-title-lg text-on-surface-variant mb-stack-md">Służby</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface block">997</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-stack-sm block">Policja</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-variant p-2 rounded-full" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface block">998</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-stack-sm block">Straż pożarna</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-variant p-2 rounded-full" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface block">999</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-stack-sm block">Pogotowie ratunkowe</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-variant p-2 rounded-full" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface block">986</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-stack-sm block">Straż miejska</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-variant p-2 rounded-full" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+</div>
+</section>
+<!-- Category: Specjalistyczne -->
+<section>
+<h2 class="font-title-lg text-title-lg text-on-surface-variant mb-stack-md">Specjalistyczne</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface block">984</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-stack-sm block">Pogotowie rzeczne</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-variant p-2 rounded-full" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-lg text-headline-lg text-on-surface block">985</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-stack-sm block">Ratownictwo górskie/wodne</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-variant p-2 rounded-full" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+</div>
+</section>
+<!-- Category: Infolinie -->
+<section>
+<h2 class="font-title-lg text-title-lg text-on-surface-variant mb-stack-md">Infolinie</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-md text-headline-md text-on-surface block tracking-wider">116 111</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-stack-sm block">Telefon Zaufania dla Dzieci i Młodzieży</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-variant p-2 rounded-full flex-shrink-0" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+<button class="bg-surface-container-lowest border border-surface-variant rounded-lg p-gutter shadow-sm hover:bg-surface-container-low active:scale-[0.98] transition-all flex justify-between items-center w-full text-left">
+<div>
+<span class="font-headline-md text-headline-md text-on-surface block tracking-wider">22 484 88 01</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-stack-sm block">Antydepresyjny Telefon Zaufania</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant bg-surface-variant p-2 rounded-full flex-shrink-0" data-icon="call" style="font-variation-settings: 'FILL' 1;">call</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+</body></html>

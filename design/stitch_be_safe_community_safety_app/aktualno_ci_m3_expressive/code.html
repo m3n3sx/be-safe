@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aktualności</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#69ff87",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-highest": "#fedad9",
+                        "outline": "#936e6d",
+                        "inverse-surface": "#412b2b",
+                        "primary": "#ba002c",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary-container": "#00732c",
+                        "surface-container": "#ffe9e8",
+                        "primary-fixed": "#ffdad9",
+                        "primary-container": "#e9003a",
+                        "on-background": "#291616",
+                        "on-primary-fixed": "#400009",
+                        "tertiary-fixed": "#d9e2ff",
+                        "surface-bright": "#fff8f7",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f7",
+                        "on-tertiary-container": "#fefcff",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#ffb3b3",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-tertiary-fixed": "#001945",
+                        "inverse-on-surface": "#ffedec",
+                        "tertiary-fixed-dim": "#b0c6ff",
+                        "surface-dim": "#f5d2d1",
+                        "on-primary-fixed-variant": "#920021",
+                        "surface-container-high": "#ffe1e0",
+                        "tertiary-container": "#0f6df3",
+                        "on-surface": "#291616",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary-fixed-variant": "#00429b",
+                        "surface-variant": "#fedad9",
+                        "surface-tint": "#bf002e",
+                        "tertiary": "#0056c5",
+                        "surface": "#fff8f7",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#5cfd80",
+                        "secondary": "#006e2a",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#fff0ef",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#00531e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16dp",
+                        "base": "8dp",
+                        "margin-tablet": "24dp",
+                        "margin-mobile": "16dp",
+                        "hero-button-size": "64dp"
+                    },
+                    "fontFamily": {
+                        "display-sm": ["Roboto Flex"],
+                        "body-lg": ["Roboto Flex"],
+                        "headline-sm": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"],
+                        "title-lg": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "display-sm": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.5px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Roboto Flex', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:pb-0 pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface-container flex justify-between items-center px-margin-mobile h-16 w-full sticky top-0 z-40">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">be:Safe</span>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-variant/50 transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile md:px-margin-tablet py-6 w-full max-w-7xl mx-auto space-y-8">
+<!-- Page Header & Filters -->
+<section class="space-y-4">
+<h1 class="font-display-sm text-display-sm text-on-background">Aktualności</h1>
+<!-- Horizontal Filter Chips -->
+<div class="flex overflow-x-auto gap-2 pb-2 scrollbar-hide -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0">
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container font-label-lg text-label-lg flex items-center gap-2 flex-shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="local_fire_department">local_fire_department</span>
+                    Ważne
+                </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant transition-colors font-label-lg text-label-lg flex-shrink-0">
+                    Lokalne
+                </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant transition-colors font-label-lg text-label-lg flex-shrink-0">
+                    Pogoda
+                </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant transition-colors font-label-lg text-label-lg flex-shrink-0">
+                    Drogowe
+                </button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-surface-container-high text-on-surface hover:bg-surface-variant transition-colors font-label-lg text-label-lg flex-shrink-0">
+                    Porady
+                </button>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
+<!-- Lead Story (Spans full width on mobile, 8 cols on desktop) -->
+<article class="col-span-1 md:col-span-8 bg-error-container rounded-[24px] overflow-hidden flex flex-col relative group">
+<div class="absolute top-4 left-4 bg-error text-on-error px-3 py-1 rounded-full font-label-lg text-label-lg flex items-center gap-1 z-10">
+<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
+                    Pilne
+                </div>
+<div class="h-48 md:h-64 bg-surface-variant relative w-full overflow-hidden">
+<img alt="Gwałtowne burze" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" data-alt="A striking digital photograph of a dramatic, dark stormy sky over a modern city skyline. The heavy, ominous clouds are illuminated by bright, jagged flashes of white and electric blue lightning. The scene is high-contrast, conveying urgency and raw natural power. The overall aesthetic aligns with a high-stakes safety alert, utilizing deep shadows and vivid highlights that resonate with the energetic, vigilant mood of a personal protection interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCRV-0zccYUM9UkikeMyqG-ykJe-7WnvJqNF9sAmy7bdA9z2SZB0trnBcPR8H2ZYOd_Sw8A9Y63Yy5JkLlNQSJTc9duG5wlHUOt9eAhqmEo43PpPN79RNpD1TIeZGAOvX5euwanIutzImUS70Yz21YqLDDvvFmilDnYgtyJIMcH6TqOYaJ1QvpQbFoh6l0kxzb3pO73pBmQJUWOISJtiaeK6REGMbkqnziImwtLZcxljisJ-87qb3oaxFzTIVyJPeO3aB5j4od7n4"/>
+</div>
+<div class="p-6 md:p-8 flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-on-error-container mb-3 opacity-80">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label-lg text-label-lg">15 minut temu</span>
+</div>
+<h2 class="font-display-sm text-display-sm text-on-error-container mb-4">Gwałtowne burze z gradem w regionie południowym</h2>
+<p class="font-body-lg text-body-lg text-on-error-container mb-6">IMGW wydało ostrzeżenie trzeciego stopnia. Możliwe porywy wiatru do 110 km/h oraz lokalne podtopienia. Zaleca się pozostanie w budynkach.</p>
+</div>
+<button class="self-start px-6 py-3 rounded-full bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary/90 transition-colors">
+                        Czytaj pełny komunikat
+                    </button>
+</div>
+</article>
+<!-- Secondary Story 1 (Spans 4 cols on desktop) -->
+<article class="col-span-1 md:col-span-4 bg-surface-container-high rounded-[24px] p-6 flex flex-col justify-between hover:bg-surface-variant transition-colors group cursor-pointer">
+<div>
+<div class="w-12 h-12 bg-tertiary-container rounded-2xl flex items-center justify-center text-on-tertiary-container mb-4">
+<span class="material-symbols-outlined fill-icon text-3xl" data-icon="directions_car">directions_car</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label-lg text-label-lg">2 godziny temu</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-3">Utrudnienia na trasie A4, węzeł Kraków Południe</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant line-clamp-3">Z powodu porannego zderzenia kilku pojazdów, ruch odbywa się jednym pasem. Szacowany czas opóźnienia to obecnie 45 minut. Policja wyznaczyła objazdy.</p>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/30 flex justify-between items-center text-primary font-label-lg text-label-lg">
+                    Sprawdź trasę
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</article>
+<!-- Secondary Story 2 (Spans 4 cols on desktop) -->
+<article class="col-span-1 md:col-span-4 bg-surface-container-high rounded-[24px] p-6 flex flex-col justify-between hover:bg-surface-variant transition-colors group cursor-pointer">
+<div>
+<div class="w-12 h-12 bg-secondary-container rounded-2xl flex items-center justify-center text-on-secondary-container mb-4">
+<span class="material-symbols-outlined fill-icon text-3xl" data-icon="shield_with_heart">shield_with_heart</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+<span class="font-label-lg text-label-lg">Wczoraj, 18:30</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-3">Jak zabezpieczyć dom przed wyjazdem na weekend?</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant line-clamp-3">Podstawowe kroki, które warto podjąć przed opuszczeniem miejsca zamieszkania. Lista kontrolna przygotowana przez ekspertów od zabezpieczeń.</p>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/30 flex justify-between items-center text-primary font-label-lg text-label-lg">
+                    Zobacz poradnik
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</article>
+<!-- Small List Items Container (Spans 8 cols on desktop) -->
+<section class="col-span-1 md:col-span-8 bg-surface-container-low rounded-[24px] p-6 flex flex-col gap-4">
+<h3 class="font-title-lg text-title-lg text-on-background mb-2">Mniej pilne, ale ważne</h3>
+<!-- List Item 1 -->
+<div class="flex items-start gap-4 p-4 rounded-[16px] bg-surface-container-highest hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="w-10 h-10 bg-surface rounded-lg flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+</div>
+<div class="flex-1">
+<h4 class="font-title-lg text-title-lg text-on-surface text-lg">Test syren alarmowych w mieście</h4>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm mt-1">Jutro w godzinach 12:00-12:15 odbędą się rutynowe testy systemu ostrzegania.</p>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="flex items-start gap-4 p-4 rounded-[16px] bg-surface-container-highest hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="w-10 h-10 bg-surface rounded-lg flex items-center justify-center text-on-surface flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+</div>
+<div class="flex-1">
+<h4 class="font-title-lg text-title-lg text-on-surface text-lg">Nowy punkt medyczny otwarty na osiedlu Północ</h4>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm mt-1">Placówka będzie czynna całodobowo, przyjmując pacjentów w nagłych przypadkach.</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end pb-4 px-2 bg-surface-container border-t border-outline-variant/30 shadow-lg rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 rounded-lg p-2 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span class="font-label-lg text-label-lg text-xs">Mapa</span>
+</a>
+<!-- Active Navigation Tab: Alerty / Aktualności -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 mb-1" href="#">
+<span class="material-symbols-outlined mb-1 fill-icon" data-icon="notifications_active">notifications_active</span>
+<span class="font-label-lg text-label-lg text-xs">Alerty</span>
+</a>
+<!-- Hero SOS Button -->
+<button class="w-[64dp] h-[64dp] rounded-full bg-primary shadow-xl scale-110 -translate-y-4 transition-transform active:scale-90 flex items-center justify-center text-on-primary font-bold">
+<span class="material-symbols-outlined text-3xl" data-icon="emergency">emergency</span>
+</button>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 rounded-lg p-2 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="group">group</span>
+<span class="font-label-lg text-label-lg text-xs">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 rounded-lg p-2 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="account_circle">account_circle</span>
+<span class="font-label-lg text-label-lg text-xs">Profil</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Profil</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#936e6d",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "on-secondary-fixed-variant": "#005312",
+                        "primary-container": "#e9003a",
+                        "on-tertiary-container": "#f4fffb",
+                        "on-secondary-container": "#217128",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#88f5e3",
+                        "surface-container": "#eeeeee",
+                        "on-primary-fixed": "#400009",
+                        "inverse-primary": "#ffb3b3",
+                        "surface-dim": "#dadada",
+                        "surface-tint": "#bf002e",
+                        "primary": "#ba002c",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary-container": "#008376",
+                        "outline-variant": "#e8bcbb",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c1c",
+                        "on-primary-fixed-variant": "#920021",
+                        "tertiary": "#00685d",
+                        "surface-bright": "#f9f9f9",
+                        "background": "#f9f9f9",
+                        "on-secondary-fixed": "#002204",
+                        "inverse-on-surface": "#f1f1f1",
+                        "secondary-fixed": "#a3f69c",
+                        "on-error": "#ffffff",
+                        "secondary": "#1b6d24",
+                        "secondary-fixed-dim": "#88d982",
+                        "primary-fixed": "#ffdad9",
+                        "on-surface-variant": "#5e3f3e",
+                        "surface-variant": "#e2e2e2",
+                        "on-surface": "#1a1c1c",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-container": "#fffbff",
+                        "secondary-container": "#a0f399",
+                        "surface-container-high": "#e8e8e8",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "surface": "#f9f9f9",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "surface-container-low": "#f3f3f3"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "stack-md": "12px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "4px",
+                        "gutter": "16px",
+                        "margin-desktop": "24px",
+                        "base": "8px"
+                    },
+                    fontFamily: {
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    fontSize: {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar Mobile & Desktop -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full z-40 bg-surface dark:bg-surface-dim flat no shadows docked full-width top-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="shield">shield</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">be:Safe</span>
+</div>
+<!-- Desktop Nav items -->
+<nav class="hidden md:flex gap-6">
+<a class="font-title-lg text-title-lg text-on-surface-variant hover:bg-surface-variant transition-colors active:scale-95 duration-150 rounded-lg px-2 py-1 flex items-center gap-1" href="#"><span class="material-symbols-outlined" data-icon="map">map</span> Mapa</a>
+<a class="font-title-lg text-title-lg text-on-surface-variant hover:bg-surface-variant transition-colors active:scale-95 duration-150 rounded-lg px-2 py-1 flex items-center gap-1" href="#"><span class="material-symbols-outlined" data-icon="notifications">notifications</span> Alerty</a>
+<a class="font-title-lg text-title-lg text-on-surface-variant hover:bg-surface-variant transition-colors active:scale-95 duration-150 rounded-lg px-2 py-1 flex items-center gap-1" href="#"><span class="material-symbols-outlined" data-icon="emergency_home">emergency_home</span> SOS</a>
+<a class="font-title-lg text-title-lg text-on-surface-variant hover:bg-surface-variant transition-colors active:scale-95 duration-150 rounded-lg px-2 py-1 flex items-center gap-1" href="#"><span class="material-symbols-outlined" data-icon="group">group</span> Rodzina</a>
+<a class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim hover:bg-surface-variant transition-colors active:scale-95 duration-150 rounded-lg px-2 py-1 flex items-center gap-1" href="#"><span class="material-symbols-outlined" data-icon="person">person</span> Profil</a>
+</nav>
+</header>
+<main class="max-w-2xl mx-auto px-margin-mobile pt-stack-lg pb-stack-lg">
+<!-- Profile Header Section -->
+<section class="flex flex-col items-center mb-stack-lg">
+<div class="relative mb-stack-sm">
+<img alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border-2 border-surface" data-alt="A close-up portrait of a professional woman with a soft smile, representing a user profile avatar in a modern mobile app. The lighting is bright and even, highlighting her friendly expression against a clean, neutral background. The aesthetic is warm and inviting, fitting for a community-driven safety application. The image is cropped in a perfect circle, characteristic of contemporary UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx_YUN3WhjyGv-ccAOVZB_GNBcQu2T5kQ6ZTN5uGaHwADavKLVgywiI5q4Cnb6xBM87eWE1W72bG7QUCrqMEKq0fi5TGKTQfJvbwy-M0Sp1LVxTOxIQotK8sfUcUXmTagjLXTbbwSiQo2yyRorbl6rQ_H1Vk10i1oKXpOPzhNUg1XRmR2bJqn1Ibu3r2tNoQbHGIFQp-D8KrR_qcPOntVRAa_zpn2VvOznUULzDYwFp6xKCsp51d_Q9uTRYuaFsPP2jhGEZRxFtpQ"/>
+<button class="absolute bottom-0 right-0 bg-surface-container-highest text-on-surface rounded-full p-1 border-2 border-surface shadow-sm hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="photo_camera" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+</button>
+</div>
+<div class="flex items-center gap-2">
+<h1 class="font-headline-md text-headline-md text-on-surface">Anna Kowalska</h1>
+<span class="bg-surface-container-high px-2 py-1 rounded-full font-label-lg text-label-lg text-on-surface-variant flex items-center gap-1">
+                    120 <span class="text-xs">⭐</span>
+</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">anna.kowalska@example.com</p>
+</section>
+<!-- Family Check-in -->
+<section class="mb-stack-lg">
+<button class="w-full bg-secondary text-on-secondary py-3 px-4 rounded-full font-title-lg text-title-lg flex items-center justify-center gap-2 hover:bg-[#155a1d] transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Jestem bezpieczny/a
+            </button>
+</section>
+<!-- Alert Radius Slider -->
+<section class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-surface-variant mb-stack-lg">
+<div class="flex justify-between items-center mb-4">
+<h2 class="font-title-lg text-title-lg text-on-surface">Promień alertów</h2>
+<span class="font-label-lg text-label-lg bg-primary-container text-on-primary-container px-3 py-1 rounded-full">500 m</span>
+</div>
+<div class="mb-6 px-2">
+<input class="w-full h-2 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" max="5000" min="100" type="range" value="500"/>
+<div class="flex justify-between text-xs text-on-surface-variant mt-2 px-1">
+<span>100 m</span>
+<span>5 km</span>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="bg-surface-container-high text-on-surface py-2 px-4 rounded-lg font-label-lg text-label-lg hover:bg-surface-variant transition-colors">
+                    Zapisz
+                </button>
+</div>
+</section>
+<!-- Menu List -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant overflow-hidden mb-stack-lg">
+<!-- Group 1 -->
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">🏆</span>
+<span class="font-body-lg text-body-lg">Ranking użytkowników</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">📊</span>
+<span class="font-body-lg text-body-lg">Statystyki</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">📍</span>
+<span class="font-body-lg text-body-lg">Udostępnij lokalizację</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">📋</span>
+<span class="font-body-lg text-body-lg">Moje zgłoszenia</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+<div class="h-2 bg-surface"></div> <!-- Divider -->
+<!-- Group 2 -->
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">🎁</span>
+<span class="font-body-lg text-body-lg">Zaproś znajomych</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">🥇</span>
+<span class="font-body-lg text-body-lg">Odznaki</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+<div class="h-2 bg-surface"></div> <!-- Divider -->
+<!-- Group 3 -->
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">📰</span>
+<span class="font-body-lg text-body-lg">Aktualności</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant text-primary" href="#">
+<div class="flex items-center gap-3">
+<span class="text-xl">🚨</span>
+<span class="font-body-lg text-body-lg font-medium">Numery alarmowe</span>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95 border-b border-surface-variant" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">👨‍👩‍👧</span>
+<span class="font-body-lg text-body-lg">Grupy rodzinne</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+<a class="flex items-center justify-between p-4 hover:bg-surface-variant transition-colors active:scale-95" href="#">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="text-xl">⚙️</span>
+<span class="font-body-lg text-body-lg">Ustawienia</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</a>
+</section>
+<!-- Logout Button -->
+<div class="flex justify-center mt-stack-lg mb-stack-lg">
+<button class="w-full max-w-xs border-2 border-primary text-primary py-3 px-4 rounded-full font-title-lg text-title-lg hover:bg-primary-fixed transition-colors active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Wyloguj się
+            </button>
+</div>
+</main>
+<!-- BottomNavBar Mobile Only -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container dark:bg-surface-container-high docked full-width rounded-t-xl shadow-md">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span class="font-label-lg text-label-lg">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span class="font-label-lg text-label-lg">Alerty</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1 text-primary" data-icon="emergency_home">emergency_home</span>
+<span class="font-label-lg text-label-lg">SOS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="group">group</span>
+<span class="font-label-lg text-label-lg">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-lg text-label-lg">Profil</span>
+</a>
+</nav>
+</body></html>

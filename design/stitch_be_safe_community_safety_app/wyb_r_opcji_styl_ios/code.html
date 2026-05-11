@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Select Ride</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#dfdfe4",
+                        "primary-container": "#34c759",
+                        "on-secondary-container": "#616267",
+                        "on-tertiary-fixed-variant": "#930005",
+                        "tertiary-fixed-dim": "#ffb4aa",
+                        "tertiary-container": "#ff8e80",
+                        "surface-dim": "#dcd9dc",
+                        "inverse-primary": "#53e16f",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#fcf8fb",
+                        "primary-fixed": "#72fe88",
+                        "error": "#ba1a1a",
+                        "outline": "#6d7b6b",
+                        "on-primary-container": "#004d1a",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae7ea",
+                        "secondary": "#5d5e63",
+                        "surface-container": "#f0edef",
+                        "surface-variant": "#e4e2e4",
+                        "surface-bright": "#fcf8fb",
+                        "surface-tint": "#006e28",
+                        "surface": "#fcf8fb",
+                        "on-secondary-fixed-variant": "#45474b",
+                        "tertiary": "#c0000a",
+                        "on-tertiary-container": "#890005",
+                        "on-secondary-fixed": "#1a1c1f",
+                        "on-background": "#1b1b1d",
+                        "surface-container-low": "#f6f3f5",
+                        "on-error-container": "#93000a",
+                        "primary": "#006e28",
+                        "on-primary-fixed-variant": "#00531c",
+                        "primary-fixed-dim": "#53e16f",
+                        "secondary-fixed": "#e2e2e7",
+                        "on-surface": "#1b1b1d",
+                        "tertiary-fixed": "#ffdad5",
+                        "outline-variant": "#bccbb8",
+                        "on-surface-variant": "#3d4a3c",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#e4e2e4",
+                        "secondary-fixed-dim": "#c6c6cb",
+                        "inverse-on-surface": "#f3f0f2",
+                        "on-primary-fixed": "#002107",
+                        "inverse-surface": "#303032",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#410001"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-page": "20px",
+                        "safe-area-bottom": "34px",
+                        "stack-lg": "24px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px",
+                        "gutter-card": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-bold": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "26px", "fontWeight": "600" }],
+                        "body-sm": ["15px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-bold": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-lg": ["17px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface h-screen w-screen overflow-hidden relative font-body-sm antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- Map Background Canvas -->
+<div class="absolute inset-0 z-0 bg-surface-container-high">
+<img class="w-full h-full object-cover opacity-60 mix-blend-multiply" data-alt="A clean, minimalist digital map interface showing a simplified city grid with subtle street names and park areas. The map is rendered in a light mode style with very soft greys, pale greens, and faint blue accents, creating a calm, navigational backdrop for a safety-focused application." data-location="Queens, NY 113" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMfKFlppKXd15rMfcwlgwDfP4hD2-QedFkJSR_tSfi-XM1SR3L4lKRJlSdMOIFVjBP5sS-5gp5WeQvyTjhsIyq1aSYREMn1-IstTuqOKMkPBd8AxibvbumXRx0ZRWiVQ3WkvjZNYXBK_P3X3GyiJXEX4g0QER3busSCDsBLe8qHtkPYsLn6jlvwbWJTR4aO4Ei2dHwpx1ziX5Lp8RHjbkoqH7vpEN6LNXww_SRj276lPtAxHA_T5sMG5z-ZW7kF8UY4sLuvDh-l-Y"/>
+<!-- Route Visualization (Abstracted via CSS/SVG for layout purposes) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-10" preserveaspectratio="none">
+<!-- Simulated Route Line -->
+<path class="drop-shadow-md" d="M 120 450 L 150 460 L 250 350 L 300 200 L 220 180" fill="none" stroke="#34c759" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"></path>
+</svg>
+<!-- Current Location Pin -->
+<div class="absolute top-[450px] left-[120px] transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
+<div class="bg-primary-container/20 w-24 h-24 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
+<div class="bg-on-primary-fixed text-on-primary px-4 py-2 rounded-full flex items-center gap-2 shadow-lg relative z-10">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="text-body-sm font-body-sm font-semibold">Current</span>
+</div>
+<!-- Pin point -->
+<div class="w-4 h-4 bg-on-primary-fixed rounded-full mt-1 border-2 border-surface shadow-sm relative z-10">
+<div class="w-2 h-2 bg-[#5E5CE6] rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+</div>
+</div>
+<!-- Destination Pin -->
+<div class="absolute top-[180px] left-[220px] transform -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
+<div class="bg-on-primary-fixed text-on-primary px-4 py-2 rounded-full flex items-center gap-2 shadow-lg relative z-10">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">stop_circle</span>
+<span class="text-body-sm font-body-sm font-semibold">Arrive 4 min</span>
+</div>
+<!-- Pin point -->
+<div class="w-3 h-3 bg-primary-container rounded-full mt-1 border-2 border-surface shadow-sm relative z-10"></div>
+</div>
+</div>
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-page py-4 pt-safe bg-transparent flat no shadows hover:opacity-80 transition-opacity">
+<!-- Leading Avatar -->
+<div class="w-12 h-12 rounded-full bg-primary-container p-0.5 shadow-sm">
+<img alt="User Profile" class="w-full h-full rounded-full object-cover border-2 border-surface" data-alt="A small, clear portrait photo of a smiling young man wearing a cap, used as a profile avatar. The photo is set against a vibrant green background circle to denote active status. Clean, professional, and friendly lighting, cohesive with a modern UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7PRCHXsn2JB3P85TtXwn02M91TiuX0jobrtbFlyTttYMH91QUU7HxwQfppy0ovRb2tIaKZsaTTkBheXmTocQhP21agUC6FjHlEOHeE-TcaJPQwlZd47Qn257I1QhT4ZZ29gTrz7J8zHHGJ1IUhvgNIZMgTMF_HrOmdOjZ1ROZgEcY6Mm6Mh94sQViPP5Be1ewm83f-65gOM_DM24cbJAj9gUKltBznQV52NA_I7OtT4b7-G8I0npt2sQ1L7ImPUsGGV1jFYXbwko"/>
+</div>
+<!-- Headline / Location -->
+<div class="flex flex-col items-center justify-center pointer-events-none">
+<div class="flex items-center gap-1 text-primary mb-0.5">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">navigation</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant">Your location</span>
+</div>
+<h1 class="text-headline-md font-headline-md font-bold text-on-surface dark:text-inverse-on-surface">Queens, NY 113</h1>
+</div>
+<!-- Trailing Icon -->
+<button class="w-12 h-12 rounded-full bg-surface shadow-sm flex items-center justify-center text-on-surface active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[24px]">apps</span>
+</button>
+</header>
+<!-- Bottom Sheet overlay -->
+<div class="fixed bottom-0 left-0 w-full z-50 bg-[#E5E5EA]/95 backdrop-blur-xl rounded-t-[32px] shadow-[0_-4px_30px_rgba(0,0,0,0.12)] flex flex-col pt-3 pb-safe-area-bottom max-h-[707px]">
+<!-- Grab Handle -->
+<div class="w-12 h-1.5 bg-outline-variant/60 rounded-full mx-auto mb-5 shrink-0"></div>
+<!-- Scrollable Options List -->
+<div class="flex-1 overflow-y-auto px-margin-page flex flex-col gap-2 pb-4 hide-scrollbar">
+<!-- Option 1: Ride XL (Selected) -->
+<label class="relative block cursor-pointer group">
+<input checked="" class="peer sr-only" name="ride_option" type="radio" value="ride_xl"/>
+<div class="bg-surface rounded-[20px] p-4 flex items-center justify-between border-2 border-transparent peer-checked:border-primary-container shadow-sm transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="w-[72px] h-[48px] relative flex items-center justify-center">
+<img class="w-full h-full object-contain drop-shadow-md" data-alt="A clean, isolated top-down isometric 3D render of a modern white SUV car on a transparent background. Designed as a UI icon for a ride-hailing app. Smooth lighting, minimalist aesthetic, sharp details matching a premium brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvyh_kWMQy34Y-HUOEZ5u0HtRCio1vona0lctOvthBT8_kzSQsG4MCcNIhLTFPIpi8n60LnfMxWZC3pn_5HqE4aXN_0HKUY_dA_NeM0lr23kC802XIs3icqOCpa-WFZk1xGOGGQeJP0fczqG7f-q2fkTC9bUQQrwv_4Cg8SGpRn2mmfdCM4p5QBQZlA1twKLqgVIaXWBowDdsiU0Sxmjuc1MuE6AATwtyg17kWt_NiDQUfI5JICOxqK1kOvEhEHUHJGDaoUn7J5q4"/>
+</div>
+<div class="flex flex-col">
+<h3 class="text-headline-md font-headline-md font-bold text-on-surface">Ride XL</h3>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+<span>6 min</span>
+<div class="flex items-center text-[12px]">
+<span class="material-symbols-outlined text-[14px]">person</span>
+<span>6</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-headline-md font-headline-md font-bold text-on-surface">$24.27</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant line-through">$32.03</span>
+</div>
+</div>
+</label>
+<!-- Option 2: Premium (Unselected) -->
+<label class="relative block cursor-pointer group">
+<input class="peer sr-only" name="ride_option" type="radio" value="premium"/>
+<div class="bg-transparent group-hover:bg-surface/60 rounded-[20px] p-4 flex items-center justify-between border-2 border-transparent transition-all duration-200">
+<div class="flex items-center gap-4 opacity-75 group-hover:opacity-100 transition-opacity">
+<div class="w-[72px] h-[48px] relative flex items-center justify-center">
+<img class="w-full h-full object-contain drop-shadow-sm" data-alt="A clean, isolated top-down isometric 3D render of a sleek, premium white sedan car on a transparent background. Designed as a UI icon for a ride-hailing app. Smooth lighting, minimalist aesthetic, sharp details matching a premium brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW4qOq3lkAX1iBQD0x_B2_OYyT5LPqCCAndcDYJrsPt4oWkexiJivHdSKp1NZb5eydbXTRw3m4zvrVNyDXx2y_c2Qhg9VaJpyRu20qvDkr11Sp1ErFRuuH-uss0u6WRjJR3ZVN5Z7__agZGywJxewEl71QgTgwk5IFFisv7ztqQX6MWF-Ai7EAB-1d-VYMUjM94WHktetvgT0sff3gI-G41UaL0y5JzBvQIjjI5-qU1Y9iSoYFgvtYtNcad555SnZ3gY0RT2ITCAs"/>
+</div>
+<div class="flex flex-col">
+<h3 class="text-headline-md font-headline-md font-semibold text-on-surface">Premium</h3>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+<span>5 min</span>
+<div class="flex items-center text-[12px]">
+<span class="material-symbols-outlined text-[14px]">person</span>
+<span>4</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end opacity-75 group-hover:opacity-100 transition-opacity">
+<span class="text-headline-md font-headline-md font-semibold text-on-surface">$32.50</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant line-through">$35.00</span>
+</div>
+</div>
+</label>
+<!-- Option 3: Comfort (Unselected) -->
+<label class="relative block cursor-pointer group">
+<input class="peer sr-only" name="ride_option" type="radio" value="comfort"/>
+<div class="bg-transparent group-hover:bg-surface/60 rounded-[20px] p-4 flex items-center justify-between border-2 border-transparent transition-all duration-200">
+<div class="flex items-center gap-4 opacity-75 group-hover:opacity-100 transition-opacity">
+<div class="w-[72px] h-[48px] relative flex items-center justify-center">
+<img class="w-full h-full object-contain drop-shadow-sm grayscale-[20%]" data-alt="A clean, isolated top-down isometric 3D render of a standard white hatchback car with subtle taxi markings on a transparent background. Designed as a UI icon for a ride-hailing app. Smooth lighting, minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApU3ABhC_Ogd8FC-dUYNaIvF-Ub6LaNAcQwKpj4nAlcwGM-tcoeRHmPJwLkouf54oYXutHMpZcCEEgCkVj8VK3H0_IEmVtw6gnj1mcgqAIsUoosLSIz5Xqg9UAvCAdVKosUiKv3Ruwq0CjavxLOzdTIf_OLCizNaEbQjauNMUiRZFKjAvg_VjHs91H7u4ChUUOQsJesPOpkFlhddO8iWvyHP4j6qxlpbqxnbf733HBQWm5a52--3TXUrWabMTgObnyrjyirS6Azbg"/>
+</div>
+<div class="flex flex-col">
+<h3 class="text-headline-md font-headline-md font-semibold text-on-surface">Comfort</h3>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+<span>10 min</span>
+<div class="flex items-center text-[12px]">
+<span class="material-symbols-outlined text-[14px]">person</span>
+<span>3</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end opacity-75 group-hover:opacity-100 transition-opacity">
+<span class="text-headline-md font-headline-md font-semibold text-on-surface">$28.43</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant line-through">$36.10</span>
+</div>
+</div>
+</label>
+</div>
+<!-- Bottom Action Canvas -->
+<div class="bg-surface rounded-t-[24px] px-margin-page pt-4 pb-2 shadow-[0_-10px_20px_rgba(0,0,0,0.03)] shrink-0 z-10 relative">
+<!-- Payment Selector -->
+<button class="w-full flex items-center justify-between py-3 mb-4 group transition-opacity hover:opacity-80">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-[#5E5CE6]">
+<span class="material-symbols-outlined text-[22px]">payments</span>
+</div>
+<span class="text-body-lg font-body-lg font-medium text-on-surface">Cash</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<!-- Action Buttons -->
+<div class="flex items-center gap-4">
+<!-- Back Button -->
+<button class="w-[56px] h-[56px] rounded-full bg-surface shadow-sm border border-outline-variant/30 flex items-center justify-center text-on-surface hover:bg-surface-container-low active:scale-95 transition-all shrink-0">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<!-- Primary Action -->
+<button class="flex-1 h-[56px] rounded-full bg-primary-container text-on-error text-body-lg font-body-lg font-bold flex items-center justify-center shadow-md hover:opacity-90 active:scale-[0.98] transition-all">
+                    Select Ride XL
+                </button>
+</div>
+</div>
+</div>
+<!-- Inject CSS to hide scrollbar for webkit but keep functionality -->
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</body></html>

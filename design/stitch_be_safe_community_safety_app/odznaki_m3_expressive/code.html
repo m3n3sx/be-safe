@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Odznaki</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#e8bcbb",
+                        "surface-container-high": "#ffe1e0",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#fedad9",
+                        "surface-container-highest": "#fedad9",
+                        "surface": "#fff8f7",
+                        "primary-fixed": "#ffdad9",
+                        "outline": "#936e6d",
+                        "on-tertiary-fixed-variant": "#00429b",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-secondary-container": "#00732c",
+                        "tertiary-container": "#0f6df3",
+                        "on-tertiary-fixed": "#001945",
+                        "background": "#fff8f7",
+                        "on-tertiary-container": "#fefcff",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "tertiary": "#0056c5",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "error": "#ba1a1a",
+                        "on-background": "#291616",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#fff0ef",
+                        "secondary-container": "#5cfd80",
+                        "secondary": "#006e2a",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#d9e2ff",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#ffe9e8",
+                        "on-primary-fixed": "#400009",
+                        "surface-dim": "#f5d2d1",
+                        "on-surface": "#291616",
+                        "primary": "#ba002c",
+                        "inverse-on-surface": "#ffedec",
+                        "primary-container": "#e9003a",
+                        "surface-tint": "#bf002e",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#412b2b",
+                        "on-secondary-fixed": "#002108",
+                        "surface-bright": "#fff8f7",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#5e3f3e",
+                        "secondary-fixed": "#69ff87",
+                        "on-primary-container": "#fffbff",
+                        "tertiary-fixed-dim": "#b0c6ff",
+                        "inverse-primary": "#ffb3b3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.5rem",
+                        "3xl": "2rem"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "margin-tablet": "24px",
+                        "gutter": "16px",
+                        "hero-button-size": "64px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["Roboto Flex"],
+                        "display-sm": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"],
+                        "headline-sm": ["Roboto Flex"],
+                        "body-lg": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "display-sm": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.5px", "fontWeight": "700"}],
+                        "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                        "headline-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full z-40 bg-surface dark:bg-surface-dim docked full-width top-0">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">be:Safe</span>
+</div>
+<nav class="hidden md:flex gap-6">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors rounded-full px-4 py-2" href="#">Mapa</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors rounded-full px-4 py-2" href="#">Alerty</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors rounded-full px-4 py-2" href="#">SOS</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors rounded-full px-4 py-2" href="#">Rodzina</a>
+<a class="text-primary dark:text-primary-fixed-dim font-label-lg text-label-lg bg-surface-variant dark:bg-surface-container-high rounded-full px-4 py-2" href="#">Profil</a>
+</nav>
+</header>
+<!-- Main Content -->
+<main class="px-margin-mobile md:px-margin-tablet py-6 max-w-4xl mx-auto flex flex-col gap-8">
+<!-- Header Section -->
+<section class="flex flex-col gap-2">
+<h1 class="font-display-sm text-display-sm text-on-surface">Odznaki</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Odkryj i zbieraj odznaki za swoje osiągnięcia w dbaniu o bezpieczeństwo.</p>
+</section>
+<!-- Stats Overview Bento -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-primary-container text-on-primary-container rounded-3xl p-6 flex flex-col items-center justify-center text-center gap-2">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="font-display-sm text-display-sm">12</span>
+<span class="font-label-lg text-label-lg">Zdobyte</span>
+</div>
+<div class="bg-surface-container-high text-on-surface rounded-3xl p-6 flex flex-col items-center justify-center text-center gap-2">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant">lock</span>
+<span class="font-headline-sm text-headline-sm">8</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant">Zablokowane</span>
+</div>
+<div class="col-span-2 bg-secondary-container text-on-secondary-container rounded-3xl p-6 flex items-center justify-between">
+<div class="flex flex-col gap-2">
+<span class="font-title-lg text-title-lg">Kolejny poziom</span>
+<span class="font-body-lg text-body-lg opacity-90">Brakuje Ci 3 odznak do poziomu Mistrza.</span>
+</div>
+<div class="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</section>
+<!-- Earned Badges Grid -->
+<section class="flex flex-col gap-4">
+<h2 class="font-title-lg text-title-lg text-on-surface">Zdobyte</h2>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+<!-- Badge 1 -->
+<div class="bg-surface-container-high rounded-2xl p-4 flex flex-col items-center text-center gap-3 relative overflow-hidden group hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="absolute -top-4 -right-4 w-16 h-16 bg-tertiary-container rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+<div class="w-16 h-16 rounded-full bg-tertiary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-tertiary-container text-3xl" style="font-variation-settings: 'FILL' 1;">directions_walk</span>
+</div>
+<div class="flex flex-col gap-1 z-10">
+<span class="font-label-lg text-label-lg text-on-surface">Aktywny Spacer</span>
+<span class="text-xs text-on-surface-variant font-medium">10 spacerów</span>
+</div>
+</div>
+<!-- Badge 2 -->
+<div class="bg-surface-container-high rounded-2xl p-4 flex flex-col items-center text-center gap-3 relative overflow-hidden group hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="absolute -top-4 -right-4 w-16 h-16 bg-secondary-container rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+<div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-secondary-container text-3xl" style="font-variation-settings: 'FILL' 1;">group_add</span>
+</div>
+<div class="flex flex-col gap-1 z-10">
+<span class="font-label-lg text-label-lg text-on-surface">Strażnik Kręgu</span>
+<span class="text-xs text-on-surface-variant font-medium">5 zaproszonych</span>
+</div>
+</div>
+<!-- Badge 3 -->
+<div class="bg-surface-container-high rounded-2xl p-4 flex flex-col items-center text-center gap-3 relative overflow-hidden group hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="absolute -top-4 -right-4 w-16 h-16 bg-primary-container rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+<div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-primary-container text-3xl" style="font-variation-settings: 'FILL' 1;">notification_important</span>
+</div>
+<div class="flex flex-col gap-1 z-10">
+<span class="font-label-lg text-label-lg text-on-surface">Błyskawica</span>
+<span class="text-xs text-on-surface-variant font-medium">Szybka reakcja</span>
+</div>
+</div>
+<!-- Badge 4 -->
+<div class="bg-surface-container-high rounded-2xl p-4 flex flex-col items-center text-center gap-3 relative overflow-hidden group hover:bg-surface-variant transition-colors cursor-pointer">
+<div class="absolute -top-4 -right-4 w-16 h-16 bg-outline-variant rounded-full opacity-20 group-hover:scale-150 transition-transform duration-500"></div>
+<div class="w-16 h-16 rounded-full bg-surface-variant border-2 border-outline flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-outline text-3xl" style="font-variation-settings: 'FILL' 1;">map</span>
+</div>
+<div class="flex flex-col gap-1 z-10">
+<span class="font-label-lg text-label-lg text-on-surface">Odkrywca</span>
+<span class="text-xs text-on-surface-variant font-medium">3 nowe strefy</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Locked Badges Section -->
+<section class="flex flex-col gap-4">
+<h2 class="font-title-lg text-title-lg text-on-surface">Zablokowane</h2>
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 opacity-75">
+<!-- Locked Badge 1 -->
+<div class="bg-surface-container rounded-2xl p-4 flex flex-col items-center text-center gap-3 border border-surface-variant">
+<div class="w-16 h-16 rounded-full bg-surface flex items-center justify-center relative">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">local_police</span>
+<span class="material-symbols-outlined text-surface-tint absolute -bottom-1 -right-1 text-xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-lg text-label-lg text-on-surface-variant">Bohater</span>
+<span class="text-xs text-on-surface-variant">Zgłoś 5 zagrożeń</span>
+</div>
+</div>
+<!-- Locked Badge 2 -->
+<div class="bg-surface-container rounded-2xl p-4 flex flex-col items-center text-center gap-3 border border-surface-variant">
+<div class="w-16 h-16 rounded-full bg-surface flex items-center justify-center relative">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">favorite</span>
+<span class="material-symbols-outlined text-surface-tint absolute -bottom-1 -right-1 text-xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-lg text-label-lg text-on-surface-variant">Ratownik</span>
+<span class="text-xs text-on-surface-variant">Udziel pomocy SOS</span>
+</div>
+</div>
+<!-- Locked Badge 3 -->
+<div class="bg-surface-container rounded-2xl p-4 flex flex-col items-center text-center gap-3 border border-surface-variant">
+<div class="w-16 h-16 rounded-full bg-surface flex items-center justify-center relative">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">verified</span>
+<span class="material-symbols-outlined text-surface-tint absolute -bottom-1 -right-1 text-xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-lg text-label-lg text-on-surface-variant">Ekspert</span>
+<span class="text-xs text-on-surface-variant">Ukończ kurs</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container dark:bg-surface-container-high rounded-t-xl shadow-md">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-lg text-label-lg">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-lg text-label-lg">Alerty</span>
+</a>
+<div class="relative -top-6">
+<button class="w-hero-button-size h-hero-button-size bg-primary rounded-[24px] flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.12)] active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-on-primary text-3xl" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+</button>
+<span class="font-label-lg text-label-lg text-primary text-center block mt-1">SOS</span>
+</div>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-lg text-label-lg">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-lg text-label-lg">Profil</span>
+</a>
+</nav>
+</body></html>

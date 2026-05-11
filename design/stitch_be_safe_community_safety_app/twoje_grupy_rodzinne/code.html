@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Rodzina</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#5e3f3e",
+                        "surface-bright": "#f9f9f9",
+                        "on-secondary-fixed-variant": "#005312",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "on-error-container": "#93000a",
+                        "on-background": "#1a1c1c",
+                        "tertiary": "#00685d",
+                        "inverse-primary": "#ffb3b3",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-low": "#f3f3f3",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary-container": "#008376",
+                        "primary-fixed": "#ffdad9",
+                        "on-primary-container": "#fffbff",
+                        "primary": "#ba002c",
+                        "on-tertiary-container": "#f4fffb",
+                        "error-container": "#ffdad6",
+                        "background": "#f9f9f9",
+                        "secondary": "#1b6d24",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface": "#f9f9f9",
+                        "surface-container": "#eeeeee",
+                        "on-secondary-container": "#217128",
+                        "outline-variant": "#e8bcbb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "secondary-container": "#a0f399",
+                        "secondary-fixed": "#a3f69c",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f1",
+                        "surface-tint": "#bf002e",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "outline": "#936e6d",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary-fixed-dim": "#88d982",
+                        "on-surface": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "primary-container": "#e9003a",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-secondary-fixed": "#002204",
+                        "on-primary-fixed": "#400009",
+                        "tertiary-fixed": "#88f5e3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "24px",
+                        "gutter": "16px",
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px",
+                        "stack-md": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                        "label-lg": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full z-40 bg-surface dark:bg-surface-dim flat no shadows sticky top-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="shield">shield</span>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">be:Safe</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow px-margin-mobile md:px-margin-desktop py-stack-lg max-w-3xl mx-auto w-full pb-32">
+<div class="mb-stack-lg flex justify-between items-end">
+<h1 class="font-headline-lg text-headline-lg text-on-background">Rodzina</h1>
+</div>
+<div class="flex flex-col gap-stack-md">
+<!-- Family Card 1 -->
+<button class="w-full text-left bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between border border-surface-variant hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container icon-fill" data-icon="group">group</span>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">Kowalscy</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-body-md text-body-md text-on-surface-variant">4 członków</span>
+<span class="w-1 h-1 rounded-full bg-surface-dim"></span>
+<span class="font-body-md text-body-md text-on-surface-variant text-[12px]">Ostatnia aktywność: 5 min temu</span>
+</div>
+<!-- Avatar Stack -->
+<div class="flex -space-x-2 mt-2">
+<img alt="Członek rodziny" class="w-6 h-6 rounded-full border-2 border-surface-container-lowest object-cover" data-alt="Close up portrait of a young woman with a warm, natural smile, looking directly at the camera. Soft, even studio lighting highlights her features against a light, neutral background. The overall aesthetic is clean, modern, and inviting, matching the light-mode UI theme with its soft tonal surfaces." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-vFW41je5YBu_dQSB4U7couIYpZdNLVQkSGr9Drv-UMf5wiRY-C15ILqsTMJ7p5fLgLrNFRVYhEYiMI4Rh0jykkbwxkvNrI5uh96CEB1vWMPh7MaScbkwZIcCppFxDsmSTNp4U4Ad-HxKOLt0H98x1D6OQbo60206iS6FQCJeaT2swCkaZKC971aT4iWjxrA0RAB6ZfMSY8rtWzCd_htfnHRVsMgMT_eY18kWg1sD2rKqCG_DJBU6Bisy6SDWYldz0AteZwwG3RQ"/>
+<img alt="Członek rodziny" class="w-6 h-6 rounded-full border-2 border-surface-container-lowest object-cover" data-alt="Portrait of a middle-aged man with short hair and a subtle smile, facing forward. Captured with soft, diffused lighting that creates a bright and approachable mood. The background is a clean, minimal light grey, perfectly complementing the modern, clean interface design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvaa63_euicX4m-r4QVVa32ZD-rVMc6-WQ34RfHq_vVnc-xkDN5hI6Mdh4gjwyVHqpaFOSdwHj2IVCzgIR7uuXq05kRWGOOuvF1HH7OIjgLO4IUglN1nQ72IJJeA25zxeJGSlN18m4TpJ_6KG1J1AvfMJnz9ivxAtCCqJPih0jrG2oSnvys3OKnTBkcsTp_6lFYItWY5cH-uxwAdswBuc37eSB0XNbSTNyYGIY30VLClfmrE482W3dIP4En1uQzICXNyrTGNpRYDo"/>
+<img alt="Członek rodziny" class="w-6 h-6 rounded-full border-2 border-surface-container-lowest object-cover" data-alt="Headshot of a smiling mature woman with clear, soft lighting. The image has a bright, uplifting tone with a very soft, out-of-focus light background. The style is professional yet warm, aligning with a secure, community-focused light-theme design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmQEjb8HZmtcR1hXBs8ixfCDwrXKxt9Ru0en0Jcr6uC-keJmB5FWf0APIo1nsw_3n5TcI1VRNgbCDAhEWRCJgqbXIvMSVxT1hu9EJTiGUC-aGrOtZ_eIT4gjzZj7Sm44lc6uwnZztIJ7seU2DSbkKFUAisvpZ57X4192hn3O8Ef4RvjcRq6fsqRobVqfGSJ0XFxO_gNBl5lLwE2dnMExb1m17jgBx5aC1LJwCzPIawOc0BndRwULFy1uzcA33S3mewt7FgfVbQ4Bs"/>
+<div class="w-6 h-6 rounded-full border-2 border-surface-container-lowest bg-surface-variant flex items-center justify-center z-10">
+<span class="font-label-lg text-label-lg text-on-surface-variant text-[10px]">+1</span>
+</div>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</button>
+<!-- Family Card 2 -->
+<button class="w-full text-left bg-surface-container-lowest rounded-2xl p-4 flex items-center justify-between border border-surface-variant hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container icon-fill" data-icon="group">group</span>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">Dziadkowie</h2>
+<div class="flex items-center gap-2 mt-1">
+<span class="font-body-md text-body-md text-on-surface-variant">2 członków</span>
+<span class="w-1 h-1 rounded-full bg-surface-dim"></span>
+<span class="font-body-md text-body-md text-on-surface-variant text-[12px]">Ostatnia aktywność: 1h temu</span>
+</div>
+<!-- Avatar Stack -->
+<div class="flex -space-x-2 mt-2">
+<img alt="Członek rodziny" class="w-6 h-6 rounded-full border-2 border-surface-container-lowest object-cover" data-alt="Portrait of an older gentleman with a gentle expression and glasses. Soft, warm natural light gently illuminates his face against a minimal, light-colored backdrop. The image conveys wisdom and warmth, fitting seamlessly into a clean, modern, and supportive UI environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ-xNT7l4LfMSd_nsgUTCLFiJRhG2bnngkN3421JyRbFMXGtj0c8TMXTYhU3WIDjVO_AyjKCdY-GkddBWsEJ4CvZAGjP9q1ZhgBgmX3Ylwr2VJFRyHXwVgHcY3Zn0bsAq3Bz-XZAQ14vxaWdDOEyrkTsobdxd1vlKsuXyn07FuJqtdCV95ToXeCU500b4zYIARLo37AawHSf2Z_PXIK_TuZeLnYUYBCtTKOZQA9PIDDpJuBDtj99XMILuUY6t38gi997-Ss0gg9FU"/>
+<img alt="Członek rodziny" class="w-6 h-6 rounded-full border-2 border-surface-container-lowest object-cover" data-alt="Close-up portrait of a senior woman smiling warmly. High-key, soft lighting creates a bright and inviting atmosphere. The background is subtle and uncluttered, maintaining the aesthetic of a modern, safety-focused, light-themed interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcG2z5vMFVcHyMWU8m1wE_tq7q-ReggqtG5Th1MVLNj3nvXbPDpRXmfA_PvSA1vdfQvwOYKE4uweexgMpzo1kBo-fW36vpOM0eFHY0XHkKaglhDYFSMmHjW22ROkDK6aTlt26Xmx38qF_wLHwXP3bTZ1U6Rl3Lcp9HvpAMU9WMUSpnZTMO-wyGP6e8qj9lei_QSX1uOe_5626ccKBXfy0Sx6HB3JlTnMMABZHlJlwYfC4AEuGa3lrRSw6opo4amndYVH85UEPgTGc"/>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</main>
+<!-- FAB for adding group -->
+<!-- Note: User requested a FAB with "+" icon and label "Dodaj grupę". This is a contextual action for this list view. -->
+<button class="fixed bottom-24 right-margin-mobile md:right-margin-desktop bg-secondary text-on-secondary rounded-2xl py-4 px-6 flex items-center gap-2 shadow-lg hover:bg-on-secondary-container transition-all active:scale-95 z-40">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="font-label-lg text-label-lg uppercase tracking-wider">Dodaj grupę</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container dark:bg-surface-container-high docked full-width rounded-t-xl shadow-md">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 p-2 rounded-lg">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span class="font-label-lg text-label-lg text-[10px]">Mapa</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 p-2 rounded-lg">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span class="font-label-lg text-label-lg text-[10px]">Alerty</span>
+</button>
+<!-- SOS Trigger - distinct styling based on brand guidelines (Primary Red) -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim hover:bg-surface-variant transition-all active:scale-90 duration-200 p-2 rounded-lg -mt-4 relative">
+<div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg mb-1">
+<span class="material-symbols-outlined text-on-primary icon-fill" data-icon="emergency_home">emergency_home</span>
+</div>
+<span class="font-label-lg text-label-lg text-[10px]">SOS</span>
+</button>
+<!-- Active Tab: Rodzina -->
+<button class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1 icon-fill" data-icon="group">group</span>
+<span class="font-label-lg text-label-lg text-[10px]">Rodzina</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 p-2 rounded-lg">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="font-label-lg text-label-lg text-[10px]">Profil</span>
+</button>
+</nav>
+<!-- Desktop Sidebar (Hidden on Mobile) -->
+<nav class="hidden md:flex flex-col w-64 bg-surface-container h-screen fixed left-0 top-16 pt-8 px-4 z-30">
+<div class="flex flex-col gap-2">
+<button class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors text-left w-full">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-lg text-label-lg text-sm">Mapa</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors text-left w-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-lg text-label-lg text-sm">Alerty</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary hover:bg-primary-container hover:text-on-primary-container transition-colors text-left w-full">
+<span class="material-symbols-outlined" data-icon="emergency_home">emergency_home</span>
+<span class="font-label-lg text-label-lg text-sm font-bold">SOS</span>
+</button>
+<!-- Active Tab Desktop -->
+<button class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container transition-colors text-left w-full">
+<span class="material-symbols-outlined icon-fill" data-icon="group">group</span>
+<span class="font-label-lg text-label-lg text-sm">Rodzina</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors text-left w-full">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-lg text-label-lg text-sm">Profil</span>
+</button>
+</div>
+</nav>
+</body></html>

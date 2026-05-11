@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Profil</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#00201c",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#a3f69c",
+                        "surface-tint": "#bf002e",
+                        "on-surface": "#1a1c1c",
+                        "surface-container": "#eeeeee",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f3f3",
+                        "on-primary-fixed": "#400009",
+                        "on-surface-variant": "#5e3f3e",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "surface-container-high": "#e8e8e8",
+                        "background": "#f9f9f9",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb3b3",
+                        "secondary-container": "#a0f399",
+                        "on-secondary-fixed-variant": "#005312",
+                        "inverse-on-surface": "#f1f1f1",
+                        "secondary": "#1b6d24",
+                        "outline": "#936e6d",
+                        "tertiary": "#00685d",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-fixed-dim": "#88d982",
+                        "on-primary-container": "#fffbff",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-fixed": "#002204",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-background": "#1a1c1c",
+                        "tertiary-container": "#008376",
+                        "outline-variant": "#e8bcbb",
+                        "tertiary-fixed": "#88f5e3",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "primary": "#ba002c",
+                        "on-primary-fixed-variant": "#920021",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-container": "#f4fffb",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e2e2e2",
+                        "primary-container": "#e9003a",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "surface-dim": "#dadada",
+                        "primary-fixed": "#ffdad9",
+                        "on-secondary-container": "#217128"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "12px",
+                        "gutter": "16px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24 pt-16 flex flex-col">
+<!-- TopAppBar (from JSON) -->
+<header class="fixed top-0 bg-surface flex justify-between items-center px-margin-mobile h-16 w-full z-40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">be:Safe</span>
+</div>
+<div>
+<!-- Optional actions area -->
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 px-margin-mobile flex flex-col gap-stack-lg max-w-2xl mx-auto w-full mt-6">
+<!-- User Profile Summary -->
+<section class="flex flex-col items-center text-center gap-stack-md mt-4">
+<div class="w-24 h-24 rounded-full overflow-hidden bg-surface-container-highest flex items-center justify-center border-4 border-surface shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A close-up portrait of a young professional woman with a soft, friendly expression, set against a bright, neutral light-mode background. The lighting is soft and high-key, creating a clean, modern aesthetic that aligns perfectly with a contemporary digital safety application interface. The color palette emphasizes natural skin tones and pristine white surroundings, evoking a sense of trust, community, and security." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5NEbGZca5MUJ2qzo_4KawBgIvluRDsSXteAK2BPT1joMsaR1ij1ukTPhnGylUxZRYBnKp-fiHeuaY-vW71ozenhKGaoDyFwmv_hcimTA5jpiPyOud8Ca6cay20z16nTxtW6T4vPpjxIpaDQ5nvV4U-qP9Yx05I3c6NYIfLf8aiOxGjVBzUWCJdzgo48eIUCwosROGKeRbpqh1Cqd1pS1FFxqKudGrxKD7MqvahTxyT9W539l6uD-n6Sex-2eRAKPFRiJT2gTuQ8E"/>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface">Anna Kowalska</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">+48 123 456 789</p>
+</div>
+</section>
+<!-- Status Card -->
+<section class="bg-surface-container-lowest rounded-xl p-4 border border-outline-variant shadow-sm flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">Status: Bezpieczny</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Aktywne udostępnianie lokalizacji</p>
+</div>
+</div>
+</section>
+<!-- Settings Groups -->
+<section class="flex flex-col gap-4">
+<!-- Group 1: Security & Privacy -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col">
+<button class="flex items-center justify-between p-4 bg-transparent hover:bg-surface-variant transition-colors w-full text-left">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">lock</span>
+<span class="font-title-lg text-title-lg text-on-surface">Ustawienia prywatności</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+<div class="h-px bg-surface-variant mx-4"></div>
+<button class="flex items-center justify-between p-4 bg-transparent hover:bg-surface-variant transition-colors w-full text-left">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">history</span>
+<span class="font-title-lg text-title-lg text-on-surface">Historia zgłoszeń</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</button>
+</div>
+<!-- Group 2: App Preferences -->
+<div class="bg-surface-container-low rounded-xl overflow-hidden shadow-sm flex flex-col">
+<div class="flex items-center justify-between p-4 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+<span class="font-title-lg text-title-lg text-on-surface">Powiadomienia</span>
+</div>
+<!-- Toggle Switch (M3 Style) -->
+<div class="w-12 h-6 bg-primary rounded-full relative cursor-pointer">
+<div class="w-5 h-5 bg-on-primary rounded-full absolute right-0.5 top-0.5 shadow-sm"></div>
+</div>
+</div>
+<div class="h-px bg-surface-variant mx-4"></div>
+<div class="flex items-center justify-between p-4 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface">dark_mode</span>
+<span class="font-title-lg text-title-lg text-on-surface">Tryb ciemny</span>
+</div>
+<!-- Toggle Switch Off -->
+<div class="w-12 h-6 bg-surface-variant border-2 border-outline rounded-full relative cursor-pointer">
+<div class="w-4 h-4 bg-outline rounded-full absolute left-0.5 top-0.5"></div>
+</div>
+</div>
+</div>
+<!-- Danger Zone -->
+<div class="mt-4">
+<button class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-full border border-error text-error hover:bg-error-container transition-colors font-label-lg text-label-lg uppercase tracking-wide">
+<span class="material-symbols-outlined text-error">logout</span>
+                    Wyloguj się
+                </button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (from JSON) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container shadow-md rounded-t-xl pb-6">
+<!-- Inactive: Mapa -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all rounded-full p-2 w-16" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-lg text-label-lg mt-1">Mapa</span>
+</a>
+<!-- Inactive: Alerty -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all rounded-full p-2 w-16" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-lg text-label-lg mt-1">Alerty</span>
+</a>
+<!-- Inactive: SOS -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all rounded-full p-2 w-16 relative" href="#">
+<div class="bg-error text-on-error w-12 h-12 rounded-full flex items-center justify-center -mt-6 shadow-md border-4 border-surface-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+</div>
+<span class="font-label-lg text-label-lg mt-1">SOS</span>
+</a>
+<!-- Inactive: Rodzina -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all rounded-full p-2 w-16" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-lg text-label-lg mt-1">Rodzina</span>
+</a>
+<!-- Active: Profil -->
+<a class="flex flex-col items-center justify-center text-on-primary-container bg-primary-container rounded-full px-4 py-1 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-lg text-label-lg mt-1">Profil</span>
+</a>
+</nav>
+</body></html>

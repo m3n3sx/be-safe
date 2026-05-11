@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Zgłoś zagrożenie</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#69ff87",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-highest": "#fedad9",
+                        "outline": "#936e6d",
+                        "inverse-surface": "#412b2b",
+                        "primary": "#ba002c",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary-container": "#00732c",
+                        "surface-container": "#ffe9e8",
+                        "primary-fixed": "#ffdad9",
+                        "primary-container": "#e9003a",
+                        "on-background": "#291616",
+                        "on-primary-fixed": "#400009",
+                        "tertiary-fixed": "#d9e2ff",
+                        "surface-bright": "#fff8f7",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f7",
+                        "on-tertiary-container": "#fefcff",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#ffb3b3",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-tertiary-fixed": "#001945",
+                        "inverse-on-surface": "#ffedec",
+                        "tertiary-fixed-dim": "#b0c6ff",
+                        "surface-dim": "#f5d2d1",
+                        "on-primary-fixed-variant": "#920021",
+                        "surface-container-high": "#ffe1e0",
+                        "tertiary-container": "#0f6df3",
+                        "on-surface": "#291616",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary-fixed-variant": "#00429b",
+                        "surface-variant": "#fedad9",
+                        "surface-tint": "#bf002e",
+                        "tertiary": "#0056c5",
+                        "surface": "#fff8f7",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#5cfd80",
+                        "secondary": "#006e2a",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#fff0ef",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#00531e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16dp",
+                        "base": "8dp",
+                        "margin-tablet": "24dp",
+                        "margin-mobile": "16dp",
+                        "hero-button-size": "64dp"
+                    },
+                    "fontFamily": {
+                        "display-sm": ["Roboto Flex"],
+                        "body-lg": ["Roboto Flex"],
+                        "headline-sm": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"],
+                        "title-lg": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "display-sm": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.5px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #fff8f7; /* background */
+            color: #291616; /* on-background */
+            font-family: 'Roboto Flex', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Hide scrollbar for horizontal scroll areas but allow scrolling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface-container flex justify-between items-center px-margin-mobile h-16 w-full sticky top-0 z-40">
+<div class="flex items-center gap-3 cursor-pointer hover:bg-surface-variant/50 transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span class="sr-only">Profil użytkownika</span>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-primary">
+            be:Safe
+        </div>
+<div class="flex items-center cursor-pointer hover:bg-surface-variant/50 transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col gap-6 p-margin-mobile md:p-margin-tablet pb-32 md:pb-margin-tablet max-w-3xl mx-auto w-full">
+<!-- Page Title -->
+<div class="flex flex-col gap-1">
+<h1 class="font-display-sm text-display-sm text-on-surface">Zgłoś zagrożenie</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Wybierz kategorię i opisz sytuację.</p>
+</div>
+<!-- Horizontal Category Selector -->
+<section class="flex flex-col gap-3">
+<h2 class="font-title-lg text-title-lg text-on-surface">Kategoria</h2>
+<div class="flex overflow-x-auto gap-3 pb-2 no-scrollbar -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0">
+<!-- Category Card: Active -->
+<button class="flex flex-col items-center justify-center min-w-[100px] h-[100px] rounded-[24px] bg-primary-container text-on-primary-container shrink-0 transition-transform active:scale-95">
+<span class="material-symbols-outlined mb-2 text-3xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-lg text-label-lg">Pożar</span>
+</button>
+<!-- Category Card: Inactive -->
+<button class="flex flex-col items-center justify-center min-w-[100px] h-[100px] rounded-[24px] bg-surface-container-high text-on-surface hover:bg-surface-variant/80 shrink-0 transition-transform active:scale-95">
+<span class="material-symbols-outlined mb-2 text-3xl">warning</span>
+<span class="font-label-lg text-label-lg">Wypadek</span>
+</button>
+<!-- Category Card: Inactive -->
+<button class="flex flex-col items-center justify-center min-w-[100px] h-[100px] rounded-[24px] bg-surface-container-high text-on-surface hover:bg-surface-variant/80 shrink-0 transition-transform active:scale-95">
+<span class="material-symbols-outlined mb-2 text-3xl">water_drop</span>
+<span class="font-label-lg text-label-lg">Zalanie</span>
+</button>
+<!-- Category Card: Inactive -->
+<button class="flex flex-col items-center justify-center min-w-[100px] h-[100px] rounded-[24px] bg-surface-container-high text-on-surface hover:bg-surface-variant/80 shrink-0 transition-transform active:scale-95">
+<span class="material-symbols-outlined mb-2 text-3xl">gavel</span>
+<span class="font-label-lg text-label-lg">Kradzież</span>
+</button>
+<!-- Category Card: Inactive -->
+<button class="flex flex-col items-center justify-center min-w-[100px] h-[100px] rounded-[24px] bg-surface-container-high text-on-surface hover:bg-surface-variant/80 shrink-0 transition-transform active:scale-95">
+<span class="material-symbols-outlined mb-2 text-3xl">add</span>
+<span class="font-label-lg text-label-lg">Inne</span>
+</button>
+</div>
+</section>
+<!-- Form Container -->
+<section class="bg-surface-container-high rounded-[24px] p-4 md:p-6 flex flex-col gap-6">
+<!-- Location Field -->
+<div class="flex flex-col gap-2">
+<label class="font-label-lg text-label-lg text-on-surface-variant px-1">Lokalizacja</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant">location_on</span>
+</div>
+<input class="w-full bg-surface-container-highest text-on-surface font-body-lg text-body-lg rounded-t-[12px] rounded-b-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 pl-10 pr-4 py-3 placeholder-on-surface-variant/50" placeholder="Podaj adres" type="text" value="ul. Marszałkowska 104, Warszawa"/>
+</div>
+<!-- Small squircle map preview to satisfy the FAB request in a more contextual way for a form -->
+<div class="mt-2 w-full h-32 rounded-[16px] overflow-hidden relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A stylized, simplified digital map view showing a city street layout. The map uses a light mode aesthetic with soft pastel tones, subtle contrast between streets and blocks, and a prominent red location pin indicating a specific address. The visual style is clean, modern, and perfectly suited for an Expressive Material 3 safety application UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtP9nl70-2mTKllEX-fnMlSMPVse6zCpuiFtfT9Zv0A7o3T_Drpo5JoksWDTQb8u_7xWc1zQ5387wNiks9xUmQTcQIHI4qjzUI-c9UmTDJLN0Czl4PLda22N0zl2HgOCmln3UH51YjJvKKC0_8kr_A9uwp5Cqj2h7ESqvexVHUj_tzX6NjhxIq64z-r2hnUH1ROpT8xmEgBpfDhtSpOzqN1j3hvteq4XJeOz1Ee6HNvuPzQovbMn-ByTli_FxR3sIOduAAApSTutI"/>
+<button class="absolute bottom-3 right-3 w-12 h-12 bg-secondary-container text-on-secondary-container rounded-[16px] shadow-sm flex items-center justify-center hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</button>
+</div>
+</div>
+<!-- Description Field -->
+<div class="flex flex-col gap-2">
+<label class="font-label-lg text-label-lg text-on-surface-variant px-1">Opis sytuacji (opcjonalnie)</label>
+<textarea class="w-full bg-surface-container-highest text-on-surface font-body-lg text-body-lg rounded-t-[12px] rounded-b-none border-b-2 border-outline-variant focus:border-primary focus:ring-0 px-4 py-3 placeholder-on-surface-variant/50 resize-none" placeholder="Dodaj szczegóły, które mogą być istotne..." rows="4"></textarea>
+</div>
+<!-- Media Attachment (Simplified Bento style) -->
+<div class="flex flex-col gap-2">
+<label class="font-label-lg text-label-lg text-on-surface-variant px-1">Załączniki</label>
+<div class="flex gap-3">
+<button class="w-20 h-20 rounded-[16px] border-2 border-dashed border-outline-variant flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined mb-1">add_a_photo</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Submit Button -->
+<div class="mt-4 flex justify-center">
+<!-- Utilizing the requested saturated red while keeping it within the theme context as primary -->
+<button class="w-full md:w-auto px-8 py-4 bg-primary text-on-primary rounded-full font-title-lg text-title-lg shadow-lg hover:shadow-xl hover:bg-surface-tint active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+                Wyślij zgłoszenie
+            </button>
+</div>
+</main>
+<!-- BottomNavBar (Hidden on md and above) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-end pb-4 px-2 bg-surface-container border-t border-outline-variant/30 rounded-t-xl shadow-lg">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-lg text-label-lg mt-1">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-label-lg text-label-lg mt-1">Alerty</span>
+</a>
+<div class="flex flex-col items-center justify-center relative -top-4">
+<button class="w-[64px] h-[64px] rounded-full bg-primary shadow-xl scale-110 flex items-center justify-center text-on-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</button>
+<span class="font-label-lg text-label-lg mt-2 text-on-surface-variant">SOS</span>
+</div>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-lg text-label-lg mt-1">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 transition-colors p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-lg text-label-lg mt-1">Profil</span>
+</a>
+</nav>
+</body></html>

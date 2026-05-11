@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Moje Zgłoszenia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Archivo+Narrow:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#ffb3b2",
+                        "surface-container-high": "#2a2a2a",
+                        "background": "#131313",
+                        "on-primary-fixed": "#002022",
+                        "on-surface-variant": "#b9cacb",
+                        "on-surface": "#e5e2e1",
+                        "surface-container": "#201f1f",
+                        "surface-tint": "#00dce6",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#410008",
+                        "secondary-fixed": "#ffdcc1",
+                        "on-primary-container": "#006b71",
+                        "tertiary": "#fff6f6",
+                        "surface-bright": "#393939",
+                        "secondary-fixed-dim": "#ffb778",
+                        "secondary": "#ffb778",
+                        "outline": "#849495",
+                        "on-error-container": "#ffdad6",
+                        "inverse-primary": "#00696f",
+                        "on-secondary-fixed-variant": "#6c3a00",
+                        "inverse-on-surface": "#313030",
+                        "secondary-container": "#fd9000",
+                        "outline-variant": "#3a494b",
+                        "on-primary": "#00373a",
+                        "on-tertiary-fixed-variant": "#92001e",
+                        "tertiary-fixed": "#ffdad8",
+                        "tertiary-container": "#ffd1cf",
+                        "primary-fixed-dim": "#00dce6",
+                        "on-background": "#e5e2e1",
+                        "inverse-surface": "#e5e2e1",
+                        "on-secondary-fixed": "#2e1500",
+                        "surface-dim": "#131313",
+                        "on-secondary-container": "#613400",
+                        "primary-fixed": "#6ff6ff",
+                        "surface-variant": "#353534",
+                        "on-secondary": "#4c2700",
+                        "surface": "#131313",
+                        "primary-container": "#00f3ff",
+                        "error": "#ffb4ab",
+                        "on-tertiary-container": "#c3002b",
+                        "on-tertiary": "#680012",
+                        "error-container": "#93000a",
+                        "primary": "#e3fdff",
+                        "on-primary-fixed-variant": "#004f53",
+                        "surface-container-highest": "#353534"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-max": "100%",
+                        "margin-desktop": "24px",
+                        "gutter": "12px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-md": ["Anton"],
+                        "headline-lg": ["Anton"],
+                        "headline-lg-mobile": ["Anton"],
+                        "label-md": ["JetBrains Mono"],
+                        "display-lg": ["Anton"],
+                        "body-md": ["Archivo Narrow"],
+                        "body-lg": ["Archivo Narrow"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "1.2", "letterSpacing": "0.04em", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "0.04em", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.5", "letterSpacing": "0.01em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col pt-16 pb-20">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 border-b border-outline-variant shadow-[0_0_12px_rgba(0,220,230,0.3)] bg-background dark:bg-background flex justify-between items-center px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">account_circle</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary-container tracking-widest text-center">SAFETY CORE</h1>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">notifications</span>
+</div>
+</header>
+<main class="flex-1 px-margin-mobile py-4 flex flex-col gap-gutter">
+<!-- Dashboard Header -->
+<div class="flex flex-col gap-unit">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase tracking-wider">SYSTEM LOGS</h2>
+<div class="h-px bg-outline-variant w-full"></div>
+</div>
+<!-- Live Status Summary -->
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Active Tickets -->
+<div class="bg-surface-container-high border-t border-error shadow-[0_-2px_12px_rgba(255,180,171,0.2)] p-gutter flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-error/5"></div>
+<span class="font-label-sm text-label-sm text-error uppercase z-10">ACTIVE_CRITICAL</span>
+<span class="font-display-lg text-display-lg text-error z-10 drop-shadow-[0_0_8px_rgba(255,180,171,0.8)]">03</span>
+</div>
+<!-- Resolved Tickets -->
+<div class="bg-surface-container-high border-t border-primary-container shadow-[0_-2px_12px_rgba(0,243,255,0.2)] p-gutter flex flex-col items-center justify-center relative overflow-hidden">
+<div class="absolute inset-0 bg-primary-container/5"></div>
+<span class="font-label-sm text-label-sm text-primary-container uppercase z-10">RESOLVED</span>
+<span class="font-display-lg text-display-lg text-primary-container z-10 drop-shadow-[0_0_8px_rgba(0,243,255,0.8)]">14</span>
+</div>
+</div>
+<!-- Incident Tickets List -->
+<div class="flex flex-col gap-gutter">
+<!-- Ticket 1: Active/Critical -->
+<div class="bg-surface-container border border-surface-variant relative overflow-hidden flex flex-col">
+<div class="h-1 w-full bg-error shadow-[0_0_8px_rgba(255,180,171,0.8)]"></div>
+<div class="p-gutter flex flex-col gap-unit">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-error bg-error/10 px-1 py-0.5 border border-error/30">INCIDENT_ID: 88A-92</span>
+<span class="font-label-sm text-label-sm text-outline">14:02 : 24.10</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Niebezpieczne przejście</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Zgłoszenie dotyczy braku oświetlenia i uszkodzonej sygnalizacji na skrzyżowaniu.</p>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-surface-variant">
+<div class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-[16px] animate-pulse">warning</span>
+<span class="font-label-sm text-label-sm uppercase">IN_PROGRESS</span>
+</div>
+<button class="bg-error text-on-error font-label-md text-label-md px-3 py-1 uppercase tracking-wider hover:bg-error-container transition-colors">REVIEW LOG</button>
+</div>
+</div>
+</div>
+<!-- Ticket 2: Secondary Warning -->
+<div class="bg-surface-container border border-surface-variant relative overflow-hidden flex flex-col">
+<div class="h-1 w-full bg-secondary-container shadow-[0_0_8px_rgba(253,144,0,0.8)]"></div>
+<div class="p-gutter flex flex-col gap-unit">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-secondary-container bg-secondary-container/10 px-1 py-0.5 border border-secondary-container/30">INCIDENT_ID: 72B-11</span>
+<span class="font-label-sm text-label-sm text-outline">09:15 : 23.10</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Wybita szyba na przystanku</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Szkło rozrzucone na chodniku, stanowi zagrożenie dla pieszych.</p>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-surface-variant">
+<div class="flex items-center gap-1 text-secondary-container">
+<span class="material-symbols-outlined text-[16px]">pending</span>
+<span class="font-label-sm text-label-sm uppercase">QUEUED</span>
+</div>
+<button class="border border-secondary-container text-secondary-container font-label-md text-label-md px-3 py-1 uppercase tracking-wider hover:bg-secondary-container/10 transition-colors">DETAILS</button>
+</div>
+</div>
+</div>
+<!-- Ticket 3: Secondary Warning -->
+<div class="bg-surface-container border border-surface-variant relative overflow-hidden flex flex-col">
+<div class="h-1 w-full bg-secondary-container shadow-[0_0_8px_rgba(253,144,0,0.8)]"></div>
+<div class="p-gutter flex flex-col gap-unit">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-secondary-container bg-secondary-container/10 px-1 py-0.5 border border-secondary-container/30">INCIDENT_ID: 61C-04</span>
+<span class="font-label-sm text-label-sm text-outline">18:45 : 21.10</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Awaria latarni</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Ulica całkowicie zaciemniona wzdłuż parku.</p>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-surface-variant">
+<div class="flex items-center gap-1 text-secondary-container">
+<span class="material-symbols-outlined text-[16px]">pending</span>
+<span class="font-label-sm text-label-sm uppercase">QUEUED</span>
+</div>
+<button class="border border-secondary-container text-secondary-container font-label-md text-label-md px-3 py-1 uppercase tracking-wider hover:bg-secondary-container/10 transition-colors">DETAILS</button>
+</div>
+</div>
+</div>
+<!-- Ticket 4: Resolved -->
+<div class="bg-surface-container-low border border-surface-variant relative overflow-hidden flex flex-col opacity-80">
+<div class="h-1 w-full bg-primary-container"></div>
+<div class="p-gutter flex flex-col gap-unit">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-primary-container bg-primary-container/10 px-1 py-0.5 border border-primary-container/30">INCIDENT_ID: 44D-99</span>
+<span class="font-label-sm text-label-sm text-outline">11:30 : 19.10</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface-variant uppercase line-through">Porzucone auto</h3>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-surface-variant">
+<div class="flex items-center gap-1 text-primary-container">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span class="font-label-sm text-label-sm uppercase">ARCHIVED</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 border-t border-outline-variant shadow-[0_-4px_12px_rgba(0,220,230,0.2)] bg-surface-container-lowest dark:bg-surface-container-lowest fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-gutter md:hidden">
+<a class="flex flex-col items-center justify-center text-outline p-unit hover:bg-surface-variant active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">map</span>
+<span class="sr-only">map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-container bg-surface-container-high rounded-none border-t-2 border-primary-container p-unit active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="sr-only">warning</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline p-unit hover:bg-surface-variant active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">emergency_share</span>
+<span class="sr-only">emergency_share</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline p-unit hover:bg-surface-variant active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">group</span>
+<span class="sr-only">group</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline p-unit hover:bg-surface-variant active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined text-[24px]">person</span>
+<span class="sr-only">person</span>
+</a>
+</nav>
+</body></html>

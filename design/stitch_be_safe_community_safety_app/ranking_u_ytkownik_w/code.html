@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ranking użytkowników - be:Safe</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e2e2e2",
+                        "primary-container": "#e9003a",
+                        "error": "#ba1a1a",
+                        "surface": "#f9f9f9",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "primary-fixed": "#ffdad9",
+                        "on-secondary-container": "#217128",
+                        "primary": "#ba002c",
+                        "on-primary-fixed-variant": "#920021",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-container": "#f4fffb",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#008376",
+                        "outline-variant": "#e8bcbb",
+                        "tertiary-fixed": "#88f5e3",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-fixed": "#002204",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-background": "#1a1c1c",
+                        "tertiary": "#00685d",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-fixed-dim": "#88d982",
+                        "on-primary-container": "#fffbff",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb3b3",
+                        "secondary-container": "#a0f399",
+                        "on-secondary-fixed-variant": "#005312",
+                        "inverse-on-surface": "#f1f1f1",
+                        "secondary": "#1b6d24",
+                        "outline": "#936e6d",
+                        "on-primary-fixed": "#400009",
+                        "on-surface-variant": "#5e3f3e",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "surface-container-high": "#e8e8e8",
+                        "background": "#f9f9f9",
+                        "on-tertiary-fixed": "#00201c",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#a3f69c",
+                        "surface-tint": "#bf002e",
+                        "surface-container": "#eeeeee",
+                        "on-surface": "#1a1c1c",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f3f3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "24px",
+                        "stack-md": "12px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-surface dark:bg-background z-40">
+<div class="flex items-center justify-between px-margin-mobile py-4 w-full">
+<button class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors p-2 rounded-full active:scale-95">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim">Ranking Społeczności</h1>
+<button class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors p-2 rounded-full active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<main class="flex-grow flex flex-col px-margin-mobile gap-stack-lg pb-[100px]">
+<!-- Filtering -->
+<section class="mt-stack-md">
+<div class="flex bg-surface-container-low rounded-xl p-1 shadow-sm">
+<button class="flex-1 py-2 font-label-lg text-label-lg text-on-primary bg-primary rounded-lg shadow-sm text-center">Moje miasto</button>
+<button class="flex-1 py-2 font-label-lg text-label-lg text-on-surface-variant text-center">Wszyscy</button>
+<button class="flex-1 py-2 font-label-lg text-label-lg text-on-surface-variant text-center">Znajomi</button>
+</div>
+</section>
+<!-- Podium Section -->
+<section class="pt-stack-lg pb-stack-md flex justify-center items-end gap-gutter relative">
+<!-- 2nd Place -->
+<div class="flex flex-col items-center gap-stack-sm mb-4">
+<div class="relative">
+<img alt="Avatar Anna_S" class="w-16 h-16 rounded-full object-cover border-4 border-surface-container shadow-md" data-alt="A portrait photography of a smiling young woman, highly detailed, professional lighting, modern bright aesthetic, soft focus background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9VYwxj1jbjGIiGZSDg_jhdSDeTwqYPlmIQKMh0vptqeqIR1moVNPvo5qF350TyM7aVIg97ISlm0JxX_2s3CsXCTmU9hvSktZJK6ywYMVo3obj4zhPVrA-EJIxa7iv6qVrEwnqDYkK7A3l-w_o5YyzwhMoL2q-d8QzWYTsaQofPeE-NOBw8Sek5jtmYpsiEJzNqYSyJkP6jq2VwXyMZaY8TGISnHflf5qd4d-hYeOC8KFpivE51mQF90rvHQx639Ht0mUS5voUfqs"/>
+<div class="absolute -bottom-2 -right-2 bg-surface-container-highest rounded-full w-8 h-8 flex items-center justify-center shadow-sm border-2 border-surface">
+<span class="text-lg leading-none">🥈</span>
+</div>
+</div>
+<div class="text-center mt-2">
+<h3 class="font-label-lg text-label-lg text-on-surface">Anna_S</h3>
+<p class="font-body-md text-body-md text-primary font-bold">1,100</p>
+</div>
+</div>
+<!-- 1st Place -->
+<div class="flex flex-col items-center gap-stack-sm z-10">
+<div class="relative">
+<img alt="Avatar Marek_92" class="w-24 h-24 rounded-full object-cover border-4 border-primary/20 shadow-lg ring-4 ring-primary/10" data-alt="A professional headshot of a young man with a beard, smiling warmly, bright lighting, crisp details, soft light grey background, high-end commercial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8H4YiR0sAuu21wi6Wkz7YRaD3fHIgKsj_3VA6Tb7T0HT5DaWgF0e4DRhQXUcn9QyTCQqXndQr9QPSmdRMKjO6gg9jQnO8cpcDWXnqoulqtKTA5JzX5fL8o2r8yn1DoY8mlIq73f1ioBwcN6z_QQeTIiusx6e7bns1i1Jn5yH1tk7YjXT_agnYeVVjDyqspjf5OtcWE0519dFEUk0oa6qsq02zxZTiY9hkWtbSm55Shw6D2o-GpdBFLhdiJeH5rAhOrvPP6V88xTI"/>
+<div class="absolute -bottom-3 -right-1 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full w-10 h-10 flex items-center justify-center shadow-md border-2 border-surface">
+<span class="text-xl leading-none drop-shadow-sm">🥇</span>
+</div>
+</div>
+<div class="text-center mt-2">
+<h3 class="font-title-lg text-title-lg text-on-surface">Marek_92</h3>
+<p class="font-body-lg text-body-lg text-primary font-bold">1,250</p>
+</div>
+</div>
+<!-- 3rd Place -->
+<div class="flex flex-col items-center gap-stack-sm mb-4">
+<div class="relative">
+<img alt="Avatar Piotr_W" class="w-16 h-16 rounded-full object-cover border-4 border-surface-container shadow-md" data-alt="A casual portrait of a man looking slightly off-camera, natural daylight, soft focus urban background, modern lifestyle aesthetic, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyDQ-MmLDdWVQw_nLZJjutDPj8UJ2ODX0xkM6SeFW0L-mzT2_HK45gZSDStvW_gIAy5rvlqvU8IJXXQc57A5HPPfvqbvgKrCI6H5BelMCAsre9Ixhg4q_3fBSMBJB_iWBozgXcHA1cb7eu--zqgwxxJReISrPuPh28Bvfs8zqhuT63ljWIOYsNPmrH86yv4mXJSfrELDGTetyfS1WhJMWPnwGkjVnPHd9FwSdmxcSnSqsXRUgxjwbA1IhevU2L15mYQ_emizx7HTM"/>
+<div class="absolute -bottom-2 -right-2 bg-orange-200 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border-2 border-surface">
+<span class="text-lg leading-none">🥉</span>
+</div>
+</div>
+<div class="text-center mt-2">
+<h3 class="font-label-lg text-label-lg text-on-surface">Piotr_W</h3>
+<p class="font-body-md text-body-md text-primary font-bold">980</p>
+</div>
+</div>
+<!-- Podium Base Decor -->
+<div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[80%] h-32 bg-gradient-to-t from-surface-variant/30 to-transparent -z-10 rounded-t-full opacity-50 blur-xl"></div>
+</section>
+<!-- Leaderboard List -->
+<section class="flex flex-col gap-base">
+<!-- Rank 4 -->
+<div class="flex items-center p-3 bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant/50">
+<span class="w-8 text-center font-title-lg text-title-lg text-on-surface-variant">4</span>
+<img alt="Avatar Kamil_K" class="w-12 h-12 rounded-full object-cover ml-2" data-alt="A close-up portrait of a young man, clear and bright lighting, neutral light background, modern clean style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqVACAm1JoYR4CZCPgGki_5qY_udOmBy75JOjbx6FU9aVlYbxTAAd1huMRzfSYUDZmjBSW4LEgXGf7EsPi3PUMjxYeNXMT83xQtjItFVIitn4NbZElJ5Ije_0rgZ8NOwQgI3M0sx1od9GzaSNoCOBu2KOAg5xCheALG0Zhtg4oxVwZChyyXdNK0KaagZLO5KKtEge8X2FzMor-nZ-P7IYRDoA2u7UHxOa1eMlKOAioXF-rKOMzkt5tXF3wlF34OZBuWca-AFvwuT8"/>
+<div class="ml-3 flex-grow">
+<div class="flex items-center gap-1">
+<h4 class="font-label-lg text-label-lg text-on-surface">Kamil_K</h4>
+<span class="text-xs">🏅</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-[11px]">12 zgłoszeń · 45 potwierdzeń</p>
+</div>
+<span class="font-body-lg text-body-lg font-bold text-primary">850</span>
+</div>
+<!-- Rank 5 (Current User) -->
+<div class="flex items-center p-3 bg-primary-container/10 rounded-xl shadow-sm border border-primary/20 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<span class="w-8 text-center font-title-lg text-title-lg text-primary">5</span>
+<img alt="Avatar Jan" class="w-12 h-12 rounded-full object-cover ml-2 border-2 border-primary/30" data-alt="A portrait of a person in a bright environment, clean and professional look, soft lighting, light airy background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeqj79fZSeJZXYDsOshNe2NTBt1H5nWevRiHkEMCw4XHJZ22hT1WPv2AyhQtdPC1YnIjW6YD8WzBXNsLjOE-G1tyMigws5L6nDB0N2EIXA2TCLFWW20up5sXw5hxQgcnHmSp1U3Ue83PNXc5BrRaAxvFGZLkspTDfGpxXZyN_4l91HJAteGPYAcSoHqmFWr0O77CH0jPKGPoNurLAyI6_2sqPpM07ssJjOmDtR6JsHczpHxixsRClEhr5bWFyHj_JKWpD2NjWDjf8"/>
+<div class="ml-3 flex-grow">
+<h4 class="font-label-lg text-label-lg text-on-surface font-bold">Ty (Jan)</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-[11px]">10 zgłoszeń · 38 potwierdzeń</p>
+</div>
+<span class="font-body-lg text-body-lg font-bold text-primary">820</span>
+</div>
+<!-- Rank 6 -->
+<div class="flex items-center p-3 bg-surface-container-lowest rounded-xl shadow-sm border border-surface-variant/50">
+<span class="w-8 text-center font-title-lg text-title-lg text-on-surface-variant">6</span>
+<img alt="Avatar Ewa_M" class="w-12 h-12 rounded-full object-cover ml-2" data-alt="A headshot of a smiling woman, bright lighting, soft neutral background, professional and approachable aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwJAV3ib3z0y2HvQzdlQ5mhmcSCMih8S7uEjk4tXjGGuniCa8KJNN6h6T4JzKzzoBI0BxFsqvF1IbkZ6lpKOsLzDZUGSkbSJY4T_JMlaAZPqQlRjD_iyy0ODAyIuTus9Keup_W34sE1FUokuG7rqKXaAwy7xKFUT0BmuSz_yOIrEp3AhwGsQm4JmJAe0RC5nrn2FTBLpwf-xoBto5sr4B14-hXmAyCu2fbzn5yUK2j91DdBIQtQksoeShB_Fkr9Y4f--NOlkBd3wA"/>
+<div class="ml-3 flex-grow">
+<div class="flex items-center gap-1">
+<h4 class="font-label-lg text-label-lg text-on-surface">Ewa_M</h4>
+<span class="text-xs">🏅</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-[11px]">8 zgłoszeń · 30 potwierdzeń</p>
+</div>
+<span class="font-body-lg text-body-lg font-bold text-primary">790</span>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container dark:bg-surface-container-high shadow-lg pb-safe">
+<div class="flex justify-around items-center w-full px-2 py-3">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all rounded-2xl active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-lg text-label-lg mt-1">Główna</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all rounded-2xl active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="font-label-lg text-label-lg mt-1">Alerty</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 hover:bg-surface-variant transition-all active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-label-lg text-label-lg mt-1">Ranking</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all rounded-2xl active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-lg text-label-lg mt-1">Profil</span>
+</button>
+</div>
+</nav>
+</body></html>

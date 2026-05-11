@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Onboarding Zaczynajmy</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#217128",
+                        "primary": "#ba002c",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#920021",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "on-surface": "#1a1c1c",
+                        "surface-tint": "#bf002e",
+                        "surface-container-low": "#f3f3f3",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#a0f399",
+                        "secondary": "#1b6d24",
+                        "on-secondary-fixed": "#002204",
+                        "on-tertiary-container": "#f4fffb",
+                        "tertiary-container": "#008376",
+                        "on-secondary-fixed-variant": "#005312",
+                        "primary-container": "#e9003a",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#88d982",
+                        "background": "#f9f9f9",
+                        "tertiary-fixed": "#88f5e3",
+                        "surface-bright": "#f9f9f9",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary": "#00685d",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-container": "#fffbff",
+                        "surface-dim": "#dadada",
+                        "surface-container": "#eeeeee",
+                        "secondary-fixed": "#a3f69c",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary": "#ffffff",
+                        "outline": "#936e6d",
+                        "error": "#ba1a1a",
+                        "on-background": "#1a1c1c",
+                        "surface-variant": "#e2e2e2",
+                        "inverse-primary": "#ffb3b3",
+                        "surface-container-high": "#e8e8e8",
+                        "surface": "#f9f9f9",
+                        "on-primary-fixed": "#400009",
+                        "primary-fixed": "#ffdad9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "24px",
+                        "stack-md": "12px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "base": "8px",
+                        "stack-sm": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-lg">
+<!-- Top App Bar (Suppressed due to linear onboarding intent, but keeping brand presence minimal) -->
+<header class="w-full flex justify-center items-center h-16 pt-margin-mobile px-margin-mobile">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">be:Safe</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-stack-lg max-w-md mx-auto w-full">
+<!-- Illustration -->
+<div class="w-full aspect-square mb-stack-lg rounded-xl overflow-hidden shadow-sm relative bg-surface-container-low flex items-center justify-center">
+<img alt="Community map illustration" class="w-full h-full object-cover opacity-90" data-alt="A modern, abstract digital illustration of a community map designed in a clean, Material 3 style. The map features soft, rounded geographic shapes indicating neighborhoods, highlighted with friendly, vibrant safe zones represented by glowing subtle green and teal areas. Delicate map pins and stylized minimal avatars suggest community connections. The color palette emphasizes clean whites, soft grays, and touches of the app's primary deep red for contrast. The overall mood is welcoming, secure, and modern, fitting a high-end Polish safety app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3E5kvKNJXrENlc98gqZOVyJHPN0KeklK90iyRC8Ab7ZLg8c-MJeK4SVxsGReglp4Yp_EHcF4kuQgJajrUEsgn66sMpCfD6RMigdCF-2xxI0T7NmpJ2h4LSKc4gCdlSfvDD2MJoE-OXYwJHnZCJS_jfohRj9HZ1GzWOevl4Xt5joFx9hCngh_XARkalsHoF3siumBunHocfJb87nLmGwjdkI-ifhHCGiFTMSOOySrOxuzslvhenCdTf3-EDQuuOhPtvWZjCmlLbAs"/>
+<!-- Decorative overlay to make it look more like UI illustration -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60"></div>
+</div>
+<!-- Copy -->
+<div class="text-center w-full mb-stack-lg">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-stack-sm">Zaczynajmy</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Dołącz do społeczności be:Safe i pomóż nam tworzyć bezpieczniejszą okolicę.</p>
+</div>
+<!-- Action Buttons -->
+<div class="w-full flex flex-col gap-stack-md mt-auto mb-stack-lg">
+<button class="w-full bg-primary text-on-primary py-3 px-6 rounded-full font-label-lg text-label-lg shadow-md hover:bg-primary-container hover:text-on-primary-container transition-colors active:scale-95 duration-150 flex justify-center items-center">
+                Zaloguj się
+            </button>
+<button class="w-full bg-secondary text-on-secondary py-3 px-6 rounded-full font-label-lg text-label-lg shadow-md hover:bg-secondary-container hover:text-on-secondary-container transition-colors active:scale-95 duration-150 flex justify-center items-center">
+                Kontynuuj jako gość
+            </button>
+</div>
+<!-- Pagination Dots -->
+<div class="flex items-center justify-center gap-2 mb-stack-lg">
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-8 h-2 rounded-full bg-primary"></div>
+</div>
+</main>
+<!-- BottomNavBar is suppressed as this is an onboarding flow -->
+</body></html>

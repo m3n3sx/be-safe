@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AEGIS // SYSTEM - Your Safety Contributions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;family=Geist:wght@200;400&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#ffcbe0",
+                        "outline-variant": "#3b494b",
+                        "tertiary-fixed": "#ffd8e7",
+                        "on-tertiary-fixed-variant": "#85145a",
+                        "on-primary": "#00363a",
+                        "inverse-surface": "#dae2fd",
+                        "on-secondary-fixed": "#23005c",
+                        "primary-fixed-dim": "#00dbe9",
+                        "on-background": "#dae2fd",
+                        "surface-variant": "#2d3449",
+                        "primary-container": "#00f0ff",
+                        "error": "#ffb4ab",
+                        "surface": "#0b1326",
+                        "on-secondary": "#3c0091",
+                        "surface-dim": "#0b1326",
+                        "primary-fixed": "#7df4ff",
+                        "on-secondary-container": "#c4abff",
+                        "on-primary-fixed-variant": "#004f54",
+                        "primary": "#dbfcff",
+                        "surface-container-highest": "#2d3449",
+                        "on-tertiary-container": "#a43173",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#620040",
+                        "on-primary-fixed": "#002022",
+                        "on-surface-variant": "#b9cacb",
+                        "surface-container-high": "#222a3d",
+                        "tertiary-fixed-dim": "#ffafd3",
+                        "background": "#0b1326",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#3d0026",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-tint": "#00dbe9",
+                        "surface-container": "#171f33",
+                        "on-surface": "#dae2fd",
+                        "surface-container-lowest": "#060e20",
+                        "surface-container-low": "#131b2e",
+                        "surface-bright": "#31394d",
+                        "tertiary": "#fff2f5",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "on-primary-container": "#006970",
+                        "inverse-primary": "#006970",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#571bc1",
+                        "inverse-on-surface": "#283044",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "secondary": "#d0bcff",
+                        "outline": "#849495"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "glass-padding": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "unit": "4px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "body-sm": ["Geist"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Geist"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "label-caps": ["Space Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "200" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "200" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            background-image: radial-gradient(circle at 50% 0%, #171f33 0%, #0b1326 70%);
+            background-attachment: fixed;
+        }
+        .glass-panel {
+            background: rgba(45, 52, 73, 0.2);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-panel-active {
+            background: rgba(0, 219, 233, 0.05);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(0, 219, 233, 0.3);
+            box-shadow: 0 0 20px rgba(0, 219, 233, 0.15), inset 0 0 10px rgba(0, 219, 233, 0.05);
+        }
+        .glow-text {
+            text-shadow: 0 0 8px rgba(0, 219, 233, 0.6);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background min-h-screen overflow-x-hidden font-body-lg pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface/40 backdrop-blur-3xl fixed top-4 left-4 right-4 rounded-full border border-white/10 shadow-[0_0_20px_rgba(0,219,233,0.15)] transition-all duration-500 ease-out active:scale-95 flex justify-between items-center px-6 h-14 w-[calc(100%-32px)] mx-auto z-50">
+<div class="flex items-center text-primary hover:bg-primary/10 hover:shadow-[0_0_10px_rgba(0,219,233,0.2)] rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined">shield_with_heart</span>
+</div>
+<div class="font-label-caps text-label-caps tracking-[0.2em] text-primary dark:text-primary-fixed font-bold">
+            AEGIS // SYSTEM
+        </div>
+<div class="flex items-center text-primary hover:bg-primary/10 hover:shadow-[0_0_10px_rgba(0,219,233,0.2)] rounded-full p-2 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="pt-28 px-margin-mobile flex flex-col gap-gutter">
+<!-- Header -->
+<section class="mb-4">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary-fixed-dim mb-2 glow-text">Your Safety Contributions</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm">A chronical of anomalies detected and stabilized within the sector. Your vigilance sustains the equilibrium.</p>
+</section>
+<!-- Stats Overview -->
+<div class="grid grid-cols-2 gap-4 mb-2">
+<div class="glass-panel rounded-xl p-glass-padding flex flex-col relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary-fixed-dim to-transparent opacity-50"></div>
+<span class="font-label-caps text-label-caps text-outline mb-2">RESOLVED</span>
+<span class="font-headline-md text-headline-md text-primary-fixed">42</span>
+</div>
+<div class="glass-panel rounded-xl p-glass-padding flex flex-col relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-tertiary-fixed-dim to-transparent opacity-50"></div>
+<span class="font-label-caps text-label-caps text-outline mb-2">PENDING</span>
+<span class="font-headline-md text-headline-md text-tertiary-fixed">03</span>
+</div>
+</div>
+<!-- Report Stack -->
+<div class="flex flex-col gap-4 relative">
+<!-- Active Report Card -->
+<article class="glass-panel-active rounded-xl p-glass-padding relative overflow-hidden z-10 transform scale-100 transition-transform">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-fixed-dim via-primary to-transparent opacity-80"></div>
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-primary-fixed-dim flex items-center justify-center bg-primary-fixed-dim/10 text-primary-fixed-dim shadow-[0_0_15px_rgba(0,219,233,0.3)]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leak_add</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-primary-fixed-dim glow-text">ACTIVE INVESTIGATION</div>
+<h2 class="font-headline-md text-headline-md text-primary mt-1">Structural Resonace Detected</h2>
+</div>
+</div>
+</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mb-6 line-clamp-2">
+                    Anomalous vibratory patterns recorded near Sector 7G core support strut. Amplitude exceeds standard tolerance parameters by 14%.
+                </div>
+<div class="flex justify-between items-end border-t border-white/5 pt-4">
+<div class="flex flex-col gap-1">
+<span class="font-label-caps text-label-caps text-outline text-[10px]">TIMESTAMP</span>
+<span class="font-body-sm text-body-sm text-inverse-surface">2045.11.04 // 14:32</span>
+</div>
+<div class="flex flex-col gap-1 text-right">
+<span class="font-label-caps text-label-caps text-outline text-[10px]">STATUS</span>
+<span class="font-body-sm text-body-sm text-tertiary-fixed-dim">Analyzing</span>
+</div>
+</div>
+</article>
+<!-- Historical Report Card 1 -->
+<article class="glass-panel rounded-xl p-glass-padding relative overflow-hidden z-0 -mt-2 scale-[0.98] opacity-90 transition-transform">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-outline flex items-center justify-center bg-surface-variant/30 text-outline">
+<span class="material-symbols-outlined">electric_meter</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-outline">ARCHIVED</div>
+<h2 class="font-headline-md text-headline-md text-inverse-surface mt-1 text-lg">Power Surge - Level 4</h2>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<div class="flex flex-col gap-1">
+<span class="font-label-caps text-label-caps text-outline text-[10px]">TIMESTAMP</span>
+<span class="font-body-sm text-body-sm text-outline-variant">2045.11.02 // 09:15</span>
+</div>
+<div class="flex flex-col gap-1 text-right">
+<span class="font-label-caps text-label-caps text-outline text-[10px]">STATUS</span>
+<span class="font-body-sm text-body-sm text-primary-fixed-dim">Stabilized</span>
+</div>
+</div>
+</article>
+<!-- Historical Report Card 2 -->
+<article class="glass-panel rounded-xl p-glass-padding relative overflow-hidden z-0 -mt-2 scale-[0.96] opacity-70 transition-transform">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-outline flex items-center justify-center bg-surface-variant/30 text-outline">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-outline">ARCHIVED</div>
+<h2 class="font-headline-md text-headline-md text-inverse-surface mt-1 text-lg">Coolant Micro-Fracture</h2>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<div class="flex flex-col gap-1">
+<span class="font-label-caps text-label-caps text-outline text-[10px]">TIMESTAMP</span>
+<span class="font-body-sm text-body-sm text-outline-variant">2045.10.28 // 22:40</span>
+</div>
+<div class="flex flex-col gap-1 text-right">
+<span class="font-label-caps text-label-caps text-outline text-[10px]">STATUS</span>
+<span class="font-body-sm text-body-sm text-primary-fixed-dim">Stabilized</span>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface-container-lowest/30 backdrop-blur-2xl border-t border-l border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.3)] fixed bottom-6 left-6 right-6 h-20 z-50 flex justify-around items-center px-4 rounded-full md:hidden">
+<a class="flex flex-col items-center justify-center text-outline grayscale opacity-60 hover:text-primary-fixed-dim transition-colors scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">radar</span>
+<span class="font-label-caps text-[10px] tracking-widest mt-1">MONITOR</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-fixed brightness-125 drop-shadow-[0_0_8px_rgba(0,219,233,0.6)] hover:text-primary-fixed-dim transition-colors scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">add_box</span>
+<span class="font-label-caps text-[10px] tracking-widest mt-1">REPORT</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline grayscale opacity-60 hover:text-primary-fixed-dim transition-colors scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="font-label-caps text-[10px] tracking-widest mt-1">INTEL</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline grayscale opacity-60 hover:text-primary-fixed-dim transition-colors scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label-caps text-[10px] tracking-widest mt-1">UNIT</span>
+</a>
+</nav>
+</body></html>

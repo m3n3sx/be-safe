@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zaproś znajomych - be:Safe</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f3f3f3",
+                    "surface-dim": "#dadada",
+                    "on-surface": "#1a1c1c",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#ffb3b3",
+                    "surface-tint": "#bf002e",
+                    "primary-container": "#e9003a",
+                    "on-error-container": "#93000a",
+                    "outline": "#936e6d",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary-fixed": "#ffdad9",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#f1f1f1",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#217128",
+                    "on-background": "#1a1c1c",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed-dim": "#ffb3b3",
+                    "surface-container-high": "#e8e8e8",
+                    "on-primary-fixed-variant": "#920021",
+                    "on-tertiary-fixed-variant": "#005047",
+                    "on-secondary-fixed": "#002204",
+                    "on-primary-fixed": "#400009",
+                    "on-tertiary-fixed": "#00201c",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed-dim": "#6ad9c8",
+                    "secondary-fixed": "#a3f69c",
+                    "surface-bright": "#f9f9f9",
+                    "on-secondary-fixed-variant": "#005312",
+                    "tertiary-fixed": "#88f5e3",
+                    "surface-container": "#eeeeee",
+                    "on-surface-variant": "#5e3f3e",
+                    "on-primary-container": "#fffbff",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#e2e2e2",
+                    "outline-variant": "#e8bcbb",
+                    "background": "#f9f9f9",
+                    "secondary-fixed-dim": "#88d982",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#2f3131",
+                    "tertiary": "#00685d",
+                    "surface": "#f9f9f9",
+                    "tertiary-container": "#008376",
+                    "secondary-container": "#a0f399",
+                    "secondary": "#1b6d24",
+                    "primary": "#ba002c",
+                    "on-tertiary-container": "#f4fffb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-sm": "4px",
+                    "gutter": "16px",
+                    "stack-md": "12px",
+                    "stack-lg": "24px",
+                    "margin-mobile": "16px",
+                    "base": "8px",
+                    "margin-desktop": "24px"
+            },
+            "fontFamily": {
+                    "title-lg": [
+                            "Inter"
+                    ],
+                    "label-lg": [
+                            "Inter"
+                    ],
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "title-lg": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-lg": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.5px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    }
+            }
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col antialiased">
+<!-- TopAppBar -->
+<header class="w-full top-0 sticky bg-surface dark:bg-background z-40">
+<div class="flex items-center justify-between px-margin-mobile py-4 w-full">
+<button aria-label="Go back" class="text-primary dark:text-primary-fixed-dim active:scale-95 transition-transform hover:bg-surface-variant/50 rounded-full p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim">Ranking Społeczności</h1>
+<button aria-label="Settings" class="text-primary dark:text-primary-fixed-dim active:scale-95 transition-transform hover:bg-surface-variant/50 rounded-full p-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col px-margin-mobile md:px-margin-desktop py-stack-lg max-w-2xl mx-auto w-full gap-stack-lg pb-[100px]">
+<!-- Header Section -->
+<div class="flex flex-col items-center text-center gap-stack-sm">
+<div class="w-32 h-32 rounded-full bg-surface-container-low flex items-center justify-center mb-stack-md relative overflow-hidden">
+<img alt="Friendly hands exchanging a gift box" class="w-full h-full object-cover" data-alt="A modern, minimalist illustration or photograph of hands gently exchanging a beautifully wrapped small gift box. The setting is bright and cheerful with high-key lighting, emphasizing a clean, light-mode aesthetic. The color palette features soft whites, light greys, and vibrant accents of deep red (#ba002c) representing community and protection. The mood is warm, trustworthy, and welcoming, perfectly aligned with a professional safety app's visual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr3O5T1V9PUPDgwwjsFnIoaL6ZFjzjYNUfYT2mCo_Qpws_-ZUO-lLbHkVQENs7ohVx2kQrFojVFG5eJPBuZaAe77wVMDycUweKymuurATQ5S5IZc5OCBCxwcvZRcwgwKx2IS-oh9v109nJatu6Zy6TOsNB944T-yL3u1gdC3k0vYx7EoJaG-OhN1AXLcbsSs-fUcC9ck7M6rt86E82kOKWYKvxOKPhfkjKdv_UEavuvIFqVfDjQrhkGEjZLyoVyZj84tv6cvsP4aM"/>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-background">Zapraszaj i zdobywaj punkty!</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Za każdą zaproszoną osobę otrzymujesz 10 punktów reputacji</p>
+</div>
+<!-- Referral Code Box -->
+<div class="bg-surface-container-lowest rounded-xl border border-surface-variant p-stack-md flex flex-col gap-stack-sm shadow-sm relative overflow-hidden group hover:border-primary-fixed transition-colors">
+<label class="font-label-lg text-label-lg text-on-surface-variant">Twój kod polecający</label>
+<div class="flex items-center justify-between">
+<span class="font-headline-lg text-headline-lg text-primary tracking-wider">MENES2026</span>
+<button aria-label="Copy referral code" class="text-primary hover:bg-primary-container/20 p-2 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">content_copy</span>
+</button>
+</div>
+</div>
+<!-- QR Code Section -->
+<div class="flex flex-col items-center justify-center gap-stack-md bg-surface-container-lowest p-stack-lg rounded-xl border border-surface-variant shadow-sm">
+<p class="font-label-lg text-label-lg text-on-surface-variant text-center">Zeskanuj kod aby pobrać aplikację</p>
+<div class="w-[200px] h-[200px] bg-white rounded-lg p-2 flex items-center justify-center border border-surface-dim">
+<img alt="QR Code" class="w-full h-full object-cover rounded" data-alt="A highly detailed, crisp close-up of a generic black and white QR code printed on a smooth, matte white surface. The lighting is soft and even, highlighting the geometric patterns of the code against a pristine, bright background. Subtle hints of a modern, sleek interface frame the code, keeping the overall aesthetic professional, clean, and seamlessly integrated into a light-mode mobile application design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSNRnUWPCJXxmet9X4m0JbRNdqIpQ77Vu9XcQ6x0lqtAppF5m7HuTO45kWL_JbDu5LuR-eFjK1er38DJHuPXWWr9vOZgtw2prFxopJC4AzsQk3mog9f9zAg3chCzREBuMtPVTUkn0QDfjFyumELdxVngKCgsh90uD0EN2igpaouqhwwTLluYVaY3M61FpX2oBJZ1dOQfKJkYJ971CbVaJd0PIEGnJSgONsewMaQCRyrY7eDAtrJV9sY9LT9NRM_3snntTMiqECAKU"/>
+</div>
+</div>
+<!-- Stats Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-surface-variant p-stack-md shadow-sm">
+<div class="flex justify-between items-center divide-x divide-surface-variant">
+<div class="flex flex-col flex-1 items-center justify-center gap-stack-sm p-stack-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">group</span>
+<div class="flex flex-col items-center">
+<span class="font-headline-md text-headline-md text-on-background">5</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">Poleconych</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 items-center justify-center gap-stack-sm p-stack-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">star</span>
+<div class="flex flex-col items-center">
+<span class="font-headline-md text-headline-md text-on-background">50</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">Zdobyte punkty</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="mt-auto pt-stack-md flex flex-col gap-stack-md">
+<button class="w-full bg-primary text-on-primary font-label-lg text-label-lg py-4 rounded-full flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-md active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">share</span>
+                UDOSTĘPNIJ ZAPROSZENIE
+            </button>
+<p class="font-body-md text-body-md text-on-surface-variant text-center px-4">
+                Polecaj be:Safe znajomym i rodzinie — razem tworzymy bezpieczniejsze miasto.
+            </p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface-container dark:bg-surface-container-high shadow-lg hidden md:hidden flex-row">
+<div class="flex justify-around items-center w-full px-2 py-3 pb-safe">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 rounded-2xl">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-lg text-[10px] leading-tight">Główna</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 rounded-2xl">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="font-label-lg text-[10px] leading-tight">Alerty</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-4 py-1 hover:bg-surface-variant transition-all active:scale-90">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-label-lg text-[10px] leading-tight">Ranking</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 rounded-2xl">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-lg text-[10px] leading-tight">Profil</span>
+</button>
+</div>
+</nav>
+<!-- Desktop Sidebar Alternative (hidden on mobile, shown on md up) -->
+<nav class="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-surface-container flex-col border-r border-surface-variant z-50">
+<div class="p-stack-lg border-b border-surface-variant">
+<h1 class="font-headline-md text-headline-md text-primary">be:Safe</h1>
+</div>
+<div class="flex flex-col gap-2 p-stack-md mt-4">
+<button class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant transition-all rounded-xl text-left">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">home</span>
+<span class="font-label-lg text-label-lg">Główna</span>
+</button>
+<button class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant transition-all rounded-xl text-left">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="font-label-lg text-label-lg">Alerty</span>
+</button>
+<button class="flex items-center gap-3 bg-primary-container text-on-primary-container px-4 py-3 rounded-xl text-left">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+<span class="font-label-lg text-label-lg">Ranking</span>
+</button>
+<button class="flex items-center gap-3 text-on-surface-variant px-4 py-3 hover:bg-surface-variant transition-all rounded-xl text-left">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-lg text-label-lg">Profil</span>
+</button>
+</div>
+</nav>
+<div class="hidden md:block md:ml-64 w-full absolute top-0 h-1"></div> <!-- Spacer for desktop layout -->
+</body></html>

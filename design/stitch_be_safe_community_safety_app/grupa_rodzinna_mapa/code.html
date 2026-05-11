@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Szczegóły grupy rodzinnej</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "inverse-on-surface": "#f1f1f1",
+                      "error": "#ba1a1a",
+                      "primary-fixed": "#ffdad9",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-error-container": "#93000a",
+                      "outline": "#936e6d",
+                      "surface-tint": "#bf002e",
+                      "primary-container": "#e9003a",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-primary": "#ffb3b3",
+                      "surface-container-low": "#f3f3f3",
+                      "surface-dim": "#dadada",
+                      "on-surface": "#1a1c1c",
+                      "error-container": "#ffdad6",
+                      "on-primary-fixed": "#400009",
+                      "on-tertiary-fixed": "#00201c",
+                      "surface-container-high": "#e8e8e8",
+                      "on-primary-fixed-variant": "#920021",
+                      "on-tertiary-fixed-variant": "#005047",
+                      "on-secondary-fixed": "#002204",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed-dim": "#ffb3b3",
+                      "on-secondary-container": "#217128",
+                      "on-background": "#1a1c1c",
+                      "surface-variant": "#e2e2e2",
+                      "outline-variant": "#e8bcbb",
+                      "background": "#f9f9f9",
+                      "on-primary": "#ffffff",
+                      "on-primary-container": "#fffbff",
+                      "tertiary-fixed": "#88f5e3",
+                      "surface-container": "#eeeeee",
+                      "on-surface-variant": "#5e3f3e",
+                      "surface-bright": "#f9f9f9",
+                      "on-secondary-fixed-variant": "#005312",
+                      "tertiary-fixed-dim": "#6ad9c8",
+                      "secondary-fixed": "#a3f69c",
+                      "primary": "#ba002c",
+                      "on-tertiary-container": "#f4fffb",
+                      "secondary-container": "#a0f399",
+                      "secondary": "#1b6d24",
+                      "tertiary-container": "#008376",
+                      "surface": "#f9f9f9",
+                      "tertiary": "#00685d",
+                      "secondary-fixed-dim": "#88d982",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#2f3131"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-md": "12px",
+                      "stack-lg": "24px",
+                      "margin-mobile": "16px",
+                      "base": "8px",
+                      "stack-sm": "4px",
+                      "gutter": "16px",
+                      "margin-desktop": "24px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "label-lg": [
+                              "Inter"
+                      ],
+                      "title-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-lg": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-lg": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background h-screen flex flex-col overflow-hidden relative">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full z-40 bg-surface dark:bg-surface-dim flat no shadows docked full-width top-0">
+<div class="flex items-center gap-3">
+<button class="text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-150 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">Kowalscy</h1>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-150 flex items-center justify-center group relative">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+<!-- Dropdown Menu Placeholder (Hidden by default, represented for structure) -->
+<div class="hidden group-hover:flex absolute top-full right-0 mt-2 w-48 bg-surface-container-lowest rounded-lg shadow-md flex-col overflow-hidden z-50">
+<a class="px-4 py-3 font-body-md text-body-md text-on-surface hover:bg-surface-variant transition-colors flex items-center gap-2" href="#"><span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span> Edytuj grupę</a>
+<a class="px-4 py-3 font-body-md text-body-md text-on-surface hover:bg-surface-variant transition-colors flex items-center gap-2" href="#"><span class="material-symbols-outlined text-[20px]" data-icon="person_add">person_add</span> Zaproś osoby</a>
+<a class="px-4 py-3 font-body-md text-body-md text-error hover:bg-error-container transition-colors flex items-center gap-2" href="#"><span class="material-symbols-outlined text-[20px]" data-icon="logout">logout</span> Opuść grupę</a>
+</div>
+</button>
+</header>
+<!-- Segmented Control -->
+<div class="px-margin-mobile py-2 bg-surface z-30">
+<div class="flex bg-surface-container-high rounded-full p-1 relative w-full max-w-sm mx-auto">
+<button class="flex-1 py-2 px-4 rounded-full font-label-lg text-label-lg text-center transition-all duration-200 bg-secondary text-on-secondary shadow-sm relative z-10">
+                Mapa
+            </button>
+<button class="flex-1 py-2 px-4 rounded-full font-label-lg text-label-lg text-center transition-all duration-200 text-on-surface-variant hover:text-on-surface relative z-10">
+                Członkowie
+            </button>
+</div>
+</div>
+<!-- Main Content: Map Canvas -->
+<main class="flex-1 relative w-full bg-surface-variant overflow-hidden">
+<!-- Map Image Representation -->
+<div class="absolute inset-0 w-full h-full bg-cover bg-center" data-alt="A stylized, modern digital map interface displaying an urban city layout. The map features a light-mode aesthetic with soft, muted tonal layers of white, light grey, and subtle greens indicating parks. The style is clean and geometric, resembling a premium navigation app. There are no actual markers drawn into the map itself, providing a clean canvas. The lighting is soft and ambient, creating a welcoming and protective mood." data-location="Warszawa" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA4wvz6DNIopmuNDnI4H0jPBcsgHiUUY3VQtAUrd7l821_40rOaD7fbbHmfq2W8nr4e6oxCVVf8SqmKLl_rwKRprftzfr0UvTjGfhwokB2LquT0-2KlIGtazHs7f3zs_h_pXpsREb5SJ74Kh45Ul-ur28IILp0FC81-8I0PYx-90aTK5oJcNpXg6DdFCJHlSm5XHp3WUwx3DKpq3FzWc2O1q12-qq2XcyQQOXvtpKZ1tT282D2p8Z8XrJ720MSgbiZ2mRV16oRXN2I');">
+</div>
+<!-- Map Overlay Gradient (Optional for better contrast) -->
+<div class="absolute inset-0 bg-gradient-to-b from-surface/20 to-transparent pointer-events-none"></div>
+<!-- Avatars on Map -->
+<!-- Avatar 1: Anna -->
+<div class="absolute top-[20%] left-[30%] flex flex-col items-center group cursor-pointer transform hover:scale-110 transition-transform z-20">
+<div class="w-12 h-12 rounded-full border-4 border-surface shadow-md overflow-hidden bg-secondary-container flex items-center justify-center">
+<img alt="Anna" class="w-full h-full object-cover" data-alt="A close-up portrait of a cheerful young woman with light brown hair, smiling warmly. She is outdoors with soft, natural daylight illuminating her face. The background is softly blurred, focusing entirely on her friendly expression. The mood is approachable and safe, fitting a family contact avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_gszXrFWzNa-PMYN8Sy09SeE083qQ-N-SI-9BU2VP202Mql3u3aZF23q86vg0b2REPiBBk0m7w6CeifkU0jSw3T07xpHAuURFM12jkaDUoVl0UhBSH0c8Ziw_YD6lnyU7WiyqXR2fLMewGRp_NlJrtXYwUZ-WbVTPvtxAulAC0n3Vs6Lq4FpVIKVNDPdvrVxxqLEHxkpSb93MZOBPXDSg04pJRjbdtISxzGrHt6yLjyCdXGCbjyVC9EqhtyG4El8MYWaYx92OlH4"/>
+</div>
+<div class="mt-1 bg-surface-container-highest px-2 py-0.5 rounded-full shadow-sm">
+<span class="font-label-lg text-label-lg text-on-surface">Anna</span>
+</div>
+</div>
+<!-- Avatar 2: Tomek (Active Tooltip) -->
+<div class="absolute top-[45%] left-[60%] flex flex-col items-center group cursor-pointer z-30">
+<!-- Tooltip -->
+<div class="mb-2 bg-surface text-on-surface px-3 py-2 rounded-lg shadow-lg border border-outline-variant flex flex-col items-center relative animate-pulse">
+<span class="font-label-lg text-label-lg whitespace-nowrap">Tomek • Przed chwilą</span>
+<!-- Triangle indicator -->
+<div class="absolute -bottom-2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-surface"></div>
+</div>
+<div class="w-14 h-14 rounded-full border-4 border-secondary shadow-lg overflow-hidden bg-secondary-container flex items-center justify-center ring-4 ring-secondary/20">
+<img alt="Tomek" class="w-full h-full object-cover" data-alt="A close-up portrait of a young man with short dark hair, looking directly at the camera with a relaxed, confident expression. The lighting is bright and even, creating a clean, modern aesthetic. The background is an abstract, soft-focus urban setting. The overall mood is reliable and protective." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_tN3vPwbZnWr8pxkp57B0GEI9JFI_aMLL3V2yPAPcCcOw-sD4sZ155BiTQBHjtoYYx5Gjll2FXPBiC6CKBYgRvhF9Qp_qk-D_Iv0skI455bNcoErJG2-KZjHFkKSFskBS9CUL1NFkbPEBjWGthrUs0EzxQ1V33WFVK3YTF4Lwr1CKrahvx82Ru6SNFc6Fq_FY6a6pRPj-4PdjNS_e8MVD-JclVIUll6CE-tInC_6TXdXNHvdiKmhPZXF8Xv8YNJWJrEUWSJe3zgM"/>
+</div>
+</div>
+<!-- Avatar 3: Marek -->
+<div class="absolute bottom-[35%] left-[20%] flex flex-col items-center group cursor-pointer transform hover:scale-110 transition-transform z-20">
+<div class="w-12 h-12 rounded-full border-4 border-surface shadow-md overflow-hidden bg-secondary-container flex items-center justify-center">
+<img alt="Marek" class="w-full h-full object-cover" data-alt="A close-up portrait of a middle-aged man with a short beard and a warm, reassuring smile. He is wearing a casual light grey shirt. The lighting is soft and natural, emphasizing a trustworthy and paternal demeanor. The background is out of focus, colored in subtle earth tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmnNOdv8w16P6pPiHZu75gQuPLQ5jgqPDrvKz_dXtBJtp6HEbu0kF5MoviSD7oYm-Ibg2q6BObG0uH4pt5j5NDeKdrq5pYHXPjb0LleCHnvIok7KgZuoYB1L898UQRrNw86tYePJrkpL9bu8Mv-gYNYqCzASFEvqjV0PZLdD0ctcMHPF77KHyZjTUkG3XbsrBLiZ4j9HZWrcioMaAxpP3dxIg8mqvZrKQ1i0cmKXWdVv5mRLylQhTsWjcJExOwhHicDN9oW64oMu0"/>
+</div>
+<div class="mt-1 bg-surface-container-highest px-2 py-0.5 rounded-full shadow-sm">
+<span class="font-label-lg text-label-lg text-on-surface">Marek</span>
+</div>
+</div>
+<!-- Floating Action Button (FAB) -->
+<button aria-label="Wróć do moich lokalizacji" class="absolute bottom-32 right-margin-mobile w-14 h-14 bg-surface rounded-2xl shadow-lg flex items-center justify-center text-primary hover:bg-surface-variant transition-colors active:scale-95 z-30">
+<span class="material-symbols-outlined text-[28px]" data-icon="my_location" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</button>
+<!-- Bottom Action Overlay -->
+<div class="absolute bottom-20 left-0 w-full px-margin-mobile flex justify-center z-30">
+<button class="w-full max-w-md bg-secondary text-on-secondary font-headline-md text-headline-md py-4 rounded-full shadow-lg hover:bg-secondary/90 transition-colors active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add_location_alt" style="font-variation-settings: 'FILL' 1;">add_location_alt</span>
+                Ustaw bezpieczną strefę
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<!-- The Family Group Map represents a top-level destination within the primary ecosystem, specifically aligning with the 'Rodzina' (Family) intent. -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container dark:bg-surface-container-high docked full-width bottom-0 rounded-t-xl shadow-md">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 group p-2 rounded-xl">
+<div class="w-12 h-8 flex items-center justify-center rounded-full group-hover:bg-surface-variant">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+</div>
+<span class="font-label-lg text-label-lg mt-1">Mapa</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 group p-2 rounded-xl">
+<div class="w-12 h-8 flex items-center justify-center rounded-full group-hover:bg-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</div>
+<span class="font-label-lg text-label-lg mt-1">Alerty</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 group p-2 rounded-xl">
+<div class="w-12 h-8 flex items-center justify-center rounded-full group-hover:bg-surface-variant">
+<span class="material-symbols-outlined text-error" data-icon="emergency_home">emergency_home</span>
+</div>
+<span class="font-label-lg text-label-lg mt-1 text-error">SOS</span>
+</button>
+<!-- Active Tab: Rodzina -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant transition-all active:scale-90 duration-200 group p-2 rounded-xl">
+<div class="w-16 h-8 flex items-center justify-center rounded-full bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary">
+<span class="material-symbols-outlined" data-icon="group" style="font-variation-settings: 'FILL' 1;">group</span>
+</div>
+<span class="font-label-lg text-label-lg mt-1 font-bold text-on-surface">Rodzina</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 group p-2 rounded-xl">
+<div class="w-12 h-8 flex items-center justify-center rounded-full group-hover:bg-surface-variant">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+<span class="font-label-lg text-label-lg mt-1">Profil</span>
+</button>
+</nav>
+<!-- Padding for Bottom Nav -->
+<div class="h-20 w-full bg-surface-variant hidden md:block"></div>
+</body></html>

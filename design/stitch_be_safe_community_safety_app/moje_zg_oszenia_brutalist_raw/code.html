@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Report Log v1.0</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#1b1b1b",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e2e2e2",
+                        "outline-variant": "#cfc4c5",
+                        "on-secondary-fixed": "#1b1d0e",
+                        "inverse-surface": "#303030",
+                        "primary-fixed-dim": "#c6c6c6",
+                        "on-background": "#1b1b1b",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "error": "#ba1a1a",
+                        "primary-container": "#1b1b1b",
+                        "surface-variant": "#e2e2e2",
+                        "on-secondary-container": "#636451",
+                        "primary-fixed": "#e2e2e2",
+                        "surface-dim": "#dadada",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-fixed-variant": "#474747",
+                        "primary": "#000000",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#848484",
+                        "on-surface-variant": "#4c4546",
+                        "on-primary-fixed": "#1b1b1b",
+                        "background": "#f9f9f9",
+                        "surface-container-high": "#e8e8e8",
+                        "tertiary-fixed-dim": "#c6c6c6",
+                        "secondary-fixed": "#e4e4cc",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#1b1b1b",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#eeeeee",
+                        "on-surface": "#1b1b1b",
+                        "surface-tint": "#5e5e5e",
+                        "secondary-fixed-dim": "#c8c8b0",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary": "#000000",
+                        "on-primary-container": "#848484",
+                        "secondary-container": "#e1e1c9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-secondary-fixed-variant": "#474836",
+                        "inverse-primary": "#c6c6c6",
+                        "on-error-container": "#93000a",
+                        "outline": "#7e7576",
+                        "secondary": "#5e604d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "overlap-offset": "-12px",
+                        "border-width": "4px",
+                        "margin-desktop": "48px",
+                        "unit": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["JetBrains Mono"],
+                        "body-lg": ["JetBrains Mono"],
+                        "display-lg": ["Space Mono"],
+                        "headline-lg-mobile": ["Space Mono"],
+                        "headline-lg": ["Space Mono"],
+                        "display-xl": ["Space Mono"],
+                        "label-bold": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.5", "fontWeight": "500" }],
+                        "display-lg": ["56px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "display-xl": ["80px", { "lineHeight": "1.0", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "label-bold": ["14px", { "lineHeight": "1.0", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.0", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Brutalist solid shadow utilities to replace CSS box-shadows */
+        .hard-shadow {
+            position: relative;
+        }
+        .hard-shadow::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: -1;
+        }
+        .hard-shadow-lg::after {
+            top: 8px;
+            left: 8px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-primary font-body-md min-h-screen flex flex-col antialiased selection:bg-secondary-container selection:text-primary">
+<!-- TopAppBar (Shared Component Execution) -->
+<header class="fixed top-0 w-full z-40 bg-background dark:bg-background text-primary dark:text-on-background border-b-4 border-primary dark:border-on-background flex justify-between items-center px-gutter py-4">
+<span class="material-symbols-outlined font-headline-lg-mobile">security</span>
+<h1 class="font-display-lg text-headline-lg uppercase text-primary dark:text-on-background tracking-tighter">SAFETY_LOG_V1</h1>
+<span class="material-symbols-outlined font-headline-lg-mobile">sync_problem</span>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow pt-28 pb-32 px-gutter flex flex-col gap-8">
+<!-- Page Intent Headline -->
+<div class="border-b-4 border-primary pb-2 mb-4">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile uppercase tracking-tight">REPORT LOG v1.0</h2>
+<p class="font-body-md text-body-md mt-2">SYSTEM.STATUS: ACTIVE // ENTRIES: 04</p>
+</div>
+<!-- Oversized List Items -->
+<div class="flex flex-col gap-10">
+<!-- Card 01 -->
+<article class="relative w-full">
+<!-- Brutalist Offset Element -->
+<div class="absolute inset-0 bg-primary translate-x-2 translate-y-2 pointer-events-none"></div>
+<!-- Card Content -->
+<div class="relative bg-surface border-border-width border-primary flex flex-col z-10">
+<!-- Status Tag (Overlapping) -->
+<div class="absolute -top-4 -left-2 bg-primary text-background border-border-width border-primary px-3 py-1 z-20">
+<span class="font-label-bold text-label-bold uppercase tracking-widest">UNRESOLVED</span>
+</div>
+<div class="p-4 pt-8 border-b-4 border-primary bg-secondary-container">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile uppercase mb-1">STRUCTURAL_DAMAGE</h3>
+<p class="font-label-bold text-label-bold">ID: 0X-A942 // LOC: SECTOR 4</p>
+</div>
+<div class="relative h-48 w-full border-b-4 border-primary bg-background">
+<img alt="Damaged concrete" class="w-full h-full object-cover grayscale contrast-150 mix-blend-multiply" data-alt="A stark, high-contrast black-and-white dithered graphic showing heavily cracked and crumbling concrete infrastructure. The image has a raw, industrial aesthetic with heavy grain and no midtones, emphasizing the brutalist, damaged nature of the subject matter. Harsh lighting highlights the textures of the broken stone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6IkFZTw7gQOD9_TOSf6D6mRklP8206qVQla8vTGJDK06NewlW9T4if-0CIWVA5J2jfIqIdg02ROjTXDuCtkkPsl9YiEoNHPjTx2shOIpzJRua7SsQ0totyGJPl9MB4ap4px4Vs75zNDwoQfkPHzO966Sfigy5_QQITUN0kwbiEjIoxZcvYw1kUytIIepM06DK9rsQz1qfOljsZecVNkCXyOnL7sr4Cz3QCfvS1fR2hQCWQ3DAGuBoFV84juPpoVOkb1Vig3y6JqU"/>
+</div>
+<div class="p-4 flex justify-between items-end">
+<p class="font-body-md text-body-md w-3/4">Concrete fatigue detected on primary load-bearing pylon. Immediate inspection required.</p>
+<span class="material-symbols-outlined text-headline-lg">arrow_forward</span>
+</div>
+</div>
+</article>
+<!-- Card 02 -->
+<article class="relative w-full">
+<div class="absolute inset-0 bg-primary translate-x-2 translate-y-2 pointer-events-none"></div>
+<div class="relative bg-surface border-border-width border-primary flex flex-col z-10">
+<div class="absolute -top-4 -right-2 bg-surface text-primary border-border-width border-primary px-3 py-1 z-20">
+<span class="font-label-bold text-label-bold uppercase tracking-widest">LOGGED</span>
+</div>
+<div class="p-4 pt-8 border-b-4 border-primary">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile uppercase mb-1">BIO_HAZARD_DETECT</h3>
+<p class="font-label-bold text-label-bold">ID: 0X-B118 // LOC: TRANSIT_HUB</p>
+</div>
+<div class="relative h-48 w-full border-b-4 border-primary bg-primary">
+<img alt="Chemical spill warning" class="w-full h-full object-cover grayscale contrast-200 opacity-80" data-alt="A stark, high-contrast black-and-white dithered graphic depicting a distressed chemical spill warning sign against a gritty metallic background. The visual style is highly compressed and industrial, utilizing only pure black and pure white pixels to create a sense of mechanical urgency and technical documentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLUYUYD5u-D5Zp0HdEDEP_yF5XITTbG9d6PwR200lIgekOEFcURjANQqPZO3SFO81-1TXulbcNYLyrquC8Ivga1SX9Q1u7B6tR7z0yPdNHzJ0LpumbMTNZtlvnM04-Qvfwr56YxLbx56iMQlNr9UVkFP9xiAaGai65qmNtmGlgOrCzh2UBwW10cgf34kAPSduGxsDIc3k9ISxOKv-tSdFDr1Jx8zxtvDRDD2j7_XSCwyuvK8tXzTTiKLF3_4DHeFLeBgbmSKo7uss"/>
+</div>
+<div class="p-4 flex justify-between items-end">
+<p class="font-body-md text-body-md w-3/4">Unidentified fluid leakage in sector sub-level. Containment protocols initiated.</p>
+<span class="material-symbols-outlined text-headline-lg">arrow_forward</span>
+</div>
+</div>
+</article>
+<!-- End of list marker -->
+<div class="flex items-center gap-4 py-8 opacity-50">
+<div class="h-1 flex-grow bg-primary"></div>
+<span class="font-label-bold text-label-bold uppercase">END_OF_LOG</span>
+<div class="h-1 flex-grow bg-primary"></div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) -->
+<!-- Positioned above BottomNavBar, aligned right -->
+<button class="fixed bottom-28 right-6 z-40 hard-shadow group focus:outline-none">
+<div class="bg-secondary-container border-border-width border-primary w-16 h-16 flex items-center justify-center transition-transform group-active:translate-x-1 group-active:translate-y-1">
+<span class="material-symbols-outlined text-[32px] text-primary">add</span>
+</div>
+</button>
+<!-- BottomNavBar (Shared Component Execution) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex h-20 divide-x-4 divide-primary dark:divide-on-background border-t-4 border-primary dark:border-on-background bg-background dark:bg-background">
+<!-- REPORTS (Active Tab based on semantic mapping to 'Moje zgłoszenia') -->
+<button class="flex flex-col items-center justify-center bg-primary dark:bg-on-background text-on-primary dark:text-background h-full w-full active:scale-95 transition-transform duration-75">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment_late</span>
+<span class="font-label-bold text-label-bold uppercase mt-1">REPORTS</span>
+</button>
+<!-- MAP (Inactive) -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-on-background h-full w-full hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">explore_nearby</span>
+<span class="font-label-bold text-label-bold uppercase mt-1">MAP</span>
+</button>
+<!-- ALERTS (Inactive) -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-on-background h-full w-full hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-bold text-label-bold uppercase mt-1">ALERTS</span>
+</button>
+<!-- PROFILE (Inactive) -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-on-background h-full w-full hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">account_box</span>
+<span class="font-label-bold text-label-bold uppercase mt-1">PROFILE</span>
+</button>
+</nav>
+</body></html>

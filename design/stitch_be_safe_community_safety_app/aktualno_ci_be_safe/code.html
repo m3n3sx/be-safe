@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Aktualności</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Custom scrollbar for horizontal scrolling */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f3f3",
+                        "secondary-container": "#a0f399",
+                        "secondary": "#1b6d24",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#88f5e3",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eeeeee",
+                        "on-primary-fixed": "#400009",
+                        "surface-dim": "#dadada",
+                        "on-surface": "#1a1c1c",
+                        "primary": "#ba002c",
+                        "inverse-on-surface": "#f1f1f1",
+                        "primary-container": "#e9003a",
+                        "surface-tint": "#bf002e",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-fixed": "#002204",
+                        "surface-bright": "#f9f9f9",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#5e3f3e",
+                        "secondary-fixed": "#a3f69c",
+                        "on-primary-container": "#fffbff",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "inverse-primary": "#ffb3b3",
+                        "outline-variant": "#e8bcbb",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface": "#f9f9f9",
+                        "primary-fixed": "#ffdad9",
+                        "outline": "#936e6d",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-secondary-container": "#217128",
+                        "tertiary-container": "#008376",
+                        "on-tertiary-fixed": "#00201c",
+                        "background": "#f9f9f9",
+                        "on-tertiary-container": "#f4fffb",
+                        "on-secondary-fixed-variant": "#005312",
+                        "tertiary": "#00685d",
+                        "secondary-fixed-dim": "#88d982",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "24px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "stack-sm": "4px",
+                        "margin-mobile": "16px",
+                        "stack-md": "12px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col antialiased">
+<!-- Top App Bar -->
+<header class="bg-surface dark:bg-surface-dim font-title-lg text-title-lg docked full-width top-0 bg-surface dark:bg-surface-dim flat no shadows flex justify-between items-center px-margin-mobile h-16 w-full z-40 sticky">
+<button class="text-on-surface-variant hover:bg-surface-variant transition-colors active:scale-95 duration-150 p-2 rounded-full flex items-center justify-center">
+<span aria-label="Wróć" class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim absolute left-1/2 -translate-x-1/2">
+            Aktualności
+        </h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col pb-24">
+<!-- Filter Chips Section -->
+<section class="w-full bg-surface py-stack-md sticky top-16 z-30 border-b border-surface-variant">
+<div class="flex overflow-x-auto hide-scrollbar px-margin-mobile gap-base">
+<button class="bg-primary text-on-primary font-label-lg text-label-lg px-4 py-2 rounded-full whitespace-nowrap active:scale-95 transition-transform">
+                    Wszystkie
+                </button>
+<button class="bg-surface-container text-on-surface-variant font-label-lg text-label-lg px-4 py-2 rounded-full whitespace-nowrap hover:bg-surface-variant active:scale-95 transition-all">
+                    Bezpieczeństwo
+                </button>
+<button class="bg-surface-container text-on-surface-variant font-label-lg text-label-lg px-4 py-2 rounded-full whitespace-nowrap hover:bg-surface-variant active:scale-95 transition-all">
+                    Rodzina
+                </button>
+<button class="bg-surface-container text-on-surface-variant font-label-lg text-label-lg px-4 py-2 rounded-full whitespace-nowrap hover:bg-surface-variant active:scale-95 transition-all">
+                    Porady
+                </button>
+<button class="bg-surface-container text-on-surface-variant font-label-lg text-label-lg px-4 py-2 rounded-full whitespace-nowrap hover:bg-surface-variant active:scale-95 transition-all">
+                    Ostrzeżenia
+                </button>
+</div>
+</section>
+<!-- Article List -->
+<section class="flex flex-col gap-gutter px-margin-mobile py-stack-lg max-w-3xl mx-auto w-full">
+<!-- Article Card 1 -->
+<article class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-surface-variant flex flex-col gap-stack-md cursor-pointer hover:shadow-md transition-shadow active:scale-[0.99]">
+<div class="flex justify-between items-start gap-4">
+<div class="flex flex-col gap-2 flex-grow">
+<span class="bg-tertiary-container text-on-tertiary-container font-label-lg text-label-lg px-2 py-1 rounded-sm self-start uppercase">
+                            BEZPIECZEŃSTWO
+                        </span>
+<h2 class="font-headline-md text-headline-md text-on-surface line-clamp-2">
+                            Jak zabezpieczyć dom przed wyjazdem na urlop?
+                        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                            Poznaj kluczowe zasady ochrony mienia podczas dłuższej nieobecności. Od systemów alarmowych po pomoc sąsiadów - sprawdzone metody na spokojny wypoczynek.
+                        </p>
+</div>
+</div>
+<div class="flex justify-between items-end mt-2">
+<div class="flex items-center gap-3 text-on-surface-variant font-label-lg text-label-lg">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                            12 Paź 2023
+                        </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                            5 min czytania
+                        </span>
+</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container-high overflow-hidden flex-shrink-0 relative">
+<img alt="Dom z systemem alarmowym" class="object-cover w-full h-full" data-alt="A modern, smart home exterior featuring a sleek security camera and alarm keypad by the front door. The scene is lit with bright, natural daylight, conveying a sense of safety and professional protection. The color palette incorporates crisp whites, architectural grays, and subtle green landscaping elements, aligning with a high-end, secure modern lifestyle aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALbIISdAAV3PQR83cA9xA0FJ4-eYYMlwOmLr3wJ-E9gSQdt4_76mUYhkWbR5OcePs-Qn_HvswolibV3InIQY3eMTgEtIX2gRZ1a37Djoj1Ymj9eT3IqwL2hEORomqcCMhM4EUQhQffAaX8IbUIyjIsZ1Bf_2i-RTNjFpBQKFL_ZXqMF8GoBYtJ1-24_uNOlf5HIVXKIMwuh5cQWFC71BPqpqzMNXbzgG8zPjT7YQHl65xeofaWU3T7m_abge9HwB9XYOhWZFw-YCY"/>
+</div>
+</div>
+</article>
+<!-- Article Card 2 -->
+<article class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-surface-variant flex flex-col gap-stack-md cursor-pointer hover:shadow-md transition-shadow active:scale-[0.99]">
+<div class="flex justify-between items-start gap-4">
+<div class="flex flex-col gap-2 flex-grow">
+<span class="bg-secondary-container text-on-secondary-container font-label-lg text-label-lg px-2 py-1 rounded-sm self-start uppercase">
+                            RODZINA
+                        </span>
+<h2 class="font-headline-md text-headline-md text-on-surface line-clamp-2">
+                            Bezpieczna droga do szkoły - poradnik dla rodziców
+                        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                            Najważniejsze zasady poruszania się po drodze, które musisz przekazać swojemu dziecku przed rozpoczęciem roku szkolnego. Odblaski i bezpieczne przejścia.
+                        </p>
+</div>
+</div>
+<div class="flex justify-between items-end mt-2">
+<div class="flex items-center gap-3 text-on-surface-variant font-label-lg text-label-lg">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                            10 Paź 2023
+                        </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                            3 min czytania
+                        </span>
+</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container-high overflow-hidden flex-shrink-0 relative">
+<img alt="Dzieci przechodzące przez jezdnię" class="object-cover w-full h-full" data-alt="Children wearing bright safety vests and backpacks crossing a well-marked pedestrian crossing near a school. The environment is sunny, vibrant, and safe, with clear traffic signals. The aesthetic is warm and reassuring, using a color palette of bright whites, safety yellows, and calming blues to emphasize community care and family security." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZWSrj4dqh1Q47Aj-vKqu3w3bswZwt4Xxml12dCyksaAtwNOmEC1OVP51ZVjCWAd_9LMpAhitfb0p_TL0g5Iv0ZfWHoUvxAEtiZ7y7KpxZu53PlD0L1Wahvzb3k5gZLGfrwQh_B5MAtpcbzPDzdhNvkk7q8CBHu3OxpVWCbF6lek_Twh53J53fSY8o7op6ibUjDa1sZ_KPtHYZJ9Kdana197Ua_pA5CIbJIJ__K3rJBHtIbdrHzHv_MCUzoFUY40IsXhKB6Y9X6Uw"/>
+</div>
+</div>
+</article>
+<!-- Article Card 3 (Simulating the open bottom sheet context) -->
+<article class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-surface-variant flex flex-col gap-stack-md cursor-pointer hover:shadow-md transition-shadow active:scale-[0.99]">
+<div class="flex justify-between items-start gap-4">
+<div class="flex flex-col gap-2 flex-grow">
+<span class="bg-error-container text-on-error-container font-label-lg text-label-lg px-2 py-1 rounded-sm self-start uppercase">
+                            OSTRZEŻENIA
+                        </span>
+<h2 class="font-headline-md text-headline-md text-on-surface line-clamp-2">
+                            Uwaga na nowe metody oszustw telefonicznych "na wnuczka"
+                        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">
+                            Policja ostrzega przed zorganizowanymi grupami, które modyfikują znane metody wyłudzeń. Sprawdź, jak rozpoznać próbę oszustwa i uchronić bliskich.
+                        </p>
+</div>
+</div>
+<div class="flex justify-between items-end mt-2">
+<div class="flex items-center gap-3 text-on-surface-variant font-label-lg text-label-lg">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                            08 Paź 2023
+                        </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                            4 min czytania
+                        </span>
+</div>
+<div class="w-16 h-16 rounded-lg bg-surface-container-high overflow-hidden flex-shrink-0 relative">
+<img alt="Osoba starsza z telefonem" class="object-cover w-full h-full" data-alt="An older adult looking cautiously at a modern smartphone screen while holding a landline receiver in the background. The lighting is slightly dramatic but professional, highlighting the concern on the subject's face. The color palette relies on deep neutral tones and subtle warning reds, aligning with a serious, protective UI aesthetic concerning security threats." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb3TvXqlbOihjaBfpc830kwtL6RxK49rue0tAFraCXH4q5QArgbWCl-34_0WmRW9TAQsi13jagGsKBNKNMqpVdhhJ3SaTGON16Kpb_0zYgQAMRPQm4c-SPUf1cnitloN5HUbhJCscu_LCtS0CzLxsmtvl5QM9dwvSAZ7KeFA7mDTzWhUoSQ2jNxrNb2FS2QN6ZRj8QGpx34QLYoCYFje__E9Iy6XnhjJeXQzusnrXs0bQbMvJybdVSc6ssiF7rMszfz1xtT5bP0Rc"/>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- Simulated Bottom Sheet (Overlay) - Hidden by default, representing the interaction -->
+<!-- In a real app this would be toggled via JS, showing it open for the prompt requirement -->
+<div aria-hidden="true" class="fixed inset-0 bg-on-background/40 z-50 flex flex-col justify-end pointer-events-none hidden">
+<!-- Overlay background -->
+</div>
+<!-- The actual Bottom Sheet -->
+<!-- Displayed here as part of the visual layout requirement, typically hidden -->
+<div class="fixed bottom-0 w-full bg-surface-container-lowest rounded-t-[28px] shadow-[0_-8px_24px_rgba(0,0,0,0.12)] z-50 flex flex-col h-[751px] transform translate-y-0 transition-transform duration-300">
+<!-- Handle & Header -->
+<div class="flex flex-col items-center pt-3 pb-2 px-margin-mobile relative bg-surface-container-lowest rounded-t-[28px]">
+<div class="w-12 h-1.5 bg-surface-variant rounded-full mb-4"></div>
+<div class="w-full flex justify-between items-center">
+<span class="bg-tertiary-container text-on-tertiary-container font-label-lg text-label-lg px-2 py-1 rounded-sm uppercase">
+                    BEZPIECZEŃSTWO
+                </span>
+<button class="bg-surface-container-high text-on-surface p-2 rounded-full hover:bg-surface-variant transition-colors flex items-center justify-center pointer-events-auto">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+</div>
+<!-- Article Content (Scrollable) -->
+<div class="overflow-y-auto px-margin-mobile pb-24 flex flex-col gap-stack-lg pointer-events-auto">
+<h2 class="font-display-lg text-display-lg text-on-surface mt-2">
+                Jak zabezpieczyć dom przed wyjazdem na urlop?
+            </h2>
+<div class="flex items-center gap-4 text-on-surface-variant font-body-md text-body-md border-b border-surface-variant pb-4">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                    12 Października 2023
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+                    5 min czytania
+                </span>
+<span class="flex items-center gap-1 ml-auto">
+<span class="material-symbols-outlined text-[18px]">share</span>
+                    Udostępnij
+                </span>
+</div>
+<div class="w-full aspect-video rounded-xl bg-surface-container-high overflow-hidden relative">
+<img alt="Dom z systemem alarmowym" class="object-cover w-full h-full" data-alt="A modern, smart home exterior featuring a sleek security camera and alarm keypad by the front door. The scene is lit with bright, natural daylight, conveying a sense of safety and professional protection. The color palette incorporates crisp whites, architectural grays, and subtle green landscaping elements, aligning with a high-end, secure modern lifestyle aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDecntb3gghLfUtpUOb0sZESOuj91KA8pWAexs0Vb8AI8JCBf6wFzWtCfGKscR6cueBXfRxkz0OhfI7aqGc2RGx6DziFFSfOOWDoqyIAiDGmWJm1oX-1RlCUVQoXQQ6IW9SIRoxLrm-3M0iRZIpbmOIT-ObAuV3DTrWuYW_SE1otv22lM2XdmkUdgpTyVYmd9sIMfI8U34eiP0yGbJg8OdXse7TbendyCbJvZcQ8kkM4IeIownYKAB1ka8ruCoYKI7M7XN6wT2G7bM"/>
+</div>
+<div class="font-body-lg text-body-lg text-on-surface flex flex-col gap-4 leading-relaxed">
+<p class="font-title-lg text-title-lg text-on-surface font-medium">
+                    Poznaj kluczowe zasady ochrony mienia podczas dłuższej nieobecności. Od systemów alarmowych po pomoc sąsiadów - sprawdzone metody na spokojny wypoczynek.
+                </p>
+<p>
+                    Planowanie wymarzonego urlopu to czas pełen ekscytacji, jednak przed zamknięciem drzwi i wyruszeniem w drogę, warto zadbać o bezpieczeństwo naszego domu. Statystyki pokazują, że okres wakacyjny to niestety czas wzmożonej aktywności włamywaczy.
+                </p>
+<h3 class="font-headline-md text-headline-md mt-4">1. Zaufany sąsiad to skarb</h3>
+<p>
+                    Najlepszym systemem alarmowym często okazuje się czujne oko sąsiada. Warto poprosić zaufaną osobę o regularne opróżnianie skrzynki pocztowej (przepełniona jest jasnym sygnałem o naszej nieobecności) oraz okazjonalne zapalanie światła wieczorem.
+                </p>
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant my-2">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">lightbulb</span>
+<p class="font-body-md text-body-md text-on-surface-variant">
+<strong>Wskazówka:</strong> Rozważ zastosowanie inteligentnych żarówek, które można zaprogramować do włączania się o różnych porach, symulując obecność domowników.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

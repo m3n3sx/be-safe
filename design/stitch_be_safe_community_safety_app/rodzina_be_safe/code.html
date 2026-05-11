@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Rodzina</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration (Design System) -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#00201c",
+                    "on-error": "#ffffff",
+                    "secondary-fixed": "#a3f69c",
+                    "surface-tint": "#bf002e",
+                    "on-surface": "#1a1c1c",
+                    "surface-container": "#eeeeee",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f3f3f3",
+                    "on-primary-fixed": "#400009",
+                    "on-surface-variant": "#5e3f3e",
+                    "tertiary-fixed-dim": "#6ad9c8",
+                    "surface-container-high": "#e8e8e8",
+                    "background": "#f9f9f9",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#ffb3b3",
+                    "secondary-container": "#a0f399",
+                    "on-secondary-fixed-variant": "#005312",
+                    "inverse-on-surface": "#f1f1f1",
+                    "secondary": "#1b6d24",
+                    "outline": "#936e6d",
+                    "tertiary": "#00685d",
+                    "surface-bright": "#f9f9f9",
+                    "secondary-fixed-dim": "#88d982",
+                    "on-primary-container": "#fffbff",
+                    "inverse-surface": "#2f3131",
+                    "on-secondary-fixed": "#002204",
+                    "primary-fixed-dim": "#ffb3b3",
+                    "on-background": "#1a1c1c",
+                    "tertiary-container": "#008376",
+                    "outline-variant": "#e8bcbb",
+                    "tertiary-fixed": "#88f5e3",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#005047",
+                    "primary": "#ba002c",
+                    "on-primary-fixed-variant": "#920021",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-tertiary-container": "#f4fffb",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#e2e2e2",
+                    "primary-container": "#e9003a",
+                    "error": "#ba1a1a",
+                    "on-secondary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "surface-dim": "#dadada",
+                    "primary-fixed": "#ffdad9",
+                    "on-secondary-container": "#217128"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem"
+            },
+            "spacing": {
+                    "stack-md": "12px",
+                    "gutter": "16px",
+                    "margin-desktop": "24px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "4px",
+                    "stack-lg": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "label-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-lg": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            /* Prevent scrolling behind fixed elements */
+            padding-top: 64px; /* TopAppBar height */
+            padding-bottom: 80px; /* BottomNavBar height approx */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-40 bg-surface dark:bg-surface-dim flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16">
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" style="font-variation-settings: 'FILL' 1;">shield</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim tracking-tight">be:Safe</h1>
+</div>
+<!-- Desktop Navigation (Hidden on mobile) -->
+<nav class="hidden md:flex items-center gap-stack-lg">
+<a class="flex items-center gap-stack-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 px-3 py-2 rounded-lg font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined">map</span>
+                Mapa
+            </a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 px-3 py-2 rounded-lg font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined">notifications</span>
+                Alerty
+            </a>
+<a class="flex items-center gap-stack-sm text-error hover:bg-error-container transition-colors active:scale-95 duration-150 px-3 py-2 rounded-lg font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+                SOS
+            </a>
+<a class="flex items-center gap-stack-sm text-primary dark:text-primary-fixed-dim bg-surface-variant px-3 py-2 rounded-lg font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+                Rodzina
+            </a>
+<a class="flex items-center gap-stack-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 px-3 py-2 rounded-lg font-label-lg text-label-lg" href="#">
+<span class="material-symbols-outlined">person</span>
+                Profil
+            </a>
+</nav>
+<!-- Mobile Profile Icon Placeholder -->
+<button class="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-surface-container-high text-on-surface">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col w-full max-w-[1200px] mx-auto pb-gutter">
+<!-- Overview Map Section -->
+<section class="w-full relative h-[250px] md:h-[350px] rounded-b-3xl md:rounded-3xl overflow-hidden shadow-sm mb-stack-lg" data-location="Warszawa">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A clean, modern, light-mode interface map view showing a stylized urban grid. The map utilizes a subtle color palette of cool greys and soft whites, typical of a professional navigation app. Three prominent, glowing green map pins are clustered near the center, indicating safe family members. The overall aesthetic is reassuring, secure, and highly legible, with a soft ambient light casting gentle shadows across the 3D terrain features." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCmP5V4Q4c39RysU56jHhL8KqHzf3YwXRgBfxCOemhWQUhiswGC9G1hDFrx_ueZUk-eIOLwl6KmrcX0LVCE_FGDclIrWkf3xtp1BLn4Jm4VBGhe_6y7HLElGDIQ6DlwsUhRLEIPmwuXldQWDr2Q5EHfX3LuPZK4mvuA3nUL3K-8C0B_y9Wv26F-tVmLnZkiY-pHxsopZGSnn-ru5sucngzeXV7z3ZHMXkDlf3TOkRBdtB1c-id89u-mwGxWOXh6WSXVugcchwPiAPw');">
+</div>
+<!-- Map Overlay Gradient for readability -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent to-transparent"></div>
+<!-- Floating Map Controls / Info -->
+<div class="absolute bottom-margin-mobile left-margin-mobile right-margin-mobile md:bottom-margin-desktop md:left-margin-desktop flex justify-between items-end">
+<div class="bg-surface-container-lowest/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-surface-variant">
+<p class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">Lokalizacja</p>
+<p class="font-title-lg text-title-lg text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                        Warszawa, Centrum
+                    </p>
+</div>
+</div>
+</section>
+<!-- Family List Header & Action -->
+<section class="px-margin-mobile md:px-margin-desktop flex flex-col sm:flex-row justify-between items-start sm:items-center gap-stack-md mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Członkowie rodziny</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-stack-sm">Zarządzaj i monitoruj bezpieczeństwo bliskich.</p>
+</div>
+<button class="bg-surface-container-lowest border border-outline-variant text-primary hover:bg-surface-variant transition-colors duration-200 active:scale-95 px-6 py-3 rounded-full font-label-lg text-label-lg flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined">person_add</span>
+                Dodaj członka rodziny
+            </button>
+</section>
+<!-- Bento Grid / Card List for Family Members -->
+<section class="px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Family Member Card 1 -->
+<article class="bg-surface-container-lowest rounded-2xl p-5 border border-surface-variant shadow-sm flex flex-col gap-stack-md relative overflow-hidden transition-shadow hover:shadow-md">
+<div class="flex justify-between items-start w-full">
+<div class="flex items-center gap-stack-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high overflow-hidden border-2 border-surface">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A small, circular profile portrait of a smiling middle-aged woman with short brown hair. The portrait is brightly lit against a neutral light grey background, conveying warmth and approachability. The image fits perfectly within a modern digital UI interface, matching the clean, light-mode aesthetic of the application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf0dNyiOsuFFchwo9bsKvfb7fDOlXoY_f5W-8bmfbdusNXHZcjyaptX5Gk2ddhP6FH8GqdcCd_3pr3ftdOokONQ2cmncgrQUY3zZeRdtZDYDN0MaUgkbHdZ00kSmNa_-ZKgUZH44BEOI7JEK8wCiv-nns1laG_3OeVRQ-xPlsSc9a_cgUbxJGhtqBLM3NRkS_FiNRu6WAL-J21oOwOrEzUYkuPi5Hk29rYCux7QcT2uSNFyaVoEy5qXgxR6PZGx0iu-qVtX_CcEss"/>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Anna Kowalska</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Mama</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-stack-sm p-3 bg-surface rounded-xl">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase mb-1">Status</span>
+<!-- Status Chip: Safe (Green) -->
+<div class="flex items-center gap-1 bg-secondary-container text-on-secondary-container px-2 py-1 rounded-sm w-fit">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-lg text-label-lg">Bezpieczny</span>
+</div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase mb-1">Ostatnia lok.</span>
+<p class="font-body-md text-body-md text-on-surface flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">home</span>
+                            Dom
+                        </p>
+</div>
+</div>
+</article>
+<!-- Family Member Card 2 -->
+<article class="bg-surface-container-lowest rounded-2xl p-5 border border-surface-variant shadow-sm flex flex-col gap-stack-md relative overflow-hidden transition-shadow hover:shadow-md">
+<div class="flex justify-between items-start w-full">
+<div class="flex items-center gap-stack-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high overflow-hidden border-2 border-surface">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A small, circular profile portrait of a smiling young man with dark hair and glasses. The portrait is brightly lit against a neutral light grey background, looking friendly and professional. The styling perfectly matches a clean, modern digital application's light-mode user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAY0oHW2b1C2wmbPgkJJsSJbdOxETzjLem49bz7IB3EtQr5fQ7Rra82trqhZP96iNzXkP1jLya8PYJkAqLtpsRfsZqmwWWpFw6ql1vZSZf0pHL6opihDd8S5qGB3utK2YB91T3rbYPX1ZKdUT9Q_buVUSmaMBjG7hzo8NRIG_TyKGvEVsDQ9oWRb9Eb-xYFYny7HFK1miEKrKbyXrlZX2htNRyTOkFPKhl2i9p3SZPDVMm8R18GjecsQssdYpzhZUNScbpRzXNrB3M"/>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Jan Kowalski</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Syn</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-stack-sm p-3 bg-surface rounded-xl">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase mb-1">Status</span>
+<!-- Status Chip: Safe (Green) -->
+<div class="flex items-center gap-1 bg-secondary-container text-on-secondary-container px-2 py-1 rounded-sm w-fit">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-lg text-label-lg">Bezpieczny</span>
+</div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase mb-1">Ostatnia lok.</span>
+<p class="font-body-md text-body-md text-on-surface flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">school</span>
+                            Uniwersytet
+                        </p>
+</div>
+</div>
+</article>
+<!-- Family Member Card 3 (Moving) -->
+<article class="bg-surface-container-lowest rounded-2xl p-5 border border-surface-variant shadow-sm flex flex-col gap-stack-md relative overflow-hidden transition-shadow hover:shadow-md">
+<div class="flex justify-between items-start w-full">
+<div class="flex items-center gap-stack-md">
+<div class="w-12 h-12 rounded-full bg-surface-container-high overflow-hidden border-2 border-surface flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl">person</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Dziadek Tomek</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Dziadek</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-stack-sm p-3 bg-surface rounded-xl">
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase mb-1">Status</span>
+<!-- Status Chip: Moving (Tertiary) -->
+<div class="flex items-center gap-1 bg-tertiary-container text-on-tertiary-container px-2 py-1 rounded-sm w-fit">
+<span class="material-symbols-outlined text-[16px]">directions_walk</span>
+<span class="font-label-lg text-label-lg">W drodze</span>
+</div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase mb-1">Ostatnia lok.</span>
+<p class="font-body-md text-body-md text-on-surface flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">park</span>
+                            Park Miejski
+                        </p>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container dark:bg-surface-container-high rounded-t-xl shadow-md border-t-0">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 w-16" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-lg text-label-lg mt-1">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 w-16" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-lg text-label-lg mt-1">Alerty</span>
+</a>
+<a class="flex flex-col items-center justify-center text-error hover:bg-error-container transition-all active:scale-90 duration-200 w-16" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+<span class="font-label-lg text-label-lg mt-1">SOS</span>
+</a>
+<!-- ACTIVE TAB -->
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 w-20" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-lg text-label-lg mt-1">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all active:scale-90 duration-200 w-16" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-lg text-label-lg mt-1">Profil</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Moje Zgłoszenia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#e8bcbb",
+                        "surface-container-high": "#ffe1e0",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#fedad9",
+                        "surface-container-highest": "#fedad9",
+                        "surface": "#fff8f7",
+                        "primary-fixed": "#ffdad9",
+                        "outline": "#936e6d",
+                        "on-tertiary-fixed-variant": "#00429b",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-secondary-container": "#00732c",
+                        "tertiary-container": "#0f6df3",
+                        "on-tertiary-fixed": "#001945",
+                        "background": "#fff8f7",
+                        "on-tertiary-container": "#fefcff",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "tertiary": "#0056c5",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "error": "#ba1a1a",
+                        "on-background": "#291616",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#fff0ef",
+                        "secondary-container": "#5cfd80",
+                        "secondary": "#006e2a",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#d9e2ff",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#ffe9e8",
+                        "on-primary-fixed": "#400009",
+                        "surface-dim": "#f5d2d1",
+                        "on-surface": "#291616",
+                        "primary": "#ba002c",
+                        "inverse-on-surface": "#ffedec",
+                        "primary-container": "#e9003a",
+                        "surface-tint": "#bf002e",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#412b2b",
+                        "on-secondary-fixed": "#002108",
+                        "surface-bright": "#fff8f7",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#5e3f3e",
+                        "secondary-fixed": "#69ff87",
+                        "on-primary-container": "#fffbff",
+                        "tertiary-fixed-dim": "#b0c6ff",
+                        "inverse-primary": "#ffb3b3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-mobile": "16px",
+                        "margin-tablet": "24px",
+                        "gutter": "16px",
+                        "hero-button-size": "64px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["Roboto Flex"],
+                        "display-sm": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"],
+                        "headline-sm": ["Roboto Flex"],
+                        "body-lg": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "display-sm": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.5px", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .material-symbols-outlined {
+                font-family: 'Material Symbols Outlined';
+                font-weight: normal;
+                font-style: normal;
+                font-size: 24px;
+                line-height: 1;
+                letter-spacing: normal;
+                text-transform: none;
+                display: inline-block;
+                white-space: nowrap;
+                word-wrap: normal;
+                direction: ltr;
+                -webkit-font-feature-settings: 'liga';
+                -webkit-font-smoothing: antialiased;
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full z-40 bg-surface top-0">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+<h1 class="font-headline-md text-headline-sm font-bold text-primary">be:Safe</h1>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile pb-[100px] md:px-margin-tablet pt-4 flex flex-col gap-6 max-w-5xl mx-auto w-full">
+<div class="flex flex-col gap-2">
+<h2 class="font-display-sm text-display-sm text-on-background">Zgłoszenia</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Przeglądaj i zarządzaj zgłoszonymi zagrożeniami.</p>
+</div>
+<!-- Segmented Control -->
+<div class="flex bg-surface-container-high rounded-full p-1 self-start shadow-sm">
+<button class="px-6 py-2 rounded-full font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-variant transition-colors">Wszystkie</button>
+<button class="px-6 py-2 rounded-full font-label-lg text-label-lg bg-primary-container text-on-primary-container shadow-sm transition-all">Moje</button>
+</div>
+<!-- Incident Cards Grid (Bento style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Card 1: In Progress -->
+<article class="bg-surface-container-high rounded-2xl p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container flex items-center justify-center text-on-tertiary-container">
+<span class="material-symbols-outlined" data-icon="construction">construction</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Uszkodzona latarnia</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm">ul. Mickiewicza 12</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-tertiary-container text-on-tertiary-container rounded-full font-label-lg text-label-lg text-xs whitespace-nowrap">W toku</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface">Przewody na wierzchu, brak oświetlenia od 2 dni.</p>
+<div class="text-xs text-on-surface-variant font-label-lg text-label-lg mt-auto pt-4 border-t border-outline-variant">Dodano: 12.10.2023</div>
+</article>
+<!-- Card 2: Resolved -->
+<article class="bg-surface-container-high rounded-2xl p-6 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Zalana ulica</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm">ul. Słoneczna</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-lg text-label-lg text-xs whitespace-nowrap">Rozwiązane</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface">Pęknięta rura wodociągowa powodująca utrudnienia.</p>
+<div class="text-xs text-on-surface-variant font-label-lg text-label-lg mt-auto pt-4 border-t border-outline-variant">Dodano: 05.10.2023</div>
+</article>
+<!-- Card 3: Danger/Action Required -->
+<article class="bg-surface-container-high rounded-2xl p-6 flex flex-col gap-4 border border-error-container md:col-span-2">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Głęboka wyrwa w jezdni</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-sm">Aleje Jerozolimskie</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-primary-container text-on-primary-container rounded-full font-label-lg text-label-lg text-xs whitespace-nowrap">Nowe</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface">Niebezpieczeństwo dla pojazdów, uszkodzenia zawieszenia możliwe przy dużych prędkościach.</p>
+<div class="text-xs text-on-surface-variant font-label-lg text-label-lg mt-auto pt-4 border-t border-outline-variant">Dodano: Dzisiaj</div>
+</article>
+</div>
+<!-- Empty State CTA (Hidden visually, structural inclusion for prompt requirements) -->
+<div class="hidden flex-col items-center justify-center p-12 bg-surface-container-low rounded-2xl text-center mt-8">
+<span class="material-symbols-outlined text-6xl text-outline mb-4" data-icon="add_location_alt">add_location_alt</span>
+<h3 class="font-title-lg text-title-lg mb-2">Brak zgłoszeń</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-6">W tej chwili nie masz żadnych aktywnych zgłoszeń w systemie.</p>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-full font-label-lg text-label-lg shadow-sm hover:shadow-md transition-shadow flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                Zgłoś pierwsze zagrożenie
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container rounded-t-xl shadow-md md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg p-2">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-lg text-label-lg text-[10px] mt-1">Mapa</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-lg text-label-lg text-[10px] mt-1">Alerty</span>
+</button>
+<!-- Hero SOS placeholder to maintain spacing -->
+<div class="w-hero-button-size relative"></div>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg p-2">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-lg text-label-lg text-[10px] mt-1">Rodzina</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all rounded-lg p-2">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-lg text-label-lg text-[10px] mt-1">Profil</span>
+</button>
+<!-- Floating SOS Hero Button -->
+<button class="absolute left-1/2 -top-6 transform -translate-x-1/2 w-hero-button-size h-hero-button-size bg-primary rounded-[24px] flex flex-col items-center justify-center text-on-primary shadow-[0_4px_14px_rgba(0,0,0,0.12)] active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined" data-icon="emergency_home" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+<span class="font-label-lg text-label-lg text-[10px] font-bold mt-1">SOS</span>
+</button>
+</nav>
+</body></html>

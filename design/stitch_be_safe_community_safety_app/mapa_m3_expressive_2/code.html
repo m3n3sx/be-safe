@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Mapa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed-variant": "#00429b",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#ffedec",
+                        "primary-fixed": "#ffdad9",
+                        "on-primary-fixed": "#400009",
+                        "surface": "#fff8f7",
+                        "surface-container-high": "#ffe1e0",
+                        "inverse-primary": "#ffb3b3",
+                        "surface-variant": "#fedad9",
+                        "on-background": "#291616",
+                        "error": "#ba1a1a",
+                        "outline": "#936e6d",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#69ff87",
+                        "surface-container": "#ffe9e8",
+                        "surface-dim": "#f5d2d1",
+                        "tertiary": "#0056c5",
+                        "surface-container-highest": "#fedad9",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary-fixed": "#001945",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#5e3f3e",
+                        "surface-bright": "#fff8f7",
+                        "tertiary-fixed": "#d9e2ff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "background": "#fff8f7",
+                        "primary-container": "#e9003a",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#0f6df3",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-tertiary-container": "#fefcff",
+                        "on-secondary-fixed": "#002108",
+                        "secondary": "#006e2a",
+                        "secondary-container": "#5cfd80",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#bf002e",
+                        "surface-container-low": "#fff0ef",
+                        "inverse-surface": "#412b2b",
+                        "on-surface": "#291616",
+                        "tertiary-fixed-dim": "#b0c6ff",
+                        "primary": "#ba002c",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-secondary-container": "#00732c"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.5rem"
+                    },
+                    spacing: {
+                        "gutter": "16dp",
+                        "base": "8dp",
+                        "hero-button-size": "64dp",
+                        "margin-mobile": "16dp",
+                        "margin-tablet": "24dp"
+                    },
+                    fontFamily: {
+                        "body-lg": ["Roboto Flex"],
+                        "title-lg": ["Roboto Flex"],
+                        "headline-sm": ["Roboto Flex"],
+                        "display-sm": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"]
+                    },
+                    fontSize: {
+                        "body-lg": ["16px", { lineHeight: "24px", letterSpacing: "0.5px", fontWeight: "400" }],
+                        "title-lg": ["22px", { lineHeight: "28px", fontWeight: "500" }],
+                        "headline-sm": ["24px", { lineHeight: "32px", letterSpacing: "0px", fontWeight: "500" }],
+                        "display-sm": ["36px", { lineHeight: "44px", letterSpacing: "-0.5px", fontWeight: "700" }],
+                        "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.1px", fontWeight: "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col font-body-lg text-body-lg">
+<!-- Canvas: Map Background -->
+<div class="relative flex-1 w-full h-full bg-surface-variant">
+<img alt="Map view" class="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-multiply" data-alt="A highly detailed top-down view of a modern city map interface, featuring smooth, stylized roads and light gray urban structures. The map is designed with a light-mode aesthetic, utilizing soft pastel tones, pale pinkish whites, and subtle topographic textures. Green parks and red warning zones provide contrasting elements. The overall look is clean, digital, and optimized for a high-stakes personal safety app." data-location="Warsaw" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvVC3Y7jGUFwSjP1xj3BiDjcGC3-oG1xE55UsKcQo2xtoHmVXl7xKLn-yBeZaq-tpU0dFRr5ev3Apc9FWiTTIvYYuYtvcCUtEukE_V_TTcjBFoj9O899UB6fVrZ-acrlsMc1OeWb_S8j0TiNXgwnMrIZcv3wF9ykrkM8PKfr76__e8F-JmWNVkpWFkH5dQr1j5MoDGgsh2WBUDfYbfXXSLZwiJkNOPq1CKLtYyBPATFrxOmiEcs581tttGlnHiy1kI_yIQnBOokCA"/>
+<!-- Top Navigation / Search (Floating over map) -->
+<div class="absolute top-0 left-0 w-full px-margin-mobile pt-margin-mobile z-40 hidden md:flex">
+<div class="bg-surface-container flex justify-between items-center px-margin-mobile h-16 w-full rounded-2xl shadow-sm">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">be:Safe</span>
+</div>
+<div class="flex-1 max-w-md mx-8">
+<div class="relative flex items-center w-full h-12 rounded-xl bg-surface-container-high px-4 focus-within:ring-2 focus-within:ring-primary">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant font-body-lg text-body-lg outline-none" placeholder="Szukaj lokalizacji..." type="text"/>
+</div>
+</div>
+<div class="flex items-center">
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors text-primary">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Mobile Floating Search -->
+<div class="absolute top-0 left-0 w-full px-4 pt-6 z-40 md:hidden">
+<div class="flex items-center w-full h-14 rounded-2xl bg-surface-container-low px-4 shadow-md">
+<button class="w-10 h-10 flex items-center justify-center -ml-2 text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant font-body-lg text-body-lg outline-none px-2" placeholder="Szukaj lokalizacji..." type="text"/>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChh75YlJ-ACIVOBlVvPio0MZ2IJzbtP_as2F0Q3bWEeL1DkXN8Jq_vD_A7AipD91cD0L6Ovg0XrCpufC3HdD9b3DmNsUYzhxjyngo33Fu2qqUsXmPmaNPlM_g5YQ2vyO6q2T9hLUs0t4Bg8mAn4df77kmpQ3-2NOtXb8p6GfCQ8NCx1IBKl1fc3zLqVs4MYWnMJDTB4jS7eG2cqO_guZNFCtDkRE4zJGzWT6oJXgdEC4Crx_ohP33GpC8K7gNgp0mmf1_nS2vnJmM"/>
+</div>
+</div>
+</div>
+<!-- Map Markers -->
+<!-- Safe Zone -->
+<div class="absolute top-1/3 left-1/4 flex flex-col items-center transform -translate-x-1/2 -translate-y-1/2">
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-label-lg text-label-lg mb-1 shadow-sm opacity-90">Strefa domowa</div>
+<div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center animate-pulse">
+<div class="w-6 h-6 bg-secondary text-on-secondary rounded-full flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+</div>
+</div>
+<!-- Incident Warning -->
+<div class="absolute top-1/2 right-1/4 flex flex-col items-center transform translate-x-1/2 -translate-y-1/2">
+<div class="bg-primary text-on-primary px-3 py-1 rounded-full font-label-lg text-label-lg mb-1 shadow-sm opacity-90">Zgłoszenie: Awantura</div>
+<div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center">
+<div class="w-8 h-8 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+</div>
+</div>
+<!-- Floating Action Button (Zgłoś) -->
+<div class="absolute bottom-24 right-4 md:bottom-8 md:right-8 z-40">
+<button class="flex items-center justify-center bg-primary text-on-primary rounded-2xl h-[56px] px-6 shadow-[0_4px_12px_rgba(0,0,0,0.12)] hover:bg-surface-tint active:scale-95 transition-all">
+<span class="material-symbols-outlined mr-2" style="font-variation-settings: 'FILL' 1;">add_alert</span>
+<span class="font-label-lg text-label-lg font-bold uppercase tracking-wider">Zgłoś</span>
+</button>
+</div>
+</div>
+<!-- Bottom Navigation Shell (Mobile Only) -->
+<div class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end pb-4 px-2 bg-surface-container rounded-t-xl md:hidden">
+<!-- Tab: Mapa (Active) -->
+<button class="flex flex-col items-center justify-center w-16 group active:scale-95 duration-100">
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 mb-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+</div>
+<span class="font-label-lg text-label-lg text-primary text-xs">Mapa</span>
+</button>
+<!-- Tab: Alerty -->
+<button class="flex flex-col items-center justify-center w-16 group hover:bg-surface-variant/80 rounded-xl py-2 active:scale-95 duration-100">
+<span class="material-symbols-outlined text-on-surface-variant mb-1">notifications_active</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant text-xs">Alerty</span>
+</button>
+<!-- Hero Tab: SOS -->
+<button class="flex flex-col items-center justify-center w-16 relative">
+<div class="w-[64dp] h-[64dp] rounded-[24px] bg-primary text-on-primary shadow-xl flex items-center justify-center scale-110 -translate-y-6 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[32px] font-bold" style="font-variation-settings: 'FILL' 1;">emergency</span>
+</div>
+<span class="font-label-lg text-label-lg text-primary text-xs absolute -bottom-2 font-bold">SOS</span>
+</button>
+<!-- Tab: Rodzina -->
+<button class="flex flex-col items-center justify-center w-16 group hover:bg-surface-variant/80 rounded-xl py-2 active:scale-95 duration-100">
+<span class="material-symbols-outlined text-on-surface-variant mb-1">group</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant text-xs">Rodzina</span>
+</button>
+<!-- Tab: Profil -->
+<button class="flex flex-col items-center justify-center w-16 group hover:bg-surface-variant/80 rounded-xl py-2 active:scale-95 duration-100">
+<span class="material-symbols-outlined text-on-surface-variant mb-1">account_circle</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant text-xs">Profil</span>
+</button>
+</div>
+</body></html>

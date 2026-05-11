@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ranking Użytkowników - be:Safe</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#69ff87",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-highest": "#fedad9",
+                        "outline": "#936e6d",
+                        "inverse-surface": "#412b2b",
+                        "primary": "#ba002c",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary-container": "#00732c",
+                        "surface-container": "#ffe9e8",
+                        "primary-fixed": "#ffdad9",
+                        "primary-container": "#e9003a",
+                        "on-background": "#291616",
+                        "on-primary-fixed": "#400009",
+                        "tertiary-fixed": "#d9e2ff",
+                        "surface-bright": "#fff8f7",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f7",
+                        "on-tertiary-container": "#fefcff",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#ffb3b3",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-tertiary-fixed": "#001945",
+                        "inverse-on-surface": "#ffedec",
+                        "tertiary-fixed-dim": "#b0c6ff",
+                        "surface-dim": "#f5d2d1",
+                        "on-primary-fixed-variant": "#920021",
+                        "surface-container-high": "#ffe1e0",
+                        "tertiary-container": "#0f6df3",
+                        "on-surface": "#291616",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary-fixed-variant": "#00429b",
+                        "surface-variant": "#fedad9",
+                        "surface-tint": "#bf002e",
+                        "tertiary": "#0056c5",
+                        "surface": "#fff8f7",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#5cfd80",
+                        "secondary": "#006e2a",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#fff0ef",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#00531e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16dp",
+                        "base": "8dp",
+                        "margin-tablet": "24dp",
+                        "margin-mobile": "16dp",
+                        "hero-button-size": "64px"
+                    },
+                    "fontFamily": {
+                        "display-sm": ["Roboto Flex"],
+                        "body-lg": ["Roboto Flex"],
+                        "headline-sm": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"],
+                        "title-lg": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "display-sm": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.5px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased font-body-lg text-body-lg min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface-container flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-40">
+<button aria-label="Profil użytkownika" class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant overflow-hidden hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">be:Safe</h1>
+<button aria-label="notifications" class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="pt-24 pb-32 px-margin-mobile max-w-md mx-auto md:max-w-2xl md:px-margin-tablet">
+<!-- Header Text -->
+<div class="mb-6">
+<h2 class="font-display-sm text-display-sm text-on-background">Ranking</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-1">Sprawdź swoją pozycję w społeczności.</p>
+</div>
+<!-- Segmented Control (Pill) -->
+<div class="flex bg-surface-container-highest p-1 rounded-full mb-8">
+<button class="flex-1 py-2 px-4 rounded-full text-on-surface-variant font-label-lg text-label-lg transition-colors hover:bg-surface-variant/50">Lokalny</button>
+<button class="flex-1 py-2 px-4 rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-sm">Krajowy</button>
+<button class="flex-1 py-2 px-4 rounded-full text-on-surface-variant font-label-lg text-label-lg transition-colors hover:bg-surface-variant/50">Globalny</button>
+</div>
+<!-- Podium (Bento Grid Style) -->
+<div class="grid grid-cols-3 gap-2 items-end mb-8 pt-4">
+<!-- Rank 2 -->
+<div class="bg-surface-container-high rounded-t-3xl rounded-b-xl flex flex-col items-center p-4 pb-6 relative h-[180px] justify-end">
+<div class="absolute -top-6 w-14 h-14 rounded-full bg-surface-variant border-4 border-surface-container-high overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A close-up portrait of a young man with a casual, friendly expression, set against a bright, well-lit urban background. The image has a clean, high-contrast light-mode aesthetic, matching a modern digital UI profile picture. The lighting is soft and flattering, highlighting natural skin tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfz-PJo7Jz-nzXcF2VujTmXE-LN-U6ZkezGJLkPSUQCAYYnZPqNpC5Ey9YiMnaFySS7abD_gglrCxUstmZD8j_MiOWx4HvVWTS0dHxFC-Qnr8g6jfTnLUs-BBYkR0hwwylqU6ENrCPizXUlEL_yZFzOvROd4-c2f2G8M1KmP_ZjKnwU_cbq3QIjeMHL9k22vJ1WtdSlBfyfdkh6TMzVNdLsTe1XRqjNzMtE-GTiwOtvhj76HkqbJxsIE5g2U9QA43WzwprkboVnA4"/>
+</div>
+<span class="material-symbols-outlined text-secondary-fixed mb-1" style="font-variation-settings: 'FILL' 1; font-size: 32px;">emoji_events</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">2</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant truncate w-full text-center mt-1">Marek K.</span>
+<span class="font-label-lg text-label-lg text-primary font-bold">1420</span>
+</div>
+<!-- Rank 1 (Hero) -->
+<div class="bg-primary-container rounded-t-3xl rounded-b-xl flex flex-col items-center p-4 pb-8 relative h-[220px] justify-end shadow-sm">
+<div class="absolute -top-8 w-20 h-20 rounded-full bg-surface-variant border-4 border-primary-container overflow-hidden shadow-sm">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A vibrant portrait of a confident young woman smiling directly at the camera, bathed in bright, natural daylight. The background is a beautifully blurred, minimalist architectural setting that perfectly fits a high-end UI layout. The color palette emphasizes rich, clear tones with subtle warm undertones, reinforcing a premium, energetic mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCdTttgrNR_3WeMMc0iSSeK8byr0xznMurLkEiJAtwKdFBVzHfDSgH3m6QkLPYcqaAwm2cIk3CJXoig7AK_IRAqnyTClXbuwAMC8rcm5Rc3nKnS5MvaKsNxTFQC9ZE9ChSqBqK_JnpKzCD6a0o-dnz6xmukfa52oHumTaZiuDKL8iLkTrUGWAC_L99Y2i5yDOYdFGwHEKy25t-tIx-5JHfW18h_1OL_1CJaehUNiIh5LUl9oAJ0fzosWK4zKg6wILaWjiDkxeb640"/>
+</div>
+<span class="material-symbols-outlined text-primary mb-1" style="font-variation-settings: 'FILL' 1; font-size: 40px;">emoji_events</span>
+<span class="font-display-sm text-display-sm text-on-primary-container">1</span>
+<span class="font-title-lg text-title-lg text-on-primary-container truncate w-full text-center mt-1">Anna N.</span>
+<span class="font-label-lg text-label-lg text-primary font-bold">2150</span>
+</div>
+<!-- Rank 3 -->
+<div class="bg-surface-container-high rounded-t-3xl rounded-b-xl flex flex-col items-center p-4 pb-6 relative h-[160px] justify-end">
+<div class="absolute -top-5 w-12 h-12 rounded-full bg-surface-variant border-4 border-surface-container-high overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A polished headshot of an older gentleman with glasses, looking composed and thoughtful against a plain, soft-white backdrop. The image relies on pristine studio lighting that ensures perfect clarity and sharp focus. The overall aesthetic is professional, clean, and seamlessly integrates into a structured, light-mode user interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJNqszbmSgfQLfr5hGLHM8dupmgFZiU7yGOgLSuvRY8U_8qCiVRrg4sZNPFRYk7innS44youC8RPEYbternROIRWO5WJYawHO6Ba1M1DbZYFiMod1AGNdpxJ5xcqSGwykDtFPJk-1usVav28ZaydchM0CsZz0MdG27W_Y1GiYmXfBZq4e_OLOQTnQwfsNPWce0MaMQ-P7SRRNAlFgFFG6sKMRS-hkBlSKxnWP2vt9mAnol_K1ZIym2oKJGztLeFWEM-gI8nv4KY-I"/>
+</div>
+<span class="material-symbols-outlined text-tertiary-fixed mb-1" style="font-variation-settings: 'FILL' 1; font-size: 28px;">emoji_events</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">3</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant truncate w-full text-center mt-1">Jan W.</span>
+<span class="font-label-lg text-label-lg text-primary font-bold">1100</span>
+</div>
+</div>
+<!-- Your Rank (Saturated Row) -->
+<div class="bg-primary rounded-2xl p-4 flex items-center gap-4 mb-6 shadow-md relative overflow-hidden">
+<!-- Decorative gradient element -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-white/20 to-transparent rounded-full -mr-10 -mt-10 pointer-events-none"></div>
+<div class="font-display-sm text-display-sm text-on-primary w-12 text-center shrink-0">42</div>
+<div class="w-12 h-12 rounded-full bg-surface overflow-hidden border-2 border-on-primary shrink-0">
+<img alt="Your Avatar" class="w-full h-full object-cover" data-alt="A clean, direct portrait of a user serving as a profile placeholder, featuring a neutral but approachable expression. The lighting is crisp and modern, matching a highly legible, contrasting user interface. The color grading emphasizes clean whites and deep tonal darks to stand out against a saturated red UI container." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAziUDwmHzj1Wbe66y2b7bDUl53Glsmfw9dfIbZBVt3O4FUslySa4MPDeTjaa9VsObGLF2pOh03qV6xZ-Z1EugnBQQchyg-XP4-qEnbwAPa0Lw6fB-DUt5VYrFcfy5s4OkYc_SuOuFi8t3LSanwgOuR2eS0GZ29_UwkgPmOqJhHrWK1YuHDpzVeJyMkmx2lPR2oiNc8isjbGlFqBoW88MHHw3XrGHQ4RO0q-zkse-eHWVjDDEqOPBqexZ7Nalo6KvstoXlmu3jVpE"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="font-title-lg text-title-lg text-on-primary truncate">Twój wynik</div>
+<div class="font-label-lg text-label-lg text-on-primary/80">Awansuj o 3 pozycje!</div>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-primary shrink-0">450</div>
+</div>
+<!-- Other Users List -->
+<div class="flex flex-col gap-2">
+<!-- Row 4 -->
+<div class="bg-surface-container rounded-xl p-4 flex items-center gap-4 hover:bg-surface-container-high transition-colors">
+<div class="font-headline-sm text-headline-sm text-on-surface-variant w-8 text-center shrink-0">4</div>
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden shrink-0">
+<span class="material-symbols-outlined w-full h-full flex items-center justify-center text-on-surface-variant bg-surface-container-highest">person</span>
+</div>
+<div class="flex-1 font-title-lg text-title-lg text-on-surface truncate">Ewa Z.</div>
+<div class="font-body-lg text-body-lg font-bold text-primary">980</div>
+</div>
+<!-- Row 5 -->
+<div class="bg-surface-container rounded-xl p-4 flex items-center gap-4 hover:bg-surface-container-high transition-colors">
+<div class="font-headline-sm text-headline-sm text-on-surface-variant w-8 text-center shrink-0">5</div>
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden shrink-0">
+<span class="material-symbols-outlined w-full h-full flex items-center justify-center text-on-surface-variant bg-surface-container-highest">person</span>
+</div>
+<div class="flex-1 font-title-lg text-title-lg text-on-surface truncate">Tomasz G.</div>
+<div class="font-body-lg text-body-lg font-bold text-primary">850</div>
+</div>
+<!-- Row 6 -->
+<div class="bg-surface-container rounded-xl p-4 flex items-center gap-4 hover:bg-surface-container-high transition-colors">
+<div class="font-headline-sm text-headline-sm text-on-surface-variant w-8 text-center shrink-0">6</div>
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden shrink-0">
+<span class="material-symbols-outlined w-full h-full flex items-center justify-center text-on-surface-variant bg-surface-container-highest">person</span>
+</div>
+<div class="flex-1 font-title-lg text-title-lg text-on-surface truncate">Piotr L.</div>
+<div class="font-body-lg text-body-lg font-bold text-primary">810</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-end pb-4 px-2 bg-surface-container border-t border-outline-variant/30 shadow-lg rounded-t-xl md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 w-16 rounded-xl transition-colors py-2">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-label-lg text-label-lg text-[11px]">Mapa</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 w-16 rounded-xl transition-colors py-2">
+<span class="material-symbols-outlined mb-1">notifications_active</span>
+<span class="font-label-lg text-label-lg text-[11px]">Alerty</span>
+</button>
+<button class="w-[64px] h-[64px] rounded-full bg-primary shadow-xl scale-110 -translate-y-4 transition-transform active:scale-90 flex flex-col items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 32px;">emergency</span>
+<span class="font-label-lg text-label-lg font-bold mt-[-4px]">SOS</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/80 w-16 rounded-xl transition-colors py-2">
+<span class="material-symbols-outlined mb-1">group</span>
+<span class="font-label-lg text-label-lg text-[11px]">Rodzina</span>
+</button>
+<!-- Active Tab: Profil -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 w-20 transition-colors">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+<span class="font-label-lg text-label-lg text-[11px] font-bold">Profil</span>
+</button>
+</nav>
+</body></html>

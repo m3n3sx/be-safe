@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Szczegóły alertu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#00685d",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-container": "#fffbff",
+                        "surface-container": "#eeeeee",
+                        "secondary-fixed": "#a3f69c",
+                        "surface-dim": "#dadada",
+                        "on-tertiary-fixed": "#00201c",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "primary-fixed": "#ffdad9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e8e8e8",
+                        "surface": "#f9f9f9",
+                        "on-primary-fixed": "#400009",
+                        "on-background": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e2e2e2",
+                        "inverse-primary": "#ffb3b3",
+                        "outline": "#936e6d",
+                        "secondary": "#1b6d24",
+                        "surface-tint": "#bf002e",
+                        "surface-container-low": "#f3f3f3",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#a0f399",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "on-surface": "#1a1c1c",
+                        "on-secondary-container": "#217128",
+                        "primary": "#ba002c",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary-fixed": "#88f5e3",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#e9003a",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#008376",
+                        "on-secondary-fixed-variant": "#005312",
+                        "secondary-fixed-dim": "#88d982",
+                        "background": "#f9f9f9",
+                        "on-secondary-fixed": "#002204",
+                        "on-tertiary-container": "#f4fffb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "4px",
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "stack-lg": "24px",
+                        "gutter": "16px",
+                        "stack-md": "12px",
+                        "margin-desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md antialiased flex flex-col min-h-screen">
+<!-- Top App Bar -->
+<header class="bg-surface text-primary font-title-lg flex justify-between items-center px-margin-mobile h-16 w-full z-40 fixed top-0 docked full-width top-0">
+<button class="text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full p-2 active:scale-95 duration-150 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<span class="font-headline-md text-headline-md font-bold text-primary">Szczegóły alertu</span>
+<div class="flex items-center gap-2">
+<button class="text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full p-2 active:scale-95 duration-150 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">share</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full p-2 active:scale-95 duration-150 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">flag</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow pt-16 pb-24 overflow-y-auto">
+<!-- Map Section -->
+<div class="relative w-full h-64 bg-surface-container-low" data-location="Warsaw" style="">
+<img alt="Map" class="w-full h-full object-cover opacity-80" data-alt="A clean, modern top-down street map view showing a section of a city. The map style is light and minimalist with subtle white and light grey roads against a very pale grey background, typical of high-end UI map integrations. The lighting is neutral and even. The aesthetic is purely informational and uncluttered, adhering to a light-mode color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEMlQElUbg2yjFH_1luh0OSkqXmBAo_r1MyXktSIC0clgKTKjiliF-BkxQqX66O4ec4lXAm5oPwOXgnTMBx2g25KCmrl4RdF72bX_H9NFDEQ1FhBgKmbOJa_rKSqC9dqLTjW4knm5FCtLTKf8o1gRj-WjzAshVPaLiL3Vz2_fClDZaPGeaO-_Qwjz8lXOdHDZtkTg5Z86KxH2ZyWSBdroThPP9MYaNMdKkc0b3dEWnohLamuuDtOpE1k1apsFLBa0pPBE1JscObjU"/>
+<!-- Alert Pin & Radius -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="relative flex items-center justify-center">
+<div class="absolute w-32 h-32 bg-primary rounded-full opacity-20 animate-pulse"></div>
+<div class="absolute w-24 h-24 bg-primary rounded-full opacity-30"></div>
+<span class="material-symbols-outlined text-primary text-4xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="px-margin-mobile sm:px-margin-desktop py-stack-lg max-w-3xl mx-auto space-y-stack-lg relative -mt-6">
+<!-- Header Card -->
+<div class="bg-surface-container-lowest rounded-xl p-gutter shadow-sm border border-surface-variant flex flex-col gap-stack-md z-10 relative">
+<div class="flex items-start gap-gutter">
+<div class="flex-shrink-0 w-12 h-12 rounded-full bg-error-container text-error flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div class="flex-grow">
+<h1 class="font-headline-md text-headline-md text-on-surface">Pożar w kamienicy</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Kategoria: Pożar • 12 min temu • 300m stąd</p>
+</div>
+</div>
+<!-- Reporter Info -->
+<div class="flex items-center gap-base mt-2 bg-surface-container-low p-2 rounded-lg inline-flex w-max">
+<img alt="Avatar" class="w-6 h-6 rounded-full object-cover" data-alt="A small, professional headshot photo of a young adult male with short dark hair, smiling slightly against a neutral light grey background. The lighting is soft and studio-quality, ensuring clear visibility for a profile picture icon in a modern UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCITjWYu44xPrYmKXkocI7fC33n5rKOXmHuzQ7ln0vKxvXC41MXHpHXGdMH2xb9qJ1XTjTCSoyKVmlcb5yszsi1HA1S5eAnn_EgVqnGy7IpsX528nlwrVTaWJViPl1zAimL94NPQdOQw7UDnwJLgSmcT2nJ8-43s-CJ-h2e01qIKX7OaOW2Y6EjiSwA6XVxDcQgy-IJ7ZlCoTc8F9V_t5OLxtmLhW5h_DphnKPoolVIMQLCmu_YFTk-lV-sYAdO0-L5Yb3vzEVzNLM"/>
+<span class="font-label-lg text-label-lg text-on-surface">Marek W.</span>
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">shield</span>
+<div class="flex items-center text-[#fbbf24]">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<!-- Voting Buttons -->
+<div class="flex gap-gutter w-full">
+<button class="flex-1 bg-secondary text-on-secondary rounded-full py-3 px-4 font-label-lg text-label-lg flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    Potwierdzam (24)
+                </button>
+<button class="flex-1 bg-surface-container-high text-on-surface-variant rounded-full py-3 px-4 font-label-lg text-label-lg flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">cancel</span>
+                    Nieaktualne (2)
+                </button>
+</div>
+<!-- Image & Description -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-surface-variant">
+<img alt="Incident Photo" class="w-full h-48 object-cover" data-alt="A dramatic photo taken from street level looking up at a brick building where dark grey smoke is billowing out of a second-story window. The scene is lit by natural daylight, conveying a sense of urgency. The overall aesthetic is realistic and documentary-style, fitting for an emergency alert context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-VBTL2g1tMVtzMCvtHtG4edNye0L998WINpjXBuSmAbYTkWXCMPZng653kcLJBt5kqQb7x3dND-D8OuuYIGeviVGjLE0lomZsz7_BahQHGp6o9PWYJsUQuTe9CQHa8PLT2rkmx5JUDqTvM3RGsdzkgfZJkW-xErgPCZNVscujIMd1uHrs9esooEnaOQkQYMLM9WPsZGL-_-5ReNE3bfHKti2drfnNheOd5BjrdfnnPnelj60KlItT4QKYYTSxqVfIGCPZr7r3JQw"/>
+<div class="p-gutter">
+<p class="font-body-lg text-body-lg text-on-surface">Gęsty dym wydobywa się z okna na drugim piętrze. Straż pożarna jest już w drodze, ale ulica jest częściowo zablokowana.</p>
+</div>
+</div>
+<!-- Comments Section -->
+<div class="pt-stack-md">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-stack-md">Komentarze (3)</h2>
+<div class="space-y-stack-md">
+<!-- Comment 1 -->
+<div class="flex gap-stack-md">
+<img alt="Avatar" class="w-10 h-10 rounded-full object-cover flex-shrink-0" data-alt="A small headshot of a young woman with light brown hair pulled back, smiling softly. She is set against a blurred, bright outdoor background. The lighting is natural and flattering, suitable for a friendly profile avatar in a modern app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCxvqMkwuDs8i52-pSVFJwZ2JL8RQVZaRcoZx2ZNrSauVlY4R84pwdU7PfLj7iW1tEb5qb0LMmPIMPFHmMyUkHbHBltVdPriN5rKcaTMm74fczw5oqvUl4kjgDL3KmI2Y6hxGe9-TFLkyHW9xRn09g8TBkIxLcKk6_OMwA_U2z8o09H0tTCCAEP6_9IY3CvYSV-j0QszisPyPlwwaD8MvfkSacsB5xsQATnm_CZgnwV-hhKLbAN5G__zfcjCg6J6_swGretC0D4CQ"/>
+<div class="bg-surface-container-low rounded-xl rounded-tl-none p-stack-md flex-grow">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-lg text-label-lg text-on-surface">Anna K.</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-xs">5 min temu</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">Widziałam wóz strażacki skręcający w Kwiatową.</p>
+</div>
+</div>
+<!-- Comment 2 -->
+<div class="flex gap-stack-md">
+<img alt="Avatar" class="w-10 h-10 rounded-full object-cover flex-shrink-0" data-alt="A close-up profile portrait of a middle-aged man with short hair and a light beard, looking directly at the camera with a neutral expression. The background is a soft, solid light grey. The image is crisp and clear, designed to look like a standard user avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9MN5V8gKF8e38NOEYujMwMOI1u0NmchHqTxBhuBVYhNdZ5auyo5zDRgiNABGrL35z7hnWr7zT5mT_rt-Fbm3spcoWghwKk3R2kV80eNEzP_aztyrsAJbMIpau_uwL-XyM-6p2FMNyYeBybh9mJCVVQi5SMPAWQiHKA177OcL_ZOGVPqmc96nTy9I0DqvTmQo9M2dwfl3wvxzc2kdiBlEyPVqSoAm3w4d66T0ezBDZAYt1hLKQGG_MJreQSlAmGisHcVv_EjcTBNM"/>
+<div class="bg-surface-container-low rounded-xl rounded-tl-none p-stack-md flex-grow">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-lg text-label-lg text-on-surface">Piotr S.</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-xs">2 min temu</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface">Ulica Kwiatowa jest już całkowicie nieprzejezdna.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Fixed Bottom Bar for Input -->
+<div class="fixed bottom-0 w-full z-50 bg-surface-container-highest shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] px-margin-mobile py-3 flex items-center gap-stack-md">
+<div class="flex-grow bg-surface rounded-full border border-surface-variant flex items-center px-4 py-2 focus-within:border-primary transition-colors">
+<input class="w-full bg-transparent border-none focus:ring-0 text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant p-0" placeholder="Napisz komentarz..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 active:scale-95 transition-transform shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</body></html>

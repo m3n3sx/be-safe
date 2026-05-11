@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zgłoś zagrożenie - be:Safe</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dadada",
+                        "on-secondary-container": "#217128",
+                        "primary-fixed": "#ffdad9",
+                        "surface-variant": "#e2e2e2",
+                        "surface": "#f9f9f9",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#e9003a",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#f4fffb",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "primary": "#ba002c",
+                        "on-primary-fixed-variant": "#920021",
+                        "surface-container-highest": "#e2e2e2",
+                        "outline-variant": "#e8bcbb",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#88f5e3",
+                        "tertiary-container": "#008376",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-background": "#1a1c1c",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-fixed": "#002204",
+                        "on-primary-container": "#fffbff",
+                        "tertiary": "#00685d",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-fixed-dim": "#88d982",
+                        "secondary": "#1b6d24",
+                        "outline": "#936e6d",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb3b3",
+                        "secondary-container": "#a0f399",
+                        "on-secondary-fixed-variant": "#005312",
+                        "inverse-on-surface": "#f1f1f1",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "surface-container-high": "#e8e8e8",
+                        "background": "#f9f9f9",
+                        "on-primary-fixed": "#400009",
+                        "on-surface-variant": "#5e3f3e",
+                        "surface-container": "#eeeeee",
+                        "on-surface": "#1a1c1c",
+                        "surface-tint": "#bf002e",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#00201c",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#a3f69c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "12px",
+                        "gutter": "16px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "label-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col items-center">
+<div class="w-full max-w-md bg-surface min-h-screen flex flex-col shadow-xl">
+<!-- Top App Bar (Task-Focused - No Main Nav Shells) -->
+<header class="bg-surface dark:bg-surface-dim flex justify-between items-center px-margin-mobile h-16 w-full z-40 sticky top-0">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant text-on-surface transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-on-surface">Zgłoś zagrożenie</h1>
+<div class="w-10 h-10"></div> <!-- Placeholder for balance -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile py-stack-lg flex flex-col gap-stack-lg overflow-y-auto">
+<!-- Category Chips (Horizontal Scroll) -->
+<section class="flex flex-col gap-stack-md">
+<h2 class="font-title-lg text-title-lg text-on-surface px-1">Kategoria</h2>
+<div class="flex overflow-x-auto gap-stack-md pb-stack-sm scrollbar-hide -mx-margin-mobile px-margin-mobile snap-x snap-mandatory">
+<!-- Selected Chip -->
+<button class="flex flex-col items-center justify-center gap-stack-sm min-w-[88px] h-[88px] bg-primary-container text-on-primary-container rounded-[16px] snap-center shrink-0 border border-transparent shadow-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[28px] shrink-0" data-weight="fill" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-label-lg text-label-lg text-center break-words w-full px-1">Wypadek</span>
+</button>
+<!-- Unselected Chips -->
+<button class="flex flex-col items-center justify-center gap-stack-sm min-w-[88px] h-[88px] bg-surface-container-low text-on-surface-variant border border-surface-variant rounded-[16px] snap-center shrink-0 hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[28px] shrink-0">groups</span>
+<span class="font-label-lg text-label-lg text-center break-words w-full px-1 leading-tight">Agresywne osoby</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-stack-sm min-w-[88px] h-[88px] bg-surface-container-low text-on-surface-variant border border-surface-variant rounded-[16px] snap-center shrink-0 hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[28px] shrink-0">front_hand</span>
+<span class="font-label-lg text-label-lg text-center break-words w-full px-1">Kradzież</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-stack-sm min-w-[88px] h-[88px] bg-surface-container-low text-on-surface-variant border border-surface-variant rounded-[16px] snap-center shrink-0 hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[28px] shrink-0">local_fire_department</span>
+<span class="font-label-lg text-label-lg text-center break-words w-full px-1">Pożar</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-stack-sm min-w-[88px] h-[88px] bg-surface-container-low text-on-surface-variant border border-surface-variant rounded-[16px] snap-center shrink-0 hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[28px] shrink-0">tsunami</span>
+<span class="font-label-lg text-label-lg text-center break-words w-full px-1">Powódź</span>
+</button>
+</div>
+</section>
+<!-- Location Section -->
+<section class="flex flex-col gap-stack-sm">
+<h2 class="font-title-lg text-title-lg text-on-surface px-1">Lokalizacja</h2>
+<div class="relative w-full h-40 rounded-[16px] overflow-hidden bg-surface-container-highest border border-surface-variant">
+<img alt="Map preview" class="w-full h-full object-cover" data-alt="A clean, minimalist digital map interface showing a modern European residential area. The map uses a very light gray and white color scheme to match the app's light mode aesthetic. The streets are clearly delineated with soft geometric lines. A vibrant red location pin stands out sharply against the neutral background." data-location="Warsaw" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRecS8Bo6KdmFzUmZfCqRMEFvN1mCzOsWPnzpkgoQ2xwL3YpHw4YCf-vr0SY8__o6kI8hzxtklUNB8loR1Z09D9gMuOLnDmzyfVmhH8YjOjAdTrCaUSjTFV-Rkp16ZYmZfpx3421P7TPFN46Up7vER4ekuVD3HdHW_9UhuIF19FP2M0e9OGVzSX3OXbT1r-ayFpJ41YI5FkrWlex9oaFCf3e4O56nyy78VJXMWdZT9fc1S1EnSaKuN85woZyqgqCqETT_ju_FdKx4"/>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="relative">
+<span class="material-symbols-outlined text-[40px] text-primary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-1 bg-black/20 rounded-full blur-[2px]"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center px-1 mt-1">
+<span class="font-body-md text-body-md text-on-surface-variant">ul. Przykładowa 12, Warszawa</span>
+<button class="font-label-lg text-label-lg text-primary hover:text-on-primary-fixed-variant transition-colors">Dostosuj lokalizację</button>
+</div>
+</section>
+<!-- Form Fields -->
+<section class="flex flex-col gap-stack-md">
+<!-- Single-line text field -->
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface-variant px-1" for="alert-title">Tytuł zagrożenia</label>
+<input class="w-full h-14 bg-surface-container-lowest border border-outline-variant text-on-surface font-body-lg text-body-lg rounded-[12px] px-4 focus:ring-2 focus:ring-primary focus:border-primary transition-all" id="alert-title" placeholder="Krótki tytuł..." type="text" value="Zderzenie dwóch aut"/>
+</div>
+<!-- Multi-line text area -->
+<div class="flex flex-col gap-1">
+<label class="font-label-lg text-label-lg text-on-surface-variant px-1" for="alert-desc">Opis (opcjonalne)</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant text-on-surface font-body-lg text-body-lg rounded-[12px] p-4 focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-none" id="alert-desc" placeholder="Podaj więcej szczegółów..." rows="3"></textarea>
+</div>
+<!-- Add Photo Button -->
+<button class="flex items-center justify-center gap-2 h-14 w-full bg-surface-container-low text-on-surface border border-dashed border-outline-variant rounded-[12px] hover:bg-surface-container transition-colors mt-2 active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant">photo_camera</span>
+<span class="font-label-lg text-label-lg">Dodaj zdjęcie</span>
+</button>
+</section>
+<!-- Slider / Duration -->
+<section class="flex flex-col gap-stack-md pb-stack-lg">
+<div class="flex justify-between items-center px-1">
+<label class="font-title-lg text-title-lg text-on-surface">Jak długo alert ma być aktywny?</label>
+<span class="font-body-lg text-body-lg text-primary font-medium">3h</span>
+</div>
+<div class="px-2 py-4">
+<input class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" max="3" min="0" step="1" type="range" value="1"/>
+<div class="flex justify-between font-label-lg text-label-lg text-on-surface-variant mt-2 px-1">
+<span>1h</span>
+<span>3h</span>
+<span>12h</span>
+<span>24h</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Bar -->
+<div class="p-margin-mobile bg-surface border-t border-surface-variant pb-8">
+<button class="w-full h-14 bg-primary text-on-primary rounded-full font-headline-md text-[16px] flex items-center justify-center shadow-md hover:bg-on-primary-fixed-variant transition-colors active:scale-[0.98] duration-150">
+                Opublikuj zgłoszenie
+            </button>
+</div>
+</div>
+</body></html>

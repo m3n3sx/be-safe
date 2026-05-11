@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Profile - be:Safe</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#006399",
+                        "secondary-fixed-dim": "#82d3de",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#004f56",
+                        "on-tertiary-container": "#003a5c",
+                        "tertiary-container": "#00a8ff",
+                        "on-tertiary-fixed": "#001d32",
+                        "background": "#fff8f5",
+                        "on-secondary-container": "#066f79",
+                        "on-primary-fixed-variant": "#753400",
+                        "primary-fixed": "#ffdbc8",
+                        "outline": "#8c7263",
+                        "on-tertiary-fixed-variant": "#004a75",
+                        "surface": "#fff8f5",
+                        "surface-container-highest": "#f6ded2",
+                        "surface-variant": "#f6ded2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#fbe3d7",
+                        "outline-variant": "#e0c0af",
+                        "on-primary-container": "#5c2800",
+                        "tertiary-fixed-dim": "#95ccff",
+                        "inverse-primary": "#ffb68b",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#584235",
+                        "secondary-fixed": "#9ff0fb",
+                        "on-secondary-fixed": "#001f23",
+                        "surface-bright": "#fff8f5",
+                        "surface-tint": "#994700",
+                        "primary-fixed-dim": "#ffb68b",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#3b2d26",
+                        "inverse-on-surface": "#ffede5",
+                        "primary-container": "#ff7a00",
+                        "on-surface": "#251912",
+                        "primary": "#994700",
+                        "surface-container": "#ffeadf",
+                        "on-primary-fixed": "#321200",
+                        "surface-dim": "#edd5ca",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#cde5ff",
+                        "secondary": "#006972",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#fff1ea",
+                        "secondary-container": "#9ff0fb",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-background": "#251912"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "32px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px",
+                        "section-gap": "48px",
+                        "margin-mobile": "20px",
+                        "gutter-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-bold": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.04em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen relative overflow-hidden font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Immersive Background -->
+<div class="fixed inset-0 z-0">
+<div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&amp;w=2070&amp;auto=format&amp;fit=crop')] bg-cover bg-center" data-alt="A breathtaking, wide-angle shot of a misty mountain range at dawn. The light is soft and diffused, creating a serene and premium light-mode aesthetic. The colors are dominated by warm, pale oranges and soft whites, perfectly complementing the interface's primary brand colors. The atmosphere is adventurous yet highly refined and safe.">
+</div>
+<div class="absolute inset-0 bg-surface/85 backdrop-blur-3xl"></div>
+</div>
+<!-- Task Header (Overrides TopAppBar for Focus) -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-margin-mobile h-16 bg-surface/50 backdrop-blur-xl border-b border-white/20">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-variant transition-colors text-on-surface active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<h1 class="font-headline-md text-headline-md text-on-surface">Edytuj profil</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 pt-24 pb-32 px-margin-mobile h-screen overflow-y-auto overflow-x-hidden flex flex-col gap-stack-lg max-w-lg mx-auto">
+<!-- Interactive Avatar Section -->
+<section class="flex flex-col items-center justify-center mt-stack-md">
+<div class="relative group cursor-pointer active:scale-95 transition-transform duration-300">
+<div class="w-32 h-32 rounded-full overflow-hidden shadow-[0_8px_30px_rgba(153,71,0,0.15)] border-4 border-surface-container-lowest relative z-10">
+<img alt="Profile picture" class="w-full h-full object-cover group-hover:blur-sm transition-all duration-300" data-alt="A high-quality portrait of a confident, sophisticated traveler looking slightly off-camera. The lighting is soft, natural daylight that highlights their features against a bright, airy background. The overall mood is modern, approachable, and aligns with a premium lifestyle brand. Warm skin tones match the primary color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkMlBKNAMy84aF9Z-jvCdWw8Tx4G02tu-ju6BvmFRYWKkPLkzxrw1lIj1YGpoorKZ9g0nm2vPDF0M6EFQrYxrGJPqDh6ssABV51JFSu8yxsjyYqcYzdrAbU1qSPE5HQeiknqkodJ45aHo7gu74HzdzEM_llZHEVB3dX_p4p7XMzzF-luZ5e_-DgPegNujkOGAEJG2Q1YkrdB1GKAdAhn0uekVVCUfmu9ramPjEGMKbgxU7FlVdtHWbBSixhHs9yrmpb9cH1Rs0VnY"/>
+<!-- Hover/Edit Overlay -->
+<div class="absolute inset-0 bg-inverse-surface/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<span class="material-symbols-outlined text-surface-container-lowest" data-icon="photo_camera" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
+</div>
+</div>
+<!-- Interactive Badge -->
+<div class="absolute bottom-0 right-0 bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center shadow-lg border-2 border-surface z-20">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit">edit</span>
+</div>
+</div>
+<span class="mt-stack-sm font-label-bold text-label-bold text-primary cursor-pointer hover:underline">Zmień zdjęcie</span>
+</section>
+<!-- Form Fields -->
+<section class="flex flex-col gap-stack-md">
+<!-- Name Input -->
+<div class="flex flex-col relative group">
+<label class="absolute top-2 left-4 font-label-sm text-label-sm text-on-surface-variant transition-all" for="nameInput">Imię i nazwisko</label>
+<input class="w-full bg-surface-variant/50 backdrop-blur-md rounded-t-lg border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 px-4 pt-7 pb-2 font-body-lg text-body-lg text-on-surface transition-colors placeholder-on-surface-variant/50 outline-none" id="nameInput" type="text" value="Alex Vance"/>
+</div>
+<!-- Email Input (Contextual Addition for realism) -->
+<div class="flex flex-col relative group">
+<label class="absolute top-2 left-4 font-label-sm text-label-sm text-on-surface-variant transition-all" for="emailInput">Adres e-mail</label>
+<input class="w-full bg-surface-variant/50 backdrop-blur-md rounded-t-lg border-0 border-b-2 border-outline-variant focus:border-primary focus:ring-0 px-4 pt-7 pb-2 font-body-lg text-body-lg text-on-surface transition-colors placeholder-on-surface-variant/50 outline-none" id="emailInput" type="email" value="alex.vance@example.com"/>
+</div>
+</section>
+<!-- Editable Menu Items (Bento Style Cards) -->
+<section class="flex flex-col gap-stack-sm">
+<h2 class="font-label-bold text-label-bold text-on-surface-variant px-2 uppercase tracking-wider mb-2">Konfiguracja</h2>
+<!-- Family Groups -->
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-lowest/80 backdrop-blur-md rounded-xl shadow-sm border border-white/50 hover:bg-surface-container-highest transition-colors group active:scale-[0.98] duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="diversity_3" style="font-variation-settings: 'FILL' 1;">diversity_3</span>
+</div>
+<div class="flex flex-col items-start">
+<span class="font-label-bold text-label-bold text-on-surface">Grupy rodzinne</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 aktywne grupy</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="edit">edit</span>
+</button>
+<!-- Settings -->
+<button class="w-full flex items-center justify-between p-4 bg-surface-container-lowest/80 backdrop-blur-md rounded-xl shadow-sm border border-white/50 hover:bg-surface-container-highest transition-colors group active:scale-[0.98] duration-200">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+</div>
+<div class="flex flex-col items-start">
+<span class="font-label-bold text-label-bold text-on-surface">Ustawienia</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Powiadomienia, prywatność</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors" data-icon="edit">edit</span>
+</button>
+</section>
+</main>
+<!-- Bottom Actions Container -->
+<div class="fixed bottom-0 left-0 w-full p-margin-mobile bg-gradient-to-t from-surface via-surface/90 to-transparent z-50 flex gap-4 pb-safe">
+<button class="flex-1 py-4 px-6 rounded-full font-label-bold text-label-bold text-primary bg-primary/10 hover:bg-primary/20 active:scale-95 transition-all duration-200 border border-primary/20">
+            Anuluj
+        </button>
+<button class="flex-1 py-4 px-6 rounded-full font-label-bold text-label-bold text-on-primary bg-primary shadow-[0_8px_20px_rgba(153,71,0,0.3)] hover:shadow-[0_12px_25px_rgba(153,71,0,0.4)] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+            Zapisz
+        </button>
+</div>
+</body></html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Odznaki</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#fffbff",
+                        "on-background": "#1a1c1c",
+                        "on-secondary-fixed": "#002204",
+                        "outline-variant": "#e8bcbb",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "secondary-fixed-dim": "#88d982",
+                        "on-secondary-fixed-variant": "#005312",
+                        "surface-bright": "#f9f9f9",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "inverse-primary": "#ffb3b3",
+                        "surface-container": "#eeeeee",
+                        "tertiary-fixed": "#88f5e3",
+                        "secondary-fixed": "#a3f69c",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary": "#1b6d24",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-primary-fixed": "#400009",
+                        "tertiary": "#00685d",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "secondary-container": "#a0f399",
+                        "background": "#f9f9f9",
+                        "on-tertiary-container": "#f4fffb",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#5e3f3e",
+                        "surface-tint": "#bf002e",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#217128",
+                        "inverse-on-surface": "#f1f1f1",
+                        "error": "#ba1a1a",
+                        "outline": "#936e6d",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-low": "#f3f3f3",
+                        "on-surface": "#1a1c1c",
+                        "on-error-container": "#93000a",
+                        "surface": "#f9f9f9",
+                        "primary-fixed": "#ffdad9",
+                        "primary": "#ba002c",
+                        "tertiary-container": "#008376",
+                        "primary-container": "#e9003a",
+                        "on-tertiary-fixed": "#00201c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "24px",
+                        "gutter": "16px",
+                        "stack-sm": "4px",
+                        "stack-md": "12px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "title-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim docked full-width top-0 bg-surface dark:bg-surface-dim flat no shadows flex justify-between items-center px-margin-mobile h-16 w-full z-40">
+<button class="text-on-surface-variant hover:bg-surface-variant transition-colors rounded-full p-2 active:scale-95 duration-150 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-primary font-bold tracking-tight">Odznaki</h1>
+<div class="w-10"></div> <!-- Placeholder for balance -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col gap-stack-lg max-w-3xl mx-auto w-full">
+<!-- Section: Zdobyte odznaki -->
+<section class="flex flex-col gap-stack-md">
+<h2 class="font-title-lg text-title-lg font-bold text-on-background">Zdobyte odznaki (3)</h2>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-gutter">
+<!-- Badge 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center gap-stack-sm text-center border-2 border-[#FFE082] shadow-sm">
+<div class="text-4xl mb-2">🏆</div>
+<span class="font-body-md text-body-md font-bold text-on-background">Strażnik miasta</span>
+</div>
+<!-- Badge 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center gap-stack-sm text-center border-2 border-secondary-fixed shadow-sm">
+<div class="text-4xl mb-2">🎖</div>
+<span class="font-body-md text-body-md font-bold text-on-background">Aktywny Sąsiad</span>
+</div>
+<!-- Badge 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center gap-stack-sm text-center border-2 border-primary-fixed shadow-sm">
+<div class="text-4xl mb-2">🥇</div>
+<span class="font-body-md text-body-md font-bold text-on-background">Dobry Samarytanin</span>
+</div>
+</div>
+</section>
+<!-- Section: Do zdobycia -->
+<section class="flex flex-col gap-stack-md mt-stack-lg">
+<h2 class="font-title-lg text-title-lg font-bold text-on-surface-variant">Do zdobycia (7)</h2>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-gutter">
+<!-- Locked Badge 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center gap-stack-sm text-center border border-surface-variant opacity-60 relative grayscale">
+<div class="absolute top-2 right-2 bg-surface-variant rounded-full p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="text-4xl mb-2">👁️</div>
+<span class="font-body-md text-body-md font-bold text-on-background">Oko Proroka</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant mt-1">8 / 10 zgłoszeń</span>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-variant rounded-full h-1.5 mt-2">
+<div class="bg-primary h-1.5 rounded-full" style="width: 80%"></div>
+</div>
+</div>
+<!-- Locked Badge 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center gap-stack-sm text-center border border-surface-variant opacity-60 relative grayscale">
+<div class="absolute top-2 right-2 bg-surface-variant rounded-full p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="text-4xl mb-2">🚑</div>
+<span class="font-body-md text-body-md font-bold text-on-background">Ratownik</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant mt-1">1 / 5 akcji</span>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-variant rounded-full h-1.5 mt-2">
+<div class="bg-primary h-1.5 rounded-full" style="width: 20%"></div>
+</div>
+</div>
+<!-- Locked Badge 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center gap-stack-sm text-center border border-surface-variant opacity-60 relative grayscale">
+<div class="absolute top-2 right-2 bg-surface-variant rounded-full p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="text-4xl mb-2">⭐</div>
+<span class="font-body-md text-body-md font-bold text-on-background">Weteran</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant mt-1">12 / 50 dni</span>
+<!-- Progress Bar -->
+<div class="w-full bg-surface-variant rounded-full h-1.5 mt-2">
+<div class="bg-primary h-1.5 rounded-full" style="width: 24%"></div>
+</div>
+</div>
+<!-- Locked Badge 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center gap-stack-sm text-center border border-surface-variant opacity-60 relative grayscale">
+<div class="absolute top-2 right-2 bg-surface-variant rounded-full p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="text-4xl mb-2">🤝</div>
+<span class="font-body-md text-body-md font-bold text-on-background">Pomocna Dłoń</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant mt-1">0 / 3 wsparcia</span>
+</div>
+<!-- Locked Badge 5 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col items-center justify-center gap-stack-sm text-center border border-surface-variant opacity-60 relative grayscale">
+<div class="absolute top-2 right-2 bg-surface-variant rounded-full p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<div class="text-4xl mb-2">🦉</div>
+<span class="font-body-md text-body-md font-bold text-on-background">Nocny Marek</span>
+<span class="font-label-lg text-label-lg text-on-surface-variant mt-1">0 / 5 zgłoszeń</span>
+</div>
+</div>
+</section>
+</main>
+</body></html>

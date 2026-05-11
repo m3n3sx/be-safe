@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Statystyki</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f9f9f9",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#e9003a",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e2e2e2",
+                        "on-secondary-container": "#217128",
+                        "primary-fixed": "#ffdad9",
+                        "surface-dim": "#dadada",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#ba002c",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#f4fffb",
+                        "tertiary-container": "#008376",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#88f5e3",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary-fixed": "#002204",
+                        "inverse-surface": "#2f3131",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-background": "#1a1c1c",
+                        "secondary-fixed-dim": "#88d982",
+                        "tertiary": "#00685d",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-container": "#fffbff",
+                        "secondary-container": "#a0f399",
+                        "on-secondary-fixed-variant": "#005312",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb3b3",
+                        "outline": "#936e6d",
+                        "secondary": "#1b6d24",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-primary-fixed": "#400009",
+                        "background": "#f9f9f9",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary-fixed": "#a3f69c",
+                        "on-tertiary-fixed": "#00201c",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#eeeeee",
+                        "on-surface": "#1a1c1c",
+                        "surface-tint": "#bf002e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "base": "8px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px",
+                        "stack-md": "12px",
+                        "gutter": "16px",
+                        "margin-desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex flex-col antialiased">
+<!-- TopAppBar -->
+<header class="bg-surface text-primary font-title-lg docked full-width top-0 bg-surface flex justify-between items-center px-margin-mobile h-16 w-full z-40 sticky shadow-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="shield" data-weight="fill" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-headline-md text-headline-md font-bold text-primary">be:Safe</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full hover:bg-surface-variant transition-colors active:scale-95 duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col gap-stack-lg p-margin-mobile md:p-margin-desktop max-w-7xl mx-auto w-full pb-24 md:pb-8">
+<div class="flex flex-col gap-stack-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Statystyki bezpieczeństwa</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Przegląd zgłoszeń i zagrożeń w Twojej okolicy.</p>
+</div>
+<!-- Summary Tiles (Bento Grid Style) -->
+<section class="grid grid-cols-3 gap-gutter">
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col gap-2 border border-surface-variant shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-16 h-16 bg-error/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">Dziś</span>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-error">12</span>
+<span class="font-body-md text-body-md text-on-surface-variant mb-2">zgłoszeń</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col gap-2 border border-surface-variant shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-16 h-16 bg-tertiary/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">Tydzień</span>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-tertiary">84</span>
+<span class="font-body-md text-body-md text-on-surface-variant mb-2">zgłoszeń</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-4 flex flex-col gap-2 border border-surface-variant shadow-sm relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-16 h-16 bg-primary/10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">Wszystkie</span>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-primary">342</span>
+<span class="font-body-md text-body-md text-on-surface-variant mb-2">zgłoszeń</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-stack-lg">
+<!-- Horizontal Bar Chart: Najczęstsze zagrożenia -->
+<section class="bg-surface-container-lowest rounded-xl p-stack-lg border border-surface-variant shadow-sm flex flex-col gap-stack-md">
+<h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="warning">warning</span>
+                    Najczęstsze zagrożenia
+                </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">W Twojej okolicy (ostatnie 30 dni)</p>
+<div class="flex flex-col gap-4">
+<!-- Row 1 -->
+<div class="flex items-center gap-3">
+<div class="w-8 flex justify-center text-error"><span class="material-symbols-outlined" data-icon="local_fire_department">local_fire_department</span></div>
+<div class="w-24 font-body-md text-body-md text-on-surface">Pożar</div>
+<div class="flex-grow flex items-center gap-2">
+<div class="h-6 bg-error rounded-full" style="width: 80%;"></div>
+<span class="font-label-lg text-label-lg text-on-surface-variant w-8 text-right">45</span>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="flex items-center gap-3">
+<div class="w-8 flex justify-center text-primary"><span class="material-symbols-outlined" data-icon="car_crash">car_crash</span></div>
+<div class="w-24 font-body-md text-body-md text-on-surface">Wypadek</div>
+<div class="flex-grow flex items-center gap-2">
+<div class="h-6 bg-primary rounded-full" style="width: 65%;"></div>
+<span class="font-label-lg text-label-lg text-on-surface-variant w-8 text-right">32</span>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="flex items-center gap-3">
+<div class="w-8 flex justify-center text-tertiary"><span class="material-symbols-outlined" data-icon="storm">storm</span></div>
+<div class="w-24 font-body-md text-body-md text-on-surface">Pogoda</div>
+<div class="flex-grow flex items-center gap-2">
+<div class="h-6 bg-tertiary rounded-full" style="width: 40%;"></div>
+<span class="font-label-lg text-label-lg text-on-surface-variant w-8 text-right">18</span>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="flex items-center gap-3">
+<div class="w-8 flex justify-center text-secondary"><span class="material-symbols-outlined" data-icon="gavel">gavel</span></div>
+<div class="w-24 font-body-md text-body-md text-on-surface">Agresja</div>
+<div class="flex-grow flex items-center gap-2">
+<div class="h-6 bg-secondary rounded-full" style="width: 25%;"></div>
+<span class="font-label-lg text-label-lg text-on-surface-variant w-8 text-right">11</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Line Chart Area: Aktywność -->
+<section class="bg-surface-container-lowest rounded-xl p-stack-lg border border-surface-variant shadow-sm flex flex-col gap-stack-md">
+<h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="timeline">timeline</span>
+                    Aktywność
+                </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-2">Zgłoszenia w ostatnich 14 dniach</p>
+<div class="relative w-full h-48 mt-auto flex items-end pt-4">
+<!-- Faux Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between border-l border-b border-surface-variant pb-6 pl-1">
+<div class="w-full border-t border-surface-variant border-dashed opacity-50 h-0"></div>
+<div class="w-full border-t border-surface-variant border-dashed opacity-50 h-0"></div>
+<div class="w-full border-t border-surface-variant border-dashed opacity-50 h-0"></div>
+<div class="w-full border-t border-surface-variant opacity-0 h-0"></div>
+</div>
+<!-- Faux Area Chart -->
+<div class="absolute bottom-6 left-1 right-0 top-4 overflow-hidden rounded-tr-xl flex items-end">
+<div class="w-full h-full bg-gradient-to-t from-primary/20 to-primary/5 relative" style="clip-path: polygon(0 80%, 10% 75%, 20% 90%, 30% 60%, 40% 65%, 50% 40%, 60% 50%, 70% 30%, 80% 45%, 90% 20%, 100% 35%, 100% 100%, 0 100%);">
+<!-- Faux Line -->
+<svg class="absolute inset-0 w-full h-full text-primary" preserveaspectratio="none" viewbox="0 0 100 100">
+<polyline fill="none" points="0,80 10,75 20,90 30,60 40,65 50,40 60,50 70,30 80,45 90,20 100,35" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"></polyline>
+</svg>
+</div>
+</div>
+<!-- X-Axis Labels -->
+<div class="absolute bottom-0 left-1 right-0 flex justify-between px-2">
+<span class="font-label-lg text-[10px] text-on-surface-variant">1</span>
+<span class="font-label-lg text-[10px] text-on-surface-variant">3</span>
+<span class="font-label-lg text-[10px] text-on-surface-variant">5</span>
+<span class="font-label-lg text-[10px] text-on-surface-variant">7</span>
+<span class="font-label-lg text-[10px] text-on-surface-variant">9</span>
+<span class="font-label-lg text-[10px] text-on-surface-variant">11</span>
+<span class="font-label-lg text-[10px] text-on-surface-variant">14</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Heatmap Section -->
+<section class="bg-surface-container-lowest rounded-xl p-stack-lg border border-surface-variant shadow-sm flex flex-col gap-stack-md">
+<div class="flex justify-between items-center">
+<div class="flex flex-col">
+<h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="map">map</span>
+                        Mapa zagrożeń
+                    </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Skupiska zgłoszeń w Twoim mieście</p>
+</div>
+<button class="bg-primary/10 text-primary font-label-lg text-label-lg px-4 py-2 rounded-full hover:bg-primary/20 transition-colors">
+                    Pełny ekran
+                </button>
+</div>
+<div class="w-full h-64 rounded-lg overflow-hidden relative shadow-inner bg-surface-variant">
+<!-- Heatmap Thumbnail Image -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A stylized, modern digital map showing a city grid from a top-down perspective. The map uses a light-mode aesthetic with soft greys and whites for streets and blocks. Several areas feature glowing, bright red and orange 'heatmap' spots indicating high activity or danger zones. The lighting is clean and flat, emphasizing the data visualization aspect. The overall mood is informative, technical, and slightly urgent due to the red hotspots." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCyxic1eKA19PH7RwNaxLuUh80AyO01hunXMLcXld1CWVWGv0QMlmBDG8GDVmFj17nsFxYALKguApizs_ZMyrePK18oaFh6r0Kf0RnR9pCOBih3yJCe42MZum3yeWvhe4nMPVcpqTqDD8W1yTompdEcsIJLw4DdwJXHCqLi7O5IuqRpxZIWdxEWNn74ZLvyOv6KBTbJ-2JyLDNQR78UcH8xGKGJYwvKzTVlTq2nyxCWWcLH_Z0mcp_1v5fH_tsL7_3S1RSZZVyTj_I');"></div>
+<!-- Overlay Gradients for depth -->
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-surface-container-lowest/40"></div>
+<!-- Overlay Elements -->
+<div class="absolute bottom-4 left-4 flex gap-2">
+<div class="bg-surface/90 backdrop-blur-sm px-3 py-1 rounded-full border border-surface-variant flex items-center gap-1 shadow-sm">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span class="font-label-lg text-label-lg text-on-surface">Wysokie ryzyko</span>
+</div>
+<div class="bg-surface/90 backdrop-blur-sm px-3 py-1 rounded-full border border-surface-variant flex items-center gap-1 shadow-sm">
+<div class="w-2 h-2 rounded-full bg-orange-400"></div>
+<span class="font-label-lg text-label-lg text-on-surface">Umiarkowane</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container rounded-t-xl shadow-md border-t-0">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all active:scale-90 duration-200 w-16 h-12 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-lg text-label-lg mt-1">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all active:scale-90 duration-200 w-16 h-12 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-label-lg text-label-lg mt-1">Alerty</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all active:scale-90 duration-200 w-16 h-12 rounded-lg" href="#">
+<span class="material-symbols-outlined text-primary text-3xl mb-1" data-icon="emergency_home" data-weight="fill" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+<span class="font-label-lg text-label-lg sr-only">SOS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all active:scale-90 duration-200 w-16 h-12 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-label-lg text-label-lg mt-1">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-lg text-label-lg mt-1">Profil</span>
+</a>
+</nav>
+<!-- Desktop Nav Placeholder (Hidden on Mobile) -->
+<aside class="hidden md:flex flex-col w-64 fixed left-0 top-16 bottom-0 bg-surface-container border-r border-surface-variant p-4 gap-2 z-30">
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-title-lg text-title-lg">Mapa</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-title-lg text-title-lg">Alerty</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:bg-surface-variant transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-title-lg text-title-lg">Rodzina</span>
+</a>
+<a class="flex items-center gap-3 p-3 rounded-lg bg-primary-container text-on-primary-container" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-title-lg text-title-lg">Profil</span>
+</a>
+<div class="mt-auto">
+<button class="w-full py-3 rounded-full bg-primary text-on-primary font-title-lg text-title-lg flex justify-center items-center gap-2 shadow-sm hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined" data-icon="emergency_home" data-weight="fill" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+                 SOS
+             </button>
+</div>
+</aside>
+<!-- Adjust main layout for desktop nav -->
+<style>
+        @media (min-width: 768px) {
+            main {
+                padding-left: calc(16rem + 24px); /* 64 w + margin */
+            }
+        }
+    </style>
+</body></html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Profile</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#006399",
+                        "secondary-fixed-dim": "#82d3de",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#004f56",
+                        "on-tertiary-container": "#003a5c",
+                        "tertiary-container": "#00a8ff",
+                        "on-tertiary-fixed": "#001d32",
+                        "background": "#fff8f5",
+                        "on-secondary-container": "#066f79",
+                        "on-primary-fixed-variant": "#753400",
+                        "primary-fixed": "#ffdbc8",
+                        "outline": "#8c7263",
+                        "on-tertiary-fixed-variant": "#004a75",
+                        "surface": "#fff8f5",
+                        "surface-container-highest": "#f6ded2",
+                        "surface-variant": "#f6ded2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#fbe3d7",
+                        "outline-variant": "#e0c0af",
+                        "on-primary-container": "#5c2800",
+                        "tertiary-fixed-dim": "#95ccff",
+                        "inverse-primary": "#ffb68b",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#584235",
+                        "secondary-fixed": "#9ff0fb",
+                        "on-secondary-fixed": "#001f23",
+                        "surface-bright": "#fff8f5",
+                        "surface-tint": "#994700",
+                        "primary-fixed-dim": "#ffb68b",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#3b2d26",
+                        "inverse-on-surface": "#ffede5",
+                        "primary-container": "#ff7a00",
+                        "on-surface": "#251912",
+                        "primary": "#994700",
+                        "surface-container": "#ffeadf",
+                        "on-primary-fixed": "#321200",
+                        "surface-dim": "#edd5ca",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#cde5ff",
+                        "secondary": "#006972",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#fff1ea",
+                        "secondary-container": "#9ff0fb",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-background": "#251912"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-lg": "32px",
+                        "stack-md": "16px",
+                        "stack-sm": "8px",
+                        "section-gap": "48px",
+                        "margin-mobile": "20px",
+                        "gutter-mobile": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-bold": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-bold": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.04em", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden antialiased flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-3xl shadow-sm hover:bg-primary/10 transition-colors active:scale-95 duration-200 flex items-center justify-between px-margin-mobile h-16 max-w-7xl mx-auto">
+<button class="text-primary p-2 -ml-2 rounded-full hover:bg-primary/10">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-display-lg text-display-lg text-primary tracking-tighter">be:Safe</h1>
+<button class="text-primary p-2 -mr-2 rounded-full hover:bg-primary/10">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow pt-[80px] pb-[100px] px-margin-mobile max-w-2xl mx-auto w-full flex flex-col gap-section-gap">
+<!-- Profile Header (Glassmorphism Card) -->
+<section class="bg-surface-container-lowest/60 backdrop-blur-md rounded-xl p-stack-lg shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/40 flex items-center gap-stack-md mt-stack-md relative overflow-hidden">
+<!-- Decorative Glow -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-primary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="w-24 h-24 rounded-full overflow-hidden shadow-sm flex-shrink-0 border-4 border-surface-container-lowest">
+<img alt="Profile Avatar" class="w-full h-full object-cover" data-alt="A close up, high quality studio portrait of a young adult looking confidently slightly off camera. Warm, soft directional lighting highlights facial features, creating a premium, modern aesthetic consistent with a high end mobile application profile picture. The background is a blurred, neutral warm tone to keep focus on the subject." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABXJW3DFJP5c5DIidqC3WwdkflwUmPpxtYjPhvjwkcxYOQG4NJwXuTYECiiENYqoW5iJ9YJ1nGI6Ut0ohpDCFJgpizjKM-g_Gsg-weyhvk8TXI2ptqdmDOKbGSmZqKZZjORUZKaL2ZxzhIuN2BYAHyXkgsKEzdMJSId9JEN1O97v1SHohjxyNxJCbUD-OxnioCLeM6mPtbmMnMF3aWrDmzOJEkhXo506YPsLZYqNVooUMSFugQF37UTTQBzpL0E5lyHiVSZYj-Ut0"/>
+</div>
+<div class="flex flex-col">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Anna Kowalska</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Użytkownik od 2023</p>
+<div class="mt-stack-sm inline-flex items-center gap-2 bg-surface-container py-1 px-3 rounded-full self-start">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="shield" style="font-variation-settings: 'FILL' 1;">shield</span>
+<span class="font-label-sm text-label-sm text-on-surface">Konto zweryfikowane</span>
+</div>
+</div>
+</section>
+<!-- Empty State Section -->
+<section class="flex-grow flex flex-col items-center justify-center text-center px-4 py-stack-lg bg-surface-container-highest/20 rounded-xl border border-dashed border-outline-variant/50 relative">
+<!-- Soft Status Glow behind icon -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/10 rounded-full blur-3xl -z-10"></div>
+<div class="w-20 h-20 bg-surface-container-lowest rounded-full shadow-[0_4px_20px_rgb(153,71,0,0.15)] flex items-center justify-center mb-stack-lg relative">
+<span class="material-symbols-outlined text-[40px] text-primary" data-icon="local_police" style="font-variation-settings: 'FILL' 1;">local_police</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Zacznij dbać o bezpieczeństwo</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mb-stack-lg">
+                Twoja aktywność i odznaki pojawią się tutaj, gdy zaczniesz zgłaszać zagrożenia lub dołączysz do grupy rodzinnej.
+            </p>
+<button class="bg-primary text-on-primary font-label-bold text-label-bold py-3 px-6 rounded-full shadow-[0_4px_12px_rgb(153,71,0,0.3)] active:scale-95 transition-transform flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="add_alert">add_alert</span>
+                Zgłoś zagrożenie
+            </button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-3 pb-safe bg-surface/80 backdrop-blur-3xl rounded-t-xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] md:hidden">
+<!-- Item 1: Home (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90 duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</a>
+<!-- Item 2: Alerts (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90 duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="notifications">notifications</span>
+<span class="font-label-sm text-label-sm mt-1">Alerts</span>
+</a>
+<!-- Item 3: Profile (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 hover:text-primary transition-all active:scale-90 duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+<!-- Item 4: Help (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-all active:scale-90 duration-300 group" href="#">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" data-icon="emergency">emergency</span>
+<span class="font-label-sm text-label-sm mt-1">Help</span>
+</a>
+</nav>
+</body></html>

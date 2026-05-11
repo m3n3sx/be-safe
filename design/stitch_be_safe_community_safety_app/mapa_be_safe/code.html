@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Mapa</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#00201c",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#a3f69c",
+                        "surface-tint": "#bf002e",
+                        "on-surface": "#1a1c1c",
+                        "surface-container": "#eeeeee",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f3f3",
+                        "on-primary-fixed": "#400009",
+                        "on-surface-variant": "#5e3f3e",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "surface-container-high": "#e8e8e8",
+                        "background": "#f9f9f9",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb3b3",
+                        "secondary-container": "#a0f399",
+                        "on-secondary-fixed-variant": "#005312",
+                        "inverse-on-surface": "#f1f1f1",
+                        "secondary": "#1b6d24",
+                        "outline": "#936e6d",
+                        "tertiary": "#00685d",
+                        "surface-bright": "#f9f9f9",
+                        "secondary-fixed-dim": "#88d982",
+                        "on-primary-container": "#fffbff",
+                        "inverse-surface": "#2f3131",
+                        "on-secondary-fixed": "#002204",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-background": "#1a1c1c",
+                        "tertiary-container": "#008376",
+                        "outline-variant": "#e8bcbb",
+                        "tertiary-fixed": "#88f5e3",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "primary": "#ba002c",
+                        "on-primary-fixed-variant": "#920021",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-tertiary-container": "#f4fffb",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e2e2e2",
+                        "primary-container": "#e9003a",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "surface-dim": "#dadada",
+                        "primary-fixed": "#ffdad9",
+                        "on-secondary-container": "#217128"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "12px",
+                        "gutter": "16px",
+                        "margin-desktop": "24px",
+                        "margin-mobile": "16px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background h-screen w-screen overflow-hidden flex flex-col font-body-md">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim flex justify-between items-center px-margin-mobile h-16 w-full z-40 docked full-width top-0 flat no shadows hidden md:flex">
+<div class="flex items-center gap-gutter">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="shield">shield</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">be:Safe</h1>
+</div>
+<nav class="flex gap-gutter">
+<!-- Web Nav Items (Mirroring BottomNav intent) -->
+<a class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim flex items-center gap-2 hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors px-3 py-2 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined icon-fill">map</span>
+                Mapa
+            </a>
+<a class="font-title-lg text-title-lg text-on-surface-variant dark:text-on-surface-variant flex items-center gap-2 hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors px-3 py-2 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">notifications</span>
+                Alerty
+            </a>
+<a class="font-title-lg text-title-lg text-error flex items-center gap-2 hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors px-3 py-2 rounded-lg active:scale-95 duration-150 font-bold" href="#">
+<span class="material-symbols-outlined">emergency_home</span>
+                SOS
+            </a>
+<a class="font-title-lg text-title-lg text-on-surface-variant dark:text-on-surface-variant flex items-center gap-2 hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors px-3 py-2 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">group</span>
+                Rodzina
+            </a>
+<a class="font-title-lg text-title-lg text-on-surface-variant dark:text-on-surface-variant flex items-center gap-2 hover:bg-surface-variant dark:hover:bg-surface-container-high transition-colors px-3 py-2 rounded-lg active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+                Profil
+            </a>
+</nav>
+</header>
+<!-- Main Canvas (Map Area) -->
+<main class="flex-grow relative w-full h-full">
+<!-- Map Background -->
+<div class="absolute inset-0 bg-surface-variant z-0" data-alt="A detailed, modern city map interface showing streets, parks, and rivers in a light mode aesthetic. The map features a clean, minimalist design with subtle greys, light blues for water, and muted greens for parks. It looks like a high-end, custom navigation application interface focused on clarity and safety." data-location="Warszawa" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCfLBNvNgY0aKDgmkjK9rajyo7rYml2dgXmVSJMyflD1dm1om9xgghcwWvuSbjPtgwN6je1dnZ3QraNXcv8GSkWK27H6j9Kj8o5UXrllZRcGvZNNy0e5VNgea0x_gO3RJcXI2EzdlgDytC37-CSGGmD1At01M-38mNxft_L1iCNZDaJ8DkswAyQ-9eG-JPBw1p-PjcZCo3N7HPzZLjowChVv6xD7iN0SGAKh4kEyBj8L1sgJaD_u6fQcx9LFyW4eS9Mr54FO8uALC8'); background-size: cover; background-position: center;">
+</div>
+<!-- Floating Search Bar -->
+<div class="absolute top-margin-mobile left-margin-mobile right-margin-mobile md:w-96 md:left-1/2 md:-translate-x-1/2 z-10">
+<div class="bg-surface-container-lowest shadow-md rounded-full flex items-center px-4 py-3 h-14">
+<span class="material-symbols-outlined text-on-surface-variant mr-3">search</span>
+<input class="flex-grow bg-transparent border-none focus:ring-0 text-body-lg text-on-surface placeholder-on-surface-variant p-0" placeholder="Szukaj adresu lub miejsca..." type="text"/>
+<button class="ml-2 text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Map Pins (Warning - Red) -->
+<!-- Pin 1: Accident -->
+<div class="absolute top-1/4 left-1/3 z-20 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-error text-on-error font-label-lg text-label-lg px-2 py-0.5 rounded-full mb-1 shadow-sm">Wypadek</div>
+<div class="bg-surface-container-lowest rounded-full p-1 shadow-md border-2 border-error">
+<div class="bg-error text-on-error w-8 h-8 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 18px;">car_crash</span>
+</div>
+</div>
+</div>
+<!-- Pin 2: Fire -->
+<div class="absolute top-1/2 right-1/4 z-20 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-error text-on-error font-label-lg text-label-lg px-2 py-0.5 rounded-full mb-1 shadow-sm">Pożar (2)</div>
+<div class="bg-surface-container-lowest rounded-full p-1 shadow-md border-2 border-error">
+<div class="bg-error text-on-error w-8 h-8 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-size: 18px;">local_fire_department</span>
+</div>
+</div>
+</div>
+<!-- Map Pins (Family - Green) -->
+<!-- Pin 3: Child Location -->
+<div class="absolute bottom-1/3 left-1/2 z-20 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-secondary text-on-secondary font-label-lg text-label-lg px-2 py-0.5 rounded-full mb-1 shadow-sm">Janek</div>
+<div class="bg-surface-container-lowest rounded-full p-1 shadow-md border-2 border-secondary">
+<div class="bg-secondary text-on-secondary w-10 h-10 rounded-full flex items-center justify-center overflow-hidden">
+<img alt="Avatar Janka" class="w-full h-full object-cover" data-alt="A small, circular avatar image showing a smiling young boy with short brown hair, wearing a casual t-shirt. The lighting is bright and outdoor, giving a cheerful and safe feeling suitable for a family tracking app profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxNjwAT6AlZxgygfLFFMdxK-edXA3ZcIva4n7Zr-nsrkvtt_FyzhRCO96XLhe11P8giWIOzRkkunjg9OJVgNZDSljBtglHzn0L4AZzs1o0G-IoEV3cQ03PYNr0g9aPv5mYnh-wIIH1pjS99Z69qaczt9xztwxuEvCuVpt8UIQlyAtQiMlE_4swJ6mRTxWVJfb5iyFuyzc6yk8k3fMzqOSN4IhL_dSjmMzGSGFo-2abegVCYhe-cpN_CswrrK-URgQalyWR0DESmp4"/>
+</div>
+</div>
+</div>
+<!-- User Location Button -->
+<button class="absolute bottom-32 right-margin-mobile md:bottom-10 md:right-margin-desktop bg-surface-container-lowest shadow-md rounded-full w-12 h-12 flex items-center justify-center text-primary z-30 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined icon-fill">my_location</span>
+</button>
+<!-- Floating Action Button (Report) -->
+<button class="absolute bottom-32 left-1/2 transform -translate-x-1/2 md:bottom-10 bg-primary text-on-primary shadow-lg rounded-full px-6 py-3 flex items-center gap-2 z-30 hover:bg-primary-fixed-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined">add_alert</span>
+<span class="font-title-lg text-title-lg font-bold">Zgłoś</span>
+</button>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container dark:bg-surface-container-high docked full-width bottom-0 rounded-t-xl shadow-md">
+<!-- Tab 1: Mapa (Active) -->
+<button class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 active:scale-90 duration-200">
+<span class="material-symbols-outlined icon-fill">map</span>
+<span class="font-label-lg text-label-lg mt-1">Mapa</span>
+</button>
+<!-- Tab 2: Alerty -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all px-2 py-1 rounded-full active:scale-90 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-lg text-label-lg mt-1">Alerty</span>
+</button>
+<!-- Tab 3: SOS (Highlighted Central Action) -->
+<button class="flex flex-col items-center justify-center text-error hover:bg-error-container transition-all px-3 py-1 rounded-full active:scale-90 duration-200 relative -top-4 bg-surface-container-lowest shadow-md border-2 border-surface-container">
+<span class="material-symbols-outlined text-3xl icon-fill" style="font-size: 32px;">emergency_home</span>
+<span class="font-label-lg text-label-lg mt-1 font-bold">SOS</span>
+</button>
+<!-- Tab 4: Rodzina -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all px-2 py-1 rounded-full active:scale-90 duration-200">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-lg text-label-lg mt-1">Rodzina</span>
+</button>
+<!-- Tab 5: Profil -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-variant dark:hover:bg-surface-container-highest transition-all px-2 py-1 rounded-full active:scale-90 duration-200">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-lg text-label-lg mt-1">Profil</span>
+</button>
+</nav>
+</body></html>

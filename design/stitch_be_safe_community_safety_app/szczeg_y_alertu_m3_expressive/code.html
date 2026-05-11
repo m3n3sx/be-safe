@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Szczegóły alertu - be:Safe</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#e8bcbb",
+                    "surface-container-high": "#ffe1e0",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#fedad9",
+                    "surface-container-highest": "#fedad9",
+                    "surface": "#fff8f7",
+                    "primary-fixed": "#ffdad9",
+                    "outline": "#936e6d",
+                    "on-tertiary-fixed-variant": "#00429b",
+                    "on-primary-fixed-variant": "#920021",
+                    "on-secondary-container": "#00732c",
+                    "tertiary-container": "#0f6df3",
+                    "on-tertiary-fixed": "#001945",
+                    "background": "#fff8f7",
+                    "on-tertiary-container": "#fefcff",
+                    "on-secondary-fixed-variant": "#00531e",
+                    "tertiary": "#0056c5",
+                    "secondary-fixed-dim": "#3ce36a",
+                    "error": "#ba1a1a",
+                    "on-background": "#291616",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#fff0ef",
+                    "secondary-container": "#5cfd80",
+                    "secondary": "#006e2a",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#d9e2ff",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#ffe9e8",
+                    "on-primary-fixed": "#400009",
+                    "surface-dim": "#f5d2d1",
+                    "on-surface": "#291616",
+                    "primary": "#ba002c",
+                    "inverse-on-surface": "#ffedec",
+                    "primary-container": "#e9003a",
+                    "surface-tint": "#bf002e",
+                    "primary-fixed-dim": "#ffb3b3",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#412b2b",
+                    "on-secondary-fixed": "#002108",
+                    "surface-bright": "#fff8f7",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#5e3f3e",
+                    "secondary-fixed": "#69ff87",
+                    "on-primary-container": "#fffbff",
+                    "tertiary-fixed-dim": "#b0c6ff",
+                    "inverse-primary": "#ffb3b3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
+                    "4xl": "2rem"
+            },
+            "spacing": {
+                    "base": "8dp",
+                    "margin-mobile": "16dp",
+                    "margin-tablet": "24dp",
+                    "gutter": "16dp",
+                    "hero-button-size": "64dp"
+            },
+            "fontFamily": {
+                    "title-lg": ["Roboto Flex", "sans-serif"],
+                    "display-sm": ["Roboto Flex", "sans-serif"],
+                    "label-lg": ["Roboto Flex", "sans-serif"],
+                    "headline-sm": ["Roboto Flex", "sans-serif"],
+                    "body-lg": ["Roboto Flex", "sans-serif"]
+            },
+            "fontSize": {
+                    "title-lg": ["22px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "display-sm": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.5px", "fontWeight": "700"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+                    "headline-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-lg text-body-lg min-h-screen flex flex-col antialiased">
+<!-- Top Navigation (Task-focused, suppressing global shell) -->
+<header class="flex items-center justify-between px-4 h-16 w-full z-40 bg-surface">
+<button class="w-12 h-12 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors text-on-surface">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-on-surface flex-1 text-center pr-12">Szczegóły alertu</h1>
+</header>
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Map Header snippet -->
+<div class="px-4 pt-2">
+<div class="w-full h-48 rounded-3xl overflow-hidden shadow-sm relative bg-surface-container-high" data-alt="A stylized, modern digital map interface displaying a city grid. The map uses a light color palette with soft pink and beige tones, reflecting the app's surface container colors. A prominent, bold red location marker pinpoints a specific incident area, creating a high-contrast focal point. The lighting is bright and flat, emphasizing usability and clear visual hierarchy in a safety context." data-location="Warszawa, Polska" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBoKE043rLThKWJ2z2rDAwGHqryHSPK9F0tx92PoShExc23UEtXewbZa_TojEnFLizz2vHMHizaHdsnYRsOURN7Ve3W83ELlUCz1upXKhyDMZtfqifhL4gByJMEzqd_ETKKiJPRAa98RiOTdDX8omgDDxjEM5btbXTgNRHHyqgsaBv0AiJAy9_mQXel4Iunt_Nx3qpGtk0p5rmszGdFXLBTDV-HrY2I99_po_VZiDd6Hryv-F5hbef5R2egqMUBQ8qpjrmvImcxgJY'); background-size: cover; background-position: center;">
+<!-- Overlay gradient for better text/element contrast at the bottom if needed -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+</div>
+</div>
+<!-- Main Content Expressive Card -->
+<div class="bg-surface-container-lowest rounded-t-[2rem] px-5 pt-8 -mt-6 relative z-10 flex flex-col gap-6 shadow-[0_-8px_16px_rgba(0,0,0,0.02)] min-h-[calc(100vh-16rem)]">
+<!-- Alert Headline -->
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 shrink-0 rounded-[1.25rem] bg-primary text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex flex-col pt-1">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1">Zagrożenie pożarowe</h2>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="font-body-lg text-body-lg">ul. Marszałkowska, Warszawa</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant mt-1">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-lg text-label-lg">Zgłoszono 12 minut temu</span>
+</div>
+</div>
+</div>
+<!-- Status Log (Timeline) -->
+<div class="bg-surface-container rounded-3xl p-5 mt-2">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-6">Przebieg zdarzenia</h3>
+<div class="relative pl-6 border-l-2 border-outline-variant space-y-8 ml-2">
+<!-- Current State -->
+<div class="relative">
+<div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-primary ring-4 ring-surface-container"></div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-primary font-bold">Teraz</span>
+<span class="font-body-lg text-body-lg text-on-surface mt-1">Oczekuje na weryfikację społeczności. Prosimy o potwierdzenie sytuacji.</span>
+</div>
+</div>
+<!-- Previous State -->
+<div class="relative">
+<div class="absolute -left-[31px] top-1 w-4 h-4 rounded-full bg-outline-variant ring-4 ring-surface-container"></div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface-variant">14:22</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant mt-1">System zarejestrował zgłoszenie od 3 użytkowników w okolicy.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Community Verification Actions (Sticky Bottom) -->
+<div class="fixed bottom-0 w-full bg-surface-container-lowest/90 backdrop-blur-md border-t border-surface-variant px-5 py-4 pb-8 z-50">
+<p class="font-label-lg text-label-lg text-center text-on-surface-variant mb-3">Czy to zgłoszenie jest prawdziwe?</p>
+<div class="flex gap-3">
+<button class="flex-1 bg-surface-variant text-on-surface font-label-lg text-label-lg py-4 rounded-full flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">close</span>
+                Nieprawda
+            </button>
+<button class="flex-1 bg-primary text-on-primary font-label-lg text-label-lg py-4 rounded-full flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                Potwierdzam
+            </button>
+</div>
+</div>
+</body></html>

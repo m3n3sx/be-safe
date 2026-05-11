@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding - Bezpieczeństwo rodziny</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#217128",
+                        "primary": "#ba002c",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#920021",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "on-surface": "#1a1c1c",
+                        "surface-tint": "#bf002e",
+                        "surface-container-low": "#f3f3f3",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#a0f399",
+                        "secondary": "#1b6d24",
+                        "on-secondary-fixed": "#002204",
+                        "on-tertiary-container": "#f4fffb",
+                        "tertiary-container": "#008376",
+                        "on-secondary-fixed-variant": "#005312",
+                        "primary-container": "#e9003a",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#88d982",
+                        "background": "#f9f9f9",
+                        "tertiary-fixed": "#88f5e3",
+                        "surface-bright": "#f9f9f9",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary": "#00685d",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-container": "#fffbff",
+                        "surface-dim": "#dadada",
+                        "surface-container": "#eeeeee",
+                        "secondary-fixed": "#a3f69c",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary": "#ffffff",
+                        "outline": "#936e6d",
+                        "error": "#ba1a1a",
+                        "on-background": "#1a1c1c",
+                        "surface-variant": "#e2e2e2",
+                        "inverse-primary": "#ffb3b3",
+                        "surface-container-high": "#e8e8e8",
+                        "surface": "#f9f9f9",
+                        "on-primary-fixed": "#400009",
+                        "primary-fixed": "#ffdad9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "24px",
+                        "stack-md": "12px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "base": "8px",
+                        "stack-sm": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-lg h-screen flex flex-col items-center justify-center m-0">
+<div class="relative w-full max-w-md h-full max-h-[850px] bg-surface-container-lowest flex flex-col justify-between overflow-hidden shadow-2xl sm:rounded-[2rem] sm:h-[795px]">
+<!-- Header / Skip Button -->
+<header class="flex justify-end p-margin-mobile w-full z-10">
+<button class="text-on-surface-variant font-label-lg text-label-lg px-4 py-2 rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+                Pomiń
+            </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile sm:px-margin-desktop text-center space-y-stack-lg z-10 relative">
+<!-- Illustration Container -->
+<div class="relative w-64 h-64 sm:w-72 sm:h-72 mb-stack-lg flex items-center justify-center">
+<!-- Decorative background elements -->
+<div class="absolute inset-0 bg-primary-container rounded-full opacity-20 blur-2xl transform scale-110"></div>
+<div class="absolute inset-4 bg-surface-container rounded-full opacity-80 blur-lg"></div>
+<img alt="Ilustracja bezpieczeństwa rodziny" class="w-full h-full object-cover rounded-full z-10 shadow-lg border-4 border-surface-container-lowest relative" data-alt="A modern, high-quality, abstract 3D illustration representing family safety and location tracking. The scene shows a stylized parent and child figure standing together on a clean, light surface. A glowing red location pin or beacon is projected above them, casting a soft red light. The overall aesthetic is clean, minimalist, and professional, using a light mode color palette with soft whites, light grays, and accents of vibrant primary red (#ba002c) and green. Soft, high-key lighting creates a reassuring and secure mood." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0q_F0g_zFi0Ezc80mWw5GMiIFEfh-5Qtg1YzY2GbK6BiXAxNWTEqbIn2zqdyZbJVqKaGaJ-iaF7MNQE-ui4qyeYEK6PplDO3kzfJVpKqHpjZxe_qfhmXOoAbR85SXYimpgpXJlJVllFSIkT4dpc8zQAqNq2cgVod9l2k_kDgXTMdenppRhokJ5BMxHnG9IhvmgBwqsBmJn4xdWKJAXemRuN1l7-eslDUsLaXkP5u6mt5gU8pr3H9Babh6_FD7z63lD9CxgNtpcys"/>
+<!-- Glowing Pulse Icon Overlay -->
+<div class="absolute -bottom-4 right-4 bg-surface-container-lowest rounded-full p-2 shadow-md z-20">
+<div class="bg-primary text-on-primary rounded-full p-3 flex items-center justify-center">
+<span class="material-symbols-outlined font-title-lg text-title-lg" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+<!-- Text Content -->
+<div class="space-y-stack-md px-4">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Bezpieczeństwo rodziny</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[280px] mx-auto">
+                    Zobacz gdzie są Twoje dzieci i ustaw bezpieczne strefy.
+                </p>
+</div>
+</main>
+<!-- Bottom Navigation / Actions -->
+<footer class="w-full px-margin-mobile sm:px-margin-desktop pb-margin-desktop pt-stack-lg flex flex-col items-center space-y-stack-lg bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest to-transparent z-10">
+<!-- Pagination Dots -->
+<div class="flex space-x-2 items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-8 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full max-w-[320px] bg-primary text-on-primary font-title-lg text-title-lg py-4 px-6 rounded-full flex justify-center items-center shadow-md hover:bg-surface-tint transition-colors active:scale-95 duration-150">
+                Dalej
+            </button>
+</footer>
+</div>
+</body></html>

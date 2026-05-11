@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Map</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#cde5ff",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#006972",
+                      "surface-container-low": "#fff1ea",
+                      "secondary-container": "#9ff0fb",
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "on-background": "#251912",
+                      "inverse-primary": "#ffb68b",
+                      "tertiary-fixed-dim": "#95ccff",
+                      "on-primary-container": "#5c2800",
+                      "secondary-fixed": "#9ff0fb",
+                      "on-tertiary": "#ffffff",
+                      "on-surface-variant": "#584235",
+                      "surface-bright": "#fff8f5",
+                      "on-secondary-fixed": "#001f23",
+                      "primary-fixed-dim": "#ffb68b",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#3b2d26",
+                      "surface-tint": "#994700",
+                      "primary-container": "#ff7a00",
+                      "inverse-on-surface": "#ffede5",
+                      "primary": "#994700",
+                      "on-surface": "#251912",
+                      "surface-dim": "#edd5ca",
+                      "surface-container": "#ffeadf",
+                      "on-primary-fixed": "#321200",
+                      "on-error-container": "#93000a",
+                      "surface": "#fff8f5",
+                      "surface-container-highest": "#f6ded2",
+                      "surface-variant": "#f6ded2",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#fbe3d7",
+                      "outline-variant": "#e0c0af",
+                      "error": "#ba1a1a",
+                      "tertiary": "#006399",
+                      "secondary-fixed-dim": "#82d3de",
+                      "on-secondary-fixed-variant": "#004f56",
+                      "on-tertiary-container": "#003a5c",
+                      "tertiary-container": "#00a8ff",
+                      "on-tertiary-fixed": "#001d32",
+                      "background": "#fff8f5",
+                      "on-secondary-container": "#066f79",
+                      "on-primary-fixed-variant": "#753400",
+                      "outline": "#8c7263",
+                      "on-tertiary-fixed-variant": "#004a75",
+                      "primary-fixed": "#ffdbc8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-lg": "32px",
+                      "stack-md": "16px",
+                      "section-gap": "48px",
+                      "stack-sm": "8px",
+                      "margin-mobile": "20px",
+                      "gutter-mobile": "12px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "label-bold": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.04em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .glow-safe {
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.4);
+        }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface h-screen w-screen overflow-hidden font-body-md relative">
+<!-- Immersive Map Background -->
+<div class="absolute inset-0 w-full h-full z-0 bg-cover bg-center" data-alt="A highly detailed, top-down view of a modern city map with clean, stylized 3D buildings. The aesthetic is bright and clear, utilizing a sophisticated light-mode palette with subtle, soft shadows to imply depth. Key roads are smoothly curved, blending seamlessly into a premium, glassmorphism-inspired UI environment. The overall mood is safe, organized, and technologically advanced." data-location="Warsaw" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjnUHkVq8AK7cODVdomdOSDu950oXCXwyZIN3ziS1SfxANRErHtJMrc2EO1E9h1PGevYbmvUDQZvk_CYHwZPastYfW-cwwuGgurLVDBa3s1vud3XnK2pqVG8my8P94IZ5TC_MRmwfKduIC7ZUxl75028hiDuxUpNaSuVI9DqJkAej17Qbi3-lq18bchVjCKAlSkwU-jEoHukrGBGuWS65-Hm2n96ild6JuejPavDWgD4_ka9zqsM2hRQoTDXYALguVUiP2voh8gCo');">
+</div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 dark:bg-surface-dim/60 backdrop-blur-xl border-b border-white/20 shadow-sm flex justify-between items-center px-margin-mobile py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="A close-up portrait of a young person smiling confidently. Bright, natural lighting highlights their features against a soft, blurred background. The style is warm, modern, and friendly, fitting a premium mobile application profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_kKzA7tTUL0vJJiJNk1XDgu4Ug3z1BeIFEUH4iAXEGfj0i7JM0PArInkZx23xKX5i7msQGrjNuTjCn_VW_TgkA-kaH5pLF9hOOHH9-GtLrUYs25HkLaHWMnfASSEFu5YUYrlHs9e3KZ6Fd4xBxsdDW75mt_xZLB_AMtpnc5jhC-7pFDilKuVMsDHnUyVZAyW8mSRWdw_MkcC_fbijreu2QH2-MPLNDeSxtb31cK1opBmzinB3e4K3_v0YQpsRPvIGRWamvblurac"/>
+</div>
+<h1 class="font-display-lg text-headline-md font-extrabold text-primary dark:text-primary-fixed tracking-tight">be:Safe</h1>
+</div>
+<button class="w-10 h-10 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-primary shadow-sm hover:opacity-80 transition-opacity active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</button>
+</header>
+<!-- Main Canvas Content (Floating elements over map) -->
+<main class="relative z-10 w-full h-full pt-24 pb-32 pointer-events-none">
+<!-- Floating Safety Card -->
+<div class="absolute bottom-28 left-margin-mobile right-margin-mobile flex justify-center pointer-events-auto">
+<div class="glass-panel rounded-2xl p-4 flex items-center gap-4 w-full max-w-sm shadow-[0_10px_40px_rgba(0,0,0,0.1)]">
+<div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center glow-safe relative">
+<div class="absolute inset-0 rounded-full bg-green-400 opacity-20 animate-ping"></div>
+<span class="material-symbols-outlined text-green-600" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Twoja okolica</p>
+<p class="font-headline-md text-body-lg font-bold text-on-surface">Bezpieczna</p>
+</div>
+</div>
+</div>
+<!-- Floating Action Button (Quick Report) -->
+<div class="absolute bottom-48 right-margin-mobile pointer-events-auto">
+<button class="w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-[0_10px_25px_rgba(153,71,0,0.4)] hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-2xl">add_alert</span>
+</button>
+</div>
+<!-- Map Markers (Decorative) -->
+<div class="absolute top-1/3 left-1/4 pointer-events-auto">
+<div class="w-8 h-8 rounded-full bg-white shadow-lg flex items-center justify-center border-2 border-primary">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+<div class="absolute top-1/2 right-1/3 pointer-events-auto">
+<div class="w-8 h-8 rounded-full bg-white shadow-lg flex items-center justify-center border-2 border-secondary">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">group</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-6 left-margin-mobile right-margin-mobile rounded-full overflow-hidden bg-surface-container/70 dark:bg-surface-container-highest/70 backdrop-blur-2xl border border-white/20 shadow-[0_20px_50px_rgba(153,71,0,0.3)] z-50 flex justify-around items-center h-20 px-4 w-[calc(100%-40px)]">
+<!-- Active Tab: Mapa -->
+<button class="flex flex-col items-center justify-center bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container rounded-full w-12 h-12 shadow-md hover:bg-surface-variant/50 transition-colors active:scale-90 duration-200 ease-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+</button>
+<!-- Inactive Tabs -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-variant/50 transition-colors active:scale-90 duration-200 ease-out w-12 h-12 rounded-full">
+<span class="material-symbols-outlined">notification_important</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-variant/50 transition-colors active:scale-90 duration-200 ease-out w-12 h-12 rounded-full">
+<span class="material-symbols-outlined">emergency</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-variant/50 transition-colors active:scale-90 duration-200 ease-out w-12 h-12 rounded-full">
+<span class="material-symbols-outlined">group</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-variant/50 transition-colors active:scale-90 duration-200 ease-out w-12 h-12 rounded-full">
+<span class="material-symbols-outlined">person</span>
+</button>
+</nav>
+<!-- Web Navigation (Hidden on Mobile) -->
+<nav class="hidden md:flex fixed top-0 left-0 h-full w-24 bg-surface/80 backdrop-blur-xl border-r border-white/20 flex-col items-center py-8 z-40">
+<div class="mt-20 flex flex-col gap-8">
+<button class="flex flex-col items-center justify-center bg-primary text-on-primary rounded-xl w-14 h-14 shadow-md">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 rounded-xl w-14 h-14 transition-colors">
+<span class="material-symbols-outlined">notification_important</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 rounded-xl w-14 h-14 transition-colors">
+<span class="material-symbols-outlined">emergency</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 rounded-xl w-14 h-14 transition-colors">
+<span class="material-symbols-outlined">group</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 rounded-xl w-14 h-14 transition-colors">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</nav>
+</body></html>

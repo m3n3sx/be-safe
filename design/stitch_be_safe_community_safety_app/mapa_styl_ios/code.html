@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Main Map</title>
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config from Brand Anchors -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#dfdfe4",
+                    "primary-container": "#34c759",
+                    "on-secondary-container": "#616267",
+                    "on-tertiary-fixed-variant": "#930005",
+                    "tertiary-fixed-dim": "#ffb4aa",
+                    "tertiary-container": "#ff8e80",
+                    "surface-dim": "#dcd9dc",
+                    "inverse-primary": "#53e16f",
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "background": "#fcf8fb",
+                    "primary-fixed": "#72fe88",
+                    "error": "#ba1a1a",
+                    "outline": "#6d7b6b",
+                    "on-primary-container": "#004d1a",
+                    "on-tertiary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#eae7ea",
+                    "secondary": "#5d5e63",
+                    "surface-container": "#f0edef",
+                    "surface-variant": "#e4e2e4",
+                    "surface-bright": "#fcf8fb",
+                    "surface-tint": "#006e28",
+                    "surface": "#fcf8fb",
+                    "on-secondary-fixed-variant": "#45474b",
+                    "tertiary": "#c0000a",
+                    "on-tertiary-container": "#890005",
+                    "on-secondary-fixed": "#1a1c1f",
+                    "on-background": "#1b1b1d",
+                    "surface-container-low": "#f6f3f5",
+                    "on-error-container": "#93000a",
+                    "primary": "#006e28",
+                    "on-primary-fixed-variant": "#00531c",
+                    "primary-fixed-dim": "#53e16f",
+                    "secondary-fixed": "#e2e2e7",
+                    "on-surface": "#1b1b1d",
+                    "tertiary-fixed": "#ffdad5",
+                    "outline-variant": "#bccbb8",
+                    "on-surface-variant": "#3d4a3c",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#e4e2e4",
+                    "secondary-fixed-dim": "#c6c6cb",
+                    "inverse-on-surface": "#f3f0f2",
+                    "on-primary-fixed": "#002107",
+                    "inverse-surface": "#303032",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#410001"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-page": "20px",
+                    "safe-area-bottom": "34px",
+                    "stack-lg": "24px",
+                    "stack-md": "16px",
+                    "stack-sm": "8px",
+                    "gutter-card": "12px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-bold": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "26px", "fontWeight": "600"}],
+                    "body-sm": ["15px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "display-bold": ["32px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "body-lg": ["17px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Ensuring safe area padding is respected if needed on actual devices, fallback to normal padding here */
+        .pt-safe { padding-top: max(1rem, env(safe-area-inset-top)); }
+        .pb-safe { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+        
+        /* Custom scrollbar hiding for clean UI */
+        ::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased h-screen w-full overflow-hidden relative">
+<!-- LAYER 0: Map Background Canvas -->
+<div class="absolute inset-0 z-0 bg-surface-variant flex items-center justify-center">
+<!-- Generative map background -->
+<img alt="Map Background" class="w-full h-full object-cover opacity-50 mix-blend-multiply" data-alt="A clean, minimalist 2D vector map of a modern city grid in a light-mode aesthetic. The streets are represented by soft pale grey lines on a pristine off-white background, creating a calm, highly legible foundation. Subtle hints of light green parks and pale blue water bodies dot the landscape, harmonizing with the overarching crisp, modern safety application style." data-location="Queens, NY" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV9LNHapwtgCGgjpvMifwuxM3YAQUZEj-6SpD-nFkthlADnLoxlcosPXvA1erMdGa9bexxlCLABC8l8WFFYs1qoUKanKCjcRilxJLX7mw247kZ78BPzbdSCeTPcu12iAVWD0eyVTqCS7iAe4yrwuIzugZLWYdQFuUAhEp_ef-ogc0-CsbSiMCbUA-LxGWvMyguHX21O31t9t9v9WziZt87OKT-Si3ekXAuUlAeCmcNDLDXeMTmTCsyfVnDgmHsdf95kf3ilFYeX6I"/>
+<!-- Simulated Map Elements (Markers) -->
+<div class="absolute top-[30%] left-[20%] w-10 h-10 bg-primary-container rounded-full border-2 border-surface-container-lowest shadow-md flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-sm">scooter</span>
+</div>
+<div class="absolute top-[25%] right-[30%] w-10 h-10 bg-primary-container rounded-full border-2 border-surface-container-lowest shadow-md flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-sm">scooter</span>
+</div>
+<div class="absolute top-[45%] left-[50%] w-12 h-12 bg-inverse-primary/30 rounded-full flex items-center justify-center animate-pulse">
+<div class="w-4 h-4 bg-primary rounded-full border-2 border-surface-container-lowest shadow-sm"></div>
+</div>
+</div>
+<!-- TopAppBar JSON Component -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-start px-margin-page py-4 bg-transparent pt-safe">
+<!-- Leading: Avatar -->
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-surface-container-lowest shadow-sm bg-primary-container shrink-0">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A small, circular headshot portrait of a friendly young man smiling gently. He is set against a vibrant, energetic primary green background. The lighting is soft and flattering, creating a modern, approachable aesthetic suitable for a personal profile avatar in a sleek iOS-style application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzvkelr1v46Nc6tjK58vMSU311mvhQBkppPZjDItOBpxZo95JoPww0e17I8Sr-a33RcZB50n0AhC9ZWA-4qrpTANpIOmYoC7wKUa5QzBKttBV9bnUTlrLrJio11dUWufaXAlBH4ZTuD42yODAssO4HrQXfTBUO75LhT3PxdSKo11ZHylpJtYKLoDsCta5_bSMskFMwnKsiI3P0zjTDRjGm_eKaB3uMPE1QXXmIQDmCketrOVjqs6uBx1oUYRP7tiZd-gMIc9wkKrw"/>
+</div>
+<!-- Center: Headline & Context -->
+<div class="flex flex-col items-center mt-1">
+<div class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">navigation</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Your location</span>
+</div>
+<h1 class="text-headline-md font-headline-md font-bold text-on-surface text-center">Queens, NY 113</h1>
+</div>
+<!-- Trailing: Icon -->
+<button class="w-12 h-12 bg-surface-container-lowest rounded-full shadow-md flex items-center justify-center text-on-surface shrink-0 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+</header>
+<!-- LAYER 1: The "Safety Sheet" Bottom Sheet -->
+<!-- It sits above the map (z-40) but below the bottom nav bar (z-50) -->
+<main class="absolute bottom-0 left-0 w-full z-40 bg-surface/95 backdrop-blur-3xl rounded-t-xl shadow-[0_-4px_24px_rgba(0,0,0,0.08)] pb-[100px]">
+<!-- Grab Handle -->
+<div class="w-full flex justify-center pt-3 pb-2">
+<div class="w-12 h-1.5 bg-outline-variant rounded-full opacity-60"></div>
+</div>
+<div class="px-margin-page">
+<!-- Headline -->
+<h2 class="text-display-bold font-display-bold text-on-surface pt-4 pb-stack-lg">Hello there, Shahid! 👋</h2>
+<!-- Quick Action Cards (Bento Grid Style) -->
+<div class="grid grid-cols-2 gap-gutter-card pb-stack-lg">
+<!-- Card 1: Cars -->
+<button class="bg-surface-container-lowest rounded-DEFAULT p-4 shadow-sm flex flex-col items-start hover:bg-surface-container-low transition-colors text-left border border-surface-container-high">
+<div class="w-full h-20 mb-3 flex items-center justify-center bg-surface-container-low rounded-lg overflow-hidden">
+<img alt="Car Option" class="h-[80%] object-contain mix-blend-multiply" data-alt="A clean, minimalist 3D rendering or studio photograph of a modern white sedan car isolated on a pure white background. The lighting is soft and diffuse, creating smooth reflections on the car's surface. The style matches a sleek, high-end mobile application UI, prioritizing clarity and a modern aesthetic over gritty realism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVpEhxZXGOdsFbsiM8JDG8DaVEcMJxCZF2Pes4D-ylVwskMh9qt_HGVNd5OpcLPqVJt2lHU7iCBfeCo_lumrpjuHh199KFHTTQ8_fCXLP0VNinPIbZYWMSt0p54NkLCej03VjA4UCC2_Q3-SjVE0Mg3WzBPUwMeDTuUIcOtpvVyfmW6unymXzFrgSJ5ilP8wYj_rEGu93jE7vM6LWbsV9_kIK-6XwZiixtSKsmNim5ORqfTUe0QaulLCqhrVCKpqKqis1IEVUGTCw"/>
+</div>
+<span class="text-body-lg font-body-lg font-bold text-on-surface block mb-1">Cars</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant block normal-case">Ride with favorite car</span>
+</button>
+<!-- Card 2: Scooters -->
+<button class="bg-surface-container-lowest rounded-DEFAULT p-4 shadow-sm flex flex-col items-start hover:bg-surface-container-low transition-colors text-left border border-surface-container-high">
+<div class="w-full h-20 mb-3 flex items-center justify-center bg-surface-container-low rounded-lg overflow-hidden">
+<img alt="Scooter Option" class="h-[80%] object-contain mix-blend-multiply" data-alt="A crisp, high-resolution studio shot of a modern electric kick scooter featuring bright primary green accents. The scooter is isolated on a stark white background with soft, even lighting to eliminate harsh shadows. The image is designed to look like a clean, premium product asset within a minimalist, modern iOS-style interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOFasVtj_6FcHYFakxFjP7fwDfB9Sgy6A05cIRpVUP-BkYI65xRqCodDDTa4fUX36r9tNL_qFWTyWtnDy4Gl0l-IfjLwaLK9RSoygF2IVg0Oc2x7hO3vJFm-yIyQzD8OLtSve4e0ftzSzp8o5Ny0wue3LG7k8zSGHGawWE_OjkTN_AurtjEnHy4EWQaxsW2XIa8-k062sTiWJFuZ1RM7lD7wcVngbt-euU9UWh0fvxiTr4TL6vdATZVasco8kNt66AccXMQNfjZs8"/>
+</div>
+<span class="text-body-lg font-body-lg font-bold text-on-surface block mb-1">Scooters</span>
+<span class="text-label-caps font-label-caps text-on-surface-variant block normal-case">Ride with favorite scooter</span>
+</button>
+</div>
+<!-- Search Bar Input -->
+<div class="bg-surface-container-lowest border border-surface-container-high rounded-full px-5 py-4 flex items-center gap-3 shadow-sm mb-stack-md">
+<span class="material-symbols-outlined text-primary-container text-[24px]">search</span>
+<input class="bg-transparent border-none p-0 flex-1 text-body-lg font-body-lg text-on-surface placeholder:text-on-surface-variant focus:ring-0 outline-none" placeholder="Where are you going?" type="text"/>
+</div>
+</div>
+</main>
+<!-- BottomNavBar JSON Component -->
+<!-- Suppressed on desktop per semantics, active on mobile. Since this is an app view, assuming mobile context. -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pt-3 pb-safe-area-bottom bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-t border-outline-variant dark:border-outline shadow-lg md:hidden">
+<!-- Active Tab: Map -->
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed bg-primary-container/20 rounded-xl px-3 py-1 scale-90 duration-150">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span class="text-label-caps font-label-caps">Map</span>
+</button>
+<!-- Inactive Tab: Alerts -->
+<button class="flex flex-col items-center justify-center text-on-secondary-container dark:text-on-secondary-fixed-variant opacity-60 hover:bg-secondary-container dark:hover:bg-secondary transition-colors rounded-xl px-3 py-1">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span class="text-label-caps font-label-caps">Alerts</span>
+</button>
+<!-- Inactive Tab: SOS -->
+<button class="flex flex-col items-center justify-center text-on-secondary-container dark:text-on-secondary-fixed-variant opacity-60 hover:bg-secondary-container dark:hover:bg-secondary transition-colors rounded-xl px-3 py-1">
+<span class="material-symbols-outlined mb-1 text-error" data-icon="emergency">emergency</span>
+<span class="text-label-caps font-label-caps">SOS</span>
+</button>
+<!-- Inactive Tab: Family -->
+<button class="flex flex-col items-center justify-center text-on-secondary-container dark:text-on-secondary-fixed-variant opacity-60 hover:bg-secondary-container dark:hover:bg-secondary transition-colors rounded-xl px-3 py-1">
+<span class="material-symbols-outlined mb-1" data-icon="group">group</span>
+<span class="text-label-caps font-label-caps">Family</span>
+</button>
+<!-- Inactive Tab: Profile -->
+<button class="flex flex-col items-center justify-center text-on-secondary-container dark:text-on-secondary-fixed-variant opacity-60 hover:bg-secondary-container dark:hover:bg-secondary transition-colors rounded-xl px-3 py-1">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span class="text-label-caps font-label-caps">Profile</span>
+</button>
+</nav>
+</body></html>

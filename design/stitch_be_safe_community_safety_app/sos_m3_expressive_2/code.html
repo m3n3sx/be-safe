@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - SOS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#00429b",
+                      "on-error-container": "#93000a",
+                      "inverse-on-surface": "#ffedec",
+                      "primary-fixed": "#ffdad9",
+                      "on-primary-fixed": "#400009",
+                      "surface": "#fff8f7",
+                      "surface-container-high": "#ffe1e0",
+                      "inverse-primary": "#ffb3b3",
+                      "surface-variant": "#fedad9",
+                      "on-background": "#291616",
+                      "error": "#ba1a1a",
+                      "outline": "#936e6d",
+                      "outline-variant": "#e8bcbb",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#69ff87",
+                      "surface-container": "#ffe9e8",
+                      "surface-dim": "#f5d2d1",
+                      "tertiary": "#0056c5",
+                      "surface-container-highest": "#fedad9",
+                      "on-primary-container": "#fffbff",
+                      "on-tertiary-fixed": "#001945",
+                      "primary-fixed-dim": "#ffb3b3",
+                      "on-error": "#ffffff",
+                      "on-primary": "#ffffff",
+                      "on-surface-variant": "#5e3f3e",
+                      "surface-bright": "#fff8f7",
+                      "tertiary-fixed": "#d9e2ff",
+                      "secondary-fixed-dim": "#3ce36a",
+                      "background": "#fff8f7",
+                      "primary-container": "#e9003a",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#0f6df3",
+                      "on-secondary-fixed-variant": "#00531e",
+                      "on-tertiary-container": "#fefcff",
+                      "on-secondary-fixed": "#002108",
+                      "secondary": "#006e2a",
+                      "secondary-container": "#5cfd80",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-tint": "#bf002e",
+                      "surface-container-low": "#fff0ef",
+                      "inverse-surface": "#412b2b",
+                      "on-surface": "#291616",
+                      "tertiary-fixed-dim": "#b0c6ff",
+                      "primary": "#ba002c",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-fixed-variant": "#920021",
+                      "on-secondary-container": "#00732c"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px",
+                      "2xl": "1.5rem",
+                      "3xl": "2rem"
+              },
+              "spacing": {
+                      "gutter": "16dp",
+                      "base": "8dp",
+                      "hero-button-size": "64dp",
+                      "margin-mobile": "16dp",
+                      "margin-tablet": "24dp"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Roboto Flex"
+                      ],
+                      "title-lg": [
+                              "Roboto Flex"
+                      ],
+                      "headline-sm": [
+                              "Roboto Flex"
+                      ],
+                      "display-sm": [
+                              "Roboto Flex"
+                      ],
+                      "label-lg": [
+                              "Roboto Flex"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "letterSpacing": "0.5px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-lg": [
+                              "22px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-sm": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "0px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-sm": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "letterSpacing": "-0.5px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-lg": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.1px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .pulse-glow {
+            box-shadow: 0 0 0 0 rgba(186, 0, 44, 0.4);
+            animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+        @keyframes pulse {
+            to {
+                box-shadow: 0 0 0 45px rgba(186, 0, 44, 0);
+            }
+        }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg antialiased flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface-container dark:bg-surface-container-high docked full-width top-0 flex justify-between items-center px-4 h-16 w-full z-10 relative">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 rounded-full overflow-hidden focus:outline-none hover:bg-surface-variant/50 transition-colors flex items-center justify-center bg-surface-container-high text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">be:Safe</h1>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-variant/50 transition-colors focus:outline-none">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col px-4 pb-24 pt-8">
+<!-- Center SOS Area -->
+<section class="flex-grow flex flex-col items-center justify-center relative min-h-[300px]">
+<!-- Hero Button Container -->
+<div class="relative flex items-center justify-center w-full max-w-sm aspect-square mb-8">
+<!-- Decorative concentric circles for "pulse" indication -->
+<div class="absolute inset-0 bg-primary-container/10 rounded-full scale-110"></div>
+<div class="absolute inset-4 bg-primary-container/20 rounded-full scale-105"></div>
+<!-- Main SOS Button -->
+<button class="relative z-10 w-48 h-48 bg-primary rounded-full flex flex-col items-center justify-center shadow-[0_12px_32px_rgba(0,0,0,0.12)] active:scale-95 transition-transform duration-200 pulse-glow focus:outline-none focus:ring-4 focus:ring-primary-container">
+<span class="material-symbols-outlined text-on-primary text-[64px] mb-2" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span class="font-display-sm text-display-sm text-on-primary">SOS</span>
+</button>
+</div>
+<p class="font-title-lg text-title-lg text-on-surface text-center mb-2">Przytrzymaj przez 3 sekundy</p>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-center max-w-xs">Aby wezwać pomoc i powiadomić kontakty alarmowe</p>
+</section>
+<!-- Quick Contacts & 112 Actions -->
+<section class="mt-auto space-y-4">
+<h2 class="font-title-lg text-title-lg text-on-surface mb-4">Szybki kontakt</h2>
+<div class="grid grid-cols-2 gap-4">
+<!-- Mama Card -->
+<button class="bg-surface-container-high rounded-[24px] p-4 flex flex-col items-center gap-3 active:scale-95 transition-transform focus:outline-none focus:ring-2 focus:ring-primary">
+<div class="w-16 h-16 rounded-full overflow-hidden bg-surface-variant">
+<img alt="Mama" class="w-full h-full object-cover" data-alt="A close-up portrait of a middle-aged woman with a warm, reassuring smile. She has light-colored hair and is wearing a soft, casual blouse. The background is softly blurred with natural lighting, creating a comforting and protective mood. The image fits perfectly within a light-mode, modern UI aesthetic, emphasizing clarity and safety." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYai5GDBwBEcI-Q-PVEl4F0Va5-X2jlOM576znuTMNvA5L7_CcFhye8kSIFJT27A_PqBrFv2ZgVPusmjclRxa2gWX75LMO14ZtTDOSSy8fDdBlHwYVccVaPjNp8r_Ts_tgpIjaJTVIJRzS0i5liwDX80FqGtzDnTyXthAGW-VLfn6rsyABVgsvS7ERatC8CEmJFDq8Ubx0h__RHv5NZ46gB6xFXanenJC9tc9yfir-eI3rcAa4G95qpqY3PP_ak8B74tZksCp4FXA"/>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface">Mama</span>
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mt-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">call</span>
+</div>
+</button>
+<!-- Tata Card -->
+<button class="bg-surface-container-high rounded-[24px] p-4 flex flex-col items-center gap-3 active:scale-95 transition-transform focus:outline-none focus:ring-2 focus:ring-primary">
+<div class="w-16 h-16 rounded-full overflow-hidden bg-surface-variant">
+<img alt="Tata" class="w-full h-full object-cover" data-alt="A close-up portrait of a middle-aged man with a calm, dependable expression. He has short hair and a slight beard, wearing a casual, dark-colored shirt. The background is softly blurred with neutral tones, providing a solid and trustworthy feel. The lighting is soft and natural, aligning with a reassuring, light-mode design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiqyrmM7pTGBmdNlI91rGXz3LPHvjbIdx-nop_BiABtsGD-GUdaz474ZunkvvWDavxt4xc7T5DG7ihFsfryyqrvmoHREKbn6q4q0xWwVUs7g0s6SQq28pLJNwARWQrLygJoupyxcbwXvwqDfYlqYu2UAEBoWbB51cPz2d1oEbvMi6U1AKbToJb4rzhbNWF7W8PbYRoR4oD5nD5xoOR0LsMj8kfGJEp7LNtNHt0xUezOZ2in5tXQ_5CWFVfZ7Ys5JpfCbnwKqLlBxQ"/>
+</div>
+<span class="font-label-lg text-label-lg text-on-surface">Tata</span>
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mt-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">call</span>
+</div>
+</button>
+</div>
+<!-- 112 Emergency Action -->
+<button class="w-full mt-4 bg-tertiary-container text-on-tertiary-container rounded-full py-4 px-6 flex items-center justify-center gap-3 active:scale-95 transition-transform shadow-md focus:outline-none focus:ring-2 focus:ring-tertiary">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">local_police</span>
+<span class="font-headline-sm text-headline-sm">Zadzwoń na 112</span>
+</button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface-container dark:bg-surface-container-low border-t border-outline-variant/30 shadow-lg docked full-width bottom-0 rounded-t-xl fixed left-0 w-full z-50 flex justify-around items-end pb-4 px-2 pt-2 md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 rounded-lg p-2 transition-colors min-w-[64px]" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">map</span>
+<span class="font-label-lg text-label-lg">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 rounded-lg p-2 transition-colors min-w-[64px]" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">notifications_active</span>
+<span class="font-label-lg text-label-lg">Alerty</span>
+</a>
+<!-- Active Nav Item (SOS) styled as hero -->
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 hover:bg-surface-variant/80 transition-colors relative -top-2" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<span class="font-label-lg text-label-lg">SOS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 rounded-lg p-2 transition-colors min-w-[64px]" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">group</span>
+<span class="font-label-lg text-label-lg">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 rounded-lg p-2 transition-colors min-w-[64px]" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+<span class="font-label-lg text-label-lg">Profil</span>
+</a>
+</nav>
+</body></html>

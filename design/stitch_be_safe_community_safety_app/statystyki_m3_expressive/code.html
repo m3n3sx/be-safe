@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Statystyki</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#69ff87",
+                        "on-secondary-fixed": "#002108",
+                        "surface-container-highest": "#fedad9",
+                        "outline": "#936e6d",
+                        "inverse-surface": "#412b2b",
+                        "primary": "#ba002c",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary-container": "#00732c",
+                        "surface-container": "#ffe9e8",
+                        "primary-fixed": "#ffdad9",
+                        "primary-container": "#e9003a",
+                        "on-background": "#291616",
+                        "on-primary-fixed": "#400009",
+                        "tertiary-fixed": "#d9e2ff",
+                        "surface-bright": "#fff8f7",
+                        "error-container": "#ffdad6",
+                        "background": "#fff8f7",
+                        "on-tertiary-container": "#fefcff",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-primary": "#ffb3b3",
+                        "on-primary": "#ffffff",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-tertiary-fixed": "#001945",
+                        "inverse-on-surface": "#ffedec",
+                        "tertiary-fixed-dim": "#b0c6ff",
+                        "surface-dim": "#f5d2d1",
+                        "on-primary-fixed-variant": "#920021",
+                        "surface-container-high": "#ffe1e0",
+                        "tertiary-container": "#0f6df3",
+                        "on-surface": "#291616",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary-fixed-variant": "#00429b",
+                        "surface-variant": "#fedad9",
+                        "surface-tint": "#bf002e",
+                        "tertiary": "#0056c5",
+                        "surface": "#fff8f7",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#5cfd80",
+                        "secondary": "#006e2a",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#fff0ef",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#00531e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "gutter": "16dp",
+                        "base": "8dp",
+                        "margin-tablet": "24dp",
+                        "margin-mobile": "16dp",
+                        "hero-button-size": "64dp"
+                    },
+                    "fontFamily": {
+                        "display-sm": ["Roboto Flex"],
+                        "body-lg": ["Roboto Flex"],
+                        "headline-sm": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"],
+                        "title-lg": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "display-sm": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.5px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bezier-curve {
+            fill: url(#gradient);
+            stroke: var(--tw-colors-tertiary-container);
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-low text-on-surface font-body-lg text-body-lg pb-32 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface-container dark:bg-surface-container-high flex justify-between items-center px-margin-mobile h-16 w-full sticky top-0 z-40">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">be:Safe</h1>
+<button class="text-primary dark:text-primary-fixed-dim hover:bg-surface-variant/50 transition-colors p-2 rounded-full active:scale-95 duration-100">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="max-w-7xl mx-auto px-margin-mobile md:px-margin-tablet py-8 grid grid-cols-4 md:grid-cols-8 gap-gutter md:gap-margin-tablet">
+<div class="col-span-4 md:col-span-8 mb-4">
+<h2 class="font-display-sm text-display-sm text-on-surface">Statystyki</h2>
+<p class="text-on-surface-variant mt-2">Przegląd Twojej aktywności i alertów bezpieczeństwa.</p>
+</div>
+<!-- High-level Stats (Bento Grid Style) -->
+<div class="col-span-4 md:col-span-8 grid grid-cols-3 gap-gutter">
+<div class="col-span-1 bg-surface-container-high rounded-2xl p-6 flex flex-col justify-between items-start">
+<div class="text-on-surface-variant font-label-lg text-label-lg mb-2">Dziś</div>
+<div class="text-[44px] leading-none font-bold text-on-surface">12</div>
+<div class="mt-4 flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span class="font-label-lg text-label-lg">+2 od wczoraj</span>
+</div>
+</div>
+<div class="col-span-1 bg-surface-container-high rounded-2xl p-6 flex flex-col justify-between items-start">
+<div class="text-on-surface-variant font-label-lg text-label-lg mb-2">Tydzień</div>
+<div class="text-[44px] leading-none font-bold text-on-surface">84</div>
+<div class="mt-4 flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span class="font-label-lg text-label-lg">-15%</span>
+</div>
+</div>
+<div class="col-span-1 bg-surface-container-high rounded-2xl p-6 flex flex-col justify-between items-start">
+<div class="text-on-surface-variant font-label-lg text-label-lg mb-2">Wszystkie</div>
+<div class="text-[44px] leading-none font-bold text-on-surface">1.2k</div>
+<div class="mt-4 flex items-center gap-1 text-on-surface-variant">
+<span class="font-label-lg text-label-lg">Wizyty na mapie</span>
+</div>
+</div>
+</div>
+<!-- Chart Section -->
+<div class="col-span-4 md:col-span-8 bg-surface-container-high rounded-2xl p-6 mt-4">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-lg text-title-lg text-on-surface">Aktywność w czasie</h3>
+<div class="flex gap-2 bg-surface-variant rounded-full p-1">
+<button class="px-4 py-1 rounded-full font-label-lg text-label-lg bg-surface text-on-surface shadow-sm">Dni</button>
+<button class="px-4 py-1 rounded-full font-label-lg text-label-lg text-on-surface-variant">Tygodnie</button>
+</div>
+</div>
+<div class="w-full h-64 relative">
+<!-- SVG Chart Placeholder with Bezier Curve -->
+<svg class="w-full h-full" preserveaspectratio="none" style="overflow: visible;" viewbox="0 0 800 200">
+<defs>
+<lineargradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#0f6df3" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#0f6df3" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#fedad9" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line stroke="#fedad9" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line stroke="#fedad9" stroke-dasharray="4" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<line stroke="#fedad9" stroke-width="1" x1="0" x2="800" y1="200" y2="200"></line>
+<!-- Area under curve -->
+<path d="M0,150 C100,100 200,180 300,120 C400,60 500,140 600,80 C700,20 800,100 800,100 L800,200 L0,200 Z" fill="url(#gradient)"></path>
+<!-- Bezier Curve Line -->
+<path d="M0,150 C100,100 200,180 300,120 C400,60 500,140 600,80 C700,20 800,100 800,100" fill="none" stroke="#0f6df3" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<!-- Data Points -->
+<circle cx="300" cy="120" fill="#ffffff" r="6" stroke="#0f6df3" stroke-width="3"></circle>
+<circle cx="600" cy="80" fill="#ffffff" r="6" stroke="#0f6df3" stroke-width="3"></circle>
+</svg>
+<!-- X-axis Labels -->
+<div class="flex justify-between mt-4 text-on-surface-variant font-label-lg text-label-lg px-2">
+<span>Pon</span>
+<span>Wto</span>
+<span>Śro</span>
+<span>Czw</span>
+<span>Pią</span>
+<span>Sob</span>
+<span>Nie</span>
+</div>
+</div>
+</div>
+<!-- Grouped Cards for Category-specific Stats -->
+<div class="col-span-4 md:col-span-4 bg-surface-container-high rounded-2xl p-6 mt-4">
+<h3 class="font-title-lg text-title-lg text-on-surface mb-6">Typy Alertów</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container fill-icon">warning</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-medium text-on-surface">Niebezpieczne strefy</div>
+<div class="font-label-lg text-label-lg text-on-surface-variant">Wysoki priorytet</div>
+</div>
+</div>
+<div class="font-title-lg text-title-lg text-on-surface font-bold">14</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container fill-icon">notifications</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-medium text-on-surface">Opuszczenie strefy</div>
+<div class="font-label-lg text-label-lg text-on-surface-variant">Średni priorytet</div>
+</div>
+</div>
+<div class="font-title-lg text-title-lg text-on-surface font-bold">42</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container fill-icon">check_circle</span>
+</div>
+<div>
+<div class="font-body-lg text-body-lg font-medium text-on-surface">Bezpieczne powroty</div>
+<div class="font-label-lg text-label-lg text-on-surface-variant">Informacyjne</div>
+</div>
+</div>
+<div class="font-title-lg text-title-lg text-on-surface font-bold">89</div>
+</div>
+</div>
+</div>
+<div class="col-span-4 md:col-span-4 bg-surface-container-high rounded-2xl p-6 mt-4 relative overflow-hidden">
+<!-- Decorative background pattern -->
+<div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[200px]">map</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface mb-6 relative z-10">Najczęstsze Lokalizacje</h3>
+<div class="space-y-4 relative z-10">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between font-label-lg text-label-lg">
+<span class="text-on-surface font-medium">Szkoła Podstawowa nr 4</span>
+<span class="text-on-surface-variant">45%</span>
+</div>
+<div class="w-full bg-surface h-3 rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full rounded-full" style="width: 45%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-4">
+<div class="flex justify-between font-label-lg text-label-lg">
+<span class="text-on-surface font-medium">Park Miejski</span>
+<span class="text-on-surface-variant">30%</span>
+</div>
+<div class="w-full bg-surface h-3 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full" style="width: 30%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2 mt-4">
+<div class="flex justify-between font-label-lg text-label-lg">
+<span class="text-on-surface font-medium">Dom - Centrum</span>
+<span class="text-on-surface-variant">25%</span>
+</div>
+<div class="w-full bg-surface h-3 rounded-full overflow-hidden">
+<div class="bg-surface-variant h-full rounded-full" style="width: 25%;"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface-container dark:bg-surface-container-low border-t border-outline-variant/30 shadow-lg fixed bottom-0 left-0 w-full z-50 flex justify-around items-end pb-4 px-2 rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-label-lg text-label-lg">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">notifications_active</span>
+<span class="font-label-lg text-label-lg">Alerty</span>
+</a>
+<!-- Hero SOS Button -->
+<a class="relative flex flex-col items-center justify-center -translate-y-4" href="#">
+<div class="w-[64dp] h-[64dp] rounded-full bg-primary shadow-xl scale-110 flex items-center justify-center transition-transform active:scale-90 ring-4 ring-surface-container-low">
+<span class="material-symbols-outlined text-on-primary fill-icon text-3xl">emergency</span>
+</div>
+<span class="font-label-lg text-label-lg font-bold text-primary mt-1">SOS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 p-2 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">group</span>
+<span class="font-label-lg text-label-lg">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 hover:bg-surface-variant/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1 fill-icon">account_circle</span>
+<span class="font-label-lg text-label-lg">Profil</span>
+</a>
+</nav>
+</body></html>

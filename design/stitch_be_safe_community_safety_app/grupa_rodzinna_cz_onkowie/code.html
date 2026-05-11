@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Szczegóły grupy rodzinnej</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-on-surface": "#f1f1f1",
+                    "error": "#ba1a1a",
+                    "primary-fixed": "#ffdad9",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-error-container": "#93000a",
+                    "outline": "#936e6d",
+                    "surface-tint": "#bf002e",
+                    "primary-container": "#e9003a",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#ffb3b3",
+                    "surface-container-low": "#f3f3f3",
+                    "surface-dim": "#dadada",
+                    "on-surface": "#1a1c1c",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#400009",
+                    "on-tertiary-fixed": "#00201c",
+                    "surface-container-high": "#e8e8e8",
+                    "on-primary-fixed-variant": "#920021",
+                    "on-tertiary-fixed-variant": "#005047",
+                    "on-secondary-fixed": "#002204",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed-dim": "#ffb3b3",
+                    "on-secondary-container": "#217128",
+                    "on-background": "#1a1c1c",
+                    "surface-variant": "#e2e2e2",
+                    "outline-variant": "#e8bcbb",
+                    "background": "#f9f9f9",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#fffbff",
+                    "tertiary-fixed": "#88f5e3",
+                    "surface-container": "#eeeeee",
+                    "on-surface-variant": "#5e3f3e",
+                    "surface-bright": "#f9f9f9",
+                    "on-secondary-fixed-variant": "#005312",
+                    "tertiary-fixed-dim": "#6ad9c8",
+                    "secondary-fixed": "#a3f69c",
+                    "primary": "#ba002c",
+                    "on-tertiary-container": "#f4fffb",
+                    "secondary-container": "#a0f399",
+                    "secondary": "#1b6d24",
+                    "tertiary-container": "#008376",
+                    "surface": "#f9f9f9",
+                    "tertiary": "#00685d",
+                    "secondary-fixed-dim": "#88d982",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#2f3131"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "12px",
+                    "stack-lg": "24px",
+                    "margin-mobile": "16px",
+                    "base": "8px",
+                    "stack-sm": "4px",
+                    "gutter": "16px",
+                    "margin-desktop": "24px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "label-lg": ["Inter"],
+                    "title-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "label-lg": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-sans antialiased pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface text-primary font-title-lg text-title-lg docked full-width top-0 bg-surface flat no shadows flex justify-between items-center px-margin-mobile h-16 w-full z-40 sticky">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant transition-colors active:scale-95 duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Kowalscy</h1>
+</div>
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-surface-variant transition-colors active:scale-95 duration-150 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<!-- Segmented Control -->
+<div class="px-margin-mobile pt-stack-md pb-stack-lg">
+<div class="flex p-1 bg-surface-container-high rounded-lg w-full">
+<button class="flex-1 py-2 text-center font-label-lg text-label-lg rounded-md text-on-surface-variant hover:bg-surface-variant transition-colors">
+                Mapa
+            </button>
+<button class="flex-1 py-2 text-center font-label-lg text-label-lg rounded-md bg-surface shadow-sm text-on-surface">
+                Członkowie
+            </button>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 px-margin-mobile flex flex-col gap-stack-md">
+<!-- Member Card: Anna -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-surface-container-high flex items-center justify-between active:scale-95 transition-transform duration-150 cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Avatar Anna" class="w-12 h-12 rounded-full object-cover border-2 border-surface" data-alt="A professional headshot of a smiling woman with warm lighting, wearing a light blouse. Modern light-mode aesthetic with soft white background and natural colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJj3N_vZ4BE3OsA0dW3iZsrF0JiAGVO1xgw4XO19pesbuteD7zTxazdvwwG-HiR2fyRa8LMP1FK6offrLPIIfVNzWr2TqqPmYMdkML8okiktaV6DtXPuXuJOO1aIKYUcz4lR7HVwSlRqBsVRwSt-PPJn_O7e5nB-UAVIyls2MK9-o6ti8SV-pHivilds1V0EhyIoRre6RN4DJFM4yyAIZ5uNdPfTq8010_MLyYm8yWiJNyILVs35HwedZ7IUHQA7RLmQOMciCHIqU"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-surface"></div>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Anna</span>
+<span class="bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg px-2 py-0.5 rounded-full text-[10px]">Rodzic</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-secondary icon-fill">location_on</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">W domu, 5 min temu</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="font-label-lg text-label-lg">85%</span>
+<span class="material-symbols-outlined text-[18px]">battery_5_bar</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<!-- Member Card: Marek -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-surface-container-high flex items-center justify-between active:scale-95 transition-transform duration-150 cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Avatar Marek" class="w-12 h-12 rounded-full object-cover border-2 border-surface" data-alt="A portrait of a man looking directly at the camera with a calm expression. Warm, natural lighting in a bright modern setting. Clean, light-mode aesthetic with subtle shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5opTOalV3AX79nJRxy_-nwXMKM3XNDdzfDzZFL-SMzbJgeD5oRwzOu8tTAUy3PqNybVBQ4BGCmK7p4LGpvDaei7FmP1J8HSquMA_IWyb1c97QsR__If-2DhvfoVdYd1sV9p8qzU2DhpderU52pXLRk0wS01LTdNSASbRxn0xHSBkv-gqh2to4ii6tZ25V26QmO14K1du3CJ93sr-X5J61IYLDwNI8BmxHo-k-MyPmTNnXScrZ5dfC8QYxFOtQI9yVXSAzyJWEH2E"/>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-surface"></div>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Marek</span>
+<span class="bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg px-2 py-0.5 rounded-full text-[10px]">Rodzic</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant icon-fill">location_on</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">Praca, 10 min temu</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="font-label-lg text-label-lg">42%</span>
+<span class="material-symbols-outlined text-[18px]">battery_3_bar</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<!-- Member Card: Tomek -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-surface-container-high flex items-center justify-between active:scale-95 transition-transform duration-150 cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container border-2 border-surface font-headline-md text-headline-md">T</div>
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-surface"></div>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-body-lg text-body-lg text-on-surface font-semibold">Tomek</span>
+<span class="bg-secondary-container text-on-secondary-container font-label-lg text-label-lg px-2 py-0.5 rounded-full text-[10px]">Dziecko</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant icon-fill">location_on</span>
+<span class="font-body-md text-body-md text-on-surface-variant text-sm truncate max-w-[140px]">Szkoła Podstawowa nr 2, 15 min temu</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<span class="font-label-lg text-label-lg">90%</span>
+<span class="material-symbols-outlined text-[18px]">battery_full_alt</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<!-- Action Button -->
+<div class="mt-stack-lg flex justify-center mb-stack-lg">
+<button class="w-full bg-secondary text-on-secondary py-3 px-6 rounded-full font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-on-secondary-container transition-colors active:scale-95 duration-150 shadow-md">
+<span class="material-symbols-outlined icon-fill">add_location_alt</span>
+                Ustaw bezpieczną strefę
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface-container text-primary font-label-lg text-label-lg font-headline-md text-headline-md text-primary docked full-width bottom-0 rounded-t-xl bg-surface-container shadow-md fixed bottom-0 w-full z-50 flex justify-around items-center px-2 py-3 bg-surface-container">
+<!-- Mapa -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all active:scale-90 duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="map">map</span>
+<span>Mapa</span>
+</a>
+<!-- Alerty -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all active:scale-90 duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="notifications">notifications</span>
+<span>Alerty</span>
+</a>
+<!-- SOS -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all active:scale-90 duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="emergency_home">emergency_home</span>
+<span>SOS</span>
+</a>
+<!-- Rodzina (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 hover:bg-surface-variant transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1 icon-fill" data-icon="group">group</span>
+<span>Rodzina</span>
+</a>
+<!-- Profil -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-variant transition-all active:scale-90 duration-200 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="person">person</span>
+<span>Profil</span>
+</a>
+</nav>
+</body></html>

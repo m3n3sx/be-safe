@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Alerty</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dcd9dc",
+                        "tertiary-fixed-dim": "#c2c1ff",
+                        "on-primary-fixed-variant": "#00531c",
+                        "inverse-on-surface": "#f3f0f2",
+                        "tertiary-container": "#a6a5ff",
+                        "on-surface": "#1b1b1d",
+                        "surface-container-high": "#eae7ea",
+                        "surface-variant": "#e4e2e4",
+                        "on-primary-container": "#004d1a",
+                        "on-tertiary-fixed-variant": "#3631b4",
+                        "surface-tint": "#006e28",
+                        "secondary-fixed-dim": "#ffb868",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary": "#4f4ccd",
+                        "surface": "#fcf8fb",
+                        "secondary": "#885200",
+                        "secondary-container": "#fd9d06",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#673d00",
+                        "surface-container-low": "#f6f3f5",
+                        "on-secondary-fixed": "#2b1700",
+                        "secondary-fixed": "#ffddbb",
+                        "inverse-surface": "#303032",
+                        "outline": "#6d7b6b",
+                        "surface-container-highest": "#e4e2e4",
+                        "primary-container": "#34c759",
+                        "surface-container": "#f0edef",
+                        "primary-fixed": "#72fe88",
+                        "on-secondary-container": "#653c00",
+                        "primary": "#006e28",
+                        "outline-variant": "#bccbb8",
+                        "surface-bright": "#fcf8fb",
+                        "tertiary-fixed": "#e2dfff",
+                        "error-container": "#ffdad6",
+                        "on-background": "#1b1b1d",
+                        "on-primary-fixed": "#002107",
+                        "on-tertiary-container": "#302aaf",
+                        "on-surface-variant": "#3d4a3c",
+                        "on-error": "#ffffff",
+                        "background": "#fcf8fb",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#53e16f",
+                        "on-tertiary-fixed": "#0c006a",
+                        "inverse-primary": "#53e16f",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "base": "8px",
+                        "gutter": "16px",
+                        "margin-mobile": "20px",
+                        "stack-gap": "12px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Ambient Glow Custom Class adhering to token values */
+        .shadow-ambient-primary {
+            box-shadow: 0 8px 24px -4px rgba(0, 110, 40, 0.15);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-surface flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-base sticky top-0 z-40">
+<!-- Leading Avatar -->
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border-2 border-primary-container flex-shrink-0 cursor-pointer hover:scale-95 transition-transform duration-150">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="A close-up portrait of a friendly young adult looking directly at the camera, wearing a casual bright green sweater. The lighting is soft and natural, suggesting a warm, sunny outdoor setting. The background is completely blurred to keep the focus on the person. The overall aesthetic is modern, approachable, and highly professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMJG7fu7qDXJeRyW35KLGhF1gpc7iXK5izdFmVGhNB1WwKHxqlhjBNtE7ooFmK76EXcHBRW_xA4H7nYvWxiGnfIfZpXqONIPQrnU2keSztgSdBErMnoW7fv11bKj4kHUWoz4Kvr702oSwZYPrZtiiROR82hrSiyhkNMfM5t-SlS5QExiOMNNTVNL_k4H7UQkU9A7q3Q72HKIa8Fspa0NEX7H9UlClgNCOzrRmxESm47hLD_jRGGNdN3995KdQTWmLWyuIoBUOCGXI"/>
+</div>
+<!-- Brand Logo -->
+<h1 class="font-display-lg text-headline-lg font-extrabold text-primary md:hidden">be:Safe</h1>
+</div>
+<!-- Desktop Navigation Cluster (Hidden on Mobile) -->
+<nav class="hidden md:flex items-center gap-8 bg-surface-container-low px-8 py-3 rounded-full">
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined">map</span>
+                Map
+            </a>
+<a class="font-label-lg text-label-lg text-primary flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+                Alerts
+            </a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined">emergency</span>
+                SOS
+            </a>
+<a class="font-label-lg text-label-lg text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined">group</span>
+                Family
+            </a>
+</nav>
+<!-- Trailing Icon -->
+<div class="flex items-center gap-4">
+<h1 class="hidden md:block font-display-lg text-headline-lg font-extrabold text-primary mr-4">be:Safe</h1>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 w-full max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop pt-8 pb-32 flex flex-col gap-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="flex flex-col gap-2">
+<h2 class="font-display-lg text-display-lg text-on-surface tracking-tight">Alerty</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Bądź na bieżąco z zagrożeniami w Twojej okolicy.</p>
+</div>
+<!-- Segmented Control -->
+<div class="flex p-1 bg-surface-container-high rounded-full self-start md:self-auto shadow-inner">
+<button class="px-8 py-3 rounded-full bg-primary text-on-primary font-label-lg text-label-lg shadow-ambient-primary active:scale-95 transition-all duration-200">
+                    Wszystkie
+                </button>
+<button class="px-8 py-3 rounded-full text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-variant active:scale-95 transition-all duration-200">
+                    Moje
+                </button>
+</div>
+</div>
+<!-- Expressive Alerts Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-min">
+<!-- Alert Card 1: Urgent (Fire) - Spans 2 columns on large screens to break standard list -->
+<article class="bg-error-container rounded-[28px] p-6 flex flex-col justify-between gap-6 relative overflow-hidden group hover:scale-[0.99] transition-transform duration-300 md:col-span-2 lg:col-span-2 shadow-sm">
+<!-- Decorative background icon -->
+<span class="material-symbols-outlined absolute -right-4 -top-8 text-[160px] text-error opacity-10 rotate-12 pointer-events-none" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<div class="flex items-start justify-between relative z-10">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-full bg-error text-on-error flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-title-lg" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-headline-lg text-headline-lg-mobile text-on-error-container leading-tight">Pożar lasu</h3>
+<span class="font-label-lg text-label-lg text-error uppercase tracking-widest mt-1">Krytyczne</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 relative z-10">
+<p class="font-body-lg text-body-lg text-on-error-container max-w-lg">
+                        Szybko rozprzestrzeniający się pożar w rejonie Lasu Kabackiego. Trwa ewakuacja pobliskich osiedli. Prosimy o omijanie tego rejonu.
+                    </p>
+<div class="flex items-center gap-2 text-on-error-container opacity-80">
+<span class="material-symbols-outlined text-body-md">location_on</span>
+<span class="font-body-md text-body-md">2 km stąd • 15 min temu</span>
+</div>
+</div>
+<div class="mt-2 relative z-10">
+<button class="bg-error text-on-error px-8 py-4 rounded-full font-label-lg text-label-lg w-full md:w-auto hover:bg-[#93000a] active:scale-95 transition-all duration-200 flex items-center justify-center gap-2 shadow-lg">
+                        Szczegóły zdarzenia
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Alert Card 2: Warning (Accident) -->
+<article class="bg-secondary-container rounded-[28px] p-6 flex flex-col justify-between gap-6 relative overflow-hidden hover:scale-[0.99] transition-transform duration-300 shadow-sm">
+<span class="material-symbols-outlined absolute -right-2 -bottom-4 text-[120px] text-secondary opacity-10 -rotate-12 pointer-events-none" style="font-variation-settings: 'FILL' 1;">car_crash</span>
+<div class="flex items-start gap-4 relative z-10">
+<div class="w-12 h-12 rounded-full bg-secondary text-on-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-title-lg" style="font-variation-settings: 'FILL' 1;">car_crash</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-title-lg text-title-lg text-on-secondary-container">Wypadek drogowy</h3>
+<span class="font-label-lg text-label-lg text-secondary uppercase tracking-widest mt-1">Ostrzeżenie</span>
+</div>
+</div>
+<div class="flex flex-col gap-3 relative z-10 mt-auto">
+<p class="font-body-md text-body-md text-on-secondary-container">
+                        Zderzenie dwóch pojazdów na skrzyżowaniu. Możliwe duże utrudnienia w ruchu.
+                    </p>
+<div class="flex items-center gap-2 text-on-secondary-container opacity-80 mt-2">
+<span class="material-symbols-outlined text-body-md">schedule</span>
+<span class="font-body-md text-body-md">5 km stąd • 30 min temu</span>
+</div>
+<button class="mt-4 bg-secondary text-on-secondary px-6 py-3 rounded-full font-label-lg text-label-lg w-full hover:bg-on-secondary-fixed-variant active:scale-95 transition-all duration-200">
+                        Szczegóły
+                    </button>
+</div>
+</article>
+<!-- Alert Card 3: Info (Weather) -->
+<article class="bg-surface-container-low border-2 border-tertiary-container rounded-[28px] p-6 flex flex-col justify-between gap-6 relative overflow-hidden hover:scale-[0.99] transition-transform duration-300">
+<div class="flex items-start gap-4 relative z-10">
+<div class="w-12 h-12 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-title-lg" style="font-variation-settings: 'FILL' 1;">thunderstorm</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-title-lg text-title-lg text-on-surface">Gwałtowna burza</h3>
+<span class="font-label-lg text-label-lg text-tertiary uppercase tracking-widest mt-1">Informacja</span>
+</div>
+</div>
+<div class="flex flex-col gap-3 relative z-10 mt-auto">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Nadciąga front burzowy z silnym wiatrem. Zabezpiecz przedmioty na balkonach.
+                    </p>
+<div class="flex items-center gap-2 text-on-surface-variant mt-2">
+<span class="material-symbols-outlined text-body-md">radar</span>
+<span class="font-body-md text-body-md">Ostrzeżenie regionalne • 1 godz. temu</span>
+</div>
+<!-- High contrast button using vibrant primary safety green -->
+<button class="mt-4 bg-primary text-on-primary px-6 py-3 rounded-full font-label-lg text-label-lg w-full hover:bg-surface-tint active:scale-95 transition-all duration-200 shadow-ambient-primary">
+                        Szczegóły
+                    </button>
+</div>
+</article>
+<!-- Alert Card 4: Standard Info -->
+<article class="bg-surface-container rounded-[28px] p-6 flex flex-col justify-between gap-6 relative overflow-hidden hover:scale-[0.99] transition-transform duration-300">
+<div class="flex items-start gap-4 relative z-10">
+<div class="w-12 h-12 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-title-lg" style="font-variation-settings: 'FILL' 1;">construction</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-title-lg text-title-lg text-on-surface">Roboty drogowe</h3>
+<span class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-widest mt-1">Utrudnienia</span>
+</div>
+</div>
+<div class="flex flex-col gap-3 relative z-10 mt-auto">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Awaria wodociągu. Zamknięty prawy pas ruchu na ulicy Głównej.
+                    </p>
+<div class="flex items-center gap-2 text-on-surface-variant mt-2">
+<span class="material-symbols-outlined text-body-md">distance</span>
+<span class="font-body-md text-body-md">8 km stąd • 2 godz. temu</span>
+</div>
+<button class="mt-4 bg-inverse-surface text-inverse-on-surface px-6 py-3 rounded-full font-label-lg text-label-lg w-full hover:opacity-90 active:scale-95 transition-all duration-200">
+                        Szczegóły
+                    </button>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter pb-4 pt-2 bg-surface-container shadow-[0_-4px_10px_rgba(0,110,40,0.05)] rounded-t-[2rem]">
+<!-- Inactive: Map -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-variant rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-label-lg text-label-lg text-[12px]">Map</span>
+</a>
+<!-- Active: Alerts -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-5 py-2 scale-98 transition-all duration-200 shadow-sm" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-label-lg text-label-lg text-[12px]">Alerts</span>
+</a>
+<!-- Inactive: SOS -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-variant rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined mb-1 text-error">emergency</span>
+<span class="font-label-lg text-label-lg text-[12px]">SOS</span>
+</a>
+<!-- Inactive: Family -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-variant rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">group</span>
+<span class="font-label-lg text-label-lg text-[12px]">Family</span>
+</a>
+<!-- Inactive: Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-variant rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">account_circle</span>
+<span class="font-label-lg text-label-lg text-[12px]">Profile</span>
+</a>
+</nav>
+</body></html>

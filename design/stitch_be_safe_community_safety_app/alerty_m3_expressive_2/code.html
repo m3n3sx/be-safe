@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Alerty</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#00429b",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#ffedec",
+                        "primary-fixed": "#ffdad9",
+                        "on-primary-fixed": "#400009",
+                        "surface": "#fff8f7",
+                        "surface-container-high": "#ffe1e0",
+                        "inverse-primary": "#ffb3b3",
+                        "surface-variant": "#fedad9",
+                        "on-background": "#291616",
+                        "error": "#ba1a1a",
+                        "outline": "#936e6d",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#69ff87",
+                        "surface-container": "#ffe9e8",
+                        "surface-dim": "#f5d2d1",
+                        "tertiary": "#0056c5",
+                        "surface-container-highest": "#fedad9",
+                        "on-primary-container": "#fffbff",
+                        "on-tertiary-fixed": "#001945",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#5e3f3e",
+                        "surface-bright": "#fff8f7",
+                        "tertiary-fixed": "#d9e2ff",
+                        "secondary-fixed-dim": "#3ce36a",
+                        "background": "#fff8f7",
+                        "primary-container": "#e9003a",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#0f6df3",
+                        "on-secondary-fixed-variant": "#00531e",
+                        "on-tertiary-container": "#fefcff",
+                        "on-secondary-fixed": "#002108",
+                        "secondary": "#006e2a",
+                        "secondary-container": "#5cfd80",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#bf002e",
+                        "surface-container-low": "#fff0ef",
+                        "inverse-surface": "#412b2b",
+                        "on-surface": "#291616",
+                        "tertiary-fixed-dim": "#b0c6ff",
+                        "primary": "#ba002c",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#920021",
+                        "on-secondary-container": "#00732c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16dp",
+                        "base": "8dp",
+                        "hero-button-size": "64dp",
+                        "margin-mobile": "16dp",
+                        "margin-tablet": "24dp"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Roboto Flex"],
+                        "title-lg": ["Roboto Flex"],
+                        "headline-sm": ["Roboto Flex"],
+                        "display-sm": ["Roboto Flex"],
+                        "label-lg": ["Roboto Flex"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+                        "title-lg": ["22px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "headline-sm": ["24px", { "lineHeight": "32px", "letterSpacing": "0px", "fontWeight": "500" }],
+                        "display-sm": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.5px", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+            .material-symbols-outlined.fill {
+                font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-low text-on-background font-body-lg min-h-screen flex flex-col pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface-container dark:bg-surface-container-high flex justify-between items-center px-margin-mobile h-16 w-full sticky top-0 z-40">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant font-label-lg overflow-hidden">
+<img alt="Profil użytkownika" class="w-full h-full object-cover" data-alt="Close up portrait photo of a young professional woman with natural makeup and hair pulled back, looking directly at the camera with a confident expression. Soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKHubxv89WMLHpWr1amQ0R0zZAuaEQEMJWFY7kk3dRttvS95vbk3BJJbCufvMyHR7XGef59U9m_5L7LMoaXegET8KnKITllozNRjvQ41cd5KQkpR_-JpqyktvI2s3eH13Qo2gySmzp_R_CmgmRts75v4cHHp5RYNB32wDTnmHF0mTQpp7MReF1jfIEnCOWoYvZcNjQgi-rOxJns_Jt8kKpUMng7o58nbaaUAnBzc3CgSrJyyZ3ZgBiPG3fkx-B0UrJ8PCtRqR6sgw"/>
+</div>
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">be:Safe</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant/50 transition-colors text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col px-margin-mobile md:px-margin-tablet pt-6 pb-8 md:max-w-3xl md:mx-auto md:w-full">
+<h1 class="font-display-sm text-display-sm text-on-surface mb-6">Alerty</h1>
+<!-- Segmented Control -->
+<div class="flex bg-surface-container-high rounded-full p-1 mb-8">
+<button class="flex-1 py-2 px-4 rounded-full bg-primary text-on-primary font-label-lg text-label-lg transition-colors shadow-sm">
+                Wszystkie
+            </button>
+<button class="flex-1 py-2 px-4 rounded-full text-on-surface-variant hover:bg-surface-variant/50 font-label-lg text-label-lg transition-colors">
+                Moje
+            </button>
+</div>
+<!-- Alerts List -->
+<div class="flex flex-col gap-4">
+<!-- Critical Alert -->
+<article class="bg-surface-container-high rounded-2xl p-4 flex gap-4 items-start relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary"></div>
+<div class="w-12 h-12 rounded-xl bg-primary-container text-primary flex flex-shrink-0 items-center justify-center mt-1">
+<span class="material-symbols-outlined fill text-3xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h2 class="font-title-lg text-title-lg text-on-surface">Zablokowana droga</h2>
+<span class="text-xs font-label-lg text-on-surface-variant">Teraz</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-3">Wypadek na skrzyżowaniu ul. Głównej i Długiej. Prosimy omijanie obszaru.</p>
+<div class="flex items-center gap-2">
+<div class="px-2 py-1 rounded-md bg-surface-variant text-on-surface-variant font-label-lg text-[11px] uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                            250m stąd
+                        </div>
+<div class="px-2 py-1 rounded-md bg-primary/10 text-primary font-label-lg text-[11px] uppercase tracking-wider">
+                            Wysoki priorytet
+                        </div>
+</div>
+</div>
+</article>
+<!-- Warning Alert -->
+<article class="bg-surface-container-high rounded-2xl p-4 flex gap-4 items-start">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/30 text-tertiary-container flex flex-shrink-0 items-center justify-center mt-1">
+<span class="material-symbols-outlined text-3xl">weather_mix</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h2 class="font-title-lg text-title-lg text-on-surface">Ostrzeżenie pogodowe</h2>
+<span class="text-xs font-label-lg text-on-surface-variant">15 min temu</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-3">Spodziewane silne opady deszczu w najbliższych godzinach.</p>
+<div class="flex items-center gap-2">
+<div class="px-2 py-1 rounded-md bg-surface-variant text-on-surface-variant font-label-lg text-[11px] uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">map</span>
+                            Całe miasto
+                        </div>
+</div>
+</div>
+</article>
+<!-- Info Alert -->
+<article class="bg-surface-container-high rounded-2xl p-4 flex gap-4 items-start">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/50 text-secondary flex flex-shrink-0 items-center justify-center mt-1">
+<span class="material-symbols-outlined text-3xl">groups</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h2 class="font-title-lg text-title-lg text-on-surface">Zgromadzenie</h2>
+<span class="text-xs font-label-lg text-on-surface-variant">2 godz. temu</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-3">Planowany marsz na Rynku Głównym. Możliwe utrudnienia w ruchu drogowym.</p>
+<div class="flex items-center gap-2">
+<div class="px-2 py-1 rounded-md bg-surface-variant text-on-surface-variant font-label-lg text-[11px] uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                            1.2 km stąd
+                        </div>
+</div>
+</div>
+</article>
+<!-- Standard Alert -->
+<article class="bg-surface-container-high rounded-2xl p-4 flex gap-4 items-start opacity-75">
+<div class="w-12 h-12 rounded-xl bg-surface-variant text-on-surface-variant flex flex-shrink-0 items-center justify-center mt-1">
+<span class="material-symbols-outlined text-3xl">construction</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h2 class="font-title-lg text-title-lg text-on-surface">Roboty drogowe</h2>
+<span class="text-xs font-label-lg text-on-surface-variant">Wczoraj</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-3">Rozpoczęto wymianę nawierzchni na ul. Polnej.</p>
+<div class="flex items-center gap-2">
+<div class="px-2 py-1 rounded-md bg-surface-variant text-on-surface-variant font-label-lg text-[11px] uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                            800m stąd
+                        </div>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface-container dark:bg-surface-container-low border-t border-outline-variant/30 shadow-lg fixed bottom-0 left-0 w-full z-50 flex justify-around items-end pb-4 px-2 rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 w-16 pt-2 pb-1 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">map</span>
+<span class="font-label-lg text-label-lg text-[10px]">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 hover:bg-surface-variant/80 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-label-lg text-label-lg text-[10px]">Alerty</span>
+</a>
+<div class="relative flex flex-col items-center -mt-6">
+<a class="w-[64dp] h-[64dp] rounded-full bg-primary shadow-xl scale-110 -translate-y-4 transition-transform active:scale-90 flex items-center justify-center text-on-primary" href="#">
+<span class="material-symbols-outlined text-3xl">emergency</span>
+</a>
+<span class="font-label-lg text-label-lg text-[10px] text-on-surface-variant absolute -bottom-1">SOS</span>
+</div>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 w-16 pt-2 pb-1 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">group</span>
+<span class="font-label-lg text-label-lg text-[10px]">Rodzina</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-variant/80 w-16 pt-2 pb-1 rounded-xl transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">account_circle</span>
+<span class="font-label-lg text-label-lg text-[10px]">Profil</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Regulamin - be:Safe</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config from Design System -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#f3f3f3",
+                    "on-primary-container": "#fffbff",
+                    "secondary-fixed-dim": "#88d982",
+                    "secondary": "#1b6d24",
+                    "surface-tint": "#bf002e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#002204",
+                    "on-primary-fixed-variant": "#920021",
+                    "secondary-fixed": "#a3f69c",
+                    "outline-variant": "#e8bcbb",
+                    "on-secondary": "#ffffff",
+                    "primary": "#ba002c",
+                    "on-surface-variant": "#5e3f3e",
+                    "tertiary-fixed-dim": "#6ad9c8",
+                    "on-secondary-fixed-variant": "#005312",
+                    "on-primary-fixed": "#400009",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#008376",
+                    "outline": "#936e6d",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-tertiary-fixed-variant": "#005047",
+                    "surface-variant": "#e2e2e2",
+                    "inverse-primary": "#ffb3b3",
+                    "on-secondary-container": "#217128",
+                    "primary-container": "#e9003a",
+                    "on-tertiary-fixed": "#00201c",
+                    "background": "#f9f9f9",
+                    "surface-dim": "#dadada",
+                    "surface-container-highest": "#e2e2e2",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#88f5e3",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e8e8e8",
+                    "secondary-container": "#a0f399",
+                    "on-background": "#1a1c1c",
+                    "primary-fixed": "#ffdad9",
+                    "primary-fixed-dim": "#ffb3b3",
+                    "on-surface": "#1a1c1c",
+                    "surface-container": "#eeeeee",
+                    "surface-bright": "#f9f9f9",
+                    "surface": "#f9f9f9",
+                    "error": "#ba1a1a",
+                    "tertiary": "#00685d",
+                    "inverse-surface": "#2f3131",
+                    "on-tertiary-container": "#f4fffb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "base": "8px",
+                    "stack-sm": "4px",
+                    "margin-mobile": "16px",
+                    "stack-md": "12px",
+                    "margin-desktop": "24px",
+                    "stack-lg": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": [
+                            "Inter"
+                    ],
+                    "body-lg": [
+                            "Inter"
+                    ],
+                    "title-lg": [
+                            "Inter"
+                    ],
+                    "headline-md": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "body-md": [
+                            "Inter"
+                    ],
+                    "label-lg": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "title-lg": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-lg": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.5px",
+                                    "fontWeight": "600"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar (Task-Focused Version) -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full z-40 bg-surface fixed top-0 border-b border-surface-variant/50">
+<button aria-label="Wróć" class="text-on-surface active:scale-95 duration-150 p-2 -ml-2 rounded-full hover:bg-surface-variant transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-title-lg text-title-lg text-on-surface flex-1 text-center font-medium">
+            Regulamin
+        </h1>
+<button aria-label="Udostępnij" class="text-on-surface active:scale-95 duration-150 p-2 -mr-2 rounded-full hover:bg-surface-variant transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">share</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<!-- Navigation Shell (BottomNavBar) is SUPPRESSED as this is a task-focused reading page with a clear 'Back' departure. -->
+<main class="pt-[88px] pb-[120px] px-margin-mobile md:px-margin-desktop max-w-3xl mx-auto">
+<!-- Header Section -->
+<div class="mb-stack-lg border-b border-surface-variant/60 pb-stack-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-stack-sm tracking-tight text-balance">
+                Regulamin aplikacji be:Safe
+            </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Ostatnia aktualizacja: 2026-05-09
+            </p>
+</div>
+<!-- Document Body -->
+<article class="space-y-[32px]">
+<!-- Section 1 -->
+<section>
+<h2 class="font-headline-md text-headline-md text-primary mb-stack-md flex items-center gap-2">
+<span class="text-surface-tint opacity-80">§1</span> Postanowienia ogólne
+                </h2>
+<ol class="list-decimal list-outside ml-[1.25rem] font-body-lg text-body-lg text-on-surface space-y-4">
+<li>
+                        Niniejszy regulamin (dalej: "Regulamin") określa zasady i warunki korzystania z aplikacji mobilnej be:Safe, stworzonej w celu poprawy bezpieczeństwa osobistego oraz budowania lokalnej społeczności chroniącej.
+                    </li>
+<li>
+                        Operatorem aplikacji oraz administratorem danych osobowych jest system i platforma dostępna pod adresem <a class="text-primary underline decoration-primary/40 hover:decoration-primary underline-offset-4 transition-colors font-medium" href="https://alert.u235.pl">alert.u235.pl</a>.
+                    </li>
+<li>
+                        Rozpoczęcie korzystania z aplikacji jest równoznaczne z zapoznaniem się, zrozumieniem i w pełni dobrowolną akceptacją niniejszego Regulaminu. Użytkownik zobowiązuje się do przestrzegania jego postanowień.
+                    </li>
+<li>
+                        Aplikacja be:Safe nie zastępuje tradycyjnych numerów alarmowych (np. 112). W sytuacji bezpośredniego zagrożenia życia i zdrowia, w pierwszej kolejności należy kontaktować się z odpowiednimi służbami ratunkowymi.
+                    </li>
+</ol>
+</section>
+<!-- Section 2 -->
+<section>
+<h2 class="font-headline-md text-headline-md text-primary mb-stack-md flex items-center gap-2">
+<span class="text-surface-tint opacity-80">§2</span> Bezpieczeństwo i dane
+                </h2>
+<p class="font-body-lg text-body-lg text-on-surface mb-stack-md">
+                    Twoje bezpieczeństwo i prywatność są naszym absolutnym priorytetem. Zbieramy tylko i wyłącznie te dane, które są krytycznie niezbędne do prawidłowego funkcjonowania modułów ratunkowych oraz alertów społecznościowych.
+                </p>
+<ol class="list-decimal list-outside ml-[1.25rem] font-body-lg text-body-lg text-on-surface space-y-4">
+<li>
+                        Dane lokalizacyjne są gromadzone w czasie rzeczywistym i udostępniane wskazanym kontaktom zaufanym (Rodzina) <strong>wyłącznie</strong> w momencie intencjonalnej aktywacji sygnału SOS lub trybu śledzenia trasy (Follow Me) przez Użytkownika.
+                    </li>
+<li>
+                        Wszelkie incydenty, niebezpieczne strefy oraz alerty lokalne zgłaszane przez społeczność można weryfikować i uzupełniać poprzez główną platformę wymiany informacji: <a class="text-primary underline decoration-primary/40 hover:decoration-primary underline-offset-4 transition-colors font-medium" href="https://alert.u235.pl/mapa">alert.u235.pl/mapa</a>.
+                    </li>
+<li>
+                        Operator stosuje zaawansowane mechanizmy kryptograficzne do zabezpieczenia danych transmitowanych pomiędzy urządzeniem mobilnym a serwerami infrastruktury be:Safe.
+                    </li>
+</ol>
+</section>
+<!-- Section 3 -->
+<section>
+<h2 class="font-headline-md text-headline-md text-primary mb-stack-md flex items-center gap-2">
+<span class="text-surface-tint opacity-80">§3</span> Warunki techniczne i odpowiedzialność
+                </h2>
+<ol class="list-decimal list-outside ml-[1.25rem] font-body-lg text-body-lg text-on-surface space-y-4">
+<li>
+                        Do prawidłowego działania aplikacji wymagane jest posiadanie urządzenia mobilnego z dostępem do sieci Internet (transmisja danych komórkowych lub Wi-Fi) oraz aktywnego modułu GPS.
+                    </li>
+<li>
+                        Operator dokłada wszelkich starań, aby aplikacja działała nieprzerwanie, jednak nie ponosi odpowiedzialności za awarie wynikające z braku zasięgu operatora telekomunikacyjnego lub zakłóceń sygnału GPS w specyficznym terenie.
+                    </li>
+<li>
+                        Wszelkie uaktualnienia regulaminu będą publikowane bezpośrednio w aplikacji oraz na portalu <a class="text-primary underline decoration-primary/40 hover:decoration-primary underline-offset-4 transition-colors font-medium" href="https://alert.u235.pl/regulamin">alert.u235.pl/regulamin</a> z zachowaniem 14-dniowego okresu przejściowego (vacatio legis).
+                    </li>
+</ol>
+</section>
+</article>
+</main>
+</body></html>

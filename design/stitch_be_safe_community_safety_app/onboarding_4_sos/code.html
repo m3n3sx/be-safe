@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#217128",
+                        "primary": "#ba002c",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#920021",
+                        "tertiary-fixed-dim": "#6ad9c8",
+                        "on-surface": "#1a1c1c",
+                        "surface-tint": "#bf002e",
+                        "surface-container-low": "#f3f3f3",
+                        "inverse-surface": "#2f3131",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#a0f399",
+                        "secondary": "#1b6d24",
+                        "on-secondary-fixed": "#002204",
+                        "on-tertiary-container": "#f4fffb",
+                        "tertiary-container": "#008376",
+                        "on-secondary-fixed-variant": "#005312",
+                        "primary-container": "#e9003a",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#88d982",
+                        "background": "#f9f9f9",
+                        "tertiary-fixed": "#88f5e3",
+                        "surface-bright": "#f9f9f9",
+                        "on-surface-variant": "#5e3f3e",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#ffb3b3",
+                        "on-tertiary-fixed": "#00201c",
+                        "tertiary": "#00685d",
+                        "surface-container-highest": "#e2e2e2",
+                        "on-primary-container": "#fffbff",
+                        "surface-dim": "#dadada",
+                        "surface-container": "#eeeeee",
+                        "secondary-fixed": "#a3f69c",
+                        "outline-variant": "#e8bcbb",
+                        "on-secondary": "#ffffff",
+                        "outline": "#936e6d",
+                        "error": "#ba1a1a",
+                        "on-background": "#1a1c1c",
+                        "surface-variant": "#e2e2e2",
+                        "inverse-primary": "#ffb3b3",
+                        "surface-container-high": "#e8e8e8",
+                        "surface": "#f9f9f9",
+                        "on-primary-fixed": "#400009",
+                        "primary-fixed": "#ffdad9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-tertiary-fixed-variant": "#005047",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "24px",
+                        "stack-md": "12px",
+                        "gutter": "16px",
+                        "stack-lg": "24px",
+                        "base": "8px",
+                        "stack-sm": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-lg": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-lg": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "600" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen flex flex-col relative font-sans antialiased overflow-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Action Area -->
+<header class="w-full flex justify-end p-margin-mobile absolute top-0 left-0 z-10">
+<button class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors duration-200 py-2 px-4 rounded-full active:bg-surface-container-low">
+            Pomiń
+        </button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center px-margin-mobile pt-20 pb-8 z-0">
+<!-- Illustration Container with Glow Effect -->
+<div class="relative w-72 h-72 mb-stack-lg flex items-center justify-center rounded-full">
+<!-- Background Glows -->
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl scale-150"></div>
+<div class="absolute inset-10 bg-primary-container/20 rounded-full blur-xl scale-125"></div>
+<!-- Core Illustration -->
+<div class="relative z-10 w-48 h-48 rounded-full shadow-[0_8px_32px_-8px_rgba(186,0,44,0.4)] overflow-hidden bg-surface-container-lowest flex items-center justify-center border border-primary-fixed/30">
+<img alt="" class="w-full h-full object-cover opacity-90 mix-blend-multiply" data-alt="A sleek, modern 3D illustration of a prominent, glowing red SOS button against a clean, brilliant white background. The button is circular with a glossy, polished surface, featuring deep primary red tones and subtle highlights to create a premium, tactile feel. A soft, reassuring red aura emanates from behind the button, signifying immediate safety and emergency response capabilities within a sophisticated, minimalist app interface. The aesthetic adheres strictly to Material Design 3 principles, prioritizing clarity and high-end visual polish." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAznTaBMkpTcHoJdD_JEnliViMXgItfm1l3Ipl-fIyHkMyLNMg-Lu6PjgXMRPsW9x--ZY-o5LAjBj6NyjtVDZidA19zQViXMI4v3H3Y-Mu2d1CfkiBIq4zwUNP7gOVVJ5W70rV-Nl18HLDLbPgi1IL5ac5FW1hs9zQTgD3Vb5fzCGFizTUiSiEu1ZMaVaNL_OCi-qxCS8RhB-KAE_h2HTTeZyt5nckZpYZUmLJszsyClY31z83ox4Dtvo9h5G6TB-J38VUoBo6Fp8g"/>
+<!-- Overlay text to ensure message is clear regardless of image generation -->
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="font-display-lg text-display-lg text-primary tracking-tighter drop-shadow-md bg-white/80 px-4 py-2 rounded-full backdrop-blur-sm">SOS</span>
+</div>
+</div>
+</div>
+<!-- Typography -->
+<div class="flex flex-col items-center text-center max-w-sm mx-auto space-y-stack-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+                SOS w jednym kliknięciu
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                W nagłej sytuacji jedno tapnięcie powiadomi rodzinę i okolicznych użytkowników.
+            </p>
+</div>
+</main>
+<!-- Bottom Navigation / Pagination Area -->
+<footer class="w-full px-margin-mobile pb-margin-desktop flex flex-col gap-stack-lg z-10 bg-gradient-to-t from-surface-container-lowest to-transparent">
+<!-- Pagination Dots (Material 3 Style) -->
+<div aria-label="Postęp konfiguracji" class="flex items-center justify-center gap-2">
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<!-- Active Dot -->
+<div class="w-8 h-2 rounded-full bg-primary transition-all duration-300"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full py-4 bg-primary text-on-primary rounded-full font-title-lg text-title-lg shadow-md hover:bg-surface-tint hover:shadow-lg active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+            Dalej
+        </button>
+</footer>
+</body></html>
