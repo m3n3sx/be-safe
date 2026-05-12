@@ -10,6 +10,7 @@ class AppTheme {
 }
 
 const appThemes = [
+  AppTheme('serenity', 'Serenity (v2)', Color(0xFF03080E), '🌙'),
   AppTheme('blue', 'Niebieski', Color(0xFF2979FF), '🔵'),
   AppTheme('red', 'Czerwony', Color(0xFFD32F2F), '🔴'),
   AppTheme('green', 'Zielony', Color(0xFF388E3C), '🟢'),
@@ -20,19 +21,20 @@ const appThemes = [
 
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _mode = ThemeMode.dark;
-  String _themeId = 'blue';
+  String _themeId = 'serenity';
 
   ThemeMode get mode => _mode;
   String get themeId => _themeId;
+  bool get isSerenity => _themeId == 'serenity';
   Color get seedColor => appThemes.firstWhere((t) => t.id == _themeId, orElse: () => appThemes[0]).seedColor;
 
   ThemeProvider() { _load(); }
 
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
-    final v = prefs.getString('theme_mode') ?? 'dark';
+    final v = prefs.getString('theme_mode') ?? 'light';
     _mode = switch (v) { 'light' => ThemeMode.light, 'system' => ThemeMode.system, _ => ThemeMode.dark };
-    _themeId = prefs.getString('theme_color') ?? 'blue';
+    _themeId = prefs.getString('theme_color') ?? 'serenity';
     notifyListeners();
   }
 
