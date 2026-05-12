@@ -1,23 +1,39 @@
+/// be:Safe v2 — Emergency Numbers Screen (Serenity Guard)
+library;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../theme/design_tokens.dart';
+import '../../widgets/serenity_card.dart';
 
 class EmergencyNumbersScreen extends StatelessWidget {
   const EmergencyNumbersScreen({super.key});
 
   static const _numbers = [
-    _Emergency('112', 'Europejski numer alarmowy', Icons.emergency, Colors.red, 'Uniwersalny — policja, straż, pogotowie'),
-    _Emergency('997', 'Policja', Icons.local_police, Color(0xFF1565C0), 'Kradzieże, wypadki, zagrożenia'),
-    _Emergency('998', 'Straż Pożarna', Icons.local_fire_department, Color(0xFFE65100), 'Pożary, wypadki, ratownictwo'),
-    _Emergency('999', 'Pogotowie ratunkowe', Icons.medical_services, Color(0xFFD32F2F), 'Sytuacje zagrażające życiu'),
-    _Emergency('986', 'Straż Miejska', Icons.security, Color(0xFF388E3C), 'Porządek publiczny'),
-    _Emergency('987', 'Centrum Zarządzania Kryzysowego', Icons.crisis_alert, Color(0xFF7B1FA2), 'Kryzysy, katastrofy'),
-    _Emergency('601100100', 'GOPR/TOPR — Góry', Icons.terrain, Color(0xFF00796B), 'Ratownictwo górskie'),
-    _Emergency('601100300', 'WOPR — Woda', Icons.water, Color(0xFF0277BD), 'Ratownictwo wodne'),
-    _Emergency('116111', 'Telefon zaufania dla dzieci', Icons.child_care, Color(0xFFE91E63), 'Pomoc psychologiczna (bezpłatny)'),
-    _Emergency('116123', 'Kryzysowy telefon zaufania', Icons.support_agent, Color(0xFF5E35B1), 'Pomoc w kryzysie emocjonalnym'),
+    _Emergency('112', 'Europejski numer alarmowy', Icons.emergency,
+        'Uniwersalny — policja, straż, pogotowie'),
+    _Emergency('997', 'Policja', Icons.local_police,
+        'Kradzieże, wypadki, zagrożenia'),
+    _Emergency('998', 'Straż Pożarna', Icons.local_fire_department,
+        'Pożary, wypadki, ratownictwo'),
+    _Emergency('999', 'Pogotowie ratunkowe', Icons.medical_services,
+        'Sytuacje zagrażające życiu'),
+    _Emergency('986', 'Straż Miejska', Icons.security, 'Porządek publiczny'),
+    _Emergency('987', 'Centrum Zarządzania Kryzysowego', Icons.crisis_alert,
+        'Kryzysy, katastrofy'),
+    _Emergency('601100100', 'GOPR / TOPR — Góry', Icons.terrain,
+        'Ratownictwo górskie'),
+    _Emergency('601100300', 'WOPR — Woda', Icons.water,
+        'Ratownictwo wodne'),
+    _Emergency('116111', 'Telefon zaufania dla dzieci', Icons.child_care,
+        'Pomoc psychologiczna (bezpłatny)'),
+    _Emergency('116123', 'Kryzysowy telefon zaufania', Icons.support_agent,
+        'Pomoc w kryzysie emocjonalnym'),
   ];
 
   Future<void> _call(String number) async {
+    HapticFeedback.mediumImpact();
     final uri = Uri(scheme: 'tel', path: number);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
@@ -27,55 +43,162 @@ class EmergencyNumbersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Numery alarmowe')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: Colors.red.shade50,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.red.shade200),
-            ),
-            child: Row(children: [
-              Icon(Icons.info_outline, color: Colors.red.shade700),
-              const SizedBox(width: 12),
-              const Expanded(child: Text(
-                'W sytuacji bezpośredniego zagrożenia życia ZAWSZE dzwoń pod 112. Aplikacja nie zastępuje służb ratunkowych.',
-                style: TextStyle(fontSize: 13),
-              )),
-            ]),
-          ),
-          ..._numbers.map((n) => Card(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: ListTile(
-              leading: CircleAvatar(backgroundColor: n.color.withValues(alpha: 0.15),
-                child: Icon(n.icon, color: n.color)),
-              title: Text(n.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(n.desc),
-              trailing: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(color: n.color, borderRadius: BorderRadius.circular(20)),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  const Icon(Icons.phone, color: Colors.white, size: 16),
-                  const SizedBox(width: 4),
-                  Text(n.number, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                ]),
+      backgroundColor: SerenityColors.surfaceBright,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SerenitySpacing.md,
+                vertical: SerenitySpacing.md,
               ),
-              onTap: () => _call(n.number),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 28),
+                    color: SerenityColors.primary,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Numery alarmowe',
+                    style: SerenityText.headlineHeroMobile,
+                  ),
+                ],
+              ),
             ),
-          )),
-        ],
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  SerenitySpacing.xl,
+                  SerenitySpacing.sm,
+                  SerenitySpacing.xl,
+                  SerenitySpacing.xxxl,
+                ),
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(SerenitySpacing.md),
+                    decoration: BoxDecoration(
+                      color: SerenityColors.tertiaryFixed,
+                      borderRadius: BorderRadius.circular(
+                        SerenityShapes.radiusXl,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: SerenityColors.onTertiaryContainer,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'W sytuacji bezpośredniego zagrożenia życia ZAWSZE dzwoń pod 112. Aplikacja nie zastępuje służb ratunkowych.',
+                            style: SerenityText.bodyMain.copyWith(
+                              fontSize: 13,
+                              color: SerenityColors.onTertiaryContainer,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: SerenitySpacing.md),
+                  ..._numbers.map(
+                    (n) => Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: SerenitySpacing.xs,
+                      ),
+                      child: SerenityCard(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: SerenitySpacing.md,
+                          vertical: SerenitySpacing.sm + 2,
+                        ),
+                        onTap: () => _call(n.number),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: SerenityColors.surfaceContainer,
+                              ),
+                              child: Icon(
+                                n.icon,
+                                color: SerenityColors.primary,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: SerenitySpacing.md),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    n.title,
+                                    style: SerenityText.labelButton.copyWith(
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    n.desc,
+                                    style: SerenityText.bodyMain.copyWith(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: SerenityColors.primaryContainer,
+                                borderRadius: SerenityShapes.pill(),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.phone,
+                                    size: 14,
+                                    color: SerenityColors.onPrimary,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    n.number,
+                                    style: SerenityText.labelButton.copyWith(
+                                      fontSize: 13,
+                                      color: SerenityColors.onPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _Emergency {
-  final String number, title, desc;
+  final String number;
+  final String title;
   final IconData icon;
-  final Color color;
-  const _Emergency(this.number, this.title, this.icon, this.color, this.desc);
+  final String desc;
+  const _Emergency(this.number, this.title, this.icon, this.desc);
 }

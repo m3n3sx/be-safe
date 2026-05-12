@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
+import '../../theme/design_tokens.dart';
 
 class LocationHistoryScreen extends StatefulWidget {
   final String groupId;
@@ -58,11 +59,20 @@ class _LocationHistoryScreenState extends State<LocationHistoryScreen> {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
+      backgroundColor: SerenityColors.surfaceBright,
       appBar: AppBar(
-        title: Text('Trasa: ${widget.userName}'),
+        backgroundColor: SerenityColors.surfaceBright,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: SerenityColors.primary),
+        title: Text(
+          'Trasa: ${widget.userName}',
+          style: SerenityText.headlineHeroMobile,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_today),
+            color: SerenityColors.primary,
             onPressed: () async {
               final picked = await showDatePicker(
                 context: context,

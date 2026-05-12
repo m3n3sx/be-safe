@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/design_tokens.dart';
 
 class LegalScreen extends StatelessWidget {
   final String type; // 'terms' or 'privacy'
@@ -7,10 +8,50 @@ class LegalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(type == 'terms' ? 'Regulamin' : 'Polityka prywatności')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Text(type == 'terms' ? _terms : _privacy, style: const TextStyle(fontSize: 14, height: 1.5)),
+      backgroundColor: SerenityColors.surfaceBright,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SerenitySpacing.md,
+                vertical: SerenitySpacing.md,
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 28),
+                    color: SerenityColors.primary,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    type == 'terms' ? 'Regulamin' : 'Polityka prywatności',
+                    style: SerenityText.headlineHeroMobile,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(
+                  SerenitySpacing.xl,
+                  SerenitySpacing.sm,
+                  SerenitySpacing.xl,
+                  SerenitySpacing.xxxl,
+                ),
+                child: Text(
+                  type == 'terms' ? _terms : _privacy,
+                  style: SerenityText.bodyMain.copyWith(
+                    fontSize: 14,
+                    color: SerenityColors.primary,
+                    height: 1.6,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

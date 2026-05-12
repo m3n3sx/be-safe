@@ -5,7 +5,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../services/api_service.dart';
 import '../../services/i18n.dart';
-import '../../services/i18n.dart';
+import '../../theme/design_tokens.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -45,8 +45,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final user = context.watch<AuthProvider>().user;
 
     return Scaffold(
-      appBar: AppBar(title: Text(S.get('settings'))),
-      body: ListView(children: [
+      backgroundColor: SerenityColors.surfaceBright,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SerenitySpacing.md,
+                vertical: SerenitySpacing.md,
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 28),
+                    color: SerenityColors.primary,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Ustawienia',
+                    style: SerenityText.headlineHeroMobile,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(children: [
         // === WYGLĄD ===
         _header(S.get('appearance')),
         ListTile(
@@ -148,12 +172,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onTap: () => _showDeleteAccount(),
         ),
       ]),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   Widget _header(String text) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
-    child: Text(text, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Theme.of(context).colorScheme.primary)),
+    padding: const EdgeInsets.fromLTRB(SerenitySpacing.xl, 24, SerenitySpacing.xl, 8),
+    child: Text(
+      text.toUpperCase(),
+      style: SerenityText.labelCaps.copyWith(
+        color: SerenityColors.onSurfaceVariant,
+      ),
+    ),
   );
 
   void _showLanguagePicker() {

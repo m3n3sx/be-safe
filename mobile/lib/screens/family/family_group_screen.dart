@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
+import '../../theme/design_tokens.dart';
 import 'location_history_screen.dart';
 
 class FamilyGroupScreen extends StatefulWidget {
@@ -136,7 +137,13 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.groupName), actions: [
+      backgroundColor: SerenityColors.surfaceBright,
+      appBar: AppBar(
+        backgroundColor: SerenityColors.surfaceBright,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: SerenityColors.primary),
+        title: Text(widget.groupName, style: SerenityText.headlineHeroMobile), actions: [
         IconButton(icon: const Icon(Icons.add_location_alt), onPressed: _addGeofence, tooltip: 'Dodaj bezpieczną strefę'),
         IconButton(icon: const Icon(Icons.refresh), onPressed: _load),
       ]),
