@@ -6,6 +6,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'providers/auth_provider.dart';
 import 'providers/alert_provider.dart';
 import 'providers/theme_provider.dart';
+import 'theme/app_theme.dart';
 import 'services/api_service.dart';
 import 'services/socket_service.dart';
 import 'services/background_service.dart';
@@ -78,18 +79,23 @@ class AlertMapApp extends StatelessWidget {
           builder: (lightDynamic, darkDynamic) {
           // Use dynamic color only if user hasn't picked a custom theme
           final useSystem = themeProv.themeId == 'blue' && lightDynamic != null;
+          final useSerenity = themeProv.isSerenity;
           return MaterialApp(
           title: 'be:Safe',
           debugShowCheckedModeBanner: false,
           themeMode: themeProv.mode,
-          theme: ThemeData(
-            colorScheme: useSystem ? lightDynamic!.harmonized() : ColorScheme.fromSeed(seedColor: themeProv.seedColor, brightness: Brightness.light),
-            useMaterial3: true,
-          ),
-          darkTheme: ThemeData(
-            colorScheme: useSystem && darkDynamic != null ? darkDynamic!.harmonized() : ColorScheme.fromSeed(seedColor: themeProv.seedColor, brightness: Brightness.dark),
-            useMaterial3: true,
-          ),
+          theme: useSerenity
+              ? buildSerenityTheme(brightness: Brightness.light)
+              : ThemeData(
+                  colorScheme: useSystem ? lightDynamic!.harmonized() : ColorScheme.fromSeed(seedColor: themeProv.seedColor, brightness: Brightness.light),
+                  useMaterial3: true,
+                ),
+          darkTheme: useSerenity
+              ? buildSerenityTheme(brightness: Brightness.dark)
+              : ThemeData(
+                  colorScheme: useSystem && darkDynamic != null ? darkDynamic!.harmonized() : ColorScheme.fromSeed(seedColor: themeProv.seedColor, brightness: Brightness.dark),
+                  useMaterial3: true,
+                ),
           home: const _AuthGate(),
           onGenerateRoute: (settings) {
             final uri = Uri.parse(settings.name ?? '');
