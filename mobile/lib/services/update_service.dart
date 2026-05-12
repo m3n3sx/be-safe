@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'api_service.dart';
 
-const int appVersion = 24;
+const int appVersion = 25;
 
 class UpdateService {
   static const _channel = MethodChannel('pl.u235.alertmap/update');
