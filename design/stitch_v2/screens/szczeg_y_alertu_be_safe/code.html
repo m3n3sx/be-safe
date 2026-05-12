@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alert Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "primary-container": "#1a2027",
+                "error": "#ba1a1a",
+                "tertiary-container": "#480008",
+                "primary-fixed": "#dde3ed",
+                "surface-variant": "#e5e2e2",
+                "surface-tint": "#595f67",
+                "surface": "#fcf8f9",
+                "surface-container-low": "#f6f3f3",
+                "secondary": "#006c4c",
+                "surface-container-lowest": "#ffffff",
+                "primary-fixed-dim": "#c1c7d0",
+                "on-tertiary-fixed": "#410007",
+                "on-primary-container": "#828790",
+                "surface-container": "#f0eded",
+                "on-tertiary-container": "#db5f60",
+                "on-tertiary-fixed-variant": "#862026",
+                "on-primary": "#ffffff",
+                "outline-variant": "#c5c6cb",
+                "surface-container-highest": "#e5e2e2",
+                "on-secondary-container": "#0f7252",
+                "on-background": "#1c1b1c",
+                "inverse-surface": "#313031",
+                "secondary-fixed-dim": "#81d7b0",
+                "tertiary-fixed": "#ffdad8",
+                "on-primary-fixed-variant": "#41474f",
+                "primary": "#03080e",
+                "on-primary-fixed": "#161c23",
+                "on-error": "#ffffff",
+                "on-surface": "#1c1b1c",
+                "surface-dim": "#dcd9da",
+                "on-secondary-fixed-variant": "#005138",
+                "tertiary": "#190001",
+                "inverse-primary": "#c1c7d0",
+                "secondary-container": "#9df4cb",
+                "surface-bright": "#fcf8f9",
+                "outline": "#75777b",
+                "surface-container-high": "#eae7e8",
+                "on-tertiary": "#ffffff",
+                "inverse-on-surface": "#f3f0f0",
+                "on-surface-variant": "#44474b",
+                "secondary-fixed": "#9df4cb",
+                "background": "#fcf8f9",
+                "tertiary-fixed-dim": "#ffb3b1",
+                "on-error-container": "#93000a",
+                "error-container": "#ffdad6",
+                "on-secondary-fixed": "#002115",
+                "on-secondary": "#ffffff"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "gutter": "16px",
+                "unit": "8px",
+                "card-gap": "20px",
+                "container-padding": "24px",
+                "section-margin": "48px"
+        },
+        "fontFamily": {
+                "body-main": [
+                        "Inter"
+                ],
+                "label-button": [
+                        "Inter"
+                ],
+                "display-md": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Inter"
+                ],
+                "headline-hero": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "headline-hero-mobile": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "body-main": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-button": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "display-md": [
+                        "64px",
+                        {
+                                "lineHeight": "72px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "200"
+                        }
+                ],
+                "display-lg": [
+                        "80px",
+                        {
+                                "lineHeight": "96px",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "100"
+                        }
+                ],
+                "headline-hero": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "300"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-hero-mobile": [
+                        "28px",
+                        {
+                                "lineHeight": "36px",
+                                "fontWeight": "300"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+    .glow-orb-coral {
+        background: radial-gradient(circle, rgba(219,95,96,1) 0%, rgba(219,95,96,0) 70%);
+    }
+    .glass-input {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-main antialiased pb-32">
+<!-- Top App Bar (Custom for Transactional/Detail Screen) -->
+<header class="flex items-center justify-between px-container-padding py-4 w-full sticky top-0 z-40 bg-background/80 backdrop-blur-md">
+<button aria-label="Go back" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 0, 'wght' 300;">chevron_left</span>
+</button>
+<div class="bg-error-container text-on-error-container px-4 py-1.5 rounded-full font-label-caps text-label-caps flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-on-error-container animate-pulse"></span>
+            Aktywny · 2h zostało
+        </div>
+</header>
+<main class="px-container-padding flex flex-col gap-section-margin pt-4">
+<!-- Hero Section: Glow Orb & Headline -->
+<section class="flex flex-col items-center text-center gap-6 relative">
+<div class="absolute inset-0 glow-orb-coral opacity-20 w-[300px] h-[300px] rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none blur-3xl"></div>
+<div class="w-[200px] h-[200px] rounded-full glow-orb-coral flex items-center justify-center shadow-2xl shadow-[rgba(219,95,96,0.3)] z-10 animate-[pulse_4s_ease-in-out_infinite]">
+<span class="material-symbols-outlined text-[80px] text-on-primary" style="font-variation-settings: 'FILL' 0, 'wght' 200;">directions_walk</span>
+</div>
+<div class="flex flex-col gap-2 z-10 max-w-md">
+<h1 class="font-headline-hero text-headline-hero-mobile text-primary font-light">Agresywna osoba w parku</h1>
+<p class="text-on-surface-variant text-sm font-medium tracking-wide">Park Saski · 200 m od ciebie · 15 min temu</p>
+</div>
+</section>
+<!-- Action Buttons -->
+<section class="flex gap-3 justify-center w-full max-w-md mx-auto z-10">
+<button class="flex-1 py-3 px-2 rounded-full border border-on-secondary-container text-on-secondary-container font-label-button text-label-button hover:bg-secondary-container transition-colors">
+                Potwierdzam
+            </button>
+<button class="flex-1 py-3 px-2 rounded-full border border-outline text-outline font-label-button text-label-button hover:bg-surface-variant transition-colors">
+                Nieaktualne
+            </button>
+<button class="flex-1 py-3 px-2 rounded-full border border-primary-container text-primary-container font-label-button text-label-button hover:bg-primary-container/5 transition-colors">
+                Udostępnij
+            </button>
+</section>
+<!-- Content Card -->
+<section class="bg-surface-container-lowest rounded-[24px] p-container-padding shadow-[0_40px_40px_rgba(26,32,39,0.04)] z-10 max-w-md mx-auto w-full flex flex-col gap-4">
+<p class="font-body-main text-body-main text-on-surface">
+                Młody mężczyzna w czarnej bluzie zaczepia przechodniów w okolicy fontanny.
+            </p>
+<div class="h-px w-full bg-surface-variant/50"></div>
+<div class="flex items-center gap-3 text-xs text-on-surface-variant font-medium">
+<div class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+                    12 osób potwierdziło
+                </div>
+<span class="text-outline-variant">•</span>
+<div>2 odrzuciło</div>
+<span class="text-outline-variant">•</span>
+<div>8 komentarzy</div>
+</div>
+</section>
+<!-- Chat Section -->
+<section class="max-w-md mx-auto w-full flex flex-col gap-card-gap z-10">
+<h2 class="font-body-main text-lg font-medium text-primary">Rozmowa w okolicy</h2>
+<div class="flex flex-col gap-4">
+<!-- Comment 1 -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center shrink-0">
+<span class="font-label-button text-label-button text-on-secondary-container">M</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-label-button text-label-button text-primary">Michał G.</span>
+<span class="text-[10px] text-outline">5 min temu</span>
+</div>
+<div class="bg-surface-container-low rounded-[16px] rounded-tl-sm p-3 font-body-main text-sm text-on-surface">
+                            Właśnie mijałem to miejsce, widziałem patrol policji, więc chyba już interweniują.
+                        </div>
+</div>
+</div>
+<!-- Comment 2 -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center shrink-0">
+<span class="font-label-button text-label-button text-on-primary-fixed">A</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-label-button text-label-button text-primary">Anna K.</span>
+<span class="text-[10px] text-outline">2 min temu</span>
+</div>
+<div class="bg-surface-container-low rounded-[16px] rounded-tl-sm p-3 font-body-main text-sm text-on-surface">
+                            Omijam główną aleję dla pewności. Dzięki za info!
+                        </div>
+</div>
+</div>
+<!-- Comment 3 -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-error-container flex items-center justify-center shrink-0">
+<span class="font-label-button text-label-button text-on-error-container">T</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-label-button text-label-button text-primary">Tomek W.</span>
+<span class="text-[10px] text-outline">Właśnie teraz</span>
+</div>
+<div class="bg-surface-container-low rounded-[16px] rounded-tl-sm p-3 font-body-main text-sm text-on-surface">
+                            Potwierdzam, policja już tam jest. Sytuacja opanowana.
+                        </div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Fixed Input -->
+<div class="fixed bottom-0 left-0 w-full px-container-padding pb-8 pt-4 bg-gradient-to-t from-background via-background/90 to-transparent z-50">
+<div class="max-w-md mx-auto relative flex items-center">
+<input class="w-full glass-input rounded-full py-4 pl-6 pr-14 border border-surface-variant/50 text-on-surface font-body-main placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary-container shadow-lg shadow-[rgba(26,32,39,0.05)]" placeholder="Napisz..." type="text"/>
+<button class="absolute right-2 w-10 h-10 rounded-full bg-primary-container flex items-center justify-center hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1, 'wght' 400;">send</span>
+</button>
+</div>
+</div>
+</body></html>

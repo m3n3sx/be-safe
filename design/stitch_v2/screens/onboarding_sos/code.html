@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Onboarding Step 4</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .mesh-bg {
+            background-color: #fcf8f9;
+            background-image: radial-gradient(at 80% 20%, hsla(152,78%,79%,0.3) 0px, transparent 50%),
+                              radial-gradient(at 20% 80%, hsla(211,27%,88%,0.3) 0px, transparent 50%);
+        }
+        .glow-orb-coral {
+            background: radial-gradient(circle, rgba(219,95,96,0.15) 0%, rgba(219,95,96,0) 70%);
+        }
+        .orb-core-coral {
+            background: radial-gradient(circle, rgba(219,95,96,1) 0%, rgba(219,95,96,0.8) 50%, rgba(219,95,96,0) 100%);
+            box-shadow: 0 0 80px 20px rgba(219,95,96,0.3);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "secondary-container": "#9df4cb",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "tertiary-container": "#480008",
+                        "surface-bright": "#fcf8f9",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "background": "#fcf8f9",
+                        "outline-variant": "#c5c6cb",
+                        "primary-fixed": "#dde3ed",
+                        "on-surface": "#1c1b1c",
+                        "surface": "#fcf8f9",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#006c4c",
+                        "inverse-primary": "#c1c7d0",
+                        "surface-container-highest": "#e5e2e2",
+                        "on-primary-fixed-variant": "#41474f",
+                        "on-error": "#ffffff",
+                        "on-background": "#1c1b1c",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f3",
+                        "surface-variant": "#e5e2e2",
+                        "on-secondary-fixed-variant": "#005138",
+                        "on-secondary-container": "#0f7252",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "primary": "#03080e",
+                        "surface-dim": "#dcd9da",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "on-tertiary-container": "#db5f60",
+                        "on-surface-variant": "#44474b",
+                        "on-primary-fixed": "#161c23",
+                        "on-tertiary-fixed": "#410007",
+                        "primary-container": "#1a2027",
+                        "on-primary-container": "#828790",
+                        "on-secondary-fixed": "#002115",
+                        "secondary-fixed": "#9df4cb",
+                        "outline": "#75777b",
+                        "inverse-surface": "#313031",
+                        "tertiary-fixed": "#ffdad8",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "tertiary": "#190001",
+                        "surface-tint": "#595f67",
+                        "surface-container-high": "#eae7e8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "section-margin": "48px",
+                        "container-padding": "24px",
+                        "card-gap": "20px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-hero-mobile": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "label-button": ["Inter"],
+                        "headline-hero": ["Inter"],
+                        "body-main": ["Inter"],
+                        "display-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["80px", { "lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100" }],
+                        "headline-hero-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "300" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "label-button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }],
+                        "body-main": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-md": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright mesh-bg min-h-screen flex flex-col font-body-main text-on-surface antialiased overflow-hidden">
+<!-- Top Action Bar (Skip) -->
+<header class="w-full flex justify-end px-container-padding py-6 z-10">
+<button class="font-label-button text-label-button text-on-surface-variant hover:text-primary transition-colors">
+            Pomiń
+        </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col items-center justify-center px-container-padding relative z-0 mt-[-40px]">
+<!-- Hero Typography -->
+<div class="text-center mb-section-margin w-full max-w-md">
+<h1 class="font-headline-hero text-headline-hero-mobile md:text-headline-hero text-primary font-light mb-4">
+                SOS zawsze w zasięgu kciuka
+            </h1>
+<p class="font-body-main text-body-main text-on-surface-variant max-w-sm mx-auto">
+                Jedno przytrzymanie powiadamia rodzinę, znajomych i społeczność.
+            </p>
+</div>
+<!-- Coral Glow Orb (SOS Feature Visual) -->
+<div class="relative w-80 h-80 flex items-center justify-center mb-12">
+<!-- Ambient Aura -->
+<div class="absolute inset-0 glow-orb-coral rounded-full"></div>
+<!-- Secondary Ripple -->
+<div class="absolute w-56 h-56 rounded-full border border-on-tertiary-container/20"></div>
+<!-- Core Interactive Element -->
+<div class="relative w-32 h-32 orb-core-coral rounded-full flex items-center justify-center cursor-default">
+<!-- Inner Ring -->
+<div class="absolute inset-2 border border-white/30 rounded-full"></div>
+<span class="text-white font-headline-hero text-headline-hero font-extralight tracking-widest relative z-10" style="font-weight: 200;">SOS</span>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Controls -->
+<footer class="w-full px-container-padding pb-10 flex flex-col items-center z-10">
+<!-- Pagination Indicators -->
+<div class="flex items-center space-x-2 mb-8">
+<div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
+<!-- Active Pill -->
+<div class="w-6 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
+</div>
+<!-- Primary Action -->
+<button class="w-full max-w-md bg-primary-container text-on-primary font-label-button text-label-button py-4 px-8 rounded-full flex items-center justify-center hover:opacity-90 transition-opacity">
+            Dalej
+            <span class="material-symbols-outlined ml-2" style="font-variation-settings: 'FILL' 0;">arrow_forward</span>
+</button>
+</footer>
+</body></html>

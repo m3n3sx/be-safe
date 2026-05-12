@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Regulamin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Custom scrollbar for horizontal nav */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#1c1b1c",
+                      "surface-container-highest": "#e5e2e2",
+                      "surface-container": "#f0eded",
+                      "tertiary-fixed-dim": "#ffb3b1",
+                      "error-container": "#ffdad6",
+                      "background": "#fcf8f9",
+                      "tertiary-container": "#480008",
+                      "inverse-primary": "#c1c7d0",
+                      "tertiary-fixed": "#ffdad8",
+                      "error": "#ba1a1a",
+                      "on-primary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed": "#9df4cb",
+                      "on-primary-fixed": "#161c23",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#f3f0f0",
+                      "on-error-container": "#93000a",
+                      "surface-container-high": "#eae7e8",
+                      "primary-fixed": "#dde3ed",
+                      "on-tertiary-fixed-variant": "#862026",
+                      "tertiary": "#190001",
+                      "on-surface-variant": "#44474b",
+                      "outline-variant": "#c5c6cb",
+                      "surface-tint": "#595f67",
+                      "secondary": "#006c4c",
+                      "primary-fixed-dim": "#c1c7d0",
+                      "on-secondary": "#ffffff",
+                      "primary": "#03080e",
+                      "on-secondary-fixed": "#002115",
+                      "inverse-surface": "#313031",
+                      "on-primary-fixed-variant": "#41474f",
+                      "on-secondary-fixed-variant": "#005138",
+                      "outline": "#75777b",
+                      "surface-variant": "#e5e2e2",
+                      "on-tertiary-fixed": "#410007",
+                      "on-tertiary-container": "#db5f60",
+                      "on-error": "#ffffff",
+                      "on-secondary-container": "#0f7252",
+                      "surface-dim": "#dcd9da",
+                      "surface-container-low": "#f6f3f3",
+                      "secondary-container": "#9df4cb",
+                      "on-surface": "#1c1b1c",
+                      "on-primary-container": "#828790",
+                      "primary-container": "#1a2027",
+                      "surface-bright": "#fcf8f9",
+                      "surface": "#fcf8f9",
+                      "secondary-fixed-dim": "#81d7b0"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "8px",
+                      "section-margin": "48px",
+                      "gutter": "16px",
+                      "container-padding": "24px",
+                      "card-gap": "20px"
+              },
+              "fontFamily": {
+                      "body-main": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-hero-mobile": [
+                              "Inter"
+                      ],
+                      "label-button": [
+                              "Inter"
+                      ],
+                      "display-md": [
+                              "Inter"
+                      ],
+                      "headline-hero": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-main": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "80px",
+                              {
+                                      "lineHeight": "96px",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "100"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-hero-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "label-button": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-md": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "200"
+                              }
+                      ],
+                      "headline-hero": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "300"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright text-on-surface font-body-main antialiased min-h-screen relative pb-32">
+<!-- Top AppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface-bright/90 backdrop-blur-md px-gutter pt-8 pb-4 flex flex-col gap-unit">
+<div class="flex items-center justify-between">
+<button aria-label="Go back" class="p-2 -ml-2 text-on-surface hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<h1 class="font-display-md text-display-md font-light tracking-tight text-on-surface flex-1 text-center pr-8">Regulamin</h1>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="font-label-caps text-label-caps text-on-surface-variant font-normal">Ostatnia aktualizacja: 12.05.2026</p>
+<button aria-label="Share" class="text-on-surface-variant hover:opacity-80 transition-opacity p-2 -mr-2">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+</div>
+<!-- Table of Contents Navigation -->
+<nav class="mt-4 -mx-gutter px-gutter overflow-x-auto hide-scrollbar">
+<div class="flex gap-2 pb-2">
+<button class="px-4 py-2 rounded-full bg-primary-container text-on-primary font-label-button text-label-button whitespace-nowrap">§1 Postanowienia ogólne</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface font-label-button text-label-button whitespace-nowrap">§2 Warunki korzystania</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface font-label-button text-label-button whitespace-nowrap">§3 Płatności</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface font-label-button text-label-button whitespace-nowrap">§4 Odpowiedzialność</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-high text-on-surface font-label-button text-label-button whitespace-nowrap">§5 Reklamacje</button>
+</div>
+</nav>
+</header>
+<!-- Main Content -->
+<main class="px-gutter pt-8 max-w-3xl mx-auto">
+<article class="space-y-section-margin">
+<section class="space-y-6" id="s1">
+<h2 class="font-headline-hero text-headline-hero font-medium flex items-center gap-3">
+<span class="text-secondary-fixed">§1</span>
+                    Postanowienia ogólne
+                </h2>
+<div class="space-y-4 font-body-main text-body-main text-on-surface leading-[1.7]">
+<p>
+                        Niniejszy regulamin określa zasady świadczenia usług drogą elektroniczną przez operatora aplikacji. Korzystanie z aplikacji oznacza akceptację poniższych warunków.
+                    </p>
+<p>
+                        Użytkownik zobowiązany jest do korzystania z usług w sposób zgodny z obowiązującym prawem, zasadami współżycia społecznego oraz postanowieniami niniejszego Regulaminu.
+                    </p>
+<ul class="space-y-2 pl-6">
+<li class="relative before:content-[''] before:absolute before:left:-6 before:top-2.5 before:w-1.5 before:h-1.5 before:bg-tertiary-fixed-dim before:rounded-full">
+                            Pojęcia użyte w regulaminie oznaczają:
+                        </li>
+<li class="relative before:content-[''] before:absolute before:left:-6 before:top-2.5 before:w-1.5 before:h-1.5 before:bg-tertiary-fixed-dim before:rounded-full ml-4">
+<strong>Usługodawca</strong> - podmiot zarządzający platformą.
+                        </li>
+<li class="relative before:content-[''] before:absolute before:left:-6 before:top-2.5 before:w-1.5 before:h-1.5 before:bg-tertiary-fixed-dim before:rounded-full ml-4">
+<strong>Użytkownik</strong> - osoba fizyczna, prawna lub jednostka organizacyjna nieposiadająca osobowości prawnej.
+                        </li>
+</ul>
+</div>
+</section>
+<section class="space-y-6" id="s2">
+<h2 class="font-headline-hero text-headline-hero font-medium flex items-center gap-3">
+<span class="text-secondary-fixed">§2</span>
+                    Warunki korzystania
+                </h2>
+<div class="space-y-4 font-body-main text-body-main text-on-surface leading-[1.7]">
+<p>
+                        Do korzystania z usług niezbędne jest posiadanie urządzenia z dostępem do sieci Internet oraz aktywnego konta poczty elektronicznej (e-mail).
+                    </p>
+<p>
+                        Zabrania się dostarczania przez Użytkownika treści o charakterze bezprawnym oraz wykorzystywania usług w sposób sprzeczny z prawem, dobrymi obyczajami lub naruszający dobra osobiste osób trzecich. Szczegółowe zasady ochrony danych opisuje <a class="text-secondary-fixed underline hover:text-secondary transition-colors" href="#">Polityka Prywatności</a>.
+                    </p>
+</div>
+</section>
+<section class="space-y-6" id="s3">
+<h2 class="font-headline-hero text-headline-hero font-medium flex items-center gap-3">
+<span class="text-secondary-fixed">§3</span>
+                    Płatności i rozliczenia
+                </h2>
+<div class="space-y-4 font-body-main text-body-main text-on-surface leading-[1.7]">
+<p>
+                        Część usług świadczonych w ramach platformy może mieć charakter odpłatny. Szczegółowe informacje o opłatach znajdują się w cenniku dostępnym na stronie.
+                    </p>
+<p>
+                        Płatności realizowane są za pośrednictwem zewnętrznych operatorów płatności. Usługodawca nie przechowuje danych kart płatniczych Użytkowników.
+                    </p>
+</div>
+</section>
+</article>
+</main>
+<!-- Floating Navigation Widget -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+<div class="bg-surface-container-highest/80 backdrop-blur-xl shadow-[0_20px_40px_rgba(26,32,39,0.08)] rounded-full px-4 py-2 flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button aria-label="Previous section" class="p-2 text-on-surface hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="keyboard_arrow_up">keyboard_arrow_up</span>
+</button>
+<button aria-label="Next section" class="p-2 text-on-surface hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+<div class="w-[1px] h-6 bg-outline-variant/30"></div>
+<button aria-label="Return to top" class="p-2 text-on-surface hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined" data-icon="vertical_align_top">vertical_align_top</span>
+</button>
+</div>
+</div>
+</body></html>

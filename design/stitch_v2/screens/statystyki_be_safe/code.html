@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Statystyki</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#03080e",
+                      "on-secondary-container": "#0f7252",
+                      "surface-bright": "#fcf8f9",
+                      "on-surface": "#1c1b1c",
+                      "secondary-fixed-dim": "#81d7b0",
+                      "outline-variant": "#c5c6cb",
+                      "surface": "#fcf8f9",
+                      "outline": "#75777b",
+                      "on-primary-container": "#828790",
+                      "on-secondary-fixed": "#002115",
+                      "on-primary-fixed-variant": "#41474f",
+                      "on-error": "#ffffff",
+                      "primary-fixed-dim": "#c1c7d0",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary": "#006c4c",
+                      "on-tertiary-fixed": "#410007",
+                      "surface-dim": "#dcd9da",
+                      "surface-variant": "#e5e2e2",
+                      "inverse-primary": "#c1c7d0",
+                      "background": "#fcf8f9",
+                      "surface-container-highest": "#e5e2e2",
+                      "secondary-container": "#9df4cb",
+                      "inverse-surface": "#313031",
+                      "on-tertiary-fixed-variant": "#862026",
+                      "on-background": "#1c1b1c",
+                      "tertiary": "#190001",
+                      "on-primary-fixed": "#161c23",
+                      "primary-container": "#1a2027",
+                      "primary-fixed": "#dde3ed",
+                      "surface-container-high": "#eae7e8",
+                      "tertiary-container": "#480008",
+                      "on-secondary-fixed-variant": "#005138",
+                      "surface-container-low": "#f6f3f3",
+                      "surface-container": "#f0eded",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#ffdad8",
+                      "surface-tint": "#595f67",
+                      "on-surface-variant": "#44474b",
+                      "error": "#ba1a1a",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#f3f0f0",
+                      "tertiary-fixed-dim": "#ffb3b1",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-container": "#db5f60",
+                      "secondary-fixed": "#9df4cb",
+                      "on-primary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      
+                      // Custom colors based on prompt, mapped to closest theme if possible, or added for specific needs where theme lacks exact match for the request
+                      "coral": "#FF7A7A", // For specific request in prompt
+                      "mint-green": "#9df4cb", // Using secondary-container
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px",
+                      "24": "24px",
+              },
+              "spacing": {
+                      "container-padding": "24px",
+                      "gutter": "16px",
+                      "card-gap": "20px",
+                      "unit": "8px",
+                      "section-margin": "48px"
+              },
+              "fontFamily": {
+                      "label-caps": ["Inter"],
+                      "label-button": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-hero": ["Inter"],
+                      "body-main": ["Inter"],
+                      "headline-hero-mobile": ["Inter"],
+                      "display-md": ["Inter"]
+              },
+              "fontSize": {
+                      "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                      "label-button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                      "display-lg": ["80px", { "lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100" }],
+                      "headline-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }],
+                      "body-main": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                      "headline-hero-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "300" }],
+                      "display-md": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200" }]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        body { background-color: #fcf8f9; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 40px 40px rgba(26, 32, 39, 0.04);
+            border-radius: 24px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-main antialiased min-h-screen pb-32">
+<!-- Header -->
+<header class="flex items-center justify-between px-container-padding py-6 sticky top-0 z-40 bg-background/80 backdrop-blur-md">
+<button class="w-10 h-10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">chevron_left</span>
+</button>
+<h1 class="font-headline-hero-mobile text-headline-hero-mobile text-primary font-medium absolute left-1/2 -translate-x-1/2">
+            Statystyki
+        </h1>
+<div class="w-10 h-10"></div> <!-- Spacer for centering -->
+</header>
+<main class="px-container-padding flex flex-col gap-section-margin">
+<!-- Segmented Control -->
+<section class="flex justify-center">
+<div class="flex items-center bg-surface-container-high rounded-full p-1 h-10 w-full max-w-sm">
+<button class="flex-1 h-full rounded-full bg-primary-container text-on-primary font-label-button text-label-button transition-all">
+                    Tydzień
+                </button>
+<button class="flex-1 h-full rounded-full text-on-surface-variant font-label-button text-label-button transition-all">
+                    Miesiąc
+                </button>
+<button class="flex-1 h-full rounded-full text-on-surface-variant font-label-button text-label-button transition-all">
+                    Rok
+                </button>
+</div>
+</section>
+<!-- Hero Stats Cards -->
+<section class="flex flex-col gap-4">
+<!-- Card 1 -->
+<div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+<h2 class="font-label-button text-label-button text-on-surface-variant font-medium">Dzisiaj</h2>
+<div class="font-display-md text-display-md text-coral my-2 leading-none">3</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-2">alerty w okolicy 500m</p>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-caps text-label-caps mt-2 bg-surface-container-low px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+<span>+2 od wczoraj</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+<h2 class="font-label-button text-label-button text-on-surface-variant font-medium">Ten tydzień</h2>
+<div class="font-display-md text-display-md text-primary my-2 leading-none">18</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">zgłoszeń w okolicy 2 km</p>
+</div>
+<!-- Card 3 -->
+<div class="glass-card p-4 flex flex-col items-center justify-center text-center">
+<h2 class="font-label-button text-label-button text-on-surface-variant font-medium">Miesiąc</h2>
+<div class="font-display-md text-display-md text-mint-green my-2 leading-none">94%</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">ocena bezpieczeństwa</p>
+</div>
+</section>
+<!-- Najczęstsze zagrożenia -->
+<section>
+<h3 class="font-body-main text-body-main font-medium text-primary mb-6">Najczęstsze zagrożenia</h3>
+<div class="flex flex-col gap-5">
+<!-- Bar 1 -->
+<div class="flex items-center justify-between gap-4">
+<span class="font-label-button text-label-button text-on-surface-variant w-20 truncate">Kradzież</span>
+<div class="flex-1 bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-coral h-full rounded-full w-[65%]"></div>
+</div>
+<span class="font-body-main text-body-main text-primary w-6 text-right">12</span>
+</div>
+<!-- Bar 2 -->
+<div class="flex items-center justify-between gap-4">
+<span class="font-label-button text-label-button text-on-surface-variant w-20 truncate">Wypadek</span>
+<div class="flex-1 bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-secondary-fixed-dim h-full rounded-full w-[40%]"></div>
+</div>
+<span class="font-body-main text-body-main text-primary w-6 text-right">4</span>
+</div>
+<!-- Bar 3 -->
+<div class="flex items-center justify-between gap-4">
+<span class="font-label-button text-label-button text-on-surface-variant w-20 truncate">Inne</span>
+<div class="flex-1 bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-mint-green h-full rounded-full w-[25%]"></div>
+</div>
+<span class="font-body-main text-body-main text-primary w-6 text-right">2</span>
+</div>
+</div>
+</section>
+<!-- Trend w 14 dni -->
+<section>
+<h3 class="font-body-main text-body-main font-medium text-primary mb-6">Trend w 14 dni</h3>
+<div class="glass-card p-6 h-48 relative flex flex-col justify-end">
+<!-- Decorative pseudo-chart -->
+<div class="absolute inset-0 top-12 bottom-8 overflow-hidden rounded-lg">
+<!-- Area Fill -->
+<div class="absolute inset-0 top-8 bg-gradient-to-b from-secondary-fixed-dim/20 to-transparent"></div>
+<!-- Line -->
+<svg class="absolute inset-0" height="100%" preserveaspectratio="none" viewbox="0 0 100 100" width="100%">
+<path class="text-secondary-fixed-dim" d="M0,80 Q25,20 50,60 T100,10" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+</svg>
+<!-- Dots -->
+<div class="absolute w-2 h-2 rounded-full bg-secondary-container shadow-[0_0_8px_rgba(157,244,203,0.8)] border border-white" style="left: 24%; top: 44%;"></div>
+<div class="absolute w-2 h-2 rounded-full bg-secondary-container shadow-[0_0_8px_rgba(157,244,203,0.8)] border border-white" style="left: 49%; top: 60%;"></div>
+<div class="absolute w-2 h-2 rounded-full bg-secondary-container shadow-[0_0_8px_rgba(157,244,203,0.8)] border border-white" style="left: 99%; top: 10%;"></div>
+</div>
+<div class="flex justify-between w-full border-t border-surface-container-high pt-2 mt-auto">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Pon</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Nd</span>
+</div>
+</div>
+</section>
+<!-- Heatmap Preview -->
+<section class="mb-8">
+<h3 class="font-body-main text-body-main font-medium text-primary mb-6">Mapa zagrożeń</h3>
+<div class="glass-card overflow-hidden relative h-48 rounded-24">
+<img alt="Heatmap preview" class="w-full h-full object-cover opacity-60 mix-blend-luminosity grayscale" data-alt="A top-down view of a modern city map interface, designed in a bright, clean, light-mode aesthetic. The map is primarily light gray and white with subtle topographical lines. Overlaying the map are soft, diffused glowing orbs in shades of vibrant coral and pink, representing heatmap hotspots. The overall mood is high-tech yet serene, with a minimalist premium UI feel." data-location="Warszawa" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9J4zX4YPW7Yp_7mzK7hV89m1xDMa1LLOwdsMz9IIyT9bPlokDOjyfTRgb6OtWfBU8jRH2AsjaNvEQtgWbdCZyAoIB6Sas4HbWdyK2sSSEy0_WWIJJWV5ZaYop3XVGaPnGQ3xFzBA_U3lOwqIQ3YZFUt5_r5rTdJkLy6q4_o81vegPdDMIHOoLYwVbyzH9xKD57JXNxx1OBA8Xjj-fyI92ZER2CqwvHVM_paIA9IGXWnpkIsgz_F7tGqpzIGPzF7QRkr71VLmoP9Y"/>
+<!-- Glowing Hotspots Overlay -->
+<div class="absolute top-1/4 left-1/4 w-16 h-16 bg-coral/40 rounded-full blur-xl animate-pulse"></div>
+<div class="absolute top-1/2 left-2/3 w-24 h-24 bg-coral/30 rounded-full blur-2xl"></div>
+<div class="absolute bottom-1/4 right-1/4 w-12 h-12 bg-coral/50 rounded-full blur-lg"></div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-unit w-[calc(100%-48px)] left-1/2 -translate-x-1/2 rounded-full mb-6 bg-primary-container dark:bg-primary-container text-on-primary dark:text-on-primary font-label-button text-label-button shadow-[0_40px_40px_rgba(26,32,39,0.04)] shadow-xl bg-primary-container/90 backdrop-blur-xl z-50 flex justify-around items-center px-6 py-4 md:hidden">
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">map</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications_active</span>
+</a>
+<!-- Active -->
+<a class="flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-on-primary after:rounded-full hover:opacity-100 transition-all scale-95 transition-transform duration-200 text-on-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">family_restroom</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+</a>
+<!-- Inactive -->
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">sos</span>
+</a>
+</nav>
+</body></html>

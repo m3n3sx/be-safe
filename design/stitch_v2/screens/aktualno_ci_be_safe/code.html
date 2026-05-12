@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Aktualności</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed": "#dde3ed",
+                      "surface-variant": "#e5e2e2",
+                      "surface-tint": "#595f67",
+                      "tertiary-container": "#480008",
+                      "primary-container": "#1a2027",
+                      "error": "#ba1a1a",
+                      "surface-container": "#f0eded",
+                      "on-tertiary-container": "#db5f60",
+                      "primary-fixed-dim": "#c1c7d0",
+                      "on-tertiary-fixed": "#410007",
+                      "on-primary-container": "#828790",
+                      "surface-container-low": "#f6f3f3",
+                      "secondary": "#006c4c",
+                      "surface-container-lowest": "#ffffff",
+                      "surface": "#fcf8f9",
+                      "surface-container-highest": "#e5e2e2",
+                      "on-secondary-container": "#0f7252",
+                      "outline-variant": "#c5c6cb",
+                      "on-tertiary-fixed-variant": "#862026",
+                      "on-primary": "#ffffff",
+                      "tertiary-fixed": "#ffdad8",
+                      "on-background": "#1c1b1c",
+                      "inverse-surface": "#313031",
+                      "secondary-fixed-dim": "#81d7b0",
+                      "tertiary": "#190001",
+                      "inverse-primary": "#c1c7d0",
+                      "secondary-container": "#9df4cb",
+                      "surface-dim": "#dcd9da",
+                      "on-secondary-fixed-variant": "#005138",
+                      "on-surface": "#1c1b1c",
+                      "on-primary-fixed-variant": "#41474f",
+                      "primary": "#03080e",
+                      "on-primary-fixed": "#161c23",
+                      "on-error": "#ffffff",
+                      "surface-container-high": "#eae7e8",
+                      "outline": "#75777b",
+                      "surface-bright": "#fcf8f9",
+                      "background": "#fcf8f9",
+                      "on-surface-variant": "#44474b",
+                      "secondary-fixed": "#9df4cb",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#f3f0f0",
+                      "on-secondary-fixed": "#002115",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed-dim": "#ffb3b1",
+                      "on-error-container": "#93000a",
+                      "error-container": "#ffdad6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-margin": "48px",
+                      "gutter": "16px",
+                      "container-padding": "24px",
+                      "unit": "8px",
+                      "card-gap": "20px"
+              },
+              "fontFamily": {
+                      "body-main": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "label-button": [
+                              "Inter"
+                      ],
+                      "display-md": [
+                              "Inter"
+                      ],
+                      "headline-hero": [
+                              "Inter"
+                      ],
+                      "headline-hero-mobile": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-main": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "80px",
+                              {
+                                      "lineHeight": "96px",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "100"
+                              }
+                      ],
+                      "label-button": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-md": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "200"
+                              }
+                      ],
+                      "headline-hero": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "headline-hero-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 40px 40px rgba(26, 32, 39, 0.04);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 bg-transparent flex items-center justify-between px-container-padding py-4 w-full z-40 transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary" data-icon="shield">shield</span>
+<span class="font-headline-hero text-headline-hero-mobile font-light tracking-tighter text-primary dark:text-inverse-primary">be:Safe</span>
+</div>
+<!-- Right side actions could go here, omitting per TopAppBar JSON -->
+</header>
+<!-- Main Content Canvas -->
+<main class="px-container-padding pt-6 pb-24 max-w-3xl mx-auto">
+<!-- Header Section -->
+<div class="mb-8">
+<h1 class="font-display-md text-display-md font-light text-primary tracking-tight mb-6">Aktualności</h1>
+<!-- Horizontal Filter Pills -->
+<div class="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
+<button class="flex-shrink-0 px-5 py-2.5 rounded-full bg-primary-container text-on-primary font-label-button text-label-button whitespace-nowrap">
+                    Wszystkie
+                </button>
+<button class="flex-shrink-0 px-5 py-2.5 rounded-full border border-primary-container/20 text-primary-container hover:bg-primary-container/5 font-label-button text-label-button whitespace-nowrap transition-colors">
+                    Bezpieczeństwo
+                </button>
+<button class="flex-shrink-0 px-5 py-2.5 rounded-full border border-primary-container/20 text-primary-container hover:bg-primary-container/5 font-label-button text-label-button whitespace-nowrap transition-colors">
+                    Ostrzeżenia
+                </button>
+<button class="flex-shrink-0 px-5 py-2.5 rounded-full border border-primary-container/20 text-primary-container hover:bg-primary-container/5 font-label-button text-label-button whitespace-nowrap transition-colors">
+                    Porady
+                </button>
+<button class="flex-shrink-0 px-5 py-2.5 rounded-full border border-primary-container/20 text-primary-container hover:bg-primary-container/5 font-label-button text-label-button whitespace-nowrap transition-colors">
+                    Społeczność
+                </button>
+</div>
+</div>
+<!-- News Feed List -->
+<div class="flex flex-col gap-card-gap">
+<!-- Card 1: Warning -->
+<article class="glass-card rounded-[24px] p-container-padding flex gap-4 items-start relative overflow-hidden group hover:shadow-[0_40px_40px_rgba(26,32,39,0.08)] transition-all duration-300">
+<div class="flex-1 min-w-0">
+<span class="inline-block px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-caps text-label-caps mb-3">
+                        Ostrzeżenie
+                    </span>
+<h2 class="font-body-main text-[18px] font-medium leading-snug text-primary mb-2">
+                        Awaria sygnalizacji na skrzyżowaniu Mickiewicza i Słowackiego
+                    </h2>
+<p class="font-body-main text-body-main text-on-surface-variant line-clamp-2 mb-4">
+                        Prosimy o zachowanie szczególnej ostrożności. Służby pracują nad usunięciem usterki. Zalecane objazdy przez ulice sąsiednie.
+                    </p>
+<div class="flex items-center gap-2 mt-auto">
+<div class="w-6 h-6 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0">
+<img alt="Zarząd Dróg Miejskich avatar" class="w-full h-full object-cover" data-alt="A clean, professional headshot avatar of a civil servant in a hi-vis vest against a bright, pure white background. Soft, high-key lighting creates a modern, trustworthy aesthetic typical of official communications. The image feels calm and reassuring, perfectly suited for a premium safety app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUwVPPWaTQc4vkufW2hI4BhaOdHtQZkh21ps2pSXP8rmRym7YYCMBdgSlZWqOe5dsfvhNEEnFmEEXA1hOYYNHhCoPVdKuvDbwWHRJ7yct0mGic7H-eFNL2cB7k54T9Ub4VaWdw84lcR2tQUf0YJ-Pqxn4lY6_3Exd_ZrIDCOeJgf8JQDRUBJ5hAB2GqymiYvFgISf9WbEnndThMHIQGyKb2gV2T0-EpsluBRl1HGRO5We-3tbh3WhC1N98Dr62vvZRrWnwnVfblOw"/>
+</div>
+<span class="font-label-caps text-[11px] font-medium text-surface-tint">ZDM</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-caps text-[11px] font-medium text-surface-tint">3 min czytania</span>
+</div>
+</div>
+<div class="w-[80px] h-[80px] rounded-[16px] overflow-hidden flex-shrink-0 bg-surface-container-high relative">
+<img alt="Traffic light" class="w-full h-full object-cover" data-alt="A soft-focus photograph of a traffic light intersection during an overcast day, capturing a subtle sense of disruption without panic. The composition is clean and minimalist, utilizing negative space. The lighting is diffuse and high-key, maintaining a serene, premium wellness aesthetic despite the subject matter." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1IG5yp4IApFv-ca8YGJyPe_7HJs1EL8Ma4Lm9dtqxFDQnd3jBoenwLVb1oeqoAssggwckjeyj8ai7Rf1XKL_NJSUiq-Kr1o2x7qBwdOabVUYrRkjDaSmOprhbafGFILFyjb6X8muDLCYA-R8rtUJ3KexeVs4lwFhFW71O58Y3_oYXnB_l6ZJ-ghb8mioho1ZZgSrV0pqsW7QZvAi-ps4LqZcya7YQzlRfVFWiZMx75OWPt6JGSc2QWnx0vVberzmciX3Fk8NWuoI"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-primary-container/20 to-transparent"></div>
+</div>
+</article>
+<!-- Card 2: Tip -->
+<article class="glass-card rounded-[24px] p-container-padding flex gap-4 items-start relative overflow-hidden group hover:shadow-[0_40px_40px_rgba(26,32,39,0.08)] transition-all duration-300">
+<div class="flex-1 min-w-0">
+<span class="inline-block px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-caps text-label-caps mb-3">
+                        Porada
+                    </span>
+<h2 class="font-body-main text-[18px] font-medium leading-snug text-primary mb-2">
+                        Jak przygotować apteczkę na wyjazd z dzieckiem
+                    </h2>
+<p class="font-body-main text-body-main text-on-surface-variant line-clamp-2 mb-4">
+                        Podstawowe wyposażenie, które warto mieć zawsze pod ręką. Zobacz listę niezbędnych artykułów na krótki weekend i dłuższe wakacje.
+                    </p>
+<div class="flex items-center gap-2 mt-auto">
+<div class="w-6 h-6 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0">
+<img alt="Dr. Anna Kowalska avatar" class="w-full h-full object-cover" data-alt="A portrait of a warm, approachable female pediatrician in a bright, modern clinical setting. The background is softly blurred, focusing on her calm expression. Soft, diffuse lighting highlights the clean, white and pale blue color palette, aligning with a premium health and wellness visual identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrKXI0VUzEDHGj4Zzq0vVuhWttoxeGZ7RJ2ZrHlgNeGj57PaF26f4FE6P-uQDV0fDo5SWnZFnXW8jI3JegimeEwgZuoUvq73H7_o0tz-Hq3IDTxC_FSYee240fCRnlCSD5umX16UR3s_Ukoulibua2KpOaS4BrnBiWUctGmHI3VhnB-dbR7_1WcchdSTkTNndQbsNytlUKxaUMQYw2OC4RzfjK5xpklFV20zd6tiiGWJFgF-e452-N4NMFKomSfqiCzOcwFQh4T_k"/>
+</div>
+<span class="font-label-caps text-[11px] font-medium text-surface-tint">Dr. Anna</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-caps text-[11px] font-medium text-surface-tint">5 min czytania</span>
+</div>
+</div>
+<div class="w-[80px] h-[80px] rounded-[16px] overflow-hidden flex-shrink-0 bg-surface-container-high relative">
+<img alt="First aid kit" class="w-full h-full object-cover" data-alt="A meticulously organized first aid kit laid out on a pristine white surface, shot from directly above. The composition is airy and minimalist, with ample negative space around the items. The lighting is soft and shadowless, creating a clean, reassuring aesthetic typical of modern premium wellness brands." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfJ2gC6FQZVAF1bPCniwffooLQlEiUofWSn6SfoV4RFEGcEfY71PdFJJplqRhyqyxnmozZaVjd-mwZ_jtLGfK-RZls5afs4Mf8nqq9RuTepD8Bwzp9Ihcv-waI3C98CpYG5lfWwm0E1wGJABWBJh3GJpaUTADP55C6Jh6OeqOUHxeW8lFGEYwGJsmDEGiBEZL6d1p10-5NQYvbvUMLCID7rQ1cMZNxOZER05Cdpc_q-bFeCxSqtuO-mRh2ac5Kx7O6HqNiwzGworE"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-secondary-container/20 to-transparent"></div>
+</div>
+</article>
+<!-- Card 3: Community -->
+<article class="glass-card rounded-[24px] p-container-padding flex gap-4 items-start relative overflow-hidden group hover:shadow-[0_40px_40px_rgba(26,32,39,0.08)] transition-all duration-300">
+<div class="flex-1 min-w-0">
+<span class="inline-block px-2.5 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-caps text-label-caps mb-3">
+                        Społeczność
+                    </span>
+<h2 class="font-body-main text-[18px] font-medium leading-snug text-primary mb-2">
+                        Nowe oświetlenie w Parku Szczęśliwickim
+                    </h2>
+<p class="font-body-main text-body-main text-on-surface-variant line-clamp-2 mb-4">
+                        Dzięki głosom mieszkańców z budżetu obywatelskiego, głowne alejki zyskały nowoczesne lampy LED. Spacery po zmroku będą bezpieczniejsze.
+                    </p>
+<div class="flex items-center gap-2 mt-auto">
+<div class="w-6 h-6 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="group">group</span>
+</div>
+<span class="font-label-caps text-[11px] font-medium text-surface-tint">Sąsiedzi</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-caps text-[11px] font-medium text-surface-tint">2 min czytania</span>
+</div>
+</div>
+<div class="w-[80px] h-[80px] rounded-[16px] overflow-hidden flex-shrink-0 bg-surface-container-high relative">
+<img alt="Park lights at dusk" class="w-full h-full object-cover" data-alt="A tranquil park pathway illuminated by modern, warm-toned LED streetlights at early dusk. The sky is a soft, deep gradient of twilight blue. The scene evokes a feeling of calm and security, with soft, diffused light spreading across the path, fitting a premium, safety-focused aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMzbGsVD9YKlbQUl9bIK5sUny-4pSKW5mOfPyikxbSY5NMw7xdY8zEuiqS_q6j5s1Qr4-Qe8HPNGQRZ5GpYE6dD9Q86FB9znk_HeqNae8LfvcYW_pHG1PTi8f9DPaB8m-tWmoDOxElNNu2i9jNh-xbO_8N3qEVxlUmLRzkvZyg1zye6RV1zzrutEm6vuNv8KpcQfCPl8WlbyeVFVdcrpaqjpoZWbqpfT8Bx9lH_-4-vJBGgLiIbuOOAZ-jRJyL3oChwJwF5tZCYmk"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-primary-fixed/20 to-transparent"></div>
+</div>
+</article>
+<!-- Card 4: Safety -->
+<article class="glass-card rounded-[24px] p-container-padding flex gap-4 items-start relative overflow-hidden group hover:shadow-[0_40px_40px_rgba(26,32,39,0.08)] transition-all duration-300">
+<div class="flex-1 min-w-0">
+<span class="inline-block px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-caps text-label-caps mb-3">
+                        Bezpieczeństwo
+                    </span>
+<h2 class="font-body-main text-[18px] font-medium leading-snug text-primary mb-2">
+                        Aktualizacja procedur ewakuacyjnych dla szkół
+                    </h2>
+<p class="font-body-main text-body-main text-on-surface-variant line-clamp-2 mb-4">
+                        Zapoznaj się z nowymi wytycznymi dotyczącymi bezpieczeństwa placówek edukacyjnych wprowadzonymi w tym semestrze.
+                    </p>
+<div class="flex items-center gap-2 mt-auto">
+<div class="w-6 h-6 rounded-full overflow-hidden bg-surface-container-high flex-shrink-0 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]" data-icon="school">school</span>
+</div>
+<span class="font-label-caps text-[11px] font-medium text-surface-tint">Edukacja</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-caps text-[11px] font-medium text-surface-tint">4 min czytania</span>
+</div>
+</div>
+<div class="w-[80px] h-[80px] rounded-[16px] overflow-hidden flex-shrink-0 bg-surface-container-high relative">
+<img alt="School hallway" class="w-full h-full object-cover" data-alt="A clean, brightly lit, empty modern school hallway featuring large windows that let in abundant natural daylight. The walls are a pristine white, creating an airy, organized atmosphere. The composition emphasizes calm and order, aligning with a premium, reassuring visual style for safety communications." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIUTPo9b8kF_pI1luSfAq0SqeyGnmnHnoDdy5MwAToWbXyYNtEANu8klk6ryLJWiUtCxwI8UFJq3K2xJYnZGgyuOYJ7HRdNNg4V3_HhsqhQB36wEq4wZG1R1vyDIFQgFTOQmqmN-HsoW-JVSuhDfl-ueef0hzeFw6fJcZmg0GFhWrvO_-GF-SyDTsMr9ub8ROBwQWLJ3sUgLUwWyH8pidpot9BiagRdeQk55rx23njJbROdokad6YvqRR821JrTzo1dE_5y-idCs8"/>
+<div class="absolute inset-0 bg-gradient-to-tr from-tertiary-fixed/20 to-transparent"></div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 py-4 bg-primary-container dark:bg-primary-container text-on-primary dark:text-on-primary font-label-button text-label-button shadow-[0_40px_40px_rgba(26,32,39,0.04)] fixed bottom-unit w-[calc(100%-48px)] left-1/2 -translate-x-1/2 rounded-full mb-6 shadow-xl bg-primary-container/90 backdrop-blur-xl">
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+</a>
+<!-- "notifications_active" selected as proxy for News/Aktualności -->
+<a class="flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-on-primary after:rounded-full hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+</a>
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="family_restroom">family_restroom</span>
+</a>
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</a>
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="sos">sos</span>
+</a>
+</nav>
+</body></html>

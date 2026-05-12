@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Historia Lokalizacji</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed-dim": "#c1c7d0",
+                      "on-tertiary": "#ffffff",
+                      "on-background": "#1c1b1c",
+                      "surface-container-highest": "#e5e2e2",
+                      "on-tertiary-fixed-variant": "#862026",
+                      "inverse-on-surface": "#f3f0f0",
+                      "tertiary-fixed-dim": "#ffb3b1",
+                      "secondary-fixed": "#9df4cb",
+                      "outline-variant": "#c5c6cb",
+                      "on-secondary-container": "#0f7252",
+                      "surface-container": "#f0eded",
+                      "on-tertiary-container": "#db5f60",
+                      "primary": "#03080e",
+                      "on-surface": "#1c1b1c",
+                      "surface": "#fcf8f9",
+                      "on-primary-fixed-variant": "#41474f",
+                      "on-secondary-fixed-variant": "#005138",
+                      "on-primary-container": "#828790",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed": "#ffdad8",
+                      "surface-tint": "#595f67",
+                      "secondary-container": "#9df4cb",
+                      "outline": "#75777b",
+                      "on-primary": "#ffffff",
+                      "surface-bright": "#fcf8f9",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#410007",
+                      "tertiary-container": "#480008",
+                      "on-primary-fixed": "#161c23",
+                      "error-container": "#ffdad6",
+                      "surface-dim": "#dcd9da",
+                      "surface-container-high": "#eae7e8",
+                      "secondary-fixed-dim": "#81d7b0",
+                      "inverse-primary": "#c1c7d0",
+                      "primary-fixed": "#dde3ed",
+                      "tertiary": "#190001",
+                      "surface-variant": "#e5e2e2",
+                      "surface-container-low": "#f6f3f3",
+                      "error": "#ba1a1a",
+                      "background": "#fcf8f9",
+                      "on-secondary-fixed": "#002115",
+                      "secondary": "#006c4c",
+                      "primary-container": "#1a2027",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-surface": "#313031",
+                      "on-error": "#ffffff",
+                      "on-surface-variant": "#44474b"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "container-padding": "24px",
+                      "section-margin": "48px",
+                      "card-gap": "20px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "label-button": [
+                              "Inter"
+                      ],
+                      "headline-hero": [
+                              "Inter"
+                      ],
+                      "body-main": [
+                              "Inter"
+                      ],
+                      "headline-hero-mobile": [
+                              "Inter"
+                      ],
+                      "display-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "80px",
+                              {
+                                      "lineHeight": "96px",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "100"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-button": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-hero": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "body-main": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-hero-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "display-md": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "200"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .soft-shadow {
+            box-shadow: 0 40px 40px rgba(26, 32, 39, 0.04);
+        }
+        .orb-mint {
+            background: radial-gradient(circle, rgba(157,244,203,1) 0%, rgba(157,244,203,0) 70%);
+        }
+        .orb-coral {
+            background: radial-gradient(circle, rgba(219,95,96,1) 0%, rgba(219,95,96,0) 70%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- Top App Bar (Task-focused, suppressing global nav) -->
+<header class="sticky top-0 z-40 bg-background/90 backdrop-blur-md">
+<div class="flex items-center justify-between px-container-padding py-4 w-full">
+<button class="text-primary hover:opacity-80 transition-opacity p-2 -ml-2 rounded-full">
+<span class="material-symbols-outlined font-light">arrow_back_ios_new</span>
+</button>
+<h1 class="font-headline-hero text-headline-hero-mobile font-light tracking-tighter text-primary">Trasa Janka</h1>
+<button class="text-primary hover:opacity-80 transition-opacity p-2 -mr-2 rounded-full">
+<span class="material-symbols-outlined font-light">calendar_month</span>
+</button>
+</div>
+</header>
+<main class="px-container-padding flex flex-col gap-section-margin pt-4">
+<!-- Controls Section -->
+<section class="flex flex-col gap-4 items-center">
+<div class="inline-flex items-center gap-2 bg-surface-container-high rounded-full px-4 py-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">14 października</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span>
+</div>
+<div class="inline-flex bg-surface-container rounded-full p-1 w-full max-w-sm">
+<button class="flex-1 rounded-full bg-surface-container-lowest shadow-sm py-2 px-4 font-label-button text-label-button text-primary text-center">Dzisiaj</button>
+<button class="flex-1 rounded-full py-2 px-4 font-label-button text-label-button text-on-surface-variant text-center hover:bg-surface-variant transition-colors">Tydzień</button>
+<button class="flex-1 rounded-full py-2 px-4 font-label-button text-label-button text-on-surface-variant text-center hover:bg-surface-variant transition-colors">Miesiąc</button>
+</div>
+</section>
+<!-- Stats Hero Card -->
+<section>
+<div class="glass-panel rounded-[24px] p-6 soft-shadow flex justify-between items-center bg-surface-container-lowest">
+<div class="flex flex-col items-center">
+<span class="font-display-md text-display-md text-primary" style="font-size: 32px; line-height: 40px; font-weight: 100;">4.2</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">km przebyte</span>
+</div>
+<div class="w-px h-12 bg-surface-variant"></div>
+<div class="flex flex-col items-center">
+<span class="font-display-md text-display-md text-primary" style="font-size: 32px; line-height: 40px; font-weight: 100;">6</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">miejsc odwiedzone</span>
+</div>
+<div class="w-px h-12 bg-surface-variant"></div>
+<div class="flex flex-col items-center">
+<span class="font-display-md text-display-md text-primary" style="font-size: 32px; line-height: 40px; font-weight: 100;">14:30</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-1">ostatnia akt.</span>
+</div>
+</div>
+</section>
+<!-- Map Section -->
+<section>
+<div class="relative w-full h-[320px] rounded-[24px] overflow-hidden soft-shadow bg-surface-container-low">
+<!-- Map Image Background -->
+<div class="absolute inset-0 bg-cover bg-center opacity-40" data-alt="A clean, minimalist street map interface in a light mode aesthetic. The map features soft, muted pastel colors with very subtle street lines and no harsh labels, creating an airy, calm wellness vibe. The overall tone is bright, pristine, and high-fidelity, resembling a premium digital interface." data-location="Warsaw" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDL8t6wKzF2mwigcGYKACYyWRMi70aLQJYBAP6SGb2A3aOoD_WfHy8-E-udXGcnfr-4uIQVbYsccAgkDgerrlpiaFnrqWvw9KA7eBpRs2c7peh_yG5SlY6WLTIdrUBxnP9xzrU4aj6rwA0PWg43kKGELfCrLE_znmwCQSxg_b-t29cMMCzhiRPWer_c8qTfr4vw4wi4vjUXboCtnRQkBxdp8TVo_3UFdeGbZFH0m88aW4Pm6RJKnbUgUCjypIGHIM2CWVcMuBl_00s');"></div>
+<!-- Map Overlay Elements -->
+<div class="absolute inset-0 p-4">
+<!-- Path SVG -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" preserveaspectratio="none" viewbox="0 0 100 100">
+<path d="M 20,80 Q 40,60 50,40 T 80,20" fill="none" opacity="0.6" stroke="#9df4cb" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+</svg>
+<!-- Start Orb -->
+<div class="absolute left-[15%] bottom-[15%] w-16 h-16 orb-mint rounded-full -translate-x-1/2 translate-y-1/2 flex items-center justify-center">
+<div class="w-3 h-3 bg-secondary rounded-full shadow-sm"></div>
+</div>
+<!-- Intermediate Stop -->
+<div class="absolute left-[48%] top-[38%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="bg-surface-container-lowest px-2 py-1 rounded-full shadow-sm mb-1">
+<span class="font-label-caps text-[10px] text-on-surface-variant">10:15</span>
+</div>
+<div class="w-2 h-2 bg-secondary-fixed-dim rounded-full outline outline-2 outline-white"></div>
+</div>
+<!-- End Orb -->
+<div class="absolute left-[80%] top-[20%] w-16 h-16 orb-coral rounded-full -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+<div class="w-3 h-3 bg-on-tertiary-container rounded-full shadow-sm"></div>
+</div>
+<!-- Current Position Pulse -->
+<div class="absolute left-[65%] top-[30%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+<div class="absolute w-8 h-8 bg-blue-400 rounded-full opacity-30 animate-ping"></div>
+<div class="w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm z-10"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Timeline Section -->
+<section class="flex flex-col gap-6 pl-2">
+<!-- Timeline Item 1 -->
+<div class="relative flex gap-4">
+<div class="absolute left-[7px] top-6 bottom-[-24px] w-px bg-surface-variant"></div>
+<div class="flex-none mt-1">
+<div class="w-4 h-4 rounded-full bg-surface-container-lowest border-2 border-secondary-fixed flex items-center justify-center z-10 relative"></div>
+</div>
+<div class="flex-1 flex justify-between items-start">
+<div>
+<h3 class="font-body-main text-body-main font-medium text-primary">Dom</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 normal-case font-normal">ul. Spokojna 12, Warszawa</p>
+</div>
+<div class="text-right">
+<p class="font-label-button text-label-button text-primary">08:00</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 normal-case font-normal">Wjazd</p>
+</div>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative flex gap-4">
+<div class="absolute left-[7px] top-6 bottom-[-24px] w-px bg-surface-variant"></div>
+<div class="flex-none mt-1">
+<div class="w-4 h-4 rounded-full bg-surface-container-lowest border-2 border-primary-fixed-dim flex items-center justify-center z-10 relative"></div>
+</div>
+<div class="flex-1 flex justify-between items-start">
+<div>
+<h3 class="font-body-main text-body-main font-medium text-primary">Szkoła Podstawowa nr 4</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 normal-case font-normal">ul. Edukacyjna 5</p>
+</div>
+<div class="text-right">
+<p class="font-label-button text-label-button text-primary">08:30 - 13:45</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 normal-case font-normal">5h 15m</p>
+</div>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative flex gap-4">
+<div class="flex-none mt-1">
+<div class="w-4 h-4 rounded-full bg-surface-container-lowest border-2 border-on-tertiary-container flex items-center justify-center z-10 relative"></div>
+</div>
+<div class="flex-1 flex justify-between items-start">
+<div>
+<h3 class="font-body-main text-body-main font-medium text-primary">Park Miejski</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 normal-case font-normal">Aleja Zielona</p>
+</div>
+<div class="text-right">
+<p class="font-label-button text-label-button text-primary">14:00 - Obecnie</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant mt-1 normal-case font-normal">30m</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

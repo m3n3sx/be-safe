@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Twoja Rodzina</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#c1c7d0",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#dde3ed",
+                        "tertiary-fixed": "#ffdad8",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-dim": "#dcd9da",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "on-primary-fixed": "#161c23",
+                        "tertiary-container": "#480008",
+                        "on-error-container": "#93000a",
+                        "on-secondary": "#ffffff",
+                        "outline": "#75777b",
+                        "on-tertiary-container": "#db5f60",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "surface-container": "#f0eded",
+                        "on-secondary-fixed-variant": "#005138",
+                        "inverse-surface": "#313031",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#410007",
+                        "tertiary": "#190001",
+                        "on-surface": "#1c1b1c",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#006c4c",
+                        "primary": "#03080e",
+                        "on-secondary-fixed": "#002115",
+                        "surface-container-high": "#eae7e8",
+                        "surface": "#fcf8f9",
+                        "on-background": "#1c1b1c",
+                        "secondary-container": "#9df4cb",
+                        "primary-container": "#1a2027",
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "background": "#fcf8f9",
+                        "surface-container-highest": "#e5e2e2",
+                        "on-surface-variant": "#44474b",
+                        "surface-tint": "#595f67",
+                        "surface-container-low": "#f6f3f3",
+                        "outline-variant": "#c5c6cb",
+                        "secondary-fixed": "#9df4cb",
+                        "surface-bright": "#fcf8f9",
+                        "on-primary-container": "#828790",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "surface-variant": "#e5e2e2",
+                        "on-primary-fixed-variant": "#41474f",
+                        "on-secondary-container": "#0f7252",
+                        "calm-aqua": "#9EEBEC"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "24": "1.5rem"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "gutter": "16px",
+                        "card-gap": "20px",
+                        "unit": "8px",
+                        "section-margin": "48px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-hero": ["Inter"],
+                        "headline-hero-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "display-md": ["Inter"],
+                        "body-main": ["Inter"],
+                        "label-button": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }],
+                        "headline-hero-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "300" }],
+                        "display-lg": ["80px", { "lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100" }],
+                        "display-md": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200" }],
+                        "body-main": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .glow-orb {
+            background: radial-gradient(circle at 50% 50%, rgba(158, 235, 236, 0.6) 0%, rgba(158, 235, 236, 0) 70%);
+        }
+        .shadow-soft {
+            box-shadow: 0 40px 40px rgba(26, 32, 39, 0.04);
+        }
+        .shadow-nav {
+            box-shadow: 0 40px 40px rgba(26, 32, 39, 0.15);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-main antialiased min-h-screen relative pb-32">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 bg-transparent transition-all duration-300 ease-in-out z-40 relative">
+<div class="flex items-center justify-between px-container-padding py-4 w-full">
+<div class="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">shield</span>
+<h1 class="font-headline-hero-mobile text-headline-hero-mobile font-light tracking-tighter">be:Safe</h1>
+</div>
+<button class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface hover:opacity-80 transition-all">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="relative px-container-padding pt-8 flex flex-col gap-section-margin">
+<!-- Glow Orb Background Anchor -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] glow-orb -z-10 pointer-events-none mix-blend-multiply"></div>
+<!-- Hero Section -->
+<section class="flex flex-col items-center justify-center text-center mt-12 mb-8">
+<h2 class="font-headline-hero text-headline-hero text-primary mb-2">Twoja Rodzina</h2>
+<div class="font-display-lg text-display-lg text-secondary-container mt-6">4/4</div>
+<p class="font-body-main text-body-main text-on-surface-variant mt-2">Wszyscy są bezpieczni</p>
+</section>
+<!-- Family Grid (Bento Style) -->
+<section class="grid grid-cols-2 gap-card-gap">
+<!-- Member 1 -->
+<div class="bg-surface-container-lowest rounded-24 p-6 shadow-soft flex flex-col items-center text-center relative overflow-hidden">
+<div class="w-20 h-20 rounded-full border-4 border-secondary-container p-1 mb-4">
+<img alt="Anna" class="w-full h-full rounded-full object-cover" data-alt="Close up portrait of a young woman with a calm expression, soft natural lighting, airy and minimalist aesthetic, premium wellness vibe, high fidelity photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl546nRZRBui4QKW4zijj3OO8S7HJpckwmKTXSdHbsY2K4CQorpvjTDCjOzKxc_2TnR4DUp7od7Vv2CMkmq4FKgeRnf0jdSCh1j4XdICGvElm-g4vOaRhVmRlEjwnlfSdRF4Do8snEqAfG-Lso0Eeli5gNsWrAZhjT6zZrZrofJx_uGWONiIS6F7UJ54GCRfSqb3RtT2aXuBHY76U9CazbXOLq_Q5QG9iY93LAwnyPg8eP45i174IC-ErGvp5_ckYoe31mz1moovM"/>
+</div>
+<h3 class="font-label-button text-label-button text-primary mb-1">Anna</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Szkoła</p>
+</div>
+<!-- Member 2 -->
+<div class="bg-surface-container-lowest rounded-24 p-6 shadow-soft flex flex-col items-center text-center relative overflow-hidden">
+<div class="w-20 h-20 rounded-full border-4 border-secondary-container p-1 mb-4">
+<img alt="Tomasz" class="w-full h-full rounded-full object-cover" data-alt="Close up portrait of a mature man with a gentle smile, warm natural lighting, airy and minimalist aesthetic, premium wellness vibe, high fidelity photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH0kdzGJyVeA4wnAxy7deSYgSs1IrWaHpN4M56dCpFchdPQcIes2RTLtvHpNmJzJrpB28CvMpHa1B1VQuFxV7-0kBi3sY_b6JHmB4blJ5yXg5KGFWXEorYEoLidU2r5YFQhxmxcbZ8_Eyo3lP72KoBpQuirq8KeW5cCIKhH-_Pn-BxS3mIVWkVx6I37CT_3Z7aUftOUGVyvOQp212uVCCCsemMaPzP2QgFmpIBE7zjH1fOtmtcI-GPp8elm_oF-a3kOaAw60zHqnk"/>
+</div>
+<h3 class="font-label-button text-label-button text-primary mb-1">Tomasz</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Praca</p>
+</div>
+<!-- Member 3 -->
+<div class="bg-surface-container-lowest rounded-24 p-6 shadow-soft flex flex-col items-center text-center relative overflow-hidden">
+<div class="w-20 h-20 rounded-full border-4 border-secondary-container p-1 mb-4">
+<img alt="Piotr" class="w-full h-full rounded-full object-cover" data-alt="Close up portrait of a young boy smiling, bright outdoor lighting, airy and minimalist aesthetic, premium wellness vibe, high fidelity photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4mbf9jm4Saf0cQuSlmogGuNUvA0I_aohb_MW9RoiYiqxAYu9vRiXpzuxr1UcXOKw7TQPGNC9cdzETvfkfNoj9kQyyaGZYlH-IAVMPBARhwjYz5Cgj0Q9fkpJ1PmrvUIkjkjshnJ8frvPVWSCEtHJX8ipWVgpnQ2TvACyiuU42tSZNtIL6msun-AMlf6_P-nP8qjennrl2IkJ_2_3RcOdjEb8IxGBeQyIWl1_9ZL1Yu_Ll34plLohfVMhaPsDR-AfNoHYylpTFlRw"/>
+</div>
+<h3 class="font-label-button text-label-button text-primary mb-1">Piotr</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Trening</p>
+</div>
+<!-- Member 4 -->
+<div class="bg-surface-container-lowest rounded-24 p-6 shadow-soft flex flex-col items-center text-center relative overflow-hidden">
+<div class="w-20 h-20 rounded-full border-4 border-secondary-container p-1 mb-4">
+<img alt="Ewa" class="w-full h-full rounded-full object-cover" data-alt="Close up portrait of an older woman looking serene, soft window light, airy and minimalist aesthetic, premium wellness vibe, high fidelity photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDui6jKxmF-OVSiIZyTX7EKGcf3yvwiEDrDSHc8MYmp3MliwiPGsq5roulXT-eqASzOm14lbRV5Xnp78gByfA5LMdV78jj9ixBM6CfJLts9eggwYdFnqiofwGYjlqEdVAbWepU1mgzhh_9ol5rbJLLJP6p2jupmeTLLiuIULDsv_5i_TttZalUiazr1EB8aL7lFedNwMqcsMp_1Mj9Yu338uLRkytI-6ArStUGCnUXqKJc0q4eaoXf_RUVE7zKuRVDfKki1WyPcnhI"/>
+</div>
+<h3 class="font-label-button text-label-button text-primary mb-1">Ewa</h3>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Dom</p>
+</div>
+</section>
+<!-- Glassmorphism Status Card -->
+<section class="glass-panel rounded-24 p-6 shadow-soft flex items-center justify-between border border-white/50">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary-fixed-dim">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<h4 class="font-label-button text-label-button text-primary mb-1">Ostatnia lokalizacja</h4>
+<p class="font-body-main text-body-main text-on-surface-variant text-sm">Anna - Szkoła (10:15)</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</section>
+<!-- Action Buttons -->
+<section class="flex flex-col gap-4">
+<button class="w-full bg-primary-container text-on-primary font-label-button text-label-button py-4 px-8 rounded-full hover:opacity-90 transition-opacity shadow-lg flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+                Wyślij sygnał
+            </button>
+<button class="w-full bg-transparent border border-primary-container/10 text-primary-container font-label-button text-label-button py-4 px-8 rounded-full hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">route</span>
+                Sprawdź trasę
+            </button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-unit w-[calc(100%-48px)] left-1/2 -translate-x-1/2 rounded-full mb-6 shadow-[0_40px_40px_rgba(26,32,39,0.04)] bg-primary-container/90 backdrop-blur-xl z-50 md:hidden">
+<div class="flex justify-around items-center px-6 py-4">
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">map</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">notifications_active</span>
+</button>
+<!-- Active (Family) -->
+<button class="flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-on-primary after:rounded-full scale-95 transition-transform duration-200 text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">family_restroom</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">person</span>
+</button>
+<!-- Inactive -->
+<button class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">sos</span>
+</button>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f6f3f3",
+                        "surface-container-highest": "#e5e2e2",
+                        "on-surface": "#1c1b1c",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "tertiary": "#190001",
+                        "surface": "#fcf8f9",
+                        "on-secondary-fixed-variant": "#005138",
+                        "surface-bright": "#fcf8f9",
+                        "inverse-surface": "#313031",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#db5f60",
+                        "tertiary-fixed": "#ffdad8",
+                        "secondary-fixed": "#9df4cb",
+                        "secondary": "#006c4c",
+                        "surface-dim": "#dcd9da",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dde3ed",
+                        "primary": "#03080e",
+                        "on-tertiary-fixed": "#410007",
+                        "on-primary-fixed": "#161c23",
+                        "secondary-container": "#9df4cb",
+                        "primary-container": "#1a2027",
+                        "on-background": "#1c1b1c",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#c1c7d0",
+                        "outline-variant": "#c5c6cb",
+                        "on-secondary-fixed": "#002115",
+                        "on-secondary-container": "#0f7252",
+                        "on-primary-container": "#828790",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#480008",
+                        "surface-variant": "#e5e2e2",
+                        "surface-container": "#f0eded",
+                        "background": "#fcf8f9",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "on-primary-fixed-variant": "#41474f",
+                        "surface-tint": "#595f67",
+                        "on-surface-variant": "#44474b",
+                        "outline": "#75777b",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "surface-container-high": "#eae7e8",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "card-gap": "20px",
+                        "unit": "8px",
+                        "section-margin": "48px",
+                        "gutter": "16px",
+                        "14": "3.5rem"
+                    },
+                    "fontFamily": {
+                        "body-main": ["Inter"],
+                        "label-button": ["Inter"],
+                        "headline-hero-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-hero": ["Inter"],
+                        "display-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-main": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-button": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "headline-hero-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "300"}],
+                        "display-lg": ["80px", {"lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300"}],
+                        "display-md": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200"}],
+                        "display-huge": ["96px", {"lineHeight": "100px", "letterSpacing": "-0.04em", "fontWeight": "100"}],
+                        "micro": ["12px", {"lineHeight": "16px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glow-orb {
+            position: absolute;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150vw;
+            height: 50vh;
+            background: radial-gradient(circle, rgba(158, 235, 236, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .input-focus-ring:focus-within {
+            box-shadow: 0 1.5px 0 0 #9EEBEC;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-container-padding py-12">
+<!-- Subtle Cyan Glow Orb -->
+<div class="glow-orb"></div>
+<div class="w-full max-w-md relative z-10 flex flex-col h-full">
+<!-- Header Section -->
+<header class="text-center mb-12 flex flex-col items-center">
+<span class="material-symbols-outlined text-[32px] text-[#FF7A7A] mb-2" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<h1 class="font-display-md text-display-md text-primary mb-4 tracking-tighter">be:Safe</h1>
+<p class="font-body-main text-body-main text-on-surface-variant font-light">Zaloguj się do swojego konta</p>
+</header>
+<!-- Form Section -->
+<main class="flex-1 w-full flex flex-col">
+<form class="flex flex-col gap-[16px] mb-8">
+<!-- Email Input -->
+<div class="relative bg-surface-container-low rounded-2xl h-14 flex items-center px-4 input-focus-ring transition-shadow duration-300">
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body-main text-body-main placeholder:text-outline placeholder:font-light placeholder:text-[16px]" id="email" placeholder="Email" required="" type="email"/>
+</div>
+<!-- Password Input -->
+<div class="relative bg-surface-container-low rounded-2xl h-14 flex items-center px-4 input-focus-ring transition-shadow duration-300">
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body-main text-body-main placeholder:text-outline placeholder:font-light placeholder:text-[16px]" id="password" placeholder="Hasło" required="" type="password"/>
+</div>
+<!-- Forgot Password Link -->
+<div class="text-right mt-1">
+<a class="font-label-button text-label-button font-normal text-on-surface-variant hover:text-primary transition-colors" href="#">Zapomniałeś hasła?</a>
+</div>
+<!-- Login Button -->
+<button class="w-full bg-primary-container text-on-primary font-label-button text-label-button font-medium h-14 rounded-full mt-4 hover:opacity-90 transition-opacity" type="submit">
+                    Zaloguj się
+                </button>
+</form>
+<!-- Divider -->
+<div class="flex items-center gap-4 mb-8">
+<div class="flex-1 h-px bg-surface-variant"></div>
+<span class="font-body-main text-body-main text-on-surface-variant text-[14px]">lub</span>
+<div class="flex-1 h-px bg-surface-variant"></div>
+</div>
+<!-- Google Login Button -->
+<button class="w-full bg-transparent border-[1.5px] border-surface-variant text-on-surface font-label-button text-label-button font-medium h-14 rounded-full flex items-center justify-center gap-3 hover:bg-surface-container-low transition-colors" type="button">
+<svg fill="none" height="24" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.56 12.25C22.56 11.47 22.49 10.72 22.36 10H12V14.26H17.92C17.66 15.63 16.88 16.79 15.71 17.57V20.34H19.28C21.36 18.42 22.56 15.6 22.56 12.25Z" fill="#4285F4"></path>
+<path d="M12 23C14.97 23 17.46 22.02 19.28 20.34L15.71 17.57C14.72 18.23 13.47 18.63 12 18.63C9.15 18.63 6.74 16.71 5.88 14.14H2.18V17.01C3.99 20.59 7.7 23 12 23Z" fill="#34A853"></path>
+<path d="M5.88 14.14C5.66 13.48 5.54 12.76 5.54 12C5.54 11.24 5.66 10.52 5.88 9.86V6.99H2.18C1.43 8.49 1 10.18 1 12C1 13.82 1.43 15.51 2.18 17.01L5.88 14.14Z" fill="#FBBC05"></path>
+<path d="M12 5.38C13.62 5.38 15.06 5.93 16.21 7.02L19.35 3.88C17.45 2.1 14.97 1 12 1C7.7 1 3.99 3.41 2.18 6.99L5.88 9.86C6.74 7.29 9.15 5.38 12 5.38Z" fill="#EA4335"></path>
+</svg>
+                Zaloguj się przez Google
+            </button>
+</main>
+<!-- Footer Section -->
+<footer class="mt-auto pt-12 flex flex-col items-center gap-6">
+<p class="font-body-main text-body-main text-on-surface-variant">
+                Nie masz konta? <a class="text-primary font-medium hover:underline" href="#">Zarejestruj się</a>
+</p>
+<p class="text-micro text-outline text-center px-4 max-w-xs font-light">
+                Logując się akceptujesz Regulamin i Politykę prywatności.
+            </p>
+</footer>
+</div>
+</body></html>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Mapa</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                @apply bg-white/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(26,32,39,0.04)] border border-white/20;
+            }
+            .glass-dark {
+                @apply bg-primary-container/90 backdrop-blur-xl shadow-[0_40px_40px_rgba(26,32,39,0.04)] border border-white/5;
+            }
+            .glow-coral {
+                box-shadow: 0 0 24px rgba(255, 122, 122, 0.4);
+            }
+            .glow-mint {
+                box-shadow: 0 0 24px rgba(157, 244, 203, 0.4);
+            }
+            .glow-blue {
+                box-shadow: 0 0 24px rgba(59, 130, 246, 0.4);
+            }
+            .material-symbols-outlined {
+              font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            }
+            .material-symbols-outlined.filled {
+              font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "error": "#ba1a1a",
+                            "on-tertiary": "#ffffff",
+                            "tertiary": "#190001",
+                            "on-tertiary-fixed": "#410007",
+                            "on-surface": "#1c1b1c",
+                            "secondary": "#006c4c",
+                            "primary": "#03080e",
+                            "on-secondary-fixed": "#002115",
+                            "surface-container-high": "#eae7e8",
+                            "surface": "#fcf8f9",
+                            "on-background": "#1c1b1c",
+                            "primary-container": "#1a2027",
+                            "secondary-container": "#9df4cb",
+                            "surface-container-lowest": "#ffffff",
+                            "error-container": "#ffdad6",
+                            "background": "#fcf8f9",
+                            "surface-tint": "#595f67",
+                            "surface-container-highest": "#e5e2e2",
+                            "on-surface-variant": "#44474b",
+                            "secondary-fixed": "#9df4cb",
+                            "outline-variant": "#c5c6cb",
+                            "surface-container-low": "#f6f3f3",
+                            "on-primary-container": "#828790",
+                            "surface-bright": "#fcf8f9",
+                            "secondary-fixed-dim": "#81d7b0",
+                            "on-primary-fixed-variant": "#41474f",
+                            "surface-variant": "#e5e2e2",
+                            "on-secondary-container": "#0f7252",
+                            "inverse-primary": "#c1c7d0",
+                            "on-primary": "#ffffff",
+                            "tertiary-fixed": "#ffdad8",
+                            "primary-fixed": "#dde3ed",
+                            "on-error": "#ffffff",
+                            "surface-dim": "#dcd9da",
+                            "on-tertiary-fixed-variant": "#862026",
+                            "inverse-on-surface": "#f3f0f0",
+                            "primary-fixed-dim": "#c1c7d0",
+                            "on-primary-fixed": "#161c23",
+                            "tertiary-container": "#480008",
+                            "on-secondary": "#ffffff",
+                            "on-error-container": "#93000a",
+                            "outline": "#75777b",
+                            "on-tertiary-container": "#db5f60",
+                            "tertiary-fixed-dim": "#ffb3b1",
+                            "surface-container": "#f0eded",
+                            "on-secondary-fixed-variant": "#005138",
+                            "inverse-surface": "#313031"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "section-margin": "48px",
+                            "unit": "8px",
+                            "card-gap": "20px",
+                            "gutter": "16px",
+                            "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                            "label-button": [
+                                    "Inter"
+                            ],
+                            "body-main": [
+                                    "Inter"
+                            ],
+                            "display-md": [
+                                    "Inter"
+                            ],
+                            "display-lg": [
+                                    "Inter"
+                            ],
+                            "headline-hero-mobile": [
+                                    "Inter"
+                            ],
+                            "headline-hero": [
+                                    "Inter"
+                            ],
+                            "label-caps": [
+                                    "Inter"
+                            ]
+                    },
+                    "fontSize": {
+                            "label-button": [
+                                    "14px",
+                                    {
+                                            "lineHeight": "20px",
+                                            "fontWeight": "500"
+                                    }
+                            ],
+                            "body-main": [
+                                    "16px",
+                                    {
+                                            "lineHeight": "24px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "display-md": [
+                                    "64px",
+                                    {
+                                            "lineHeight": "72px",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "200"
+                                    }
+                            ],
+                            "display-lg": [
+                                    "80px",
+                                    {
+                                            "lineHeight": "96px",
+                                            "letterSpacing": "-0.04em",
+                                            "fontWeight": "100"
+                                    }
+                            ],
+                            "headline-hero-mobile": [
+                                    "28px",
+                                    {
+                                            "lineHeight": "36px",
+                                            "fontWeight": "300"
+                                    }
+                            ],
+                            "headline-hero": [
+                                    "32px",
+                                    {
+                                            "lineHeight": "40px",
+                                            "letterSpacing": "-0.01em",
+                                            "fontWeight": "300"
+                                    }
+                            ],
+                            "label-caps": [
+                                    "12px",
+                                    {
+                                            "lineHeight": "16px",
+                                            "letterSpacing": "0.05em",
+                                            "fontWeight": "500"
+                                    }
+                            ]
+                    }
+            },
+                },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface h-screen w-screen overflow-hidden relative font-body-main text-body-main selection:bg-secondary-container selection:text-on-surface">
+<!-- Map Background -->
+<div class="absolute inset-0 z-0">
+<!-- Simplified Google Maps style background -->
+<img alt="Map view" class="w-full h-full object-cover object-center mix-blend-luminosity opacity-40 filter contrast-75 brightness-110" data-alt="A minimalist, light-mode map interface resembling a high-fidelity satellite or vector map. The map uses a muted, airy color palette with soft greys and whites, creating a calm, premium wellness aesthetic. There are no harsh borders or high-stress visual elements. The overall look is modern, clean, and spacious." data-location="Warsaw, Poland" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYk2cJYSvSXZdr4XX4z_P0PauunWPVUAV9mX011Ol_v1CnDkjRWaD46rPTxEZlluWhDZeVw8pvD8h_IrgbW_s4HDqm5l7vCW2EpRFlxaaccHklrcAlz0Nb17uQ7rj9lSfquB8K23XXDwKn_qhu4Pt2C6uymE-Vj9sqF-LtWdA43PXrTY2EThIKhwCjqKge5ZY6YLzqODpPWN3TlRvG9yzmZp1WqDKkeei2cFsMMttBE70Os42egEwjUZcP5jGJaDcAeyQbI3Zh0xs"/>
+<div class="absolute inset-0 bg-surface/30 mix-blend-overlay"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-surface/60 via-transparent to-surface/80 pointer-events-none"></div>
+</div>
+<!-- Top UI -->
+<div class="absolute top-0 left-0 w-full z-10 pt-[env(safe-area-inset-top,48px)] px-container-padding pb-6 flex flex-col gap-4 pointer-events-auto">
+<!-- Search Bar -->
+<div class="glass w-full h-[56px] rounded-full flex items-center px-6 gap-4">
+<span class="material-symbols-outlined text-on-surface-variant/70 text-[24px]">search</span>
+<input class="flex-1 bg-transparent border-none outline-none font-body-main text-body-main font-[300] placeholder:text-on-surface-variant/50 text-on-surface p-0 focus:ring-0" placeholder="Szukaj adresu lub miejsca" type="text"/>
+<div class="w-px h-6 bg-surface-variant mx-2"></div>
+<span class="material-symbols-outlined text-on-surface-variant/70 text-[24px] cursor-pointer hover:text-on-surface transition-colors">tune</span>
+</div>
+<!-- Filter Chips -->
+<div class="flex overflow-x-auto gap-[12px] no-scrollbar -mx-container-padding px-container-padding pb-2 scroll-smooth">
+<button class="shrink-0 h-[32px] px-4 rounded-full bg-primary-container text-on-primary font-label-button text-label-button shadow-sm transition-transform active:scale-95">
+                Wszystkie
+            </button>
+<button class="shrink-0 h-[32px] px-4 rounded-full glass text-on-surface font-label-button text-label-button hover:bg-white/90 transition-all active:scale-95">
+                Agresja
+            </button>
+<button class="shrink-0 h-[32px] px-4 rounded-full glass text-on-surface font-label-button text-label-button hover:bg-white/90 transition-all active:scale-95">
+                Wypadek
+            </button>
+<button class="shrink-0 h-[32px] px-4 rounded-full glass text-on-surface font-label-button text-label-button hover:bg-white/90 transition-all active:scale-95">
+                Pożar
+            </button>
+<button class="shrink-0 h-[32px] px-4 rounded-full glass text-on-surface font-label-button text-label-button hover:bg-white/90 transition-all active:scale-95">
+                Powódź
+            </button>
+<button class="shrink-0 h-[32px] px-4 rounded-full glass text-on-surface font-label-button text-label-button hover:bg-white/90 transition-all active:scale-95">
+                Budowa
+            </button>
+<button class="shrink-0 h-[32px] px-4 rounded-full glass text-on-surface font-label-button text-label-button hover:bg-white/90 transition-all active:scale-95">
+                Ciemny teren
+            </button>
+</div>
+</div>
+<!-- Map Elements (Pins) -->
+<div class="absolute inset-0 z-0 pointer-events-none">
+<!-- User Position -->
+<div class="absolute top-[55%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+<div class="w-16 h-16 rounded-full bg-blue-500/20 animate-pulse absolute"></div>
+<div class="w-8 h-8 rounded-full bg-blue-500/30 animate-pulse absolute" style="animation-delay: 500ms;"></div>
+<div class="w-4 h-4 rounded-full bg-blue-500 border-2 border-white glow-blue z-10 shadow-sm relative"></div>
+</div>
+<!-- Alert Pin 1 -->
+<div class="absolute top-[40%] left-[30%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-auto cursor-pointer group">
+<div class="w-[32px] h-[32px] rounded-full bg-[#FF7A7A] border-2 border-white glow-coral flex items-center justify-center shadow-md transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-white text-[18px]">warning</span>
+</div>
+</div>
+<!-- Alert Pin 2 -->
+<div class="absolute top-[65%] left-[70%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-auto cursor-pointer group">
+<div class="w-[32px] h-[32px] rounded-full bg-[#FF7A7A] border-2 border-white glow-coral flex items-center justify-center shadow-md transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-white text-[18px]">local_fire_department</span>
+</div>
+</div>
+<!-- Family Pin 1 -->
+<div class="absolute top-[35%] left-[65%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-auto cursor-pointer group">
+<div class="w-[40px] h-[40px] rounded-full bg-surface border-2 border-secondary-container glow-mint flex items-center justify-center shadow-md overflow-hidden transition-transform group-hover:scale-110 relative">
+<img alt="Family member avatar" class="w-full h-full object-cover" data-alt="A small, circular avatar portrait of a young woman with a calm expression, set within a bright, airy interface element. The lighting is soft and flattering, aligning with a premium wellness aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR-lO8VlZq6NKM-lJmQTjudzydKQvMtLbRx8sWk7d05bq8vQSJyK7s86_yGJ65alr9WWMggQ-J_6CqejR2B-ILJeZMawJnf9Jnedms6nBGrGtD9QqPDNr9vtCRhZPTk8q6_RFfv0fgvWag3pfrsrZJmdOqifIb5XTSaFPblVej8NykACDUtJjH8WmD_WGX6viexwSZ7hMeenxLVkdgXw6eR0vPhJEXDH4ySRT_zyQRhewHvtSzPuOfsicO8ncB6HOh-h00o36f_AU"/>
+</div>
+</div>
+</div>
+<!-- Bottom UI Area (Above Nav) -->
+<div class="absolute bottom-[112px] left-0 w-full px-container-padding flex flex-col gap-4 z-20 pointer-events-none">
+<!-- FABs -->
+<div class="flex justify-end gap-3 pointer-events-auto mb-2">
+<button class="w-[56px] h-[56px] rounded-full bg-primary-container text-on-primary shadow-lg flex items-center justify-center hover:scale-105 transition-transform active:scale-95">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<button class="h-[56px] px-6 rounded-full bg-primary-container text-on-primary shadow-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[#FF7A7A]">add</span>
+<span class="font-label-button text-label-button">Zgłoś</span>
+</button>
+</div>
+<!-- Info Card -->
+<div class="glass w-full h-[80px] rounded-[24px] rounded-b-[32px] p-4 flex flex-col justify-center relative pointer-events-auto cursor-pointer hover:bg-white/90 transition-colors">
+<div class="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-surface-variant/50 rounded-full"></div>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-error-container/50 flex items-center justify-center">
+<span class="material-symbols-outlined text-error text-[18px]">notifications</span>
+</div>
+<span class="font-label-button text-label-button font-[500] text-on-surface">3 aktywne alerty w twojej okolicy</span>
+</div>
+<div class="bg-[#FF7A7A]/10 text-[#FF7A7A] px-2 py-0.5 rounded-full font-label-caps text-label-caps font-[600]">
+                    3
+                </div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Shell (JSON Component) -->
+<nav class="fixed bottom-unit w-[calc(100%-48px)] left-1/2 -translate-x-1/2 rounded-full mb-6 z-50 bg-primary-container/90 backdrop-blur-xl shadow-[0_40px_40px_rgba(26,32,39,0.04)] h-[72px] px-6 py-4 flex justify-around items-center">
+<!-- Inactive: map (Active state logic applied since this is a Map screen) -->
+<a class="flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-on-primary after:rounded-full text-on-primary hover:opacity-100 transition-all group" href="#">
+<span class="material-symbols-outlined filled group-active:scale-95 transition-transform duration-200">map</span>
+</a>
+<!-- Inactive: notifications_active -->
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all group" href="#">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform duration-200">notifications_active</span>
+</a>
+<!-- Inactive: family_restroom -->
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all group" href="#">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform duration-200">family_restroom</span>
+</a>
+<!-- Inactive: person -->
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all group" href="#">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform duration-200">person</span>
+</a>
+<!-- Inactive: sos -->
+<a class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all group" href="#">
+<span class="material-symbols-outlined group-active:scale-95 transition-transform duration-200">sos</span>
+</a>
+</nav>
+</body></html>
