@@ -24,6 +24,7 @@ import '../map/map_screen.dart';
 import '../profile/profile_screen.dart';
 import '../settings/settings_screen.dart';
 import '../emergency/emergency_numbers_screen.dart';
+import '../sos/sos_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -184,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 4:
         route = Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const EmergencyNumbersScreen()),
+          MaterialPageRoute(builder: (_) => const SosScreen()),
         );
         break;
       default:
