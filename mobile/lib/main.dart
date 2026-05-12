@@ -30,6 +30,7 @@ import 'screens/profile/referral_screen.dart';
 import 'screens/profile/badges_screen.dart';
 import 'screens/community/news_screen.dart';
 import 'screens/emergency/emergency_numbers_screen.dart';
+import 'screens/sos/sos_screen.dart';
 
 import 'services/i18n.dart';
 
@@ -121,6 +122,7 @@ class AlertMapApp extends StatelessWidget {
               '/badges' => const BadgesScreen(),
               '/news' => const NewsScreen(),
               '/emergency' => const EmergencyNumbersScreen(),
+              '/sos' => const SosScreen(),
               _ => const MapScreen(),
             });
           },

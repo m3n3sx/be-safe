@@ -600,7 +600,7 @@ class _MapScreenState extends State<MapScreen> {
               Navigator.pushNamed(context, '/profile');
               break;
             case 4:
-              _sendSOS();
+              Navigator.pushNamed(context, '/sos');
               break;
           }
         },
