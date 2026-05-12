@@ -15,6 +15,7 @@ import 'services/analytics.dart';
 import 'services/fcm_service.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/map/map_screen.dart';
+import 'screens/home/home_screen.dart';
 import 'screens/family/family_screen.dart';
 import 'screens/family/family_group_screen.dart';
 import 'screens/profile/profile_screen.dart';
@@ -178,7 +179,7 @@ class _AuthGateState extends State<_AuthGate> {
     final auth = context.watch<AuthProvider>();
     if (_onboardingDone == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
     if (!_onboardingDone!) return OnboardingScreen(onComplete: () => setState(() => _onboardingDone = true));
-    return auth.isLoggedIn ? const MapScreen() : const LoginScreen();
+    return auth.isLoggedIn ? const HomeScreen() : const LoginScreen();
   }
 }
 // CI test
