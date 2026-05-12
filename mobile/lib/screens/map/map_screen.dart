@@ -13,6 +13,8 @@ import '../../services/location_service.dart';
 import '../../services/i18n.dart';
 import '../alerts/create_alert_screen.dart';
 import '../alerts/alert_detail_screen.dart';
+import '../../theme/design_tokens.dart';
+import '../../widgets/pill_nav_bar.dart';
 
 /// Wrapper for AlertModel to satisfy ClusterItem contract.
 class _ClusterableAlert with gcm.ClusterItem {
@@ -268,50 +270,70 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
 
-        // Search bar
-        Positioned(top: MediaQuery.of(context).padding.top + 8, left: 12, right: 12,
-          child: Column(children: [
+        // Search bar — Serenity style (white pill + category filter chips below)
+        Positioned(top: MediaQuery.of(context).padding.top + 8, left: 16, right: 16,
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(28),
-                boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black.withValues(alpha: 0.12))]),
+              decoration: BoxDecoration(
+                color: SerenityColors.surfaceContainerLowest,
+                borderRadius: SerenityShapes.pill(),
+                boxShadow: SerenityElevation.card(),
+              ),
               child: TextField(
+                style: SerenityText.bodyMain.copyWith(color: SerenityColors.primary),
                 decoration: InputDecoration(
-                  hintText: S.get('search_location'), hintStyle: TextStyle(color: Colors.grey.shade400),
-                  prefixIcon: Icon(Icons.search, color: cs.primary),
-                  suffixIcon: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Semantics(
-                      label: 'Filtry kategorii alertów',
-                      button: true,
-                      child: IconButton(icon: Icon(Icons.tune, color: _showFilters ? cs.primary : Colors.grey.shade400),
-                        onPressed: () => setState(() { _showFilters = !_showFilters; _showAlertList = false; })),
+                  hintText: 'Szukaj adresu lub miejsca',
+                  hintStyle: SerenityText.bodyMain.copyWith(color: SerenityColors.onSurfaceVariant),
+                  prefixIcon: const Icon(Icons.search, color: SerenityColors.primary, size: 22),
+                  suffixIcon: Semantics(
+                    label: 'Wycentruj mapę na moją lokalizację',
+                    button: true,
+                    child: IconButton(
+                      icon: const Icon(Icons.my_location, color: SerenityColors.primary, size: 22),
+                      onPressed: () {
+                        HapticFeedback.selectionClick();
+                        _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_currentPos, 15));
+                        alertProv.loadNearby(_currentPos, radiusM: 10000);
+                      },
                     ),
-                    Semantics(
-                      label: 'Wycentruj mapę na moją lokalizację',
-                      button: true,
-                      child: IconButton(icon: Icon(Icons.my_location, color: cs.primary),
-                        onPressed: () { _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_currentPos, 15)); alertProv.loadNearby(_currentPos, radiusM: 10000); }),
-                    ),
-                  ]),
-                  border: InputBorder.none, contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  border: InputBorder.none, enabledBorder: InputBorder.none, focusedBorder: InputBorder.none,
+                  filled: false,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 onSubmitted: (q) => _searchLocation(q),
               ),
             ),
-            if (_showFilters) Container(
-              margin: const EdgeInsets.only(top: 8), padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
-                boxShadow: [BoxShadow(blurRadius: 10, color: Colors.black.withValues(alpha: 0.12))]),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  const Text('Filtruj', style: TextStyle(fontWeight: FontWeight.bold)),
-                  if (alertProv.activeFilters.isNotEmpty) TextButton(onPressed: alertProv.clearFilters, child: Text('Wyczyść', style: TextStyle(color: cs.primary))),
-                ]),
-                Wrap(spacing: 6, runSpacing: 4, children: AlertCategory.values.map((c) => FilterChip(
-                  label: Text('${c.emoji} ${c.label}', style: const TextStyle(fontSize: 12)),
-                  selected: alertProv.activeFilters.contains(c), selectedColor: cs.primary.withValues(alpha: 0.15), checkmarkColor: cs.primary,
-                  onSelected: (_) => alertProv.toggleFilter(c), visualDensity: VisualDensity.compact,
-                )).toList()),
-              ]),
+            const SizedBox(height: 12),
+            // Horizontal filter chips
+            SizedBox(
+              height: 40,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                children: [
+                  _SerenityChip(
+                    label: 'Wszystkie',
+                    active: alertProv.activeFilters.isEmpty,
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      alertProv.clearFilters();
+                    },
+                  ),
+                  for (final cat in AlertCategory.values)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: _SerenityChip(
+                        label: cat.label,
+                        active: alertProv.activeFilters.contains(cat),
+                        onTap: () {
+                          HapticFeedback.selectionClick();
+                          alertProv.toggleFilter(cat);
+                        },
+                      ),
+                    ),
+                ],
+              ),
             ),
           ]),
         ),
@@ -343,22 +365,97 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
 
-        // "Zgłoś" button — RED
-        Positioned(bottom: 8, left: 16, right: 16,
-          child: Semantics(
-            button: true,
-            label: 'Zgłoś zagrożenie w twojej okolicy',
-            child: ElevatedButton.icon(
-              onPressed: () async {
-                HapticFeedback.mediumImpact();
-                await Navigator.push(context, MaterialPageRoute(builder: (_) => CreateAlertScreen(position: _currentPos)));
-                alertProv.loadNearby(_currentPos, radiusM: 10000);
-              },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade700, foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)), elevation: 4),
-              icon: const Icon(Icons.warning_amber_rounded),
-              label: Text(S.get('report'), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+        // "Zgłoś" pill button (Serenity style: primaryContainer navy + white text)
+        Positioned(bottom: 104, right: 16,
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            // Location button (pill)
+            Container(
+              decoration: BoxDecoration(
+                color: SerenityColors.primaryContainer,
+                borderRadius: SerenityShapes.pill(),
+                boxShadow: SerenityElevation.floating(),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.my_location, color: SerenityColors.onPrimary),
+                onPressed: () {
+                  HapticFeedback.selectionClick();
+                  _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_currentPos, 15));
+                },
+                padding: const EdgeInsets.all(16),
+                constraints: const BoxConstraints(minWidth: 56, minHeight: 56),
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Zgłoś pill
+            Semantics(
+              button: true,
+              label: 'Zgłoś zagrożenie w twojej okolicy',
+              child: Material(
+                color: SerenityColors.primaryContainer,
+                borderRadius: SerenityShapes.pill(),
+                child: InkWell(
+                  borderRadius: SerenityShapes.pill(),
+                  onTap: () async {
+                    HapticFeedback.mediumImpact();
+                    await Navigator.push(context, MaterialPageRoute(builder: (_) => CreateAlertScreen(position: _currentPos)));
+                    if (mounted) alertProv.loadNearby(_currentPos, radiusM: 10000);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: SerenityShapes.pill(),
+                      boxShadow: SerenityElevation.floating(),
+                    ),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.add, color: SerenityColors.glowAlertCoral, size: 20),
+                      const SizedBox(width: 8),
+                      Text('Zgłoś', style: SerenityText.labelButton.copyWith(color: SerenityColors.onPrimary)),
+                    ]),
+                  ),
+                ),
+              ),
+            ),
+          ]),
+        ),
+
+        // Bottom info bar — "X aktywnych alertów w twojej okolicy"
+        if (alerts.isNotEmpty) Positioned(bottom: 8, left: 16, right: 16,
+          child: GestureDetector(
+            onTap: () {
+              HapticFeedback.selectionClick();
+              setState(() => _showAlertList = !_showAlertList);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: SerenityColors.surfaceContainerLowest,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: SerenityElevation.card(),
+              ),
+              child: Row(children: [
+                Container(
+                  width: 40, height: 40,
+                  decoration: BoxDecoration(
+                    color: SerenityColors.tertiaryFixed,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.notifications_active, color: SerenityColors.onTertiaryContainer, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Text(
+                  '${alerts.length} aktywn${alerts.length == 1 ? 'y alert' : (alerts.length < 5 ? 'e alerty' : 'ych alertów')} w twojej okolicy',
+                  style: SerenityText.labelButton.copyWith(fontSize: 15, color: SerenityColors.primary),
+                )),
+                Container(
+                  width: 28, height: 28,
+                  decoration: BoxDecoration(
+                    color: SerenityColors.tertiaryFixed,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(child: Text('${alerts.length}',
+                    style: SerenityText.labelCaps.copyWith(color: SerenityColors.onTertiaryContainer, fontSize: 12))),
+                ),
+              ]),
             ),
           ),
         ),
@@ -451,38 +548,63 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Widget _buildBottomNav(ColorScheme cs, List<AlertModel> alerts) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: cs.primary,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.white60,
-      currentIndex: 0,
-      onTap: (i) {
-        if (i == 0) { _dismissOverlays(); return; }
-        if (i == 1) { setState(() { _showAlertList = !_showAlertList; _showFilters = false; }); return; }
-        if (i == 2) { _sendSOS(); return; }
-        if (i == 3) Navigator.pushNamed(context, '/family');
-        if (i == 4) Navigator.pushNamed(context, '/profile');
-      },
-      items: [
-        const BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
-        BottomNavigationBarItem(
-          icon: alerts.isEmpty ? const Icon(Icons.notifications_none) : Badge(
-            label: Text('${alerts.length}', style: const TextStyle(color: Colors.white, fontSize: 9)),
-            backgroundColor: Colors.red, child: const Icon(Icons.notifications_active)),
-          label: 'Alerty'),
-        BottomNavigationBarItem(
-          icon: Semantics(
-            button: true,
-            label: 'Przycisk SOS — wysyła alarmowe powiadomienie',
-            child: Container(width: 56, height: 56,
-              decoration: BoxDecoration(color: Colors.red.shade700, shape: BoxShape.circle),
-              child: const Center(child: Text('SOS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)))),
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 24,
+        right: 24,
+        bottom: MediaQuery.of(context).padding.bottom + 12,
+        top: 8,
+      ),
+      child: PillNavBar(
+        currentIndex: 0, // Map is active
+        items: const [
+          PillNavItem(
+            icon: Icons.map_outlined,
+            activeIcon: Icons.map,
+            label: 'Mapa',
           ),
-          label: ''),
-        const BottomNavigationBarItem(icon: Icon(Icons.family_restroom), label: 'Rodzina'),
-        const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-      ],
+          PillNavItem(
+            icon: Icons.home_outlined,
+            activeIcon: Icons.home,
+            label: 'Home',
+          ),
+          PillNavItem(
+            icon: Icons.family_restroom_outlined,
+            activeIcon: Icons.family_restroom,
+            label: 'Rodzina',
+          ),
+          PillNavItem(
+            icon: Icons.person_outline,
+            activeIcon: Icons.person,
+            label: 'Profil',
+          ),
+          PillNavItem(
+            icon: Icons.sos_outlined,
+            activeIcon: Icons.sos,
+            label: 'SOS',
+          ),
+        ],
+        onTap: (i) {
+          HapticFeedback.selectionClick();
+          switch (i) {
+            case 0:
+              _dismissOverlays();
+              break;
+            case 1:
+              Navigator.pop(context);
+              break;
+            case 2:
+              Navigator.pushNamed(context, '/family');
+              break;
+            case 3:
+              Navigator.pushNamed(context, '/profile');
+              break;
+            case 4:
+              _sendSOS();
+              break;
+          }
+        },
+      ),
     );
   }
 
@@ -602,6 +724,51 @@ class _AlertSidePane extends StatelessWidget {
                 ),
         ),
       ]),
+    );
+  }
+}
+
+/// Serenity-style filter chip — pill shape, primaryContainer when active,
+/// surfaceContainer when inactive. Used in the map filter row.
+class _SerenityChip extends StatelessWidget {
+  final String label;
+  final bool active;
+  final VoidCallback onTap;
+
+  const _SerenityChip({
+    required this.label,
+    required this.active,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: active
+          ? SerenityColors.primaryContainer
+          : SerenityColors.surfaceContainerLowest,
+      borderRadius: SerenityShapes.pill(),
+      child: InkWell(
+        borderRadius: SerenityShapes.pill(),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            borderRadius: SerenityShapes.pill(),
+            boxShadow: active ? null : SerenityElevation.card(),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: SerenityText.labelButton.copyWith(
+                color: active
+                    ? SerenityColors.onPrimary
+                    : SerenityColors.primary,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
