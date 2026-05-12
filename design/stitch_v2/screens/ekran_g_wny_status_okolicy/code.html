@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#dde3ed",
+                        "on-secondary": "#ffffff",
+                        "surface-tint": "#595f67",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#828790",
+                        "secondary-container": "#9df4cb",
+                        "tertiary": "#190001",
+                        "outline-variant": "#c5c6cb",
+                        "background": "#fcf8f9",
+                        "tertiary-container": "#480008",
+                        "surface-container-high": "#eae7e8",
+                        "on-tertiary-container": "#db5f60",
+                        "surface-variant": "#e5e2e2",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#c1c7d0",
+                        "on-secondary-container": "#0f7252",
+                        "on-surface-variant": "#44474b",
+                        "on-secondary-fixed": "#002115",
+                        "secondary": "#006c4c",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-dim": "#dcd9da",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f6f3f3",
+                        "surface-container-highest": "#e5e2e2",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "surface-bright": "#fcf8f9",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "on-tertiary-fixed": "#410007",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "secondary-fixed": "#9df4cb",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "inverse-surface": "#313031",
+                        "outline": "#75777b",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#005138",
+                        "on-surface": "#1c1b1c",
+                        "on-primary-fixed": "#161c23",
+                        "surface": "#fcf8f9",
+                        "on-background": "#1c1b1c",
+                        "on-primary-fixed-variant": "#41474f",
+                        "primary": "#03080e",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdad8",
+                        "primary-container": "#1a2027",
+                        "error": "#ba1a1a",
+                        "surface-container": "#f0eded"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "section-margin": "48px",
+                        "card-gap": "20px",
+                        "unit": "8px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-hero": ["Inter"],
+                        "headline-hero-mobile": ["Inter"],
+                        "display-md": ["Inter"],
+                        "label-button": ["Inter"],
+                        "body-main": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }],
+                        "headline-hero-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "300" }],
+                        "display-md": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200" }],
+                        "label-button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-main": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["80px", { "lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glow-orb {
+            background: radial-gradient(circle, rgba(157, 244, 203, 1) 0%, rgba(157, 244, 203, 0) 70%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright text-on-surface min-h-screen relative pb-32 overflow-x-hidden font-body-main">
+<!-- TopAppBar -->
+<header class="bg-transparent text-primary dark:text-inverse-primary docked full-width top-0 bg-transparent flat no shadows transition-all duration-300 ease-in-out flex items-center justify-between px-container-padding py-4 w-full">
+<button class="text-primary hover:opacity-80 transition-opacity flex items-center justify-center p-2 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[28px]">menu</span>
+</button>
+<h1 class="font-headline-hero text-headline-hero-mobile font-light tracking-tighter text-primary dark:text-inverse-primary flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shield</span>
+            be:Safe
+        </h1>
+<button class="text-primary hover:opacity-80 transition-opacity flex items-center justify-center p-2 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined text-[28px]">notifications</span>
+</button>
+</header>
+<main class="px-container-padding">
+<!-- Hero Section -->
+<section class="pt-[32px] text-center flex flex-col items-center">
+<h2 class="font-display-md text-display-md text-primary mb-2">Wszystko w porządku</h2>
+<p class="font-body-main text-body-main text-on-surface-variant max-w-sm mx-auto">Twoja okolica jest bezpieczna</p>
+<!-- Central Visual - Glow Orb -->
+<div class="relative w-[280px] h-[280px] my-12 flex items-center justify-center">
+<div class="absolute inset-0 glow-orb rounded-full animate-pulse opacity-80" style="animation-duration: 4s;"></div>
+<div class="relative z-10 flex flex-col items-center justify-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-2">poziom bezpieczeństwa</span>
+<span class="font-display-lg text-display-lg text-primary">9/10</span>
+</div>
+</div>
+<!-- Link -->
+<a class="inline-flex items-center gap-1 font-label-button text-label-button text-primary hover:opacity-70 transition-opacity" href="#">
+                Zobacz mapę
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</section>
+<!-- Activity Section -->
+<section class="mt-section-margin">
+<div class="w-16 h-px bg-outline-variant/30 mb-8 mx-auto"></div>
+<h3 class="font-body-main text-body-main font-medium text-primary mb-6">Dzisiejsza aktywność</h3>
+<!-- Widget Cards (Scrollable) -->
+<div class="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 -mx-container-padding px-container-padding scrollbar-hide">
+<!-- Card 1 -->
+<div class="snap-center shrink-0 w-[200px] bg-surface-container-lowest rounded-[20px] p-4 shadow-[0_40px_40px_rgba(26,32,39,0.04)] border border-surface-variant/50 backdrop-blur-md flex flex-col justify-between">
+<span class="material-symbols-outlined text-on-error-container text-[24px] mb-4">warning</span>
+<div>
+<div class="font-display-md text-headline-hero text-primary">3</div>
+<div class="font-body-main text-[14px] text-on-surface-variant leading-tight">alerty w pobliżu</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-center shrink-0 w-[200px] bg-surface-container-lowest rounded-[20px] p-4 shadow-[0_40px_40px_rgba(26,32,39,0.04)] border border-surface-variant/50 backdrop-blur-md flex flex-col justify-between">
+<span class="material-symbols-outlined text-secondary text-[24px] mb-4">thumb_up</span>
+<div>
+<div class="font-display-md text-headline-hero text-primary">12</div>
+<div class="font-body-main text-[14px] text-on-surface-variant leading-tight">potwierdzeń społeczności</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="snap-center shrink-0 w-[200px] bg-surface-container-lowest rounded-[20px] p-4 shadow-[0_40px_40px_rgba(26,32,39,0.04)] border border-surface-variant/50 backdrop-blur-md flex flex-col justify-between">
+<span class="material-symbols-outlined text-primary text-[24px] mb-4">family_restroom</span>
+<div>
+<div class="font-display-md text-headline-hero text-primary">2/2</div>
+<div class="font-body-main text-[14px] text-on-surface-variant leading-tight">bliscy online</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-[104px] right-6 bg-primary-container text-on-primary rounded-full px-6 py-4 flex items-center gap-2 shadow-[0_20px_40px_rgba(26,32,39,0.15)] hover:scale-105 transition-transform duration-200 z-40">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-label-button text-label-button">Zgłoś</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="bg-primary-container dark:bg-primary-container text-on-primary dark:text-on-primary font-label-button text-label-button font-headline-hero text-headline-hero text-on-primary fixed bottom-unit w-[calc(100%-48px)] left-1/2 -translate-x-1/2 rounded-full mb-6 shadow-[0_40px_40px_rgba(26,32,39,0.04)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 py-4 shadow-xl bg-primary-container/90 backdrop-blur-xl">
+<button class="flex flex-col items-center justify-center flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">map</span>
+</button>
+<button class="flex flex-col items-center justify-center flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-on-primary after:rounded-full hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</button>
+<button class="flex flex-col items-center justify-center flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">family_restroom</span>
+</button>
+<button class="flex flex-col items-center justify-center flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+</button>
+<button class="flex flex-col items-center justify-center flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all Active: scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">sos</span>
+</button>
+</nav>
+</body></html>

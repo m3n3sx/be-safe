@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Onboarding</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "secondary-container": "#9df4cb",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "tertiary-container": "#480008",
+                        "surface-bright": "#fcf8f9",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "background": "#fcf8f9",
+                        "outline-variant": "#c5c6cb",
+                        "primary-fixed": "#dde3ed",
+                        "on-surface": "#1c1b1c",
+                        "surface": "#fcf8f9",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary": "#006c4c",
+                        "inverse-primary": "#c1c7d0",
+                        "surface-container-highest": "#e5e2e2",
+                        "on-primary-fixed-variant": "#41474f",
+                        "on-error": "#ffffff",
+                        "on-background": "#1c1b1c",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f3",
+                        "surface-variant": "#e5e2e2",
+                        "on-secondary-fixed-variant": "#005138",
+                        "on-secondary-container": "#0f7252",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "primary": "#03080e",
+                        "surface-dim": "#dcd9da",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "on-tertiary-container": "#db5f60",
+                        "on-surface-variant": "#44474b",
+                        "on-primary-fixed": "#161c23",
+                        "on-tertiary-fixed": "#410007",
+                        "primary-container": "#1a2027",
+                        "on-primary-container": "#828790",
+                        "on-secondary-fixed": "#002115",
+                        "secondary-fixed": "#9df4cb",
+                        "outline": "#75777b",
+                        "inverse-surface": "#313031",
+                        "tertiary-fixed": "#ffdad8",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "tertiary": "#190001",
+                        "surface-tint": "#595f67",
+                        "surface-container-high": "#eae7e8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "section-margin": "48px",
+                        "container-padding": "24px",
+                        "card-gap": "20px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-hero-mobile": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "label-button": ["Inter"],
+                        "headline-hero": ["Inter"],
+                        "body-main": ["Inter"],
+                        "display-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["80px", { "lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100" }],
+                        "headline-hero-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "300" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "label-button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }],
+                        "body-main": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-md": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright min-h-[884px] flex flex-col relative overflow-hidden font-body-main text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Ambient Mesh Gradient Background -->
+<div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+<div class="absolute top-[-10%] left-[-20%] w-[70vw] h-[70vw] rounded-full bg-secondary-container/20 blur-[80px] md:blur-[120px] opacity-70 transform rotate-12"></div>
+<div class="absolute bottom-[20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-primary-fixed-dim/10 blur-[60px] md:blur-[100px] opacity-50"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="relative z-10 flex flex-col flex-1 px-container-padding pb-10 pt-16">
+<!-- Hero Section -->
+<div class="flex-1 flex flex-col justify-center items-center mt-[-10vh]">
+<h1 class="font-headline-hero-mobile text-headline-hero-mobile text-primary text-center max-w-[280px]">
+                Witamy w be:Safe
+            </h1>
+</div>
+<!-- Action Area -->
+<div class="w-full max-w-sm mx-auto flex flex-col gap-4 mb-12">
+<!-- Google Login Button (Primary Style) -->
+<button class="w-full flex items-center justify-center gap-3 bg-primary-container text-on-primary rounded-full py-[18px] px-6 transition-all active:scale-[0.98] active:opacity-90 hover:shadow-md">
+<svg class="w-5 h-5 flex-shrink-0" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="currentColor"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="currentColor"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="currentColor"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="currentColor"></path>
+</svg>
+<span class="font-label-button text-label-button">Zaloguj się przez Google</span>
+</button>
+<!-- Guest Button (Secondary Ghost Style) -->
+<button class="w-full flex items-center justify-center bg-transparent text-primary-container border border-primary-container/10 rounded-full py-[18px] px-6 transition-colors hover:bg-surface-container-low active:bg-surface-variant">
+<span class="font-label-button text-label-button">Kontynuuj jako gość</span>
+</button>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center items-center gap-2.5 mt-auto">
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant/40 transition-colors"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant/40 transition-colors"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant/40 transition-colors"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-outline-variant/40 transition-colors"></div>
+<div class="w-6 h-1.5 rounded-full bg-primary-container transition-all duration-300"></div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Twój Profil</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#c1c7d0",
+                    "on-primary": "#ffffff",
+                    "primary-fixed": "#dde3ed",
+                    "tertiary-fixed": "#ffdad8",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#862026",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface-dim": "#dcd9da",
+                    "primary-fixed-dim": "#c1c7d0",
+                    "on-primary-fixed": "#161c23",
+                    "tertiary-container": "#480008",
+                    "on-error-container": "#93000a",
+                    "on-secondary": "#ffffff",
+                    "outline": "#75777b",
+                    "on-tertiary-container": "#db5f60",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "surface-container": "#f0eded",
+                    "on-secondary-fixed-variant": "#005138",
+                    "inverse-surface": "#313031",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#410007",
+                    "tertiary": "#190001",
+                    "on-surface": "#1c1b1c",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#006c4c",
+                    "primary": "#03080e",
+                    "on-secondary-fixed": "#002115",
+                    "surface-container-high": "#eae7e8",
+                    "surface": "#fcf8f9",
+                    "on-background": "#1c1b1c",
+                    "secondary-container": "#9df4cb",
+                    "primary-container": "#1a2027",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "background": "#fcf8f9",
+                    "surface-container-highest": "#e5e2e2",
+                    "on-surface-variant": "#44474b",
+                    "surface-tint": "#595f67",
+                    "surface-container-low": "#f6f3f3",
+                    "outline-variant": "#c5c6cb",
+                    "secondary-fixed": "#9df4cb",
+                    "surface-bright": "#fcf8f9",
+                    "on-primary-container": "#828790",
+                    "secondary-fixed-dim": "#81d7b0",
+                    "surface-variant": "#e5e2e2",
+                    "on-primary-fixed-variant": "#41474f",
+                    "on-secondary-container": "#0f7252"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-padding": "24px",
+                    "gutter": "16px",
+                    "card-gap": "20px",
+                    "unit": "8px",
+                    "section-margin": "48px"
+            },
+            "fontFamily": {
+                    "label-caps": [
+                            "Inter"
+                    ],
+                    "headline-hero": [
+                            "Inter"
+                    ],
+                    "headline-hero-mobile": [
+                            "Inter"
+                    ],
+                    "display-lg": [
+                            "Inter"
+                    ],
+                    "display-md": [
+                            "Inter"
+                    ],
+                    "body-main": [
+                            "Inter"
+                    ],
+                    "label-button": [
+                            "Inter"
+                    ]
+            },
+            "fontSize": {
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-hero": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "300"
+                            }
+                    ],
+                    "headline-hero-mobile": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "300"
+                            }
+                    ],
+                    "display-lg": [
+                            "80px",
+                            {
+                                    "lineHeight": "96px",
+                                    "letterSpacing": "-0.04em",
+                                    "fontWeight": "100"
+                            }
+                    ],
+                    "display-md": [
+                            "64px",
+                            {
+                                    "lineHeight": "72px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "200"
+                            }
+                    ],
+                    "body-main": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-button": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "fontWeight": "500"
+                            }
+                    ]
+            }
+        }
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-main antialiased min-h-screen flex flex-col pb-32">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-40 bg-transparent flex items-center justify-between px-container-padding py-4 transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 0;">shield</span>
+</div>
+<div class="font-headline-hero text-headline-hero-mobile font-light tracking-tighter text-primary">
+            be:Safe
+        </div>
+<div class="w-8"></div> <!-- Spacer for balance -->
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col px-container-padding mt-8">
+<!-- Hero Title -->
+<h1 class="font-headline-hero text-headline-hero-mobile text-primary mb-12 text-center">
+            Twój Profil
+        </h1>
+<!-- Avatar Section with Glow -->
+<div class="relative self-center mb-section-margin">
+<!-- Aqua Glow Orb behind Avatar -->
+<div class="absolute inset-0 bg-secondary-container rounded-full blur-[40px] opacity-60 scale-125"></div>
+<div class="relative w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-lowest shadow-[0_40px_40px_rgba(26,32,39,0.04)] bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A sophisticated, high-key portrait of a calm individual in a bright, modern minimalist setting. The lighting is soft and airy, perfectly aligning with a premium wellness app aesthetic. The color palette is dominated by pure whites, soft grays, and subtle natural skin tones. The mood is tranquil, serene, and deeply relaxing, emphasizing a sense of personal security and mindfulness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvUaXvtfVMxnr3QDDMqA1obeO3RyTudlGjnqznn40eociQ0H2NClm1MUnG8nDTqHV73VrcGM2uj4uUvzHJx4airKG7skHVWhAINCqcgpaxAyBmta1FGmOzYykTV42sdnk9SbuYORYlZSJq9K_6Pq7z967FuUp0BOwotyZhlbDsul2RfIX6oURcu6JtrREGJymBzMP36GOQxpU6Ogtop_Nc2-tsCb2uKHNbtvErPddpNt5aJLUKTmIZIPyx8GlO5fUj8Ehd1n9kZGI"/>
+</div>
+<div class="absolute bottom-0 right-0 bg-surface-container-lowest rounded-full p-2 shadow-lg cursor-pointer hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 0;">edit</span>
+</div>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-2 gap-card-gap mb-section-margin">
+<!-- Stat Card 1 -->
+<div class="bg-surface-container-lowest rounded-[24px] p-6 flex flex-col items-center justify-center shadow-[0_40px_40px_rgba(26,32,39,0.04)] relative overflow-hidden">
+<div class="absolute -top-10 -right-10 w-24 h-24 bg-primary-fixed rounded-full blur-2xl opacity-30"></div>
+<span class="font-display-md text-display-md text-primary mb-2">12</span>
+<span class="font-label-button text-label-button text-on-surface-variant">Zgłoszeń</span>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-container-lowest rounded-[24px] p-6 flex flex-col items-center justify-center shadow-[0_40px_40px_rgba(26,32,39,0.04)] relative overflow-hidden">
+<div class="absolute -top-10 -left-10 w-24 h-24 bg-secondary-fixed rounded-full blur-2xl opacity-30"></div>
+<span class="font-display-md text-display-md text-primary mb-2">84</span>
+<span class="font-label-button text-label-button text-on-surface-variant">Punktów zaufania</span>
+</div>
+</div>
+<!-- Settings List (Bento-style stacked modules) -->
+<div class="flex flex-col gap-4 mb-section-margin">
+<button class="w-full bg-surface-container-lowest rounded-[24px] p-5 flex items-center justify-between shadow-[0_20px_40px_rgba(26,32,39,0.02)] hover:bg-surface transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed/20 flex items-center justify-center text-primary group-hover:bg-primary-fixed/40 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">manage_accounts</span>
+</div>
+<span class="font-body-main text-body-main text-primary">Dane konta</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="w-full bg-surface-container-lowest rounded-[24px] p-5 flex items-center justify-between shadow-[0_20px_40px_rgba(26,32,39,0.02)] hover:bg-surface transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed/20 flex items-center justify-center text-primary group-hover:bg-primary-fixed/40 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">lock</span>
+</div>
+<span class="font-body-main text-body-main text-primary">Prywatność</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="w-full bg-surface-container-lowest rounded-[24px] p-5 flex items-center justify-between shadow-[0_20px_40px_rgba(26,32,39,0.02)] hover:bg-surface transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed/20 flex items-center justify-center text-primary group-hover:bg-primary-fixed/40 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</div>
+<span class="font-body-main text-body-main text-primary">Powiadomienia</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="w-full bg-surface-container-lowest rounded-[24px] p-5 flex items-center justify-between shadow-[0_20px_40px_rgba(26,32,39,0.02)] hover:bg-surface transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed/20 flex items-center justify-center text-primary group-hover:bg-primary-fixed/40 transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+</div>
+<span class="font-body-main text-body-main text-primary">Pomoc i wsparcie</span>
+</div>
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+</div>
+<!-- Logout Button -->
+<div class="mt-auto mb-10 flex justify-center">
+<button class="bg-primary-container text-on-primary font-label-button text-label-button px-8 py-4 rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity w-full max-w-xs justify-center shadow-lg">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">logout</span>
+                Wyloguj się
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-unit w-[calc(100%-48px)] left-1/2 -translate-x-1/2 rounded-full mb-6 shadow-xl bg-primary-container/90 backdrop-blur-xl z-50 flex justify-around items-center px-6 py-4">
+<button class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all group">
+<span class="material-symbols-outlined text-[28px] group-active:scale-95 transition-transform duration-200" style="font-variation-settings: 'FILL' 0;">map</span>
+</button>
+<button class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all group">
+<span class="material-symbols-outlined text-[28px] group-active:scale-95 transition-transform duration-200" style="font-variation-settings: 'FILL' 0;">notifications_active</span>
+</button>
+<button class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all group">
+<span class="material-symbols-outlined text-[28px] group-active:scale-95 transition-transform duration-200" style="font-variation-settings: 'FILL' 0;">family_restroom</span>
+</button>
+<!-- Active Tab: Profile -->
+<button class="flex flex-col items-center justify-center relative after:content-[''] after:absolute after:-bottom-2 after:w-1 after:h-1 after:bg-on-primary after:rounded-full group">
+<span class="material-symbols-outlined text-[28px] text-on-primary group-active:scale-95 transition-transform duration-200" style="font-variation-settings: 'FILL' 1;">person</span>
+</button>
+<button class="flex flex-col items-center justify-center opacity-50 text-on-primary hover:opacity-100 transition-all group">
+<span class="material-symbols-outlined text-[28px] group-active:scale-95 transition-transform duration-200" style="font-variation-settings: 'FILL' 0;">sos</span>
+</button>
+</nav>
+<!-- Desktop Nav Placeholder (Hidden on mobile based on responsive pivot rules) -->
+<nav class="hidden md:flex fixed top-0 left-0 w-full bg-transparent px-container-padding py-4 items-center justify-between z-50">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl">shield</span>
+<span class="font-headline-hero text-headline-hero tracking-tighter">be:Safe</span>
+</div>
+<div class="flex items-center gap-8 bg-surface-container-lowest/80 backdrop-blur-xl px-8 py-3 rounded-full shadow-sm">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined">map</span> Mapa</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined">notifications_active</span> Powiadomienia</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2"><span class="material-symbols-outlined">family_restroom</span> Społeczność</button>
+<button class="text-primary font-medium flex items-center gap-2"><span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span> Profil</button>
+</div>
+<div class="w-24"></div>
+</nav>
+</body></html>

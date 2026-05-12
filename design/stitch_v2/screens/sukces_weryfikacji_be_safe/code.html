@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Email Confirmed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#190001",
+                        "surface-variant": "#e5e2e2",
+                        "surface-container-low": "#f6f3f3",
+                        "primary-fixed": "#dde3ed",
+                        "inverse-primary": "#c1c7d0",
+                        "surface-dim": "#dcd9da",
+                        "surface-container-high": "#eae7e8",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "on-primary-fixed": "#161c23",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#44474b",
+                        "inverse-surface": "#313031",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#002115",
+                        "secondary": "#006c4c",
+                        "primary-container": "#1a2027",
+                        "background": "#fcf8f9",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "surface": "#fcf8f9",
+                        "on-primary-fixed-variant": "#41474f",
+                        "on-secondary-fixed-variant": "#005138",
+                        "on-primary-container": "#828790",
+                        "primary": "#03080e",
+                        "on-surface": "#1c1b1c",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "secondary-fixed": "#9df4cb",
+                        "outline-variant": "#c5c6cb",
+                        "on-secondary-container": "#0f7252",
+                        "surface-container": "#f0eded",
+                        "on-tertiary-container": "#db5f60",
+                        "surface-container-highest": "#e5e2e2",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "inverse-on-surface": "#f3f0f0",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1c1b1c",
+                        "tertiary-container": "#480008",
+                        "on-tertiary-fixed": "#410007",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fcf8f9",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#9df4cb",
+                        "outline": "#75777b",
+                        "tertiary-fixed": "#ffdad8",
+                        "surface-tint": "#595f67"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "gutter": "16px",
+                        "section-margin": "48px",
+                        "card-gap": "20px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-hero-mobile": ["Inter"],
+                        "display-md": ["Inter"],
+                        "label-button": ["Inter"],
+                        "headline-hero": ["Inter"],
+                        "body-main": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["80px", { "lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100" }],
+                        "headline-hero-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "300" }],
+                        "display-md": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200" }],
+                        "label-button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }],
+                        "body-main": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background min-h-screen flex flex-col justify-between relative overflow-hidden font-body-main selection:bg-secondary-fixed selection:text-primary">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-secondary-fixed/20 via-transparent to-transparent z-0 pointer-events-none"></div>
+<main class="relative z-10 flex-grow flex flex-col items-center justify-center px-container-padding text-center w-full max-w-md mx-auto">
+<h1 class="font-headline-hero text-headline-hero text-primary mb-12 tracking-tight">Email potwierdzony!</h1>
+<div class="w-[260px] h-[260px] rounded-full bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-secondary-fixed via-secondary-fixed/40 to-secondary-fixed/0 flex items-center justify-center mb-12 shadow-[0_0_120px_rgba(157,244,203,0.2)]">
+<span class="material-symbols-outlined text-primary text-[80px]" style="font-variation-settings: 'wght' 200, 'FILL' 0;">
+                check
+            </span>
+</div>
+<p class="font-body-main text-body-main text-on-surface-variant max-w-[280px] mx-auto leading-relaxed">
+            Twój adres email został potwierdzony. Możesz teraz korzystać ze wszystkich funkcji be:Safe.
+        </p>
+</main>
+<div class="relative z-10 w-full px-container-padding pb-10 flex flex-col items-center max-w-md mx-auto mt-auto">
+<button class="w-full h-[56px] rounded-full bg-primary-container text-on-primary font-label-button text-label-button flex items-center justify-center mb-10 hover:opacity-90 transition-opacity">
+            Otwórz be:Safe
+        </button>
+<div class="flex flex-col items-center gap-3 font-label-caps text-label-caps text-outline/60">
+<span class="font-headline-hero text-[18px] tracking-tighter text-primary/30 font-light">be:Safe</span>
+<div class="flex gap-2">
+<a class="hover:text-primary transition-colors" href="#">privacy</a>
+<span>·</span>
+<a class="hover:text-primary transition-colors" href="#">terms</a>
+</div>
+</div>
+</div>
+</body></html>

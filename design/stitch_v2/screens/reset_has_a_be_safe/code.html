@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Zresetuj hasło</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#190001",
+                        "surface-variant": "#e5e2e2",
+                        "surface-container-low": "#f6f3f3",
+                        "primary-fixed": "#dde3ed",
+                        "inverse-primary": "#c1c7d0",
+                        "surface-dim": "#dcd9da",
+                        "surface-container-high": "#eae7e8",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "on-primary-fixed": "#161c23",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#44474b",
+                        "inverse-surface": "#313031",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#002115",
+                        "secondary": "#006c4c",
+                        "primary-container": "#1a2027",
+                        "background": "#fcf8f9",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "surface": "#fcf8f9",
+                        "on-primary-fixed-variant": "#41474f",
+                        "on-secondary-fixed-variant": "#005138",
+                        "on-primary-container": "#828790",
+                        "primary": "#03080e",
+                        "on-surface": "#1c1b1c",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "secondary-fixed": "#9df4cb",
+                        "outline-variant": "#c5c6cb",
+                        "on-secondary-container": "#0f7252",
+                        "surface-container": "#f0eded",
+                        "on-tertiary-container": "#db5f60",
+                        "surface-container-highest": "#e5e2e2",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "inverse-on-surface": "#f3f0f0",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1c1b1c",
+                        "tertiary-container": "#480008",
+                        "on-tertiary-fixed": "#410007",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#fcf8f9",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#9df4cb",
+                        "outline": "#75777b",
+                        "tertiary-fixed": "#ffdad8",
+                        "surface-tint": "#595f67"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "gutter": "16px",
+                        "section-margin": "48px",
+                        "card-gap": "20px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-hero-mobile": ["Inter"],
+                        "display-md": ["Inter"],
+                        "label-button": ["Inter"],
+                        "headline-hero": ["Inter"],
+                        "body-main": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg": ["80px", { "lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100" }],
+                        "headline-hero-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "300" }],
+                        "display-md": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200" }],
+                        "label-button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }],
+                        "body-main": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glow-orb {
+            background: radial-gradient(circle, rgba(26,32,39,0.15) 0%, rgba(26,32,39,0) 70%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen flex flex-col font-body-main antialiased selection:bg-primary selection:text-on-primary">
+<!-- Small Glow Orb -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[120px] glow-orb pointer-events-none rounded-full blur-2xl mt-8"></div>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col justify-center px-container-padding relative z-10 w-full max-w-md mx-auto">
+<!-- Header -->
+<header class="mb-section-margin text-center">
+<h1 class="font-headline-hero-mobile text-headline-hero-mobile text-primary tracking-tight">Zresetuj hasło</h1>
+<p class="font-body-main text-body-main text-on-surface-variant mt-2 opacity-80">Wprowadź nowe hasło dla swojego konta.</p>
+</header>
+<!-- Form Section -->
+<section class="w-full space-y-card-gap">
+<!-- Input: Nowe hasło -->
+<div class="relative group">
+<label class="block font-label-button text-label-button text-on-surface-variant mb-2 ml-4" for="new_password">Nowe hasło</label>
+<div class="relative bg-surface-container-lowest rounded-[24px] shadow-[0_8px_30px_rgba(26,32,39,0.04)] border border-surface-variant/50 transition-colors focus-within:border-primary/20">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-60 pointer-events-none">lock</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body-main text-body-main py-4 pl-12 pr-4 rounded-[24px] placeholder-on-surface-variant/40" id="new_password" name="new_password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Input: Powtórz hasło -->
+<div class="relative group">
+<label class="block font-label-button text-label-button text-on-surface-variant mb-2 ml-4" for="confirm_password">Powtórz hasło</label>
+<div class="relative bg-surface-container-lowest rounded-[24px] shadow-[0_8px_30px_rgba(26,32,39,0.04)] border border-surface-variant/50 transition-colors focus-within:border-primary/20">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant opacity-60 pointer-events-none">lock_reset</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-body-main text-body-main py-4 pl-12 pr-4 rounded-[24px] placeholder-on-surface-variant/40" id="confirm_password" name="confirm_password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Action Button -->
+<div class="pt-8 w-full flex justify-center">
+<button class="bg-primary-container text-on-primary font-label-button text-label-button rounded-full py-4 px-12 hover:opacity-90 transition-opacity w-full sm:w-auto shadow-[0_12px_24px_rgba(26,32,39,0.15)]">
+                    Zapisz hasło
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="py-8 text-center flex flex-col items-center justify-center space-y-2 opacity-60">
+<div class="font-label-caps text-label-caps text-primary tracking-widest font-light">be:Safe</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant flex gap-2">
+<a class="hover:text-primary transition-colors" href="#">privacy</a>
+<span>·</span>
+<a class="hover:text-primary transition-colors" href="#">terms</a>
+</div>
+</footer>
+</body></html>
