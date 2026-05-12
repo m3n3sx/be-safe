@@ -1,3 +1,11 @@
+/// be:Safe v2 — Alert Detail Screen (Serenity Guard)
+///
+/// Alert detail: map preview, photo, title, info chips, credibility,
+/// vote buttons, realtime comments.
+///
+/// Design source: design/stitch_v2/screens/szczeg_y_alertu_be_safe/
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,52 +15,62 @@ import '../../models/alert.dart';
 import '../../providers/alert_provider.dart';
 import '../../services/api_service.dart';
 import '../../services/socket_service.dart';
-import '../../services/i18n.dart';
+import '../../theme/design_tokens.dart';
+import '../../widgets/serenity_card.dart';
 
 class AlertDetailScreen extends StatefulWidget {
   final AlertModel alert;
   const AlertDetailScreen({super.key, required this.alert});
-  @override State<AlertDetailScreen> createState() => _AlertDetailScreenState();
+
+  @override
+  State<AlertDetailScreen> createState() => _AlertDetailScreenState();
 }
 
 class _AlertDetailScreenState extends State<AlertDetailScreen> {
   List<Map<String, dynamic>> _comments = [];
   final _commentCtrl = TextEditingController();
-  final ScrollController _commentsScroll = ScrollController();
+  final ScrollController _scroll = ScrollController();
   bool _sending = false;
-  void Function()? _unsubscribeChat;
+  void Function()? _unsubscribe;
 
   @override
   void initState() {
     super.initState();
     _loadComments();
-    // Subskrybuj realtime chat
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final socket = context.read<SocketService>();
-      _unsubscribeChat = socket.subscribeToAlert(
+      _unsubscribe = socket.subscribeToAlert(
         widget.alert.id,
         onNewComment: (c) {
           if (!mounted) return;
-          // Deduplikacja po id
           if (_comments.any((x) => x['id'] == c['id'])) return;
           setState(() => _comments.add(c));
           _scrollToBottom();
         },
         onCommentDeleted: (c) {
           if (!mounted) return;
-          setState(() => _comments.removeWhere((x) => x['id'] == c['comment_id']));
+          setState(
+            () => _comments.removeWhere((x) => x['id'] == c['comment_id']),
+          );
         },
       );
     });
   }
 
+  @override
+  void dispose() {
+    _unsubscribe?.call();
+    _commentCtrl.dispose();
+    _scroll.dispose();
+    super.dispose();
+  }
+
   void _scrollToBottom() {
-    if (!_commentsScroll.hasClients) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_commentsScroll.hasClients) {
-        _commentsScroll.animateTo(
-          _commentsScroll.position.maxScrollExtent,
+      if (_scroll.hasClients) {
+        _scroll.animateTo(
+          _scroll.position.maxScrollExtent,
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
         );
@@ -60,19 +78,14 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
     });
   }
 
-  @override
-  void dispose() {
-    _unsubscribeChat?.call();
-    _commentCtrl.dispose();
-    _commentsScroll.dispose();
-    super.dispose();
-  }
-
   Future<void> _loadComments() async {
     try {
-      final res = await context.read<ApiService>().get('/alerts/${widget.alert.id}/comments');
-      if (res['comments'] != null && mounted) {
-        setState(() => _comments = List<Map<String, dynamic>>.from(res['comments']));
+      final res = await context
+          .read<ApiService>()
+          .get('/alerts/${widget.alert.id}/comments');
+      final list = (res['comments'] as List?) ?? [];
+      if (mounted) {
+        setState(() => _comments = List<Map<String, dynamic>>.from(list));
         _scrollToBottom();
       }
     } catch (_) {}
@@ -82,288 +95,663 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
     if (_commentCtrl.text.trim().isEmpty) return;
     setState(() => _sending = true);
     try {
-      final res = await context.read<ApiService>().post('/alerts/${widget.alert.id}/comments', {'content': _commentCtrl.text.trim()});
+      final res = await context.read<ApiService>().post(
+        '/alerts/${widget.alert.id}/comments',
+        {'content': _commentCtrl.text.trim()},
+      );
       if (res['id'] != null) {
         _commentCtrl.clear();
-        // Optimistic add — broadcast też przyjdzie, ale dedup po id
         if (!_comments.any((x) => x['id'] == res['id'])) {
           setState(() => _comments.add(res));
           _scrollToBottom();
         }
       }
     } catch (_) {
-    } finally { if (mounted) setState(() => _sending = false); }
+    } finally {
+      if (mounted) setState(() => _sending = false);
+    }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final a = widget.alert;
-    final cs = Theme.of(context).colorScheme;
-    final timeAgo = DateTime.now().difference(a.createdAt);
-    final expiresIn = a.expiresAt.difference(DateTime.now());
-    final total = a.confirms + a.denies;
-    final confirmPct = total > 0 ? a.confirms / total : 0.5;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Scaffold(
-      appBar: AppBar(title: Text(a.category.label), actions: [
-        IconButton(
-          icon: const Icon(Icons.share),
-          onPressed: () => Share.share(
-            '⚠️ ${a.title}\n\n${a.description ?? ""}\n\nLokalizacja: https://www.google.com/maps?q=${a.location.latitude},${a.location.longitude}\n\nZgłoszone przez be:Safe — https://besafe.org.pl',
+  Future<void> _vote(String type) async {
+    HapticFeedback.lightImpact();
+    try {
+      await context.read<AlertProvider>().vote(widget.alert.id, type);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: type == 'confirm'
+              ? SerenityColors.secondary
+              : SerenityColors.onSurfaceVariant,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+          ),
+          content: Text(
+            type == 'confirm'
+                ? 'Potwierdzono zagrożenie'
+                : 'Oznaczono jako nieaktualne',
           ),
         ),
-        IconButton(
-          icon: const Icon(Icons.flag_outlined),
-          tooltip: 'Zgłoś nadużycie',
-          onPressed: () => _reportAlert(),
-        ),
-      ]),
-      body: Column(children: [
-        Expanded(child: ListView(controller: _commentsScroll, children: [
-          // Map
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
-            child: SizedBox(height: 200, child: GoogleMap(
-              initialCameraPosition: CameraPosition(target: a.location, zoom: 16),
-              markers: {Marker(markerId: MarkerId(a.id), position: a.location)},
-              circles: {Circle(circleId: CircleId(a.id), center: a.location, radius: a.radiusM.toDouble(),
-                fillColor: Colors.red.withValues(alpha: 0.15), strokeColor: Colors.red, strokeWidth: 2)},
-              myLocationEnabled: false, zoomControlsEnabled: false, mapToolbarEnabled: false,
-              scrollGesturesEnabled: false, zoomGesturesEnabled: false, rotateGesturesEnabled: false, tiltGesturesEnabled: false,
-              liteModeEnabled: true,
-              style: isDark ? _darkStyle : null,
-            )),
-          ),
-
-          if (a.photoUrl != null) Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-            child: ClipRRect(borderRadius: BorderRadius.circular(16),
-              child: Image.network(a.photoUrl!, height: 200, width: double.infinity, fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const SizedBox.shrink())),
-          ),
-
-          Padding(padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            // Title
-            Text(a.title, style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-
-            // Info chips — MD3 style
-            Wrap(spacing: 8, runSpacing: 8, children: [
-              _infoChip(context, Icons.access_time, '${_fmt(timeAgo)} ${S.get('ago')}'),
-              _infoChip(context, Icons.timer_outlined, '${S.get('expires_in')} ${_fmt(expiresIn)}'),
-              if (a.distanceM != null) _infoChip(context, Icons.near_me, '${a.distanceM!.round()}m'),
-              _authorChip(context, a),
-            ]),
-            const SizedBox(height: 16),
-
-            if (a.description != null) ...[
-              Text(a.description!, style: Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.5)),
-              const SizedBox(height: 16),
-            ],
-
-            // Credibility card
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              child: Padding(padding: const EdgeInsets.all(16), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(S.get('credibility'), style: Theme.of(context).textTheme.titleSmall),
-                const SizedBox(height: 10),
-                ClipRRect(borderRadius: BorderRadius.circular(8),
-                  child: LinearProgressIndicator(value: confirmPct, minHeight: 10, backgroundColor: cs.errorContainer, color: Colors.green)),
-                const SizedBox(height: 8),
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Text('✅ ${a.confirms} ${S.get('confirmations')}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 13)),
-                  Text('❌ ${a.denies} ${S.get('denials')}', style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 13)),
-                ]),
-              ])),
-            ),
-            const SizedBox(height: 12),
-
-            // Vote buttons — MD3 FilledButton
-            Row(children: [
-              Expanded(child: FilledButton.icon(
-                onPressed: () => _vote('confirm'),
-                icon: const Icon(Icons.thumb_up),
-                label: Text(S.get('confirm')),
-                style: FilledButton.styleFrom(backgroundColor: Colors.green, foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-              )),
-              const SizedBox(width: 12),
-              Expanded(child: FilledButton.icon(
-                onPressed: () => _vote('deny'),
-                icon: const Icon(Icons.thumb_down),
-                label: Text(S.get('outdated')),
-                style: FilledButton.styleFrom(backgroundColor: cs.error, foregroundColor: cs.onError,
-                  padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
-              )),
-            ]),
-            const SizedBox(height: 24),
-
-            // Comments header
-            Row(children: [
-              const Icon(Icons.chat_bubble_outline, size: 18), const SizedBox(width: 6),
-              Text('${S.get('comments')} (${_comments.length})', style: Theme.of(context).textTheme.titleSmall),
-            ]),
-            const SizedBox(height: 8),
-
-            // Comments list — MD3 cards
-            ..._comments.map((c) => _commentTile(context, c)),
-            if (_comments.isEmpty) Padding(padding: const EdgeInsets.symmetric(vertical: 12),
-              child: Text(S.get('no_comments'), style: TextStyle(color: cs.onSurfaceVariant))),
-          ])),
-        ])),
-
-        // Comment input — MD3 style
-        Container(
-          padding: EdgeInsets.fromLTRB(12, 8, 8, MediaQuery.of(context).padding.bottom + 8),
-          decoration: BoxDecoration(color: cs.surface, border: Border(top: BorderSide(color: cs.outlineVariant))),
-          child: Row(children: [
-            Expanded(child: TextField(
-              controller: _commentCtrl,
-              decoration: InputDecoration(
-                hintText: S.get('add_comment'),
-                filled: true,
-                fillColor: cs.surfaceContainerHighest,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              ),
-              textInputAction: TextInputAction.send,
-              onSubmitted: (_) => _addComment(),
-            )),
-            const SizedBox(width: 8),
-            _sending
-              ? const SizedBox(width: 40, height: 40, child: Padding(padding: EdgeInsets.all(8), child: CircularProgressIndicator(strokeWidth: 2)))
-              : IconButton.filled(onPressed: _addComment, icon: const Icon(Icons.send, size: 20)),
-          ]),
-        ),
-      ]),
-    );
+      );
+      Navigator.pop(context);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Już głosowałeś na ten alert')),
+      );
+    }
   }
 
-  Widget _authorChip(BuildContext context, AlertModel a) {
-    final cs = Theme.of(context).colorScheme;
-    final repColor = a.authorReputation >= 200 ? Colors.green : (a.authorReputation >= 100 ? Colors.amber : Colors.red);
-    final badgeColor = a.authorVerified ? cs.primary : null;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: badgeColor?.withValues(alpha: 0.1) ?? cs.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(20),
-        border: a.authorVerified ? Border.all(color: cs.primary, width: 1.5) : null,
+  Future<void> _reportAlert() async {
+    HapticFeedback.lightImpact();
+    final reason = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: SerenityColors.surfaceContainerLowest,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        if (a.authorVerified) ...[
-          Icon(Icons.verified, size: 14, color: cs.primary),
-          const SizedBox(width: 4),
-        ] else
-          Icon(Icons.person_outline, size: 14, color: cs.onSurfaceVariant),
-        const SizedBox(width: 4),
-        Text(a.authorUsername, style: TextStyle(
-          color: a.authorVerified ? cs.primary : cs.onSurfaceVariant,
-          fontSize: 12,
-          fontWeight: a.authorVerified ? FontWeight.bold : FontWeight.normal,
-        )),
-        if (a.authorRole != null) ...[
-          const SizedBox(width: 4),
-          Text('· ${a.authorRole}', style: TextStyle(fontSize: 11, color: cs.primary)),
-        ],
-        const SizedBox(width: 6),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-          decoration: BoxDecoration(color: repColor.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(8)),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(Icons.star, size: 10, color: repColor),
-            const SizedBox(width: 2),
-            Text('${a.authorReputation}', style: TextStyle(fontSize: 10, color: repColor, fontWeight: FontWeight.bold)),
-          ]),
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 48,
+              height: 4,
+              decoration: BoxDecoration(
+                color: SerenityColors.outlineVariant,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SerenitySpacing.xl,
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Zgłoś nadużycie',
+                  style: SerenityText.headlineHeroMobile.copyWith(fontSize: 20),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            for (final r in [
+              ('spam', 'Spam / reklama'),
+              ('fake', 'Fałszywe zgłoszenie'),
+              ('offensive', 'Treść obraźliwa'),
+              ('illegal', 'Treść niezgodna z prawem'),
+              ('other', 'Inne'),
+            ])
+              ListTile(
+                title: Text(r.$2, style: SerenityText.labelButton.copyWith(fontSize: 15)),
+                onTap: () => Navigator.pop(ctx, r.$1),
+              ),
+            const SizedBox(height: 12),
+          ],
         ),
-      ]),
+      ),
     );
-  }
-
-  Widget _infoChip(BuildContext context, IconData icon, String text) {
-    final cs = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(color: cs.surfaceContainerHighest, borderRadius: BorderRadius.circular(20)),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(icon, size: 14, color: cs.onSurfaceVariant), const SizedBox(width: 4),
-        Text(text, style: TextStyle(color: cs.onSurfaceVariant, fontSize: 12)),
-      ]),
-    );
-  }
-
-  Widget _commentTile(BuildContext context, Map<String, dynamic> c) {
-    final cs = Theme.of(context).colorScheme;
-    final author = c['author'] is Map ? c['author']['username'] ?? 'Anonim' : 'Anonim';
-    final time = DateTime.tryParse(c['created_at'] ?? '');
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(padding: const EdgeInsets.all(12), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        CircleAvatar(radius: 16, backgroundColor: cs.primaryContainer,
-          child: Text(author[0].toUpperCase(), style: TextStyle(fontSize: 13, color: cs.onPrimaryContainer, fontWeight: FontWeight.bold))),
-        const SizedBox(width: 10),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(children: [
-            Text(author, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-            if (time != null) ...[const SizedBox(width: 8), Text(_fmt(DateTime.now().difference(time)), style: TextStyle(fontSize: 11, color: cs.onSurfaceVariant))],
-          ]),
-          const SizedBox(height: 4),
-          Text(c['content'] ?? '', style: const TextStyle(fontSize: 14)),
-        ])),
-      ])),
-    );
+    if (reason == null || !mounted) return;
+    try {
+      await context
+          .read<ApiService>()
+          .post('/alerts/${widget.alert.id}/report', {'reason': reason});
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: SerenityColors.secondary,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+            ),
+            content: const Text('Zgłoszenie wysłane. Dziękujemy!'),
+          ),
+        );
+      }
+    } catch (_) {}
   }
 
   String _fmt(Duration d) {
     if (d.inDays > 0) return '${d.inDays}d';
     if (d.inHours > 0) return '${d.inHours}h';
-    return '${d.inMinutes}min';
+    return '${d.inMinutes}m';
   }
 
-  Future<void> _reportAlert() async {
-    HapticFeedback.lightImpact();
-    final reason = await showDialog<String>(context: context, builder: (ctx) => SimpleDialog(
-      title: const Text('Zgłoś nadużycie'),
-      children: [
-        for (final r in [
-          ('spam', 'Spam / reklama'),
-          ('fake', 'Fałszywe zgłoszenie'),
-          ('offensive', 'Treść obraźliwa'),
-          ('illegal', 'Treść niezgodna z prawem'),
-          ('other', 'Inne'),
-        ])
-          SimpleDialogOption(
-            onPressed: () => Navigator.pop(ctx, r.$1),
-            child: Text(r.$2),
+  @override
+  Widget build(BuildContext context) {
+    final a = widget.alert;
+    final timeAgo = DateTime.now().difference(a.createdAt);
+    final expiresIn = a.expiresAt.difference(DateTime.now());
+    final total = a.confirms + a.denies;
+    final confirmPct = total > 0 ? a.confirms / total : 0.5;
+
+    return Scaffold(
+      backgroundColor: SerenityColors.surfaceBright,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildTopBar(a),
+            Expanded(
+              child: ListView(
+                controller: _scroll,
+                padding: EdgeInsets.zero,
+                children: [
+                  _buildMap(a),
+                  if (a.photoUrl != null) _buildPhoto(a),
+                  Padding(
+                    padding: const EdgeInsets.all(SerenitySpacing.xl),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          a.title,
+                          style: SerenityText.displayMd.copyWith(
+                            fontSize: 28,
+                            height: 36 / 28,
+                          ),
+                        ),
+                        const SizedBox(height: SerenitySpacing.md),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            _infoChip(
+                              Icons.access_time,
+                              '${_fmt(timeAgo)} temu',
+                            ),
+                            _infoChip(
+                              Icons.timer_outlined,
+                              'wygasa za ${_fmt(expiresIn)}',
+                            ),
+                            if (a.distanceM != null)
+                              _infoChip(
+                                Icons.near_me,
+                                '${a.distanceM!.round()}m',
+                              ),
+                            _authorChip(a),
+                          ],
+                        ),
+                        if (a.description != null) ...[
+                          const SizedBox(height: SerenitySpacing.lg),
+                          Text(
+                            a.description!,
+                            style: SerenityText.bodyMain.copyWith(
+                              fontSize: 15,
+                              color: SerenityColors.primary,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: SerenitySpacing.lg),
+                        _buildCredibility(a, confirmPct),
+                        const SizedBox(height: SerenitySpacing.md),
+                        _buildVoteRow(),
+                        const SizedBox(height: SerenitySpacing.xxl),
+                        _buildCommentsHeader(),
+                        const SizedBox(height: SerenitySpacing.sm),
+                        ..._comments.map(_buildCommentTile),
+                        if (_comments.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            child: Text(
+                              'Brak komentarzy. Bądź pierwszy!',
+                              style: SerenityText.bodyMain,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            _buildCommentInput(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopBar(AlertModel a) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: SerenitySpacing.md,
+        vertical: SerenitySpacing.md,
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back, size: 28),
+            color: SerenityColors.primary,
+            onPressed: () => Navigator.pop(context),
           ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              a.category.label,
+              style: SerenityText.headlineHeroMobile.copyWith(fontSize: 22),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.share_outlined),
+            color: SerenityColors.primary,
+            onPressed: () => Share.share(
+              '⚠️ ${a.title}\n\n${a.description ?? ""}\n\n'
+              'Lokalizacja: https://www.google.com/maps?q=${a.location.latitude},${a.location.longitude}\n\n'
+              'be:Safe — https://besafe.org.pl',
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.flag_outlined),
+            color: SerenityColors.primary,
+            tooltip: 'Zgłoś nadużycie',
+            onPressed: _reportAlert,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMap(AlertModel a) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: SerenitySpacing.xl),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+        child: SizedBox(
+          height: 200,
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(target: a.location, zoom: 16),
+            markers: {Marker(markerId: MarkerId(a.id), position: a.location)},
+            circles: {
+              Circle(
+                circleId: CircleId(a.id),
+                center: a.location,
+                radius: a.radiusM.toDouble(),
+                fillColor:
+                    SerenityColors.glowAlertCoral.withValues(alpha: 0.18),
+                strokeColor: SerenityColors.glowAlertCoral,
+                strokeWidth: 2,
+              ),
+            },
+            myLocationEnabled: false,
+            zoomControlsEnabled: false,
+            mapToolbarEnabled: false,
+            scrollGesturesEnabled: false,
+            zoomGesturesEnabled: false,
+            rotateGesturesEnabled: false,
+            tiltGesturesEnabled: false,
+            liteModeEnabled: true,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhoto(AlertModel a) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        SerenitySpacing.xl,
+        SerenitySpacing.md,
+        SerenitySpacing.xl,
+        0,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+        child: Image.network(
+          a.photoUrl!,
+          height: 220,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+        ),
+      ),
+    );
+  }
+
+  Widget _infoChip(IconData icon, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: SerenityColors.surfaceContainer,
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusFull),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: SerenityColors.onSurfaceVariant),
+          const SizedBox(width: 6),
+          Text(text, style: SerenityText.labelCaps.copyWith(fontSize: 11)),
+        ],
+      ),
+    );
+  }
+
+  Widget _authorChip(AlertModel a) {
+    final repColor = a.authorReputation >= 200
+        ? SerenityColors.secondary
+        : (a.authorReputation >= 100
+            ? SerenityColors.onTertiaryContainer
+            : SerenityColors.error);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: a.authorVerified
+            ? SerenityColors.primary.withValues(alpha: 0.08)
+            : SerenityColors.surfaceContainer,
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusFull),
+        border: a.authorVerified
+            ? Border.all(color: SerenityColors.primary, width: 1)
+            : null,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            a.authorVerified ? Icons.verified : Icons.person_outline,
+            size: 14,
+            color: a.authorVerified
+                ? SerenityColors.primary
+                : SerenityColors.onSurfaceVariant,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            a.authorUsername,
+            style: SerenityText.labelCaps.copyWith(
+              fontSize: 11,
+              color: a.authorVerified
+                  ? SerenityColors.primary
+                  : SerenityColors.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Icon(Icons.star, size: 11, color: repColor),
+          const SizedBox(width: 2),
+          Text(
+            '${a.authorReputation}',
+            style: SerenityText.labelCaps.copyWith(
+              fontSize: 10,
+              color: repColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCredibility(AlertModel a, double confirmPct) {
+    return SerenityCard(
+      padding: const EdgeInsets.all(SerenitySpacing.md + 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'WIARYGODNOŚĆ',
+            style: SerenityText.labelCaps,
+          ),
+          const SizedBox(height: 10),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: confirmPct,
+              minHeight: 10,
+              backgroundColor: SerenityColors.tertiaryFixed,
+              color: SerenityColors.secondary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '✓ ${a.confirms} potwierdzeń',
+                style: SerenityText.labelButton.copyWith(
+                  fontSize: 13,
+                  color: SerenityColors.secondary,
+                ),
+              ),
+              Text(
+                '✗ ${a.denies} zaprzeczeń',
+                style: SerenityText.labelButton.copyWith(
+                  fontSize: 13,
+                  color: SerenityColors.onTertiaryContainer,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVoteRow() {
+    return Row(
+      children: [
+        Expanded(
+          child: _voteButton(
+            label: 'Potwierdzam',
+            icon: Icons.thumb_up_outlined,
+            color: SerenityColors.secondary,
+            onTap: () => _vote('confirm'),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _voteButton(
+            label: 'Nieaktualne',
+            icon: Icons.thumb_down_outlined,
+            color: SerenityColors.onTertiaryContainer,
+            onTap: () => _vote('deny'),
+            outline: true,
+          ),
+        ),
       ],
-    ));
-    if (reason == null || !mounted) return;
-    try {
-      await context.read<ApiService>().post('/alerts/${widget.alert.id}/report', {'reason': reason});
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Zgłoszenie wysłane. Dziękujemy!')));
-    } catch (_) {
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Już zgłoszone lub błąd')));
-    }
+    );
   }
 
-  void _vote(String type) async {
-    HapticFeedback.lightImpact();
-    try {
-      await context.read<AlertProvider>().vote(widget.alert.id, type);
-      if (mounted) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(type == 'confirm' ? 'Potwierdzono zagrożenie' : 'Oznaczono jako nieaktualne'))); Navigator.pop(context); }
-    } catch (_) { if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Już głosowałeś na ten alert'))); }
+  Widget _voteButton({
+    required String label,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+    bool outline = false,
+  }) {
+    return Material(
+      color: outline ? Colors.transparent : color,
+      borderRadius: SerenityShapes.pill(),
+      child: InkWell(
+        borderRadius: SerenityShapes.pill(),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: SerenityShapes.pill(),
+            border: outline
+                ? Border.all(color: color.withValues(alpha: 0.5))
+                : null,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 18,
+                color: outline ? color : SerenityColors.onPrimary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: SerenityText.labelButton.copyWith(
+                  color: outline ? color : SerenityColors.onPrimary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
-  static const String _darkStyle = '''[
-    {"elementType":"geometry","stylers":[{"color":"#212121"}]},
-    {"elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},
-    {"elementType":"labels.text.stroke","stylers":[{"color":"#212121"}]},
-    {"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#2c2c2c"}]},
-    {"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]},
-    {"featureType":"poi.business","stylers":[{"visibility":"off"}]}
-  ]''';
+  Widget _buildCommentsHeader() {
+    return Row(
+      children: [
+        Icon(
+          Icons.chat_bubble_outline,
+          size: 18,
+          color: SerenityColors.onSurfaceVariant,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          'KOMENTARZE (${_comments.length})',
+          style: SerenityText.labelCaps,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCommentTile(Map<String, dynamic> c) {
+    final author =
+        c['author'] is Map ? c['author']['username'] ?? 'Anonim' : 'Anonim';
+    final time = DateTime.tryParse(c['created_at'] ?? '');
+    return Padding(
+      padding: const EdgeInsets.only(bottom: SerenitySpacing.sm),
+      child: SerenityCard(
+        padding: const EdgeInsets.all(SerenitySpacing.md),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: SerenityColors.secondaryContainer,
+              child: Text(
+                author.isNotEmpty ? author[0].toUpperCase() : '?',
+                style: SerenityText.labelButton.copyWith(
+                  fontSize: 13,
+                  color: SerenityColors.onSecondaryContainer,
+                ),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        author,
+                        style: SerenityText.labelButton.copyWith(fontSize: 13),
+                      ),
+                      if (time != null) ...[
+                        const SizedBox(width: 8),
+                        Text(
+                          '${_fmt(DateTime.now().difference(time))} temu',
+                          style:
+                              SerenityText.labelCaps.copyWith(fontSize: 11),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    c['content'] ?? '',
+                    style: SerenityText.bodyMain.copyWith(
+                      fontSize: 14,
+                      color: SerenityColors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCommentInput() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        12,
+        8,
+        8,
+        MediaQuery.of(context).padding.bottom + 8,
+      ),
+      decoration: BoxDecoration(
+        color: SerenityColors.surface,
+        border: Border(
+          top: BorderSide(
+            color: SerenityColors.outlineVariant.withValues(alpha: 0.4),
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _commentCtrl,
+              style: SerenityText.bodyMain.copyWith(
+                color: SerenityColors.primary,
+              ),
+              decoration: InputDecoration(
+                hintText: 'Dodaj komentarz...',
+                hintStyle: SerenityText.bodyMain.copyWith(
+                  color: SerenityColors.onSurfaceVariant,
+                ),
+                filled: true,
+                fillColor: SerenityColors.surfaceContainerLow,
+                border: OutlineInputBorder(
+                  borderRadius: SerenityShapes.pill(),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: SerenityShapes.pill(),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: SerenityShapes.pill(),
+                  borderSide: BorderSide.none,
+                ),
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+              ),
+              textInputAction: TextInputAction.send,
+              onSubmitted: (_) => _addComment(),
+            ),
+          ),
+          const SizedBox(width: 8),
+          _sending
+              ? const SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : Material(
+                  color: SerenityColors.primaryContainer,
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: _addComment,
+                    child: const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Icon(
+                        Icons.send,
+                        size: 20,
+                        color: SerenityColors.onPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
 }
