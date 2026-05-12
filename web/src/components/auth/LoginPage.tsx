@@ -42,7 +42,7 @@ export default function LoginPage() {
     try {
       const client = (window as any).google.accounts.id;
       client.initialize({
-        client_id: '200274591700-jptqm86318od93eukrg0ajccpt87gfmu.apps.googleusercontent.com',
+        client_id: '1098119585965-1dmn79cgjbhsr84f1iu3dibvpilc906p.apps.googleusercontent.com',
         callback: async (response: { credential: string }) => {
           const payload = JSON.parse(atob(response.credential.split('.')[1]));
           setLoading(true);

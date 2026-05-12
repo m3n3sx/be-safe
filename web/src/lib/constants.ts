@@ -1,4 +1,4 @@
-export const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyCRg3frfmPXG6caSjel2c_nFbkb8bMIqYU';
+export const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'AIzaSyCuEqShVm8H-_7rxLy6uLTq4xUbCxFg7UI';
 export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'https://alert.u235.pl';
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://alert.u235.pl/api/v1';
 
