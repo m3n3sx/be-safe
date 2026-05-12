@@ -1,14 +1,21 @@
+/// be:Safe v2 — Referral Screen (Serenity Guard)
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../services/api_service.dart';
-import '../../widgets/shimmer_loader.dart';
+import '../../theme/design_tokens.dart';
+import '../../widgets/glow_orb.dart';
+import '../../widgets/serenity_card.dart';
 
 class ReferralScreen extends StatefulWidget {
   const ReferralScreen({super.key});
-  @override State<ReferralScreen> createState() => _ReferralScreenState();
+
+  @override
+  State<ReferralScreen> createState() => _ReferralScreenState();
 }
 
 class _ReferralScreenState extends State<ReferralScreen> {
@@ -17,108 +24,253 @@ class _ReferralScreenState extends State<ReferralScreen> {
   bool _loading = true;
 
   @override
-  void initState() { super.initState(); _load(); }
+  void initState() {
+    super.initState();
+    _load();
+  }
 
   Future<void> _load() async {
     try {
       final res = await context.read<ApiService>().get('/users/me');
-      if (mounted) setState(() {
-        _code = res['referral_code'];
-        _referrals = res['referrals_count'] ?? 0;
-        _loading = false;
-      });
-    } catch (_) { if (mounted) setState(() => _loading = false); }
+      if (mounted) {
+        setState(() {
+          _code = res['referral_code'];
+          _referrals = res['referrals_count'] ?? 0;
+          _loading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     final code = _code ?? '...';
     final shareUrl = 'https://besafe.org.pl?ref=$code';
-    final shareText = 'Dołącz do be:Safe — aplikacji bezpieczeństwa społeczności! Użyj mojego kodu polecającego: $code\n\n$shareUrl';
+    final shareText =
+        'Dołącz do be:Safe — aplikacji bezpieczeństwa społeczności! Użyj mojego kodu polecającego: $code\n\n$shareUrl';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Zaproś znajomych')),
-      body: _loading
-        ? Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(children: const [
-              SizedBox(height: 32),
-              ShimmerLoader(width: 80, height: 80, borderRadius: BorderRadius.all(Radius.circular(40))),
-              SizedBox(height: 24),
-              ShimmerLoader(width: 220, height: 60, borderRadius: BorderRadius.all(Radius.circular(16))),
-              SizedBox(height: 24),
-              ShimmerLoader(width: 200, height: 200, borderRadius: BorderRadius.all(Radius.circular(16))),
-              SizedBox(height: 24),
-              ShimmerCard(height: 90),
-            ]),
-          )
-        : SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(children: [
-              Icon(Icons.card_giftcard, size: 80, color: cs.primary),
-              const SizedBox(height: 16),
-              const Text('Twój kod polecający', style: TextStyle(fontSize: 16, color: Colors.grey)),
-              const SizedBox(height: 8),
-              GestureDetector(
-                onTap: () {
-                  Clipboard.setData(ClipboardData(text: code));
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Kod skopiowany!')));
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: cs.primaryContainer,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: cs.primary, width: 2),
+      backgroundColor: SerenityColors.surfaceBright,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SerenitySpacing.md,
+                vertical: SerenitySpacing.md,
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, size: 28),
+                    color: SerenityColors.primary,
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Text(code, style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 4, color: cs.onPrimaryContainer)),
-                    const SizedBox(width: 12),
-                    Icon(Icons.copy, color: cs.onPrimaryContainer),
-                  ]),
-                ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Zaproś znajomych',
+                    style: SerenityText.headlineHeroMobile,
+                  ),
+                ],
               ),
-              const SizedBox(height: 24),
-
-              // QR code
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                child: QrImageView(data: shareUrl, size: 200, backgroundColor: Colors.white),
-              ),
-              const SizedBox(height: 24),
-
-              // Stats
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                    Column(children: [
-                      Text('$_referrals', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-                      const Text('Poleconych', style: TextStyle(color: Colors.grey)),
-                    ]),
-                    Column(children: [
-                      Text('${_referrals * 10}', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-                      const Text('Punktów', style: TextStyle(color: Colors.grey)),
-                    ]),
-                  ]),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              SizedBox(width: double.infinity, child: FilledButton.icon(
-                onPressed: () => Share.share(shareText),
-                icon: const Icon(Icons.share),
-                label: const Text('Udostępnij'),
-                style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
-              )),
-
-              const SizedBox(height: 16),
-              Text('Polecaj be:Safe znajomym i rodzinie — razem tworzymy bezpieczniejsze miasto',
-                textAlign: TextAlign.center, style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
-            ]),
-          ),
+            ),
+            Expanded(
+              child: _loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.all(SerenitySpacing.xl),
+                      child: Column(
+                        children: [
+                          GlowOrb(
+                            size: 160,
+                            color: SerenityColors.glowSafeMint,
+                            coreOpacity: 0.5,
+                            pulse: false,
+                            child: Icon(
+                              Icons.card_giftcard,
+                              size: 56,
+                              color: SerenityColors.primary,
+                            ),
+                          ),
+                          const SizedBox(height: SerenitySpacing.xl),
+                          Text(
+                            'Twój kod polecający',
+                            style: SerenityText.labelCaps,
+                          ),
+                          const SizedBox(height: 8),
+                          GestureDetector(
+                            onTap: () {
+                              HapticFeedback.selectionClick();
+                              Clipboard.setData(
+                                ClipboardData(text: code),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor:
+                                      SerenityColors.secondary,
+                                  behavior: SnackBarBehavior.floating,
+                                  margin: const EdgeInsets.all(16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      SerenityShapes.radiusXl,
+                                    ),
+                                  ),
+                                  content: const Text('Kod skopiowany'),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 14,
+                              ),
+                              decoration: BoxDecoration(
+                                color: SerenityColors.primaryContainer,
+                                borderRadius: SerenityShapes.pill(),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    code,
+                                    style:
+                                        SerenityText.displayMd.copyWith(
+                                      fontSize: 28,
+                                      height: 1.0,
+                                      letterSpacing: 4,
+                                      color: SerenityColors.onPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Icon(
+                                    Icons.copy,
+                                    color: SerenityColors.onPrimary,
+                                    size: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: SerenitySpacing.xl),
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: SerenityColors.surfaceContainerLowest,
+                              borderRadius: BorderRadius.circular(
+                                SerenityShapes.radiusXl,
+                              ),
+                              boxShadow: SerenityElevation.card(),
+                            ),
+                            child: QrImageView(
+                              data: shareUrl,
+                              size: 200,
+                              backgroundColor: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: SerenitySpacing.xl),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: SerenityCard(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '$_referrals',
+                                        style: SerenityText.displayMd
+                                            .copyWith(
+                                          fontSize: 36,
+                                          height: 1.0,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Poleconych',
+                                        style: SerenityText.labelCaps,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: SerenityCard(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 20),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '${_referrals * 10}',
+                                        style: SerenityText.displayMd
+                                            .copyWith(
+                                          fontSize: 36,
+                                          height: 1.0,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Punktów',
+                                        style: SerenityText.labelCaps,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: SerenitySpacing.xl),
+                          Material(
+                            color: SerenityColors.primaryContainer,
+                            borderRadius: SerenityShapes.pill(),
+                            child: InkWell(
+                              borderRadius: SerenityShapes.pill(),
+                              onTap: () => Share.share(shareText),
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 18,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.share,
+                                      color: SerenityColors.onPrimary,
+                                      size: 20,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Udostępnij',
+                                      style: SerenityText.labelButton
+                                          .copyWith(
+                                        fontSize: 16,
+                                        color: SerenityColors.onPrimary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: SerenitySpacing.md),
+                          Text(
+                            'Polecaj be:Safe znajomym i rodzinie — razem tworzymy bezpieczniejsze miasto',
+                            textAlign: TextAlign.center,
+                            style: SerenityText.bodyMain.copyWith(
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
