@@ -59,6 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
       label: 'Profil',
     ),
     PillNavItem(icon: Icons.sos_outlined, activeIcon: Icons.sos, label: 'SOS'),
+    PillNavItem(
+      icon: Icons.apps_outlined,
+      activeIcon: Icons.apps,
+      label: 'Więcej',
+    ),
   ];
 
   @override
@@ -188,6 +193,11 @@ class _HomeScreenState extends State<HomeScreen> {
           MaterialPageRoute(builder: (_) => const SosScreen()),
         );
         break;
+      case 5:
+        // "Więcej" — open the same menu sheet that was in the topBar
+        _openMenu();
+        setState(() => _navIndex = 1);
+        return;
       default:
         return;
     }
@@ -284,11 +294,31 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            icon: const Icon(Icons.menu, size: 28),
-            color: SerenityColors.primary,
-            onPressed: _openMenu,
-            tooltip: 'Menu',
+          // Avatar -> profile
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const ProfileScreen()),
+            ),
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: SerenityColors.surfaceContainerLowest,
+                boxShadow: SerenityElevation.card(),
+              ),
+              child: Center(
+                child: Text(
+                  userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+                  style: SerenityText.labelButton.copyWith(
+                    fontSize: 16,
+                    color: SerenityColors.primary,
+                  ),
+                ),
+              ),
+            ),
           ),
           Row(
             mainAxisSize: MainAxisSize.min,
