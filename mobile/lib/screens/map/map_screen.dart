@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as gcm;
@@ -15,6 +14,7 @@ import '../alerts/create_alert_screen.dart';
 import '../alerts/alert_detail_screen.dart';
 import '../../theme/design_tokens.dart';
 import '../../widgets/pill_nav_bar.dart';
+import '../../widgets/map_markers.dart';
 
 /// Wrapper for AlertModel to satisfy ClusterItem contract.
 class _ClusterableAlert with gcm.ClusterItem {
@@ -73,7 +73,7 @@ class _MapScreenState extends State<MapScreen> {
       return Marker(
         markerId: MarkerId(cluster.getId()),
         position: cluster.location,
-        icon: await _createClusterBitmap(cluster.count),
+        icon: await MapMarkers.clusterPin(cluster.count),
         onTap: () {
           HapticFeedback.selectionClick();
           _mapController?.animateCamera(CameraUpdate.newLatLngZoom(cluster.location, 15));
@@ -85,7 +85,7 @@ class _MapScreenState extends State<MapScreen> {
     return Marker(
       markerId: MarkerId(a.id),
       position: a.location,
-      icon: _iconCache[a.category] ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      icon: _iconCache[a.category] ?? await MapMarkers.alertPin(a.category),
       onTap: () {
         HapticFeedback.selectionClick();
         Navigator.push(context, MaterialPageRoute(builder: (_) => AlertDetailScreen(alert: a)));
@@ -93,91 +93,13 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  Future<BitmapDescriptor> _createClusterBitmap(int count) async {
-    final dpr = MediaQuery.of(context).devicePixelRatio;
-    final size = (56.0 * dpr).roundToDouble();
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-
-    final outer = Paint()..color = Colors.red.withValues(alpha: 0.35)..isAntiAlias = true;
-    final inner = Paint()..color = Colors.red.shade700..isAntiAlias = true;
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, outer);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.6, inner);
-
-    final tp = TextPainter(
-      text: TextSpan(
-        text: count > 99 ? '99+' : '$count',
-        style: TextStyle(fontSize: 18 * dpr, fontWeight: FontWeight.w800, color: Colors.white, height: 1),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, Offset((size - tp.width) / 2, (size - tp.height) / 2));
-
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
-    final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    return BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: 56, height: 56);
-  }
-
   Future<void> _precacheIcons() async {
     await Future.delayed(const Duration(milliseconds: 100));
     if (!mounted) return;
     for (final cat in AlertCategory.values) {
-      _iconCache[cat] = await _createAlertPin();
+      _iconCache[cat] = await MapMarkers.alertPin(cat);
     }
     if (mounted) setState(() {});
-  }
-
-  Future<BitmapDescriptor> _createAlertPin() async {
-    final dpr = MediaQuery.of(context).devicePixelRatio;
-    final w = (44.0 * dpr).roundToDouble();
-    final h = (58.0 * dpr).roundToDouble();
-    final r = w / 2;
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-
-    final pin = Paint()..color = Colors.red.shade700..isAntiAlias = true;
-    canvas.drawCircle(Offset(w / 2, r), r, pin);
-    final tri = Path()..moveTo(w / 2 - r * 0.5, r + r * 0.6)..lineTo(w / 2, h)..lineTo(w / 2 + r * 0.5, r + r * 0.6)..close();
-    canvas.drawPath(tri, pin);
-
-    final tp = TextPainter(
-      text: TextSpan(text: '!', style: TextStyle(fontSize: 26 * dpr, fontWeight: FontWeight.w900, color: Colors.white, height: 1)),
-      textDirection: TextDirection.ltr)..layout();
-    tp.paint(canvas, Offset((w - tp.width) / 2, r - tp.height / 2));
-
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(w.toInt(), h.toInt());
-    final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    return BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: 44, height: 58);
-  }
-
-  Future<BitmapDescriptor> _createChildPin(String name) async {
-    final dpr = MediaQuery.of(context).devicePixelRatio;
-    final w = (44.0 * dpr).roundToDouble();
-    final h = (58.0 * dpr).roundToDouble();
-    final r = w / 2;
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-
-    final pin = Paint()..color = Colors.green.shade700..isAntiAlias = true;
-    canvas.drawCircle(Offset(w / 2, r), r, pin);
-    final tri = Path()..moveTo(w / 2 - r * 0.5, r + r * 0.6)..lineTo(w / 2, h)..lineTo(w / 2 + r * 0.5, r + r * 0.6)..close();
-    canvas.drawPath(tri, pin);
-
-    // White circle for avatar area
-    canvas.drawCircle(Offset(w / 2, r), r * 0.6, Paint()..color = Colors.white..isAntiAlias = true);
-    // Child icon
-    final icon = TextPainter(
-      text: TextSpan(text: String.fromCharCode(Icons.child_care.codePoint),
-        style: TextStyle(fontSize: 18 * dpr, fontFamily: Icons.child_care.fontFamily, color: Colors.green.shade700)),
-      textDirection: TextDirection.ltr)..layout();
-    icon.paint(canvas, Offset((w - icon.width) / 2, r - icon.height / 2));
-
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(w.toInt(), h.toInt());
-    final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    return BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: 44, height: 58);
   }
 
   Future<void> _initLocation() async {
@@ -204,7 +126,7 @@ class _MapScreenState extends State<MapScreen> {
       for (final k in kids) {
         final name = k['username'] ?? '?';
         if (!_childIconCache.containsKey(name)) {
-          _childIconCache[name] = await _createChildPin(name);
+          _childIconCache[name] = await MapMarkers.childPin(name);
         }
       }
       if (mounted) setState(() => _children = kids);

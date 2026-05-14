@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe — Pinezki mapy</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@300,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#fcf8f9",
+                        "outline-variant": "#c5c6cb",
+                        "secondary-container": "#9df4cb",
+                        "on-secondary-container": "#0f7252",
+                        "surface-container-high": "#eae7e8",
+                        "on-secondary-fixed": "#002115",
+                        "inverse-surface": "#313031",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "surface-container-low": "#f6f3f3",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#44474b",
+                        "inverse-primary": "#c1c7d0",
+                        "tertiary-fixed": "#ffdad8",
+                        "tertiary-container": "#480008",
+                        "background": "#fcf8f9",
+                        "on-primary": "#ffffff",
+                        "secondary": "#006c4c",
+                        "on-primary-fixed": "#161c23",
+                        "on-background": "#1c1b1c",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-container-highest": "#e5e2e2",
+                        "on-primary-fixed-variant": "#41474f",
+                        "surface-dim": "#dcd9da",
+                        "outline": "#75777b",
+                        "surface": "#fcf8f9",
+                        "primary-container": "#1a2027",
+                        "primary-fixed": "#dde3ed",
+                        "on-secondary-fixed-variant": "#005138",
+                        "on-tertiary-container": "#db5f60",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#9df4cb",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#410007",
+                        "tertiary": "#190001",
+                        "surface-tint": "#595f67",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "on-surface": "#1c1b1c",
+                        "primary": "#03080e",
+                        "on-primary-container": "#828790",
+                        "on-error-container": "#93000a",
+                        "surface-variant": "#e5e2e2",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "surface-container": "#f0eded",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "unit": "8px",
+                        "gutter": "16px",
+                        "card-gap": "20px",
+                        "section-margin": "48px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-hero": ["Inter"],
+                        "display-md": ["Inter"],
+                        "label-button": ["Inter"],
+                        "body-main": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-hero-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["80px", { "lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100" }],
+                        "headline-hero": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300" }],
+                        "display-md": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200" }],
+                        "label-button": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-main": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-hero-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "300" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .pin-shadow {
+            box-shadow: 0 4px 8px rgba(26, 32, 39, 0.2);
+        }
+        .card-shadow {
+            box-shadow: 0 40px 40px rgba(26, 32, 39, 0.04);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright min-h-screen pb-[100px] antialiased text-on-surface flex flex-col md:hidden">
+<!-- TopAppBar -->
+<header class="bg-transparent docked full-width top-0 text-primary flex items-center justify-between px-container-padding py-4 w-full z-10 relative">
+<button class="w-10 h-10 flex items-center justify-center hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-headline-hero-mobile text-headline-hero-mobile text-primary dark:text-inverse-primary absolute left-1/2 -translate-x-1/2">Pinezki mapy</h1>
+<div class="w-10"></div> <!-- Spacer for centering -->
+</header>
+<!-- Canvas area -->
+<main class="flex-grow px-container-padding flex flex-col gap-8 mt-4 relative z-0">
+<!-- SECTION 1: ALERT CATEGORIES -->
+<section class="bg-surface-container-lowest rounded-[24px] p-container-padding card-shadow flex flex-col gap-6 relative">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase">KATEGORIE</h2>
+<div class="grid grid-cols-3 gap-y-6 gap-x-4">
+<!-- Pin Template function could be imagined here, writing out 18 instances -->
+<!-- 1. Agresja -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">person_off</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">AGRESJA</span>
+</div>
+<!-- 2. Kradzież -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">front_hand</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">KRADZIEŻ</span>
+</div>
+<!-- 3. Wypadek -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">car_crash</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">WYPADEK</span>
+</div>
+<!-- 4. Pożar -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">local_fire_department</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">POŻAR</span>
+</div>
+<!-- 5. Powódź -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">waves</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">POWÓDŹ</span>
+</div>
+<!-- 6. Oblodzenie -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">severe_cold</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">OBLODZENIE</span>
+</div>
+<!-- 7. Niebezpieczna budowa -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">construction</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">NIEB. BUDOWA</span>
+</div>
+<!-- 8. Niebezpieczne zwierzę -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">pets</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">NIEB. ZWIERZĘ</span>
+</div>
+<!-- 9. Ciemna strefa -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">dark_mode</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">CIEMNA STREFA</span>
+</div>
+<!-- 10. Narkotyki -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">vaccines</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">NARKOTYKI</span>
+</div>
+<!-- 11. Akcja policji -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">local_police</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">AKCJA POLICJI</span>
+</div>
+<!-- 12. Pogoda -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">thunderstorm</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">POGODA</span>
+</div>
+<!-- 13. Inne -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">more_horiz</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">INNE</span>
+</div>
+<!-- 14. Podejrzana osoba -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">visibility</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">PODEJRZANA</span>
+</div>
+<!-- 15. Niebezpieczne przejście -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">traffic</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">NIEB. PRZEJŚCIE</span>
+</div>
+<!-- 16. Niebezpieczny plac zabaw -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">child_friendly</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">PLAC ZABAW</span>
+</div>
+<!-- 17. Zbiornik wodny -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">water</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">ZBIORNIK</span>
+</div>
+<!-- 18. Strefa szkolna -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">school</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">STREFA SZKOLNA</span>
+</div>
+</div>
+</section>
+<!-- SECTION 2: VARIANTS -->
+<section class="bg-surface-container-lowest rounded-[24px] p-container-padding card-shadow flex flex-col gap-6 relative">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase">WARIANTY</h2>
+<div class="grid grid-cols-2 gap-y-6 gap-x-4">
+<!-- a) Domyślny -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">local_fire_department</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">DOMYŚLNY</span>
+</div>
+<!-- b) Wybrany -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[62px] h-[88px] flex items-end justify-center scale-110">
+<div class="absolute w-[88px] h-[88px] bg-[#FF7A7A] opacity-40 rounded-full -top-[14px]"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="88" viewbox="0 0 62 88" width="62" xmlns="http://www.w3.org/2000/svg">
+<path d="M31 88C31 88 62 50.732 62 31C62 13.88 48.12 0 31 0C13.88 0 0 13.88 0 31C0 50.732 31 88 31 88Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+<circle cx="31" cy="31" r="28" stroke="#1A2027" stroke-opacity="0.3" stroke-width="1.5"></circle>
+</svg>
+<span class="material-symbols-outlined text-white text-[32px] absolute top-4">local_fire_department</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center mt-2">WYBRANY</span>
+</div>
+<!-- c) Potwierdzony -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">local_fire_department</span>
+<!-- Badge -->
+<div class="absolute bottom-[20px] -right-2 w-[22px] h-[22px] bg-secondary-container rounded-full border-2 border-white flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-secondary-container text-[12px] font-bold" style="font-variation-settings: 'wght' 600;">check</span>
+</div>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">POTWIERDZONY</span>
+</div>
+<!-- d) Nieaktualny -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#B8B8B8] opacity-15 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.1)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#B8B8B8" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5 opacity-70">local_fire_department</span>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">NIEAKTUALNY</span>
+</div>
+<!-- e) Wiele (3) -->
+<div class="flex flex-col items-center justify-end h-[110px] gap-2">
+<div class="relative w-[56px] h-[80px] flex items-end justify-center">
+<div class="absolute w-[80px] h-[80px] bg-[#FF7A7A] opacity-25 rounded-full -top-3"></div>
+<svg class="absolute bottom-0 drop-shadow-[0_4px_8px_rgba(26,32,39,0.2)]" fill="none" height="80" viewbox="0 0 56 80" width="56" xmlns="http://www.w3.org/2000/svg">
+<path d="M28 80C28 80 56 46.12 56 28C56 12.536 43.464 0 28 0C12.536 0 0 12.536 0 28C0 46.12 28 80 28 80Z" fill="#FF7A7A" stroke="white" stroke-width="2.5"></path>
+</svg>
+<span class="material-symbols-outlined text-white text-[28px] absolute top-3.5">local_fire_department</span>
+<!-- Badge -->
+<div class="absolute bottom-[20px] -right-2 w-[22px] h-[22px] bg-primary-container rounded-full border-2 border-white flex items-center justify-center z-10">
+<span class="font-label-caps text-[11px] text-white">3</span>
+</div>
+</div>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase text-center w-full leading-tight h-6 flex items-center justify-center">WIELE (3)</span>
+</div>
+</div>
+</section>
+</main>
+</body></html>
