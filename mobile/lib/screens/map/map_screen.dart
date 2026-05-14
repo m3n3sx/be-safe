@@ -183,7 +183,7 @@ class _MapScreenState extends State<MapScreen> {
             },
             circles: {
               ...alerts.map((a) => Circle(circleId: CircleId(a.id), center: a.location, radius: a.radiusM.toDouble(),
-                fillColor: Colors.red.withValues(alpha: 0.12), strokeColor: Colors.redAccent.withValues(alpha: 0.5), strokeWidth: 1)),
+                fillColor: const Color(0xFFFF7A7A).withValues(alpha: 0.06), strokeColor: const Color(0xFFFF7A7A).withValues(alpha: 0.25), strokeWidth: 1)),
               ..._children.map((c) => Circle(circleId: CircleId('child_${c['user_id']}'), center: LatLng(c['lat'], c['lng']),
                 radius: 150, fillColor: cs.primary.withValues(alpha: 0.08), strokeColor: cs.primary.withValues(alpha: 0.4), strokeWidth: 2)),
             },
