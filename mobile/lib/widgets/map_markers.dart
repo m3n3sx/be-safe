@@ -28,64 +28,58 @@ class MapMarkers {
     final key = 'alert_${category.apiValue}';
     if (_cache.containsKey(key)) return _cache[key]!;
 
-    const size = 120.0; // canvas size
-    const headR = 28.0; // head radius
-    const tailH = 20.0; // tail height below head
-    const headCy = 40.0; // head center Y
+    // Tight canvas: just the pin, no glow
+    const w = 48.0;
+    const h = 64.0;
+    const headR = 20.0;
+    const headCy = 22.0; // center of head circle
+    const cx = w / 2;
+    const bottomY = h - 2.0; // tail tip
 
     final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, size, size));
+    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, w, h));
 
-    // Glow halo
-    final glowPaint = Paint()
-      ..shader = ui.Gradient.radial(
-        Offset(size / 2, headCy),
-        headR + 16,
-        [
-          const Color(0xFFFF7A7A).withValues(alpha: 0.25),
-          const Color(0xFFFF7A7A).withValues(alpha: 0),
-        ],
-      );
-    canvas.drawCircle(Offset(size / 2, headCy), headR + 16, glowPaint);
+    // Teardrop path
+    final path = Path()
+      ..moveTo(cx, bottomY)
+      ..quadraticBezierTo(cx - headR * 0.7, headCy + headR * 0.9, cx - headR, headCy)
+      ..arcTo(
+        Rect.fromCircle(center: const Offset(cx, headCy), radius: headR),
+        math.pi,
+        -2 * math.pi,
+        false,
+      )
+      ..quadraticBezierTo(cx + headR * 0.7, headCy + headR * 0.9, cx, bottomY)
+      ..close();
 
-    // Teardrop path (circle head + pointed tail)
-    final path = Path();
-    final cx = size / 2;
-    final bottomY = headCy + headR + tailH;
-    // Start from bottom point, arc left up around circle, arc right, back to point
-    path.moveTo(cx, bottomY);
-    // Left curve to circle
-    path.quadraticBezierTo(cx - headR * 0.6, headCy + headR, cx - headR, headCy);
-    // Arc around the top (semicircle left to right)
-    path.arcTo(
-      Rect.fromCircle(center: Offset(cx, headCy), radius: headR),
-      math.pi, // start angle (left)
-      -2 * math.pi, // sweep full circle
-      false,
-    );
-    // Right curve back to point
-    path.quadraticBezierTo(cx + headR * 0.6, headCy + headR, cx, bottomY);
-    path.close();
-
-    // Fill coral
-    canvas.drawPath(path, Paint()..color = const Color(0xFFFF7A7A));
-
-    // White stroke
+    // White outline (draw first, thicker, acts as border)
     canvas.drawPath(
       path,
       Paint()
         ..color = Colors.white
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.5,
+        ..style = PaintingStyle.fill,
     );
+    // Slightly smaller coral fill
+    final innerPath = Path()
+      ..moveTo(cx, bottomY - 1.5)
+      ..quadraticBezierTo(cx - (headR - 2) * 0.7, headCy + (headR - 2) * 0.9, cx - headR + 2, headCy)
+      ..arcTo(
+        Rect.fromCircle(center: const Offset(cx, headCy), radius: headR - 2),
+        math.pi,
+        -2 * math.pi,
+        false,
+      )
+      ..quadraticBezierTo(cx + (headR - 2) * 0.7, headCy + (headR - 2) * 0.9, cx, bottomY - 1.5)
+      ..close();
+    canvas.drawPath(innerPath, Paint()..color = const Color(0xFFFF7A7A));
 
-    // Icon (Material Icons via text painter)
+    // Icon centered in head
     final iconData = category.iconData;
     final textPainter = TextPainter(textDirection: TextDirection.ltr);
     textPainter.text = TextSpan(
       text: String.fromCharCode(iconData.codePoint),
       style: TextStyle(
-        fontSize: 26,
+        fontSize: 20,
         fontFamily: iconData.fontFamily,
         package: iconData.fontPackage,
         color: Colors.white,
@@ -97,18 +91,14 @@ class MapMarkers {
       Offset(cx - textPainter.width / 2, headCy - textPainter.height / 2),
     );
 
-    // Shadow below tail
-    canvas.drawOval(
-      Rect.fromCenter(center: Offset(cx, bottomY + 4), width: 16, height: 6),
-      Paint()
-        ..color = SerenityColors.primaryContainer.withValues(alpha: 0.2)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
-    );
-
     final picture = recorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
+    final img = await picture.toImage((w * 3).toInt(), (h * 3).toInt()); // @3x
     final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    final descriptor = BitmapDescriptor.bytes(bytes!.buffer.asUint8List());
+    final descriptor = BitmapDescriptor.bytes(
+      bytes!.buffer.asUint8List(),
+      width: w,
+      height: h,
+    );
     _cache[key] = descriptor;
     return descriptor;
   }
@@ -118,30 +108,36 @@ class MapMarkers {
     const key = 'alert_inactive';
     if (_cache.containsKey(key)) return _cache[key]!;
 
-    const size = 120.0;
-    const headR = 28.0;
-    const tailH = 20.0;
-    const headCy = 40.0;
+    const w = 48.0;
+    const h = 64.0;
+    const headR = 20.0;
+    const headCy = 22.0;
+    const cx = w / 2;
+    const bottomY = h - 2.0;
 
     final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, size, size));
+    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, w, h));
 
-    final cx = size / 2;
-    final bottomY = headCy + headR + tailH;
     final path = Path()
       ..moveTo(cx, bottomY)
-      ..quadraticBezierTo(cx - headR * 0.6, headCy + headR, cx - headR, headCy)
-      ..arcTo(Rect.fromCircle(center: Offset(cx, headCy), radius: headR), math.pi, -2 * math.pi, false)
-      ..quadraticBezierTo(cx + headR * 0.6, headCy + headR, cx, bottomY)
+      ..quadraticBezierTo(cx - headR * 0.7, headCy + headR * 0.9, cx - headR, headCy)
+      ..arcTo(Rect.fromCircle(center: const Offset(cx, headCy), radius: headR), math.pi, -2 * math.pi, false)
+      ..quadraticBezierTo(cx + headR * 0.7, headCy + headR * 0.9, cx, bottomY)
       ..close();
 
-    canvas.drawPath(path, Paint()..color = const Color(0xFFB8B8B8));
-    canvas.drawPath(path, Paint()..color = Colors.white..style = PaintingStyle.stroke..strokeWidth = 2.5);
+    canvas.drawPath(path, Paint()..color = Colors.white);
+    final inner = Path()
+      ..moveTo(cx, bottomY - 1.5)
+      ..quadraticBezierTo(cx - (headR - 2) * 0.7, headCy + (headR - 2) * 0.9, cx - headR + 2, headCy)
+      ..arcTo(Rect.fromCircle(center: const Offset(cx, headCy), radius: headR - 2), math.pi, -2 * math.pi, false)
+      ..quadraticBezierTo(cx + (headR - 2) * 0.7, headCy + (headR - 2) * 0.9, cx, bottomY - 1.5)
+      ..close();
+    canvas.drawPath(inner, Paint()..color = const Color(0xFFB8B8B8));
 
     final picture = recorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
+    final img = await picture.toImage((w * 3).toInt(), (h * 3).toInt());
     final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List());
+    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: w, height: h);
     return _cache[key]!;
   }
 
@@ -152,9 +148,9 @@ class MapMarkers {
     final key = 'cluster_$bucket';
     if (_cache.containsKey(key)) return _cache[key]!;
 
-    final double sz = bucket == 's' ? 80 : bucket == 'm' ? 96 : bucket == 'l' ? 112 : 128;
-    final double r = sz / 2 - 8;
-    final double fontSize = bucket == 's' ? 16 : bucket == 'm' ? 18 : bucket == 'l' ? 20 : 24;
+    final double sz = bucket == 's' ? 40 : bucket == 'm' ? 48 : bucket == 'l' ? 56 : 64;
+    final double r = sz / 2 - 4;
+    final double fontSize = bucket == 's' ? 13 : bucket == 'm' ? 14 : bucket == 'l' ? 16 : 18;
 
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, sz, sz));
@@ -209,9 +205,9 @@ class MapMarkers {
     tp.paint(canvas, Offset(center.dx - tp.width / 2, center.dy - tp.height / 2));
 
     final picture = recorder.endRecording();
-    final img = await picture.toImage(sz.toInt(), sz.toInt());
+    final img = await picture.toImage((sz * 3).toInt(), (sz * 3).toInt());
     final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List());
+    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: sz, height: sz);
     return _cache[key]!;
   }
 
@@ -220,7 +216,7 @@ class MapMarkers {
     const key = 'user';
     if (_cache.containsKey(key)) return _cache[key]!;
 
-    const size = 64.0;
+    const size = 36.0;
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, size, size));
     final center = Offset(size / 2, size / 2);
@@ -237,14 +233,14 @@ class MapMarkers {
         ),
     );
     // White ring
-    canvas.drawCircle(center, 10, Paint()..color = Colors.white);
+    canvas.drawCircle(center, 7, Paint()..color = Colors.white);
     // Navy dot
-    canvas.drawCircle(center, 8, Paint()..color = SerenityColors.primaryContainer);
+    canvas.drawCircle(center, 5, Paint()..color = SerenityColors.primaryContainer);
 
     final picture = recorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
+    final img = await picture.toImage((size * 3).toInt(), (size * 3).toInt());
     final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List());
+    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: size, height: size);
     return _cache[key]!;
   }
 
@@ -253,7 +249,7 @@ class MapMarkers {
     final key = 'child_${name.hashCode}';
     if (_cache.containsKey(key)) return _cache[key]!;
 
-    const size = 80.0;
+    const size = 44.0;
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, size, size));
     final center = Offset(size / 2, size / 2);
@@ -270,7 +266,7 @@ class MapMarkers {
         ),
     );
     // White fill
-    canvas.drawCircle(center, 22, Paint()..color = Colors.white);
+    canvas.drawCircle(center, 15, Paint()..color = Colors.white);
     // Mint ring
     canvas.drawCircle(
       center,
@@ -297,9 +293,9 @@ class MapMarkers {
     tp.paint(canvas, Offset(center.dx - tp.width / 2, center.dy - tp.height / 2));
 
     final picture = recorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
+    final img = await picture.toImage((size * 3).toInt(), (size * 3).toInt());
     final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List());
+    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: size, height: size);
     return _cache[key]!;
   }
 
@@ -308,7 +304,7 @@ class MapMarkers {
     const key = 'sos';
     if (_cache.containsKey(key)) return _cache[key]!;
 
-    const size = 96.0;
+    const size = 48.0;
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, size, size));
     final center = Offset(size / 2, size / 2);
@@ -337,9 +333,9 @@ class MapMarkers {
     tp.paint(canvas, Offset(center.dx - tp.width / 2, center.dy - tp.height / 2));
 
     final picture = recorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
+    final img = await picture.toImage((size * 3).toInt(), (size * 3).toInt());
     final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
-    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List());
+    _cache[key] = BitmapDescriptor.bytes(bytes!.buffer.asUint8List(), width: size, height: size);
     return _cache[key]!;
   }
 
