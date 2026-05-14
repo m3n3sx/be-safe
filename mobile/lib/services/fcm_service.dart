@@ -17,9 +17,11 @@ class FcmService {
   /// Inicjalizuje Firebase + FCM. Wywołać po zalogowaniu użytkownika.
   /// Jeśli Firebase nie jest skonfigurowany (brak google-services.json), FCM jest pomijany.
   static Future<void> init(ApiService api) async {
-    if (_initialized) return;
+    // Always re-register token (even if Firebase already initialized)
     try {
-      await Firebase.initializeApp();
+      if (!_initialized) {
+        await Firebase.initializeApp();
+      }
     } catch (e) {
       debugPrint('[FCM] Firebase init failed (skipping): $e');
       return;

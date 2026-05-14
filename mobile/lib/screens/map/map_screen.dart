@@ -305,34 +305,12 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            // Horizontal filter chips
-            SizedBox(
-              height: 40,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  _SerenityChip(
-                    label: 'Wszystkie',
-                    active: alertProv.activeFilters.isEmpty,
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      alertProv.clearFilters();
-                    },
-                  ),
-                  for (final cat in AlertCategory.values)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: _SerenityChip(
-                        label: cat.label,
-                        active: alertProv.activeFilters.contains(cat),
-                        onTap: () {
-                          HapticFeedback.selectionClick();
-                          alertProv.toggleFilter(cat);
-                        },
-                      ),
-                    ),
-                ],
+            // Compact filter button (opens bottom sheet)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: _FilterPillButton(
+                activeCount: alertProv.activeFilters.length,
+                onTap: () => _openFiltersSheet(alertProv),
               ),
             ),
           ]),
@@ -632,6 +610,124 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+
+  void _openFiltersSheet(AlertProvider alertProv) {
+    HapticFeedback.selectionClick();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: SerenityColors.surfaceContainerLowest,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setS) {
+          return DraggableScrollableSheet(
+            initialChildSize: 0.6,
+            maxChildSize: 0.85,
+            minChildSize: 0.4,
+            expand: false,
+            builder: (_, controller) => Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SerenitySpacing.xl,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  Container(
+                    width: 48,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: SerenityColors.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        'Filtruj kategorie',
+                        style: SerenityText.headlineHeroMobile
+                            .copyWith(fontSize: 22),
+                      ),
+                      const Spacer(),
+                      if (alertProv.activeFilters.isNotEmpty)
+                        TextButton(
+                          onPressed: () {
+                            HapticFeedback.selectionClick();
+                            alertProv.clearFilters();
+                            setS(() {});
+                          },
+                          child: Text(
+                            'Wyczyść',
+                            style: SerenityText.labelButton.copyWith(
+                              color: SerenityColors.error,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: ListView(
+                      controller: controller,
+                      children: [
+                        for (final cat in AlertCategory.values)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: _CategoryRow(
+                              category: cat,
+                              selected: alertProv.activeFilters.contains(cat),
+                              onTap: () {
+                                HapticFeedback.selectionClick();
+                                alertProv.toggleFilter(cat);
+                                setS(() {});
+                              },
+                            ),
+                          ),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(ctx).padding.bottom + 12,
+                      top: 8,
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Material(
+                        color: SerenityColors.primaryContainer,
+                        borderRadius: SerenityShapes.pill(),
+                        child: InkWell(
+                          borderRadius: SerenityShapes.pill(),
+                          onTap: () => Navigator.pop(ctx),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(vertical: 16),
+                            child: Center(
+                              child: Text(
+                                'Pokaż ${alertProv.activeFilters.isEmpty ? "wszystkie" : "wybrane (${alertProv.activeFilters.length})"}',
+                                style: SerenityText.labelButton.copyWith(
+                                  fontSize: 15,
+                                  color: SerenityColors.onPrimary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   Future<void> _searchLocation(String query) async {
     if (query.isEmpty) return;
     try {
@@ -727,24 +823,19 @@ class _AlertSidePane extends StatelessWidget {
     );
   }
 }
-
-/// Serenity-style filter chip — pill shape, primaryContainer when active,
-/// surfaceContainer when inactive. Used in the map filter row.
-class _SerenityChip extends StatelessWidget {
-  final String label;
-  final bool active;
+/// Compact filter button shown above the map. Replaces full chip row.
+/// Shows "Filtruj" or "Filtry: N" if active filters present.
+class _FilterPillButton extends StatelessWidget {
+  final int activeCount;
   final VoidCallback onTap;
 
-  const _SerenityChip({
-    required this.label,
-    required this.active,
-    required this.onTap,
-  });
+  const _FilterPillButton({required this.activeCount, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+    final hasFilters = activeCount > 0;
     return Material(
-      color: active
+      color: hasFilters
           ? SerenityColors.primaryContainer
           : SerenityColors.surfaceContainerLowest,
       borderRadius: SerenityShapes.pill(),
@@ -752,20 +843,129 @@ class _SerenityChip extends StatelessWidget {
         borderRadius: SerenityShapes.pill(),
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: SerenityShapes.pill(),
-            boxShadow: active ? null : SerenityElevation.card(),
+            boxShadow: hasFilters ? null : SerenityElevation.card(),
           ),
-          child: Center(
-            child: Text(
-              label,
-              style: SerenityText.labelButton.copyWith(
-                color: active
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.tune,
+                size: 18,
+                color: hasFilters
                     ? SerenityColors.onPrimary
                     : SerenityColors.primary,
               ),
-            ),
+              const SizedBox(width: 8),
+              Text(
+                hasFilters ? 'Filtry · $activeCount' : 'Filtruj kategorie',
+                style: SerenityText.labelButton.copyWith(
+                  color: hasFilters
+                      ? SerenityColors.onPrimary
+                      : SerenityColors.primary,
+                ),
+              ),
+              if (hasFilters) ...[
+                const SizedBox(width: 6),
+                Icon(
+                  Icons.check_circle,
+                  size: 14,
+                  color: SerenityColors.glowSafeMint,
+                ),
+              ] else ...[
+                const SizedBox(width: 6),
+                Icon(
+                  Icons.expand_more,
+                  size: 18,
+                  color: SerenityColors.onSurfaceVariant,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Single category row in the filter bottom sheet (icon + label + checkbox).
+class _CategoryRow extends StatelessWidget {
+  final AlertCategory category;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _CategoryRow({
+    required this.category,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected
+          ? SerenityColors.primary.withValues(alpha: 0.06)
+          : SerenityColors.surfaceContainerLowest,
+      borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: SerenitySpacing.md,
+            vertical: SerenitySpacing.sm + 2,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+            border: selected
+                ? Border.all(
+                    color: SerenityColors.primary.withValues(alpha: 0.4),
+                  )
+                : null,
+            boxShadow: selected ? null : SerenityElevation.card(),
+          ),
+          child: Row(
+            children: [
+              Text(
+                category.emoji,
+                style: const TextStyle(fontSize: 22),
+              ),
+              const SizedBox(width: SerenitySpacing.md),
+              Expanded(
+                child: Text(
+                  category.label,
+                  style: SerenityText.labelButton.copyWith(
+                    fontSize: 15,
+                    color: SerenityColors.primary,
+                  ),
+                ),
+              ),
+              Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: selected
+                      ? SerenityColors.primaryContainer
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: selected
+                        ? SerenityColors.primaryContainer
+                        : SerenityColors.outlineVariant,
+                    width: 1.5,
+                  ),
+                ),
+                child: selected
+                    ? const Icon(
+                        Icons.check,
+                        size: 14,
+                        color: SerenityColors.onPrimary,
+                      )
+                    : null,
+              ),
+            ],
           ),
         ),
       ),
