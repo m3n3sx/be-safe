@@ -2,7 +2,7 @@
 
 > **Data analizy:** 2026-05-18  
 > **Zakres:** przegląd repozytorium `be-safe` (backend, mobile, web, baza, CI, dokumentacja)  
-> **Powiązane dokumenty:** [README.md](../README.md), [PLAN_BEZPIECZENSTWA.md](./PLAN_BEZPIECZENSTWA.md), [FULL_DOCUMENTATION.md](./FULL_DOCUMENTATION.md), [API.md](./API.md), [DATABASE.md](./DATABASE.md), [INFRASTRUCTURE.md](./INFRASTRUCTURE.md)
+> **Powiązane dokumenty:** [README.md](../README.md), [PLAN_BEZPIECZENSTWA.md](./PLAN_BEZPIECZENSTWA.md), [PLAN_RODZINA_CZAT_I_UX.md](./PLAN_RODZINA_CZAT_I_UX.md), [FULL_DOCUMENTATION.md](./FULL_DOCUMENTATION.md), [API.md](./API.md), [DATABASE.md](./DATABASE.md), [INFRASTRUCTURE.md](./INFRASTRUCTURE.md)
 
 ---
 
