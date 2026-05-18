@@ -1,0 +1,25 @@
+---
+description: Wersjonowanie, changelog, backup i modularność przy rozwoju aplikacji w tym repozytorium
+alwaysApply: true
+---
+
+# Dostarczanie aplikacji
+
+## Podejście i jakość
+
+- Stosuj najlepsze praktyki branżowe i utrzymuj kod **modularny** (wyraźne granice modułów, rozszerzalność bez duplikacji).
+- Gdy zakres zmiany na to zasługuje, **rozważ podział na co najmniej pięć niezależnych perspektyw specjalistycznych** (np. subagenty Task): np. architektura/modularność, testy, bezpieczeństwo, DX/CI, domena problemu — i zsyntetyzuj wnioski przed scaleniem. Przy drobnych poprawkach wystarczy proporcjonalnie lżejszy przegląd.
+
+## Wersje i iteracje
+
+- Każda **nowa funkcjonalność** albo istotna poprawka kończy się **podbiciem wersji** zgodnie z przyjętym schematem w projekcie (np. semver w `package.json` / `pyproject.toml` / tagach Git — dopasuj do faktycznego typu aplikacji).
+- Artefakt „wydania” danej wersji musi być **generowany i zapisywany** w formacie naturalnym dla tego typu aplikacji (np. paczka npm, wheel/sdist, obraz kontenera, archiwum instalacyjne — wybór dokumentuj w changelogu, jeśli nie jest oczywisty).
+
+## Changelog i backup
+
+- Utrzymuj **CHANGELOG** (np. `CHANGELOG.md` w formacie Keep a Changelog lub równoważnym): każda iteracja ma wpis z datą/wersją i **jasnym opisem zmian** (dodane, zmienione, naprawione, ewentualnie breaking).
+- Przy każdej wersji twórz **osobny backup** całości relewantnego stanu (np. archiwum `backups/app-name-vX.Y.Z.zip` albo tag Git + eksport archiwum — spójnie z toolchainem repozytorium). Backup nie zastępuje Gita; ułatwia przywrócenie konkretnej iteracji.
+
+## Późniejsze poprawki
+
+- Przy kolejnych poprawkach **najpierw** sprawdź bieżącą wersję, ostatni wpis w changelogu i istniejące backupy / tagi; kontynuuj tę samą konwencję wersji, changelogu i backupów.
