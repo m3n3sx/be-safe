@@ -15,6 +15,7 @@ Społecznościowa aplikacja bezpieczeństwa — mapa zagrożeń w czasie rzeczyw
 | [**Analiza aplikacji**](docs/ANALIZA_APLIKACJI.md) | Przegląd architektury, działania i rekomendacji (start tutaj) |
 | [**Plan bezpieczeństwa**](docs/PLAN_BEZPIECZENSTWA.md) | Priorytetyzowane naprawy luk |
 | [**Rodzina, czat i UX**](docs/PLAN_RODZINA_CZAT_I_UX.md) | Czat grupy rodzinnej, uproszczenie nawigacji |
+| [**Plan UX globalny**](docs/PLAN_UX_GLOBALNY_I_WDROZENIE.md) | Raport 10 perspektyw + harmonogram wdrożenia F0–F5 |
 | [Pełna dokumentacja techniczna](docs/FULL_DOCUMENTATION.md) | API, ekrany, deploy, znane problemy |
 | [API](docs/API.md) | Kontrakt REST |
 | [Baza danych](docs/DATABASE.md) | Tabele i relacje |
