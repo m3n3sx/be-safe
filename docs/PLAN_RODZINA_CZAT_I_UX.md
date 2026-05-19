@@ -1,7 +1,7 @@
 # Plan: czat rodzinny, uproszczenie UX i dostępność Rodziny
 
 > **Data:** 2026-05-18  
-> **Powiązane:** [ANALIZA_APLIKACJI.md](./ANALIZA_APLIKACJI.md), [design/stitch_v2/DESIGN.md](../design/stitch_v2/DESIGN.md), [design/stitch/v2_aqoir_inspired.md](../design/stitch/v2_aqoir_inspired.md)
+> **Powiązane:** [PLAN_UX_GLOBALNY_I_WDROZENIE.md](./PLAN_UX_GLOBALNY_I_WDROZENIE.md), [ANALIZA_APLIKACJI.md](./ANALIZA_APLIKACJI.md), [design/stitch_v2/DESIGN.md](../design/stitch_v2/DESIGN.md), [design/stitch/v2_aqoir_inspired.md](../design/stitch/v2_aqoir_inspired.md)
 
 ---
 
