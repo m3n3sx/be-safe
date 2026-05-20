@@ -43,8 +43,8 @@
 ### Credentials (pliki lokalne)
 
 - Profile CLI: `~/.aws/credentials` sekcja `[besafe]`
-  - `aws_access_key_id = ***REMOVED***`
-  - `aws_secret_access_key = aMhCLr8+0UKXtNl7Z1U9eDrcGQ26WQDNe/B2Y82M`
+  - `aws_access_key_id = [REDACTED_AWS_KEY_ID_admin_rotated]`
+  - `aws_secret_access_key = [REDACTED_AWS_SECRET_admin_rotated]`
 - Region: `eu-north-1` (Stockholm) — default dla EC2/Bedrock/Claude Platform
 - SES region: `eu-central-1` (Frankfurt)
 - SSH do EC2: `/home/ooxo/Pobrane/besafe_key.pem` (chmod 400)
@@ -64,7 +64,7 @@
 
 ### Claude Platform on AWS (opencode)
 
-- **API key:** `AEAAQWVhQXBpS2V5LWduenE3c2tjLWF0LTg1MjMyOTAzMTU2NjpXSmlMTnZRS0xhSFlKQnNqSWZ2ZEFaU2hmL0w5R0JpNUV4MHAxa0tPV3dJWnZjWnBVQ3RjdGFHdjJ2MD0=` (wygasa 2027-05-11)
+- **API key:** `[REDACTED_CLAUDE_API_KEY_TO_ROTATE]` (wygasa 2027-05-11)
 - **Endpoint:** `https://aws-external-anthropic.us-east-1.api.aws/v1`
 - **Workspace ID:** `wrkspc_01F6CibEnUj9uWWirJFz6r8k`
 - Config w `~/.config/opencode/opencode.json` provider `anthropic`
@@ -76,7 +76,7 @@
 - **Verified identities:** `besafe.org.pl` (domain, DKIM SUCCESS), `besafeorgpl@gmail.com`
 - **SMTP endpoint:** `email-smtp.eu-central-1.amazonaws.com:587` (STARTTLS)
 - **SMTP credentials:**
-  - Username: `***REMOVED***`
+  - Username: `[REDACTED_AWS_KEY_ID_ses_smtp_rotated]`
   - Password (SigV4-converted from IAM): `BOXUnRvhVneIu0CJtjWXlEMjvMaaWWZq473bO8C5i0P1`
 - **TODO:** request production access → https://console.aws.amazon.com/ses/home?region=eu-central-1#/account
 
@@ -141,7 +141,7 @@
 
 - Projekt Stitch pod kontem besafeorgpl: `projects/5133474667399141717` (be:Safe Community Safety App)
 - Design asset MASTER_STYLE.md wgrany jako screen instance `6939230070896220200`
-- API key: `AQ.Ab8RN6JjhwZmrAwnOo99VQb1dMxOrEh4EI_PiC8BTvU0Q-SWEg`
+- API key: `[REDACTED_STITCH_API_KEY_TO_ROTATE]`
 - Konfiguracja MCP w Kiro: `~/.kiro/settings/mcp.json` sekcja `stitch`
 
 ---
@@ -232,7 +232,7 @@ Virtual aliases (`/etc/postfix/virtual_aliases`): postmaster/abuse/root → info
   ```
   PORT=3001
   DATABASE_URL=postgresql://alertmap:AlertMap2026!@localhost:5432/alertmap
-  JWT_SECRET=***REMOVED***
+  JWT_SECRET=[REDACTED_JWT_SECRET_rotated]
   JWT_EXPIRES_IN=7d
   EMAIL_FROM=info@besafe.org.pl
   EMAIL_FROM_NAME=be:Safe
@@ -315,17 +315,17 @@ ssh -i /home/ooxo/Pobrane/besafe_key.pem ubuntu@16.192.31.100 \
 
 ```
 # AWS
-AWS_ACCESS_KEY_ID=***REMOVED***                                (besafe-admin)
-AWS_SECRET_ACCESS_KEY=aMhCLr8+0UKXtNl7Z1U9eDrcGQ26WQDNe/B2Y82M
-AWS_SES_SMTP_USER=***REMOVED***
+AWS_ACCESS_KEY_ID=[REDACTED_AWS_KEY_ID_admin_rotated]                                (besafe-admin)
+AWS_SECRET_ACCESS_KEY=[REDACTED_AWS_SECRET_admin_rotated]
+AWS_SES_SMTP_USER=[REDACTED_AWS_KEY_ID_ses_smtp_rotated]
 AWS_SES_SMTP_PASSWORD=BOXUnRvhVneIu0CJtjWXlEMjvMaaWWZq473bO8C5i0P1
 
 # Claude Platform on AWS
-CLAUDE_API_KEY=AEAAQWVhQXBpS2V5LWduenE3c2tjLWF0LTg1MjMyOTAzMTU2NjpXSmlMTnZRS0xhSFlKQnNqSWZ2ZEFaU2hmL0w5R0JpNUV4MHAxa0tPV3dJWnZjWnBVQ3RjdGFHdjJ2MD0=
+CLAUDE_API_KEY=[REDACTED_CLAUDE_API_KEY_TO_ROTATE]
 CLAUDE_WORKSPACE_ID=wrkspc_01F6CibEnUj9uWWirJFz6r8k
 
 # Stitch (Google Cloud Stitch API)
-STITCH_API_KEY=AQ.Ab8RN6JjhwZmrAwnOo99VQb1dMxOrEh4EI_PiC8BTvU0Q-SWEg
+STITCH_API_KEY=[REDACTED_STITCH_API_KEY_TO_ROTATE]
 
 # Cloudflare (wygasa 2026-05-18)
 CLOUDFLARE_TOKEN=cfut_YUTstC36PSm4mNRBCh7UpmC6V3WEoQvIIdT5qkQef359bb95
@@ -343,7 +343,7 @@ OAUTH_WEB_SECRET=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
 OAUTH_ANDROID_CLIENT_ID=1098119585965-bp2oo16n9u6tughijdrv3j7ojd94vnth.apps.googleusercontent.com
 
 # Backend .env
-JWT_SECRET=***REMOVED***
+JWT_SECRET=[REDACTED_JWT_SECRET_rotated]
 DB_PASSWORD=AlertMap2026!
 ROUNDCUBE_DB_PASSWORD=1vdXbY1DZIrK
 

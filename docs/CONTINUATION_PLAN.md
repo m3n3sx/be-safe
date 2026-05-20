@@ -104,7 +104,7 @@ namiary na serwisy. `OPS_RUNBOOK.md` ma gotowe komendy na typowe operacje.
 
 ### Priorytet 2 — security housekeeping
 
-4. **Root AWS access key `***REMOVED***`**
+4. **Root AWS access key `[REDACTED_AWS_ROOT_KEY_TO_ROTATE_MANUALLY]`**
    - Stale aktywny (bez MFA)
    - Logowanie jako root: Console → Security credentials → delete access key
    - Włączyć MFA na root user

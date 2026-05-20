@@ -80,7 +80,7 @@ Użyj build_site.
 Jeśli MCP nie odpala:
 ```bash
 # sprawdź czy server się łączy
-STITCH_API_KEY="AQ.Ab8RN6Jj..." npx -y @_davideast/stitch-mcp proxy
+STITCH_API_KEY="[REDACTED_STITCH_API_KEY_TO_ROTATE]" npx -y @_davideast/stitch-mcp proxy
 
 # powinieneś zobaczyć:
 # [stitch-proxy] Connecting to https://stitch.googleapis.com/mcp...
