@@ -70,7 +70,7 @@ jobs:
         run: |
           flutter build ios --release --no-codesign --dart-define=SENTRY_DSN=${SENTRY_DSN:-}
 
-      - name: Compress Runner.app (zstd, lowest size)
+      - name: Package as IPA (unsigned)
         working-directory: mobile/build/ios/iphoneos
         run: |
           if [ ! -d Runner.app ]; then
@@ -78,26 +78,28 @@ jobs:
             ls -la
             exit 1
           fi
-          # tar+zstd ~50% mniejsze niz zip GH Actions
-          tar -cf - Runner.app | zstd -19 -T0 -o Runner.app.tar.zst
-          ls -lh Runner.app.tar.zst
+          # IPA = zip(Payload/Runner.app). Wymaga podpisania na Twojej maszynie (sideloader/AltStore).
+          mkdir -p Payload
+          cp -R Runner.app Payload/
+          zip -qr AlertMap-unsigned.ipa Payload
+          ls -lh AlertMap-unsigned.ipa
+          rm -rf Payload
 
-      - name: Upload Runner.app (for Appetize.io / resigning)
+      - name: Upload unsigned IPA (sign locally with sideloader/AltStore)
         uses: actions/upload-artifact@v4
         with:
-          name: beSafe-ios-runner-app
-          path: mobile/build/ios/iphoneos/Runner.app.tar.zst
-          retention-days: 3
-          compression-level: 0  # juz skompresowany zstd
+          name: beSafe-ios-ipa
+          path: mobile/build/ios/iphoneos/AlertMap-unsigned.ipa
+          retention-days: 1
+          compression-level: 0  # IPA juz jest zip
 
       - name: Summary
         run: |
           echo "## Build iOS unsigned — zakończony ✅" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Artefakt: **beSafe-ios-runner-app** (Runner.app.tar.zst, retention 3 dni)" >> $GITHUB_STEP_SUMMARY
+          echo "Artefakt: **beSafe-ios-ipa** (AlertMap-unsigned.ipa, retention 1 dzień)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Jak użyć:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Pobierz artefakt z sekcji Artifacts poniżej" >> $GITHUB_STEP_SUMMARY
-          echo "2. \`unzip beSafe-ios-runner-app.zip && zstd -d Runner.app.tar.zst && tar -xf Runner.app.tar\`" >> $GITHUB_STEP_SUMMARY
-          echo "3. **Appetize.io**: Upload Runner.app → emulator iPhone w przeglądarce" >> $GITHUB_STEP_SUMMARY
-          echo "4. **Real iPhone**: podpisz \`codesign\` z Apple Developer cert, zapakuj w IPA, sideload" >> $GITHUB_STEP_SUMMARY
+          echo "### Instalacja na Linux (Fedora):" >> $GITHUB_STEP_SUMMARY
+          echo "1. \`gh run download $GITHUB_RUN_ID -n beSafe-ios-ipa\`" >> $GITHUB_STEP_SUMMARY
+          echo "2. \`bash mobile/scripts/install_ipa.sh AlertMap-unsigned.ipa\`" >> $GITHUB_STEP_SUMMARY
+          echo "3. Podaj Apple ID + hasło (app-specific). Działa 7 dni." >> $GITHUB_STEP_SUMMARY
