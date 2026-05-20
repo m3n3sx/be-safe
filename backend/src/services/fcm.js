@@ -33,9 +33,35 @@ function tryInit() {
   }
 }
 
-async function sendPush(fcmToken, title, body, data = {}) {
+// F20: Check if user is in school hours silent mode (any group where they're child + Warsaw pn-pt 8-15)
+async function isSilentSchoolHours(userId) {
+  try {
+    // Warsaw time check (no DB query needed)
+    const fmt = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/Warsaw',
+      weekday: 'short',
+      hour: '2-digit',
+      hour12: false,
+    });
+    const parts = Object.fromEntries(fmt.formatToParts(new Date()).map((p) => [p.type, p.value]));
+    const weekday = parts.weekday; // Mon, Tue, ..., Sun
+    const hour = parseInt(parts.hour, 10);
+    const isSchoolDay = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].includes(weekday);
+    const isSchoolHour = hour >= 8 && hour < 15;
+    if (!isSchoolDay || !isSchoolHour) return false;
+    const { rows } = await db.query(
+      `SELECT 1 FROM family_members WHERE user_id = $1 AND role = 'child' AND school_hours_silent = TRUE LIMIT 1`,
+      [userId]
+    );
+    return rows.length > 0;
+  } catch (_) { return false; }
+}
+
+async function sendPush(fcmToken, title, body, data = {}, options = {}) {
   const m = tryInit();
   if (!m || !fcmToken) return null;
+
+  const silent = options.silent === true;
 
   try {
     const messageId = await m.send({
@@ -43,16 +69,17 @@ async function sendPush(fcmToken, title, body, data = {}) {
       notification: { title, body },
       data: Object.fromEntries(Object.entries(data).map(([k, v]) => [k, String(v)])),
       android: {
-        priority: 'high',
+        priority: silent ? 'normal' : 'high',
         notification: {
-          channelId: 'danger_alerts',
-          priority: 'max',
-          defaultSound: true,
-          defaultVibrateTimings: true,
+          channelId: silent ? 'school_silent' : 'danger_alerts',
+          priority: silent ? 'low' : 'max',
+          defaultSound: !silent,
+          defaultVibrateTimings: !silent,
         },
       },
       apns: {
-        payload: { aps: { sound: 'default', 'content-available': 1 } },
+        headers: silent ? { 'apns-priority': '5' } : undefined,
+        payload: { aps: { sound: silent ? null : 'default', 'content-available': 1 } },
       },
     });
     return messageId;
@@ -79,11 +106,20 @@ async function notifyNearbyUsers(alert) {
 
   let sent = 0;
   for (const user of rows) {
+    const silent = await isSilentSchoolHours(user.id);
     const result = await sendPush(
       user.fcm_token,
       `⚠️ ${alert.title}`,
       alert.description || 'Nowe zagrożenie w Twojej okolicy',
-      { alert_id: alert.id, type: 'new_alert', category: alert.category || '' }
+      {
+        alert_id: alert.id,
+        type: 'new_alert',
+        category: alert.category || '',
+        lat: alert.lat != null ? String(alert.lat) : '',
+        lng: alert.lng != null ? String(alert.lng) : '',
+        title: alert.title || '',
+      },
+      { silent }
     );
     if (result) sent++;
     await db.query(`INSERT INTO alert_notifications (alert_id, user_id) VALUES ($1, $2) ON CONFLICT DO NOTHING`, [alert.id, user.id]);
@@ -95,7 +131,8 @@ async function notifyNearbyUsers(alert) {
 async function notifyUser(userId, title, body, data = {}) {
   const { rows } = await db.query(`SELECT fcm_token FROM users WHERE id = $1`, [userId]);
   if (!rows[0]?.fcm_token) return null;
-  return sendPush(rows[0].fcm_token, title, body, data);
+  const silent = await isSilentSchoolHours(userId);
+  return sendPush(rows[0].fcm_token, title, body, data, { silent });
 }
 
-module.exports = { sendPush, notifyNearbyUsers, notifyUser };
+module.exports = { sendPush, notifyNearbyUsers, notifyUser, isSilentSchoolHours };

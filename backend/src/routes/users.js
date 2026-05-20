@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const db = require('../config/db');
 const auth = require('../middleware/auth');
+const { notifyUser } = require('../services/fcm');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -39,7 +40,7 @@ router.get('/ranking', async (req, res) => {
 router.get('/me', async (req, res) => {
   const { rows } = await db.query(
     `SELECT u.id, u.email, u.username, u.avatar_url, u.alert_radius_m, u.reputation_score,
-            u.is_child, u.email_verified, u.referral_code, u.created_at,
+            u.is_child, u.phone, u.is_kpp, u.kpp_certificate, u.email_verified, u.referral_code, u.app_mode, u.created_at,
             (SELECT COUNT(*)::int FROM users WHERE referred_by = u.id) AS referrals_count
      FROM users u WHERE u.id = $1`,
     [req.user.id]
@@ -48,14 +49,18 @@ router.get('/me', async (req, res) => {
 });
 
 router.patch('/me', async (req, res) => {
-  const allowed = ['username', 'alert_radius_m', 'avatar_url'];
+  const allowed = ['username', 'alert_radius_m', 'avatar_url', 'phone', 'app_mode', 'is_kpp', 'kpp_certificate'];
   const fields = Object.keys(req.body).filter((k) => allowed.includes(k));
   if (!fields.length) return res.status(400).json({ error: 'No valid fields' });
+
+  if (fields.includes('app_mode') && !['kids', 'senior', 'normal'].includes(req.body.app_mode)) {
+    return res.status(400).json({ error: 'Invalid app_mode (kids|senior|normal)' });
+  }
 
   const sets = fields.map((f, i) => `${f} = $${i + 2}`).join(', ');
   const vals = fields.map((f) => req.body[f]);
   const { rows } = await db.query(
-    `UPDATE users SET ${sets}, updated_at = NOW() WHERE id = $1 RETURNING id, email, username, alert_radius_m`,
+    `UPDATE users SET ${sets}, updated_at = NOW() WHERE id = $1 RETURNING id, email, username, alert_radius_m, app_mode`,
     [req.user.id, ...vals]
   );
   res.json(rows[0]);
@@ -176,32 +181,91 @@ router.post('/me/checkin', async (req, res) => {
   res.json({ ok: true });
 });
 
+// F21: Sprawdź czy zameldowany dziś (status='safe', timezone Europe/Warsaw)
+router.get('/me/checkin/today', async (req, res) => {
+  try {
+    const { rows } = await db.query(
+      `SELECT id, status, message, created_at
+       FROM user_checkins
+       WHERE user_id = $1
+         AND status = 'safe'
+         AND (created_at AT TIME ZONE 'Europe/Warsaw')::date = (NOW() AT TIME ZONE 'Europe/Warsaw')::date
+       ORDER BY created_at DESC
+       LIMIT 1`,
+      [req.user.id]
+    );
+    if (rows.length === 0) {
+      return res.json({ checked_in_today: false, last_at: null });
+    }
+    res.json({
+      checked_in_today: true,
+      last_at: rows[0].created_at,
+      message: rows[0].message,
+    });
+  } catch (e) {
+    console.error('[checkin/today]', e.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // Battery update — z apki przesyłane w tle
 router.put('/me/battery', async (req, res) => {
   const { level } = req.body;
   if (typeof level !== 'number' || level < 0 || level > 100) {
     return res.status(400).json({ error: 'Invalid battery level' });
   }
+  // Pobierz poprzedni stan ZANIM zaktualizujesz (do dedup progów)
+  const { rows: prev } = await db.query(
+    `SELECT last_battery_level, username FROM users WHERE id = $1`,
+    [req.user.id]
+  );
+  const prevLevel = prev[0]?.last_battery_level;
+  const childUsername = prev[0]?.username || 'Dziecko';
+
   await db.query(
     `UPDATE users SET last_battery_level = $1, last_battery_at = NOW() WHERE id = $2`,
     [level, req.user.id]
   );
-  // Alert parents gdy < 15%
-  if (level <= 15) {
+
+  // Progi: wysyłaj alert tylko gdy POPRZEDNI był >= próg i AKTUALNY < próg (przekroczenie w dół)
+  const thresholds = [
+    { limit: 20, severity: 'low', emoji: '🔋', title: 'Niski poziom baterii' },
+    { limit: 10, severity: 'critical', emoji: '🪫', title: 'Bateria krytycznie niska' },
+  ];
+  const crossed = thresholds.filter(t => level < t.limit && (prevLevel === null || prevLevel === undefined || prevLevel >= t.limit));
+
+  if (crossed.length > 0) {
     const io = req.app.get('io');
-    if (io) {
-      const { rows: parents } = await db.query(
-        `SELECT m2.user_id AS parent_id, u.username FROM family_members m1
-         JOIN family_members m2 ON m1.group_id = m2.group_id
-         JOIN users u ON u.id = $1
-         WHERE m1.user_id = $1 AND m1.role = 'child' AND m2.role = 'parent'`,
-        [req.user.id]
-      );
-      for (const p of parents) {
+    const { rows: parents } = await db.query(
+      `SELECT m2.user_id AS parent_id
+       FROM family_members m1
+       JOIN family_members m2 ON m1.group_id = m2.group_id
+       WHERE m1.user_id = $1 AND m1.role = 'child' AND m2.role = 'parent' AND m2.user_id != $1`,
+      [req.user.id]
+    );
+
+    // Wybierz NAJOSTRZEJSZY przekroczony próg (critical > low)
+    const t = crossed.find(x => x.severity === 'critical') || crossed[0];
+
+    for (const p of parents) {
+      if (io) {
         io.to(`user:${p.parent_id}`).emit('family:low_battery', {
-          user_id: req.user.id, username: p.username, level,
+          user_id: req.user.id, username: childUsername, level, severity: t.severity,
         });
       }
+      notifyUser(
+        p.parent_id,
+        `${t.emoji} ${t.title} — ${childUsername}`,
+        `Bateria: ${level}%. Skontaktuj się z dzieckiem lub poproś o doładowanie.`,
+        {
+          type: 'child_low_battery',
+          child_id: req.user.id,
+          child_username: childUsername,
+          level: level,
+          severity: t.severity,
+        }
+      ).catch(() => {});
+      console.log(`[battery] ${childUsername} → ${p.parent_id} (level=${level}%, severity=${t.severity})`);
     }
   }
   res.json({ ok: true });

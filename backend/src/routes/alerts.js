@@ -17,7 +17,8 @@ const upload = multer({
   fileFilter: (_, file, cb) => cb(null, /^image\/(jpeg|png|webp)$/.test(file.mimetype)),
 });
 
-const { notifyNearbyUsers } = require('../services/fcm');
+const { notifyNearbyUsers, notifyUser } = require('../services/fcm');
+const { moderate } = require('../services/moderation');
 const rateLimit = require('express-rate-limit');
 const createAlertLimiter = rateLimit({ windowMs: 3600000, max: 10 });
 
@@ -47,7 +48,11 @@ router.get('/new', async (req, res) => {
 
 const ALERT_COLS = `a.id, a.author_id, a.category, a.title, a.description, a.photo_url,
   ST_Y(a.location::geometry) AS lat, ST_X(a.location::geometry) AS lng,
-  a.radius_m, a.status, a.confirms, a.denies, a.expires_at, a.created_at`;
+  a.radius_m, a.status, a.confirms, a.denies, a.trust_score, a.expires_at, a.created_at, a.is_anonymous`;
+
+// F17: gdy is_anonymous=TRUE -> ukryj author info dla innych (poza autorem)
+const authorJson = `CASE WHEN a.is_anonymous AND a.author_id != $1 THEN NULL
+  ELSE json_build_object('username', u.username, 'reputation_score', u.reputation_score, 'is_verified', u.is_verified, 'verified_role', u.verified_role, 'avatar_url', u.avatar_url) END AS author`;
 
 router.get('/stats', async (req, res) => {
   const { lat, lng, radius_m = 2000 } = req.query;
@@ -93,7 +98,7 @@ router.get('/heatmap', async (req, res) => {
 
 router.get('/mine', async (req, res) => {
   const { rows } = await db.query(
-    `SELECT ${ALERT_COLS}, json_build_object('username', u.username) AS author
+    `SELECT ${ALERT_COLS}, json_build_object('username', u.username, 'reputation_score', u.reputation_score, 'is_verified', u.is_verified, 'verified_role', u.verified_role, 'avatar_url', u.avatar_url) AS author
      FROM alerts a JOIN users u ON a.author_id = u.id
      WHERE a.author_id = $1 ORDER BY a.created_at DESC LIMIT 100`,
     [req.user.id]
@@ -105,12 +110,13 @@ router.get('/nearby', async (req, res) => {
   const { lat, lng, radius_m = 1000, category } = req.query;
   if (!lat || !lng) return res.status(400).json({ error: 'lat and lng required' });
 
-  let q = `SELECT ${ALERT_COLS}, ST_Distance(a.location, ST_MakePoint($2, $1)::geography) AS distance_m,
-            json_build_object('username', u.username, 'reputation_score', u.reputation_score, 'is_verified', u.is_verified, 'verified_role', u.verified_role, 'avatar_url', u.avatar_url) AS author
+  // F17: param $1 = req.user.id (dla authorJson CASE), $2=lat, $3=lng, $4=radius_m
+  let q = `SELECT ${ALERT_COLS}, ST_Distance(a.location, ST_MakePoint($3, $2)::geography) AS distance_m,
+            ${authorJson}
             FROM alerts a JOIN users u ON a.author_id = u.id
             WHERE a.status = 'active' AND a.expires_at > NOW()
-            AND ST_DWithin(a.location, ST_MakePoint($2, $1)::geography, $3)`;
-  const params = [lat, lng, radius_m];
+            AND ST_DWithin(a.location, ST_MakePoint($3, $2)::geography, $4)`;
+  const params = [req.user.id, lat, lng, radius_m];
 
   if (category) {
     params.push(category);
@@ -124,26 +130,49 @@ router.get('/nearby', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { rows } = await db.query(
-    `SELECT ${ALERT_COLS}, json_build_object('username', u.username, 'reputation_score', u.reputation_score, 'is_verified', u.is_verified, 'verified_role', u.verified_role, 'avatar_url', u.avatar_url) AS author
-     FROM alerts a JOIN users u ON a.author_id = u.id WHERE a.id = $1`,
-    [req.params.id]
+    `SELECT ${ALERT_COLS}, ${authorJson}
+     FROM alerts a JOIN users u ON a.author_id = u.id WHERE a.id = $2`,
+    [req.user.id, req.params.id]
   );
   if (!rows[0]) return res.status(404).json({ error: 'Not found' });
   res.json(rows[0]);
 });
 
 router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) => {
-  const { category, title, description, lat, lng, radius_m = 100, duration_hours = 3 } = req.body;
+  const { category, title, description, lat, lng, radius_m = 100, duration_hours = 3, is_anonymous = false } = req.body;
+  // F17: anonimowe zgłoszenia - flaga zapisywana w DB, author_id zostaje dla moderacji
+  const anonymous = is_anonymous === true || is_anonymous === 'true' || is_anonymous === 1 || is_anonymous === '1';
   const expires = new Date(Date.now() + duration_hours * 3600000).toISOString();
   const photo_url = req.file ? `/uploads/${req.file.filename}` : null;
+
+  // F05: Text moderation (skip dla SOS - aggression z 🆘)
+  const isSosBypass = category === 'aggression' && typeof title === 'string' && title.includes('🆘');
+  const moderation = isSosBypass ? { action: 'allow', score: 0, reasons: [] } : moderate({ title, description });
+  if (moderation.action === 'block') {
+    console.log(`[moderation] BLOCK by ${req.user.id}: score=${moderation.score} reasons=${moderation.reasons.join(',')}`);
+    return res.status(422).json({
+      error: 'Treść została odrzucona przez moderację. Sprawdź czy nie zawiera obraźliwych słów.',
+      moderation_score: moderation.score,
+    });
+  }
+  const initialStatus = moderation.action === 'flag' ? 'hidden' : 'active';
+
   const { rows } = await db.query(
-    `INSERT INTO alerts (author_id, category, title, description, photo_url, location, radius_m, expires_at)
-     VALUES ($1, $2, $3, $4, $5, ST_MakePoint($7, $6)::geography, $8, $9)
+    `INSERT INTO alerts (author_id, category, title, description, photo_url, location, radius_m, expires_at, status, is_anonymous)
+     VALUES ($1, $2, $3, $4, $5, ST_MakePoint($7, $6)::geography, $8, $9, $10, $11)
      RETURNING id, author_id, category, title, description, photo_url,
        ST_Y(location::geometry) AS lat, ST_X(location::geometry) AS lng,
-       radius_m, status, confirms, denies, expires_at, created_at`,
-    [req.user.id, category, title, description, photo_url, lat, lng, radius_m, expires]
+       radius_m, status, confirms, denies, expires_at, created_at, is_anonymous`,
+    [req.user.id, category, title, description, photo_url, lat, lng, radius_m, expires, initialStatus, anonymous]
   );
+
+  if (moderation.action === 'flag') {
+    console.log(`[moderation] FLAG (hidden) by ${req.user.id}: score=${moderation.score} reasons=${moderation.reasons.join(',')}`);
+    return res.status(201).json({
+      ...rows[0],
+      moderation: { action: 'flag', score: moderation.score, note: 'Twój alert wymaga przeglądu moderacji. Zostanie opublikowany po akceptacji.' },
+    });
+  }
   // Emit only to users within their alert radius
   const io = req.app.get('io');
   if (io) {
@@ -155,6 +184,130 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
     for (const u of nearby) io.to(`user:${u.id}`).emit('alert:new', rows[0]);
   }
   notifyNearbyUsers(rows[0]).catch(() => {});
+
+  // === RODZICIELSKIE POWIADOMIENIA (I.2B + I.4) ===
+  // I.2B: znajdź dzieci w pobliżu nowego alertu (w jego promieniu) i powiadom ich rodziców
+  // I.4:  jeśli to SOS (kategoria aggression + tytuł zawiera 🆘) i autor jest dzieckiem w grupie,
+  //       powiadom WSZYSTKICH parentów grupy niezależnie od ich lokalizacji
+  (async () => {
+    const alert = rows[0];
+    try {
+      // I.4 - SOS dziecka
+      const isSOS = (alert.category === 'aggression' &&
+        typeof alert.title === 'string' && alert.title.includes('🆘'));
+
+      if (isSOS) {
+        const { rows: parents } = await db.query(
+          `SELECT DISTINCT p.user_id, u.username AS parent_username, c.username AS child_username, fm.group_id, g.name AS group_name
+           FROM family_members fm
+           JOIN family_members p ON p.group_id = fm.group_id AND p.role = 'parent' AND p.user_id != fm.user_id
+           JOIN users u ON u.id = p.user_id
+           JOIN users c ON c.id = fm.user_id
+           JOIN family_groups g ON g.id = fm.group_id
+           WHERE fm.user_id = $1 AND fm.role = 'child' AND fm.tracking_enabled = true`,
+          [req.user.id]
+        );
+        let fcmSent = 0;
+        for (const p of parents) {
+          const ok = await notifyUser(
+            p.user_id,
+            `🆘 SOS od ${p.child_username}`,
+            `${p.child_username} wzywa pomoc! Tap aby zobaczyć lokalizację.`,
+            {
+              type: 'family_sos',
+              alert_id: alert.id,
+              child_id: req.user.id,
+              child_username: p.child_username,
+              group_id: p.group_id,
+              lat: String(alert.lat),
+              lng: String(alert.lng),
+            }
+          );
+          if (ok) fcmSent++;
+        }
+        console.log(`[family_sos] ${parents[0]?.child_username || req.user.id} -> ${parents.length} parents (FCM: ${fcmSent})`);
+
+        // F12: KPP responders (Kwalifikowana Pierwsza Pomoc) w promieniu 2km - osobny push
+        const kppRadius = 2000;
+        const { rows: kppNearby } = await db.query(
+          `SELECT id, username, ST_Distance(last_location, ST_MakePoint($2, $1)::geography) AS distance_m
+           FROM users
+           WHERE is_kpp = TRUE
+             AND last_location IS NOT NULL
+             AND id != $3
+             AND ST_DWithin(last_location, ST_MakePoint($2, $1)::geography, $4)
+           ORDER BY distance_m ASC
+           LIMIT 25`,
+          [alert.lat, alert.lng, req.user.id, kppRadius]
+        );
+        let kppSent = 0;
+        for (const r of kppNearby) {
+          const ok = await notifyUser(
+            r.id,
+            '🚑 KPP: ktoś potrzebuje pomocy',
+            `Wezwanie ratownika w odległości ${Math.round(r.distance_m)}m. Możesz zareagować?`,
+            {
+              type: 'kpp_responder_call',
+              alert_id: alert.id,
+              lat: String(alert.lat),
+              lng: String(alert.lng),
+              distance_m: String(Math.round(r.distance_m)),
+            }
+          );
+          if (ok) kppSent++;
+        }
+        if (kppNearby.length > 0) {
+          console.log(`[kpp] ${kppNearby.length} responders within ${kppRadius}m (FCM: ${kppSent})`);
+        }
+      }
+
+      // I.2B - dzieci w obszarze alertu (niezależnie od lokalizacji rodziców)
+      const { rows: childrenInArea } = await db.query(
+        `SELECT DISTINCT fm.user_id AS child_id, c.username AS child_username,
+                p.user_id AS parent_id, fm.group_id, g.name AS group_name,
+                ST_Y(c.last_location::geometry) AS child_lat,
+                ST_X(c.last_location::geometry) AS child_lng
+         FROM family_members fm
+         JOIN users c ON c.id = fm.user_id
+         JOIN family_members p ON p.group_id = fm.group_id AND p.role = 'parent' AND p.user_id != fm.user_id
+         JOIN family_groups g ON g.id = fm.group_id
+         WHERE fm.role = 'child'
+           AND fm.tracking_enabled = true
+           AND c.last_location IS NOT NULL
+           AND c.id != $1
+           AND ST_DWithin(c.last_location, ST_MakePoint($3, $2)::geography, $4)`,
+        [req.user.id, lat, lng, radius_m]
+      );
+      let parentNotified = 0;
+      const sentToParent = new Set();
+      for (const r of childrenInArea) {
+        const dedupKey = `${r.parent_id}:${alert.id}:${r.child_id}`;
+        if (sentToParent.has(dedupKey)) continue;
+        sentToParent.add(dedupKey);
+        const ok = await notifyUser(
+          r.parent_id,
+          `⚠️ Zagrożenie obok ${r.child_username}`,
+          `${alert.title || 'Nowe zgłoszenie'} — w pobliżu lokalizacji dziecka.`,
+          {
+            type: 'family_alert_near_child',
+            alert_id: alert.id,
+            child_id: r.child_id,
+            child_username: r.child_username,
+            group_id: r.group_id,
+            lat: String(alert.lat),
+            lng: String(alert.lng),
+          }
+        );
+        if (ok) parentNotified++;
+      }
+      if (childrenInArea.length) {
+        console.log(`[alert_near_child] alert ${alert.id} -> ${childrenInArea.length} child-parent pairs, ${parentNotified} pushed`);
+      }
+    } catch (e) {
+      console.error('[alert family-notify]', e.message);
+    }
+  })();
+
   res.status(201).json(rows[0]);
 });
 
@@ -199,7 +352,33 @@ router.post('/:id/vote', async (req, res) => {
       `INSERT INTO alert_votes (alert_id, user_id, vote) VALUES ($1, $2, $3)`,
       [req.params.id, req.user.id, req.body.vote]
     );
-    const { rows } = await db.query(`SELECT confirms, denies FROM alerts WHERE id = $1`, [req.params.id]);
+    // F31: ważony trust_score po każdym głosie. Waga głosu = 1 + min(reputation_score, 100) / 50
+    // Score = sum(confirm_weights) - sum(deny_weights * 1.5) — fałszerstwo karzemy mocniej
+    const { rows: ts } = await db.query(
+      `WITH weighted AS (
+         SELECT v.vote, (1.0 + LEAST(GREATEST(u.reputation_score, 0), 100) / 50.0) AS w
+         FROM alert_votes v JOIN users u ON u.id = v.user_id
+         WHERE v.alert_id = $1
+       )
+       SELECT
+         COALESCE(SUM(CASE WHEN vote='confirm' THEN w ELSE 0 END), 0) AS c_w,
+         COALESCE(SUM(CASE WHEN vote='deny' THEN w * 1.5 ELSE 0 END), 0) AS d_w
+       FROM weighted`,
+      [req.params.id]
+    );
+    const score = Math.max(0, Number(ts[0].c_w) - Number(ts[0].d_w));
+    const { rows } = await db.query(
+      `UPDATE alerts SET trust_score = $2 WHERE id = $1
+       RETURNING confirms, denies, trust_score, author_id`,
+      [req.params.id, score]
+    );
+    // F31: jeśli alert ma confirm_score >= 5 i bardzo mało denies — +1 dla autora reputation
+    if (req.body.vote === 'confirm' && rows[0].denies === 0 && rows[0].confirms >= 5) {
+      await db.query(
+        `UPDATE users SET reputation_score = LEAST(reputation_score + 1, 200) WHERE id = $1`,
+        [rows[0].author_id]
+      );
+    }
     req.app.get('io')?.emit('alert:updated', { id: req.params.id, ...rows[0] });
     res.json(rows[0]);
   } catch (e) {
