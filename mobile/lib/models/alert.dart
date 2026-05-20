@@ -27,25 +27,27 @@ enum AlertCategory {
     schoolZone => 'Strefa szkolna',
   };
 
+  // Mapowanie zgodne z designem Serenity Guard (refined_map_markers_be_safe).
+  // person_alert nie istnieje w Flutter Material - substytut: crisis_alert.
   IconData get iconData => switch (this) {
-    aggression => Icons.person_off,
-    theft => Icons.front_hand,
+    aggression => Icons.crisis_alert,
+    theft => Icons.wallet,
     accident => Icons.car_crash,
     fire => Icons.local_fire_department,
     flood => Icons.waves,
     ice => Icons.severe_cold,
-    construction => Icons.construction,
+    construction => Icons.warning_amber,
     animal => Icons.pets,
     darkArea => Icons.dark_mode,
     drugs => Icons.vaccines,
-    police => Icons.shield,
-    weather => Icons.bolt,
-    other => Icons.priority_high,
-    strangerDanger => Icons.person_search,
-    trafficDanger => Icons.do_not_step,
-    playgroundHazard => Icons.child_care,
-    waterHazard => Icons.water_drop,
-    schoolZone => Icons.directions_run,
+    police => Icons.local_police,
+    weather => Icons.thunderstorm,
+    other => Icons.more_horiz,
+    strangerDanger => Icons.visibility,
+    trafficDanger => Icons.traffic,
+    playgroundHazard => Icons.child_friendly,
+    waterHazard => Icons.water,
+    schoolZone => Icons.school,
   };
 
   Color get color => switch (this) {
@@ -100,6 +102,7 @@ class AlertModel {
   final bool authorVerified;
   final String? authorRole;
   final String? authorAvatarUrl;
+  final bool isAnonymous;
 
   AlertModel({
     required this.id, this.authorId = '', required this.category, required this.title,
@@ -107,6 +110,7 @@ class AlertModel {
     this.confirms = 0, this.denies = 0, this.distanceM,
     required this.expiresAt, required this.createdAt, required this.authorUsername,
     this.authorReputation = 100, this.authorVerified = false, this.authorRole, this.authorAvatarUrl,
+    this.isAnonymous = false,
   });
 
   factory AlertModel.fromJson(Map<String, dynamic> j) => AlertModel(
@@ -133,6 +137,7 @@ class AlertModel {
     authorVerified: j['author']?['is_verified'] == true,
     authorRole: j['author']?['verified_role'] as String?,
     authorAvatarUrl: j['author']?['avatar_url'] as String?,
+    isAnonymous: j['is_anonymous'] == true || j['author'] == null,
   );
 
   Map<String, dynamic> toJson() => {

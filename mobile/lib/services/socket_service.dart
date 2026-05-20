@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 typedef CommentHandler = void Function(Map<String, dynamic>);
@@ -6,6 +7,11 @@ typedef TypingHandler = void Function(Map<String, dynamic>);
 class SocketService {
   static const serverUrl = 'https://besafe.org.pl';
   io.Socket? _socket;
+
+  // F14: broadcast stream for family chat messages
+  final StreamController<Map<String, dynamic>> _familyMessageCtrl =
+      StreamController<Map<String, dynamic>>.broadcast();
+  Stream<Map<String, dynamic>> get onFamilyMessage => _familyMessageCtrl.stream;
 
   // Per-alert listener callbacks. Keyed by alert id so we can register/unregister
   // independently of the main `connect()` subscription.
@@ -31,6 +37,9 @@ class SocketService {
     _socket!.on('alert:new', (data) => onNewAlert?.call(Map<String, dynamic>.from(data)));
     _socket!.on('family:location', (data) => onFamilyLocation?.call(Map<String, dynamic>.from(data)));
     _socket!.on('family:geofence_exit', (data) => onGeofenceExit?.call(Map<String, dynamic>.from(data)));
+    _socket!.on('family:message', (data) {
+      _familyMessageCtrl.add(Map<String, dynamic>.from(data));
+    });
 
     _socket!.on('comment:new', (data) {
       final m = Map<String, dynamic>.from(data);

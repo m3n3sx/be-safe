@@ -7,6 +7,8 @@ class AuthProvider extends ChangeNotifier {
   final ApiService _api;
   User? _user;
   bool _loading = false;
+  bool _autoLoginInProgress = false;
+  bool _autoLoginAttempted = false;
   final _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
 
   AuthProvider(this._api);
@@ -14,6 +16,15 @@ class AuthProvider extends ChangeNotifier {
   User? get user => _user;
   bool get isLoggedIn => _user != null;
   bool get loading => _loading;
+
+  /// True while tryAutoLogin is fetching session from server.
+  /// UI should show "checking session" spinner instead of LoginScreen
+  /// to avoid flash of unauthenticated state.
+  bool get autoLoginInProgress => _autoLoginInProgress;
+
+  /// True after tryAutoLogin has completed (success or fail).
+  /// Used by _AuthGate to decide if LoginScreen should be shown.
+  bool get autoLoginAttempted => _autoLoginAttempted;
 
   Future<bool> register(String email, String password, String username, {String? referralCode}) async {
     _loading = true; notifyListeners();
@@ -74,9 +85,7 @@ class AuthProvider extends ChangeNotifier {
       final res = await _api.post('/auth/google', body);
       if (res['token'] != null) {
         await _api.setToken(res['token']);
-        final u = res['user'];
-        _user = User(id: u['id'], email: u['email'], username: u['username'] ?? '',
-          avatarUrl: u['avatar_url'], alertRadiusM: u['alert_radius_m'] ?? 500, reputationScore: u['reputation_score'] ?? 100);
+        _user = User.fromJson(res['user']);
         _loading = false;
         notifyListeners();
         return true;
@@ -95,10 +104,63 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> tryAutoLogin() async {
     await _api.loadToken();
-    if (_api.token != null) {
-      final res = await _api.get('/users/me');
-      if (res['id'] != null) _user = User.fromJson(res);
+    if (_api.token == null) {
+      _autoLoginAttempted = true;
       notifyListeners();
+      return;
+    }
+    // Token istnieje — pokazujemy "Sprawdzam sesję..." zamiast LoginScreen
+    _autoLoginInProgress = true;
+    notifyListeners();
+    try {
+      // Timeout 6s — jeśli serwer nie odpowiada, fallback do LoginScreen
+      // (zachowany token, więc po ręcznym loginie znów spróbuje auto)
+      final res = await _api
+          .get('/users/me')
+          .timeout(const Duration(seconds: 6), onTimeout: () => <String, dynamic>{});
+      if (res['id'] != null) {
+        _user = User.fromJson(res);
+      }
+    } catch (_) {
+      // Token nieaktualny lub sieć padła — zostawiamy LoginScreen
+    } finally {
+      _autoLoginInProgress = false;
+      _autoLoginAttempted = true;
+      notifyListeners();
+    }
+  }
+
+  /// Odśwież profil użytkownika z serwera bez ponownego logowania.
+  Future<void> refreshMe() async {
+    if (_api.token == null) return;
+    final res = await _api.get('/users/me');
+    if (res['id'] != null) {
+      _user = User.fromJson(res);
+      notifyListeners();
+    }
+  }
+
+  /// Zmienia tryb aplikacji użytkownika. Aktualizuje lokalnie + PATCH do backendu.
+  /// Zwraca true gdy zapis się powiódł.
+  Future<bool> updateAppMode(AppMode mode) async {
+    if (_user == null) return false;
+    final prev = _user!.appMode;
+    // Optymistyczny update
+    _user = _user!.copyWith(appMode: mode);
+    notifyListeners();
+    try {
+      final res = await _api.patch('/users/me', {'app_mode': mode.apiValue});
+      if (res['error'] != null) {
+        // Rollback
+        _user = _user!.copyWith(appMode: prev);
+        notifyListeners();
+        return false;
+      }
+      return true;
+    } catch (_) {
+      _user = _user!.copyWith(appMode: prev);
+      notifyListeners();
+      return false;
     }
   }
 }

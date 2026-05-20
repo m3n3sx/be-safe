@@ -129,7 +129,7 @@ class BackgroundService {
       locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 50),
     ).listen((pos) {
       _socket.updateLocation(pos.latitude, pos.longitude);
-      _api.post('/users/me/location', {'lat': pos.latitude, 'lng': pos.longitude}).catchError((_) => <String, dynamic>{});
+      _api.put('/users/me/location', {'lat': pos.latitude, 'lng': pos.longitude}).catchError((_) => <String, dynamic>{});
     });
 
     _startPolling();
@@ -251,6 +251,22 @@ void _onBackgroundStart(ServiceInstance service) async {
   // Loguj do Android logcat
   debugPrint('[BG isolate] started');
 
+  // KRYTYCZNE: na Android 14+ musimy ustawić foreground notification w <5s
+  // po startForegroundService(), inaczej system rzuci
+  // ForegroundServiceDidNotStartInTimeException i ubije apkę.
+  // setForegroundNotificationInfo MUSI być pierwsze — przed prefs/IO.
+  if (service is AndroidServiceInstance) {
+    try {
+      await service.setAsForegroundService();
+    } catch (e) {
+      debugPrint('[BG isolate] setAsForegroundService failed: $e');
+    }
+    service.setForegroundNotificationInfo(
+      title: 'be:Safe — monitoring zagrożeń',
+      content: 'Nasłuchuję alertów w Twojej okolicy.',
+    );
+  }
+
   // Zatrzymanie na żądanie
   service.on('stopService').listen((event) async {
     debugPrint('[BG isolate] stopService received');
@@ -263,14 +279,6 @@ void _onBackgroundStart(ServiceInstance service) async {
     debugPrint('[BG isolate] brak tokenu — stop');
     await service.stopSelf();
     return;
-  }
-
-  // Update FGS notification (Android)
-  if (service is AndroidServiceInstance) {
-    service.setForegroundNotificationInfo(
-      title: 'be:Safe — monitoring zagrożeń',
-      content: 'Nasłuchuję alertów w Twojej okolicy.',
-    );
   }
 
   final localNotif = FlutterLocalNotificationsPlugin();
@@ -297,7 +305,7 @@ void _onBackgroundStart(ServiceInstance service) async {
       );
       lastLat = pos.latitude;
       lastLng = pos.longitude;
-      await http.post(
+      await http.put(
         Uri.parse('${ApiService.baseUrl}/users/me/location'),
         headers: {
           'Content-Type': 'application/json',

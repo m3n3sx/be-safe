@@ -42,31 +42,33 @@ class PillNavBar extends StatelessWidget {
     this.glassmorphic = true,
   });
 
+  /// Unified 5-tab navigation across the app:
+  /// 0=Mapa, 1=Home, 2=Rodzina, 3=SOS, 4=Profil
   static const List<PillNavItem> defaultItems = [
     PillNavItem(icon: Icons.map_outlined, activeIcon: Icons.map, label: 'Mapa'),
     PillNavItem(
-      icon: Icons.notifications_none,
-      activeIcon: Icons.notifications_active,
-      label: 'Alerty',
+      icon: Icons.home_outlined,
+      activeIcon: Icons.home,
+      label: 'Home',
     ),
     PillNavItem(
       icon: Icons.family_restroom_outlined,
       activeIcon: Icons.family_restroom,
       label: 'Rodzina',
     ),
+    PillNavItem(icon: Icons.sos_outlined, activeIcon: Icons.sos, label: 'SOS'),
     PillNavItem(
       icon: Icons.person_outline,
       activeIcon: Icons.person,
       label: 'Profil',
     ),
-    PillNavItem(icon: Icons.sos_outlined, activeIcon: Icons.sos, label: 'SOS'),
   ];
 
   @override
   Widget build(BuildContext context) {
     final bar = Container(
-      height: 72,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      height: 84,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: glassmorphic
             ? SerenityColors.primaryContainer.withValues(alpha: 0.9)
@@ -141,24 +143,28 @@ class _NavIcon extends StatelessWidget {
           scale: selected ? 1.0 : 0.95,
           duration: SerenityAnim.tap,
           curve: Curves.easeOut,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(selected ? item.activeIcon : item.icon, color: color, size: 26),
-              const SizedBox(height: 4),
-              AnimatedContainer(
-                duration: SerenityAnim.tap,
-                width: 4,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: selected
-                      ? SerenityColors.onPrimary
-                      : Colors.transparent,
-                  shape: BoxShape.circle,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(selected ? item.activeIcon : item.icon, color: color, size: 24),
+                const SizedBox(height: 2),
+                Text(
+                  item.label,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 10,
+                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                    letterSpacing: 0.3,
+                    height: 1.1,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.visible,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
