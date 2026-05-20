@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow, Circle } from '@react-google-maps/api';
+import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { GoogleMap, useJsApiLoader, InfoWindow, Circle } from '@react-google-maps/api';
+import { MarkerClusterer, type Renderer, type Cluster } from '@googlemaps/markerclusterer';
 import { GOOGLE_MAPS_API_KEY, DEFAULT_CENTER, DEFAULT_ZOOM, DARK_MAP_STYLES, LIGHT_MAP_STYLES } from '@/lib/constants';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,6 +11,14 @@ import api from '@/lib/api';
 import { t } from '@/lib/i18n';
 import type { Alert, AlertCategory } from '@/types';
 import { getCategoryInfo, ALERT_CATEGORIES } from '@/types';
+import {
+  gmapsAlertIcon,
+  gmapsClusterIcon,
+  gmapsUserPositionIcon,
+  gmapsSosIcon,
+  buildFlatCircleSvg,
+  SERENITY,
+} from '@/lib/markerIcons';
 import AlertDetail from '@/components/alerts/AlertDetail';
 import CreateAlertModal from '@/components/alerts/CreateAlertModal';
 import SOSButton from '@/components/ui/SOSButton';
@@ -37,6 +46,12 @@ export default function MapView() {
   const [categoryFilter, setCategoryFilter] = useState<Set<AlertCategory>>(new Set());
   const [showFilter, setShowFilter] = useState(false);
   const lastFetchRef = useRef<string>('');
+
+  // Imperatively-managed markers (so MarkerClusterer can own them)
+  const markerMapRef = useRef<Map<string, google.maps.Marker>>(new Map());
+  const userMarkerRef = useRef<google.maps.Marker | null>(null);
+  const createMarkerRef = useRef<google.maps.Marker | null>(null);
+  const clustererRef = useRef<MarkerClusterer | null>(null);
 
   // Get user location
   useEffect(() => {
@@ -125,9 +140,200 @@ export default function MapView() {
     }
   }, []);
 
-  const filteredAlerts = categoryFilter.size > 0
-    ? alerts.filter(a => categoryFilter.has(a.category))
-    : alerts;
+  const filteredAlerts = useMemo(
+    () => (categoryFilter.size > 0 ? alerts.filter(a => categoryFilter.has(a.category)) : alerts),
+    [alerts, categoryFilter]
+  );
+
+  // Cluster renderer (custom navy/coral/mint cluster icons)
+  const clusterRenderer = useMemo<Renderer>(() => ({
+    render: ({ count, position }: Cluster) => {
+      const g = window.google.maps;
+      return new g.Marker({
+        position,
+        icon: gmapsClusterIcon(g, count),
+        zIndex: 100 + count,
+        // No label - the count is baked into the SVG
+      });
+    },
+  }), []);
+
+  // Tap a cluster -> zoom the map so all its markers fit comfortably on screen.
+  // We compute the bounds from the cluster's own marker positions and add a
+  // little padding so the pins land inside the viewport rather than at the edge.
+  const handleClusterClick = useCallback(
+    (
+      _event: google.maps.MapMouseEvent,
+      cluster: Cluster,
+      mapInstance: google.maps.Map,
+    ) => {
+      const g = window.google.maps;
+      const markers = cluster.markers ?? [];
+      if (markers.length === 0) {
+        if (cluster.position) mapInstance.panTo(cluster.position);
+        return;
+      }
+      const bounds = new g.LatLngBounds();
+      let pinned = 0;
+      for (const m of markers) {
+        const pos = (m as google.maps.Marker).getPosition?.();
+        if (pos) { bounds.extend(pos); pinned += 1; }
+      }
+      if (pinned === 0) return;
+      // All markers at the same point (e.g. duplicate report) -> just zoom in.
+      if (bounds.getNorthEast().equals(bounds.getSouthWest())) {
+        mapInstance.panTo(bounds.getCenter());
+        mapInstance.setZoom(Math.min(18, (mapInstance.getZoom() ?? 14) + 2));
+        return;
+      }
+      mapInstance.fitBounds(bounds, { top: 80, right: 60, bottom: 220, left: 60 });
+    },
+    [],
+  );
+
+  // Build/refresh the MarkerClusterer + alert markers when map or alerts change
+  useEffect(() => {
+    if (!map || !isLoaded) return;
+    const g = window.google.maps;
+
+    // Lazy-create clusterer once the map is ready
+    if (!clustererRef.current) {
+      clustererRef.current = new MarkerClusterer({
+        map,
+        renderer: clusterRenderer,
+        onClusterClick: handleClusterClick,
+      });
+    }
+    const clusterer = clustererRef.current;
+
+    const existing = markerMapRef.current;
+    const nextIds = new Set(filteredAlerts.map(a => a.id));
+
+    // Remove markers no longer present
+    const toRemove: google.maps.Marker[] = [];
+    for (const [id, marker] of existing) {
+      if (!nextIds.has(id)) {
+        toRemove.push(marker);
+        existing.delete(id);
+      }
+    }
+    if (toRemove.length > 0) {
+      clusterer.removeMarkers(toRemove, true);
+      toRemove.forEach(m => m.setMap(null));
+    }
+
+    // Add new markers
+    const toAdd: google.maps.Marker[] = [];
+    for (const a of filteredAlerts) {
+      if (existing.has(a.id)) continue;
+      const cat = getCategoryInfo(a.category);
+      const marker = new g.Marker({
+        position: { lat: a.lat, lng: a.lng },
+        icon: gmapsAlertIcon(g, {
+          materialSymbol: cat.materialSymbol,
+          variant: 'default',
+        }),
+        title: cat.label,
+      });
+      marker.addListener('click', () => setSelectedAlert(a));
+      existing.set(a.id, marker);
+      toAdd.push(marker);
+    }
+    if (toAdd.length > 0) {
+      clusterer.addMarkers(toAdd, true);
+    }
+
+    clusterer.render();
+  }, [map, isLoaded, filteredAlerts, clusterRenderer]);
+
+  // Highlight the selected alert (selected variant) + drop confirmed badge when confirms outweigh denies
+  useEffect(() => {
+    if (!map || !isLoaded) return;
+    const g = window.google.maps;
+    for (const a of filteredAlerts) {
+      const marker = markerMapRef.current.get(a.id);
+      if (!marker) continue;
+      const isSelected = selectedAlert?.id === a.id;
+      const isConfirmed = a.confirms >= 3 && a.confirms > a.denies;
+      const variant: 'default' | 'selected' | 'confirmed' = isSelected
+        ? 'selected'
+        : isConfirmed
+          ? 'confirmed'
+          : 'default';
+      marker.setIcon(
+        gmapsAlertIcon(g, {
+          materialSymbol: getCategoryInfo(a.category).materialSymbol,
+          variant,
+        })
+      );
+      marker.setZIndex(isSelected ? 999 : isConfirmed ? 50 : 10);
+    }
+  }, [selectedAlert, filteredAlerts, map, isLoaded]);
+
+  // Cleanup clusterer on unmount
+  useEffect(() => {
+    const markers = markerMapRef.current;
+    return () => {
+      if (clustererRef.current) {
+        clustererRef.current.clearMarkers();
+        clustererRef.current.setMap(null);
+        clustererRef.current = null;
+      }
+      markers.clear();
+    };
+  }, []);
+
+  // User position marker (imperative, so we can use the custom SVG)
+  useEffect(() => {
+    if (!map || !isLoaded) return;
+    const g = window.google.maps;
+    if (!userPos) {
+      if (userMarkerRef.current) {
+        userMarkerRef.current.setMap(null);
+        userMarkerRef.current = null;
+      }
+      return;
+    }
+    if (!userMarkerRef.current) {
+      userMarkerRef.current = new g.Marker({
+        map,
+        position: userPos,
+        icon: gmapsUserPositionIcon(g),
+        zIndex: 1000,
+        clickable: false,
+      });
+    } else {
+      userMarkerRef.current.setPosition(userPos);
+    }
+  }, [userPos, map, isLoaded]);
+
+  // Draggable create-position marker
+  useEffect(() => {
+    if (!map || !isLoaded) return;
+    const g = window.google.maps;
+    if (!showCreate || !createPos) {
+      if (createMarkerRef.current) {
+        createMarkerRef.current.setMap(null);
+        createMarkerRef.current = null;
+      }
+      return;
+    }
+    if (!createMarkerRef.current) {
+      createMarkerRef.current = new g.Marker({
+        map,
+        position: createPos,
+        // Reuse the SOS-styled pin to signal "you are placing an alert here"
+        icon: gmapsSosIcon(g),
+        zIndex: 998,
+        draggable: true,
+      });
+      createMarkerRef.current.addListener('dragend', (e: google.maps.MapMouseEvent) => {
+        if (e.latLng) setCreatePos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+      });
+    } else {
+      createMarkerRef.current.setPosition(createPos);
+    }
+  }, [showCreate, createPos, map, isLoaded]);
 
   const toggleCategory = (cat: AlertCategory) => {
     setCategoryFilter(prev => {
@@ -164,72 +370,22 @@ export default function MapView() {
           clickableIcons: false,
         }}
       >
-        {/* User position */}
+        {/* User position radius (the dot itself is an imperative marker, see useEffect above) */}
         {userPos && (
-          <>
-            <Marker
-              position={userPos}
-              icon={{
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 8,
-                fillColor: '#3B82F6',
-                fillOpacity: 1,
-                strokeColor: '#fff',
-                strokeWeight: 3,
-              }}
-              zIndex={1000}
-            />
-            <Circle
-              center={userPos}
-              radius={user?.alert_radius_m || 5000}
-              options={{
-                fillColor: '#3B82F6',
-                fillOpacity: 0.05,
-                strokeColor: '#3B82F6',
-                strokeOpacity: 0.2,
-                strokeWeight: 1,
-              }}
-            />
-          </>
-        )}
-
-        {/* Alert markers */}
-        {filteredAlerts.map(alert => {
-          const cat = getCategoryInfo(alert.category);
-          return (
-            <Marker
-              key={alert.id}
-              position={{ lat: alert.lat, lng: alert.lng }}
-              onClick={() => setSelectedAlert(alert)}
-              icon={{
-                url: `data:image/svg+xml,${encodeURIComponent(createMarkerSvg(cat.emoji, cat.color))}`,
-                scaledSize: new google.maps.Size(40, 48),
-                anchor: new google.maps.Point(20, 48),
-              }}
-            />
-          );
-        })}
-
-        {/* Create position marker */}
-        {showCreate && createPos && (
-          <Marker
-            position={createPos}
-            icon={{
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 10,
-              fillColor: '#EF4444',
-              fillOpacity: 0.8,
-              strokeColor: '#fff',
-              strokeWeight: 2,
-            }}
-            draggable
-            onDragEnd={(e) => {
-              if (e.latLng) setCreatePos({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+          <Circle
+            center={userPos}
+            radius={user?.alert_radius_m || 5000}
+            options={{
+              fillColor: SERENITY.aqua,
+              fillOpacity: 0.06,
+              strokeColor: SERENITY.aqua,
+              strokeOpacity: 0.35,
+              strokeWeight: 1,
             }}
           />
         )}
 
-        {/* Selected alert info */}
+        {/* Selected alert info window */}
         {selectedAlert && (
           <InfoWindow
             position={{ lat: selectedAlert.lat, lng: selectedAlert.lng }}
@@ -285,7 +441,7 @@ export default function MapView() {
         )}
       </div>
 
-      {/* Filter dropdown */}
+      {/* Filter dropdown - now uses Serenity flat-circle markers as legend chips */}
       {showFilter && (
         <div className="absolute top-16 left-4 z-20 w-72 max-h-80 overflow-y-auto bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl p-3 space-y-1">
           <div className="flex items-center justify-between mb-2">
@@ -296,20 +452,34 @@ export default function MapView() {
               </button>
             )}
           </div>
-          {ALERT_CATEGORIES.map(cat => (
-            <button
-              key={cat.key}
-              onClick={() => toggleCategory(cat.key)}
-              className={`flex items-center gap-2 w-full px-3 py-2 rounded-lg text-left text-sm transition-colors ${
-                categoryFilter.has(cat.key)
-                  ? 'bg-red-500/10 text-red-500'
-                  : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-              }`}
-            >
-              <span>{cat.emoji}</span>
-              <span>{cat.label}</span>
-            </button>
-          ))}
+          {ALERT_CATEGORIES.map(cat => {
+            const active = categoryFilter.has(cat.key);
+            return (
+              <button
+                key={cat.key}
+                onClick={() => toggleCategory(cat.key)}
+                className={`flex items-center gap-3 w-full px-3 py-2 rounded-lg text-left text-sm transition-colors ${
+                  active
+                    ? 'bg-red-500/10 text-red-500'
+                    : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                }`}
+              >
+                <span
+                  className="inline-block w-7 h-7 flex-shrink-0"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(
+                      buildFlatCircleSvg(cat.materialSymbol, { size: 28, dimmed: !active && categoryFilter.size > 0 })
+                    )}")`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                  }}
+                  aria-hidden="true"
+                />
+                <span>{cat.label}</span>
+              </button>
+            );
+          })}
         </div>
       )}
 
@@ -361,12 +531,4 @@ export default function MapView() {
       )}
     </div>
   );
-}
-
-function createMarkerSvg(emoji: string, color: string): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="48" viewBox="0 0 40 48">
-    <path d="M20 48s-1-1-1-1C18 46 2 30 2 18 2 8.1 10.1 0 20 0s18 8.1 18 18c0 12-16 28-17 29l-1 1z" fill="${color}" opacity="0.9"/>
-    <circle cx="20" cy="18" r="14" fill="white" opacity="0.95"/>
-    <text x="20" y="24" text-anchor="middle" font-size="16">${emoji}</text>
-  </svg>`;
 }

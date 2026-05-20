@@ -16,27 +16,29 @@ export interface AlertCategoryInfo {
   labelEn: string;
   emoji: string;
   color: string;
+  /** Material Symbols outlined name (e.g. 'person_alert'). */
+  materialSymbol: string;
 }
 
 export const ALERT_CATEGORIES: AlertCategoryInfo[] = [
-  { key: 'aggression', label: 'Agresywne osoby', labelEn: 'Aggressive people', emoji: '🤬', color: '#FF1744' },
-  { key: 'theft', label: 'Kradzież / rozbój', labelEn: 'Theft / robbery', emoji: '🔪', color: '#FF1744' },
-  { key: 'accident', label: 'Wypadek', labelEn: 'Accident', emoji: '💥', color: '#FF6D00' },
-  { key: 'fire', label: 'Pożar', labelEn: 'Fire', emoji: '🔥', color: '#FF3D00' },
-  { key: 'flood', label: 'Powódź', labelEn: 'Flood', emoji: '🌊', color: '#2979FF' },
-  { key: 'ice', label: 'Oblodzenie', labelEn: 'Ice', emoji: '❄️', color: '#00B0FF' },
-  { key: 'construction', label: 'Niebezpieczna budowa', labelEn: 'Dangerous construction', emoji: '⛏️', color: '#FFAB00' },
-  { key: 'animal', label: 'Niebezpieczne zwierzę', labelEn: 'Dangerous animal', emoji: '🐺', color: '#FF6D00' },
-  { key: 'dark_area', label: 'Nieoświetlony teren', labelEn: 'Dark area', emoji: '🌑', color: '#78909C' },
-  { key: 'drugs', label: 'Narkotyki', labelEn: 'Drugs', emoji: '💉', color: '#AA00FF' },
-  { key: 'police', label: 'Akcja policyjna', labelEn: 'Police action', emoji: '🚨', color: '#2979FF' },
-  { key: 'weather', label: 'Zagrożenie pogodowe', labelEn: 'Weather danger', emoji: '⛈️', color: '#1565C0' },
-  { key: 'other', label: 'Inne', labelEn: 'Other', emoji: '⚠️', color: '#FFAB00' },
-  { key: 'stranger_danger', label: 'Podejrzana osoba', labelEn: 'Stranger danger', emoji: '😈', color: '#FF1744' },
-  { key: 'traffic_danger', label: 'Niebezpieczne przejście', labelEn: 'Traffic danger', emoji: '☠️', color: '#FF6D00' },
-  { key: 'playground_hazard', label: 'Uszkodzony plac zabaw', labelEn: 'Playground hazard', emoji: '⛔', color: '#FFAB00' },
-  { key: 'water_hazard', label: 'Zbiornik wodny', labelEn: 'Water hazard', emoji: '🌀', color: '#2979FF' },
-  { key: 'school_zone', label: 'Strefa szkolna', labelEn: 'School zone', emoji: '🚸', color: '#FF6D00' },
+  { key: 'aggression', label: 'Agresywne osoby', labelEn: 'Aggressive people', emoji: '🤬', color: '#FF1744', materialSymbol: 'person_alert' },
+  { key: 'theft', label: 'Kradzież / rozbój', labelEn: 'Theft / robbery', emoji: '🔪', color: '#FF1744', materialSymbol: 'wallet' },
+  { key: 'accident', label: 'Wypadek', labelEn: 'Accident', emoji: '💥', color: '#FF6D00', materialSymbol: 'car_crash' },
+  { key: 'fire', label: 'Pożar', labelEn: 'Fire', emoji: '🔥', color: '#FF3D00', materialSymbol: 'local_fire_department' },
+  { key: 'flood', label: 'Powódź', labelEn: 'Flood', emoji: '🌊', color: '#2979FF', materialSymbol: 'waves' },
+  { key: 'ice', label: 'Oblodzenie', labelEn: 'Ice', emoji: '❄️', color: '#00B0FF', materialSymbol: 'severe_cold' },
+  { key: 'construction', label: 'Niebezpieczna budowa', labelEn: 'Dangerous construction', emoji: '⛏️', color: '#FFAB00', materialSymbol: 'warning' },
+  { key: 'animal', label: 'Niebezpieczne zwierzę', labelEn: 'Dangerous animal', emoji: '🐺', color: '#FF6D00', materialSymbol: 'pets' },
+  { key: 'dark_area', label: 'Nieoświetlony teren', labelEn: 'Dark area', emoji: '🌑', color: '#78909C', materialSymbol: 'dark_mode' },
+  { key: 'drugs', label: 'Narkotyki', labelEn: 'Drugs', emoji: '💉', color: '#AA00FF', materialSymbol: 'vaccines' },
+  { key: 'police', label: 'Akcja policyjna', labelEn: 'Police action', emoji: '🚨', color: '#2979FF', materialSymbol: 'local_police' },
+  { key: 'weather', label: 'Zagrożenie pogodowe', labelEn: 'Weather danger', emoji: '⛈️', color: '#1565C0', materialSymbol: 'thunderstorm' },
+  { key: 'other', label: 'Inne', labelEn: 'Other', emoji: '⚠️', color: '#FFAB00', materialSymbol: 'more_horiz' },
+  { key: 'stranger_danger', label: 'Podejrzana osoba', labelEn: 'Stranger danger', emoji: '😈', color: '#FF1744', materialSymbol: 'visibility' },
+  { key: 'traffic_danger', label: 'Niebezpieczne przejście', labelEn: 'Traffic danger', emoji: '☠️', color: '#FF6D00', materialSymbol: 'traffic' },
+  { key: 'playground_hazard', label: 'Uszkodzony plac zabaw', labelEn: 'Playground hazard', emoji: '⛔', color: '#FFAB00', materialSymbol: 'child_friendly' },
+  { key: 'water_hazard', label: 'Zbiornik wodny', labelEn: 'Water hazard', emoji: '🌀', color: '#2979FF', materialSymbol: 'water' },
+  { key: 'school_zone', label: 'Strefa szkolna', labelEn: 'School zone', emoji: '🚸', color: '#FF6D00', materialSymbol: 'school' },
 ];
 
 export function getCategoryInfo(cat: AlertCategory): AlertCategoryInfo {
