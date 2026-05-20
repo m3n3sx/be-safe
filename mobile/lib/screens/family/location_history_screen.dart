@@ -73,6 +73,7 @@ class _LocationHistoryScreenState extends State<LocationHistoryScreen> {
           IconButton(
             icon: const Icon(Icons.calendar_today),
             color: SerenityColors.primary,
+            tooltip: 'Wybierz datę',
             onPressed: () async {
               final picked = await showDatePicker(
                 context: context,

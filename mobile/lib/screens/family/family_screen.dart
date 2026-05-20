@@ -11,11 +11,280 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import '../../widgets/glow_orb.dart';
 import '../../widgets/serenity_card.dart';
+import 'child_profile_screen.dart';
 import 'family_group_screen.dart';
+import 'family_chat_screen.dart';
+import 'family_planner_screen.dart';
+import 'add_geofence_screen.dart';
+import 'member_profile_screen.dart';
+import '../pets/pets_screen.dart';
+
+// F35 — 8 ról rodzinnych. Synchronizacja z backend ALLOWED_ROLES (routes/family.js).
+const List<Map<String, dynamic>> _kRoleOptions = [
+  {
+    'value': 'parent',
+    'label': 'Rodzic',
+    'icon': Icons.escalator_warning_outlined,
+    'desc': 'Pełen wgląd w dzieci w rodzinie',
+  },
+  {
+    'value': 'child',
+    'label': 'Dziecko',
+    'icon': Icons.child_care_outlined,
+    'desc': 'Widoczne dla rodziców i opiekunów',
+  },
+  {
+    'value': 'senior',
+    'label': 'Senior',
+    'icon': Icons.elderly_outlined,
+    'desc': 'Codzienny check-in o 20:00',
+  },
+  {
+    'value': 'guardian',
+    'label': 'Opiekun',
+    'icon': Icons.shield_outlined,
+    'desc': 'Pełen wgląd w dzieci jak rodzic',
+  },
+  {
+    'value': 'family_member',
+    'label': 'Członek rodziny',
+    'icon': Icons.family_restroom_outlined,
+    'desc': 'Standardowy członek (domyślne)',
+  },
+  {
+    'value': 'partner',
+    'label': 'Partner',
+    'icon': Icons.favorite_outline,
+    'desc': 'Mąż, żona, partnerka',
+  },
+  {
+    'value': 'friend',
+    'label': 'Znajomy',
+    'icon': Icons.group_outlined,
+    'desc': 'Bliska osoba spoza rodziny',
+  },
+  {
+    'value': 'other',
+    'label': 'Inny',
+    'icon': Icons.person_outline,
+    'desc': 'Inna relacja',
+  },
+];
+
+String roleLabel(String? role) {
+  if (role == null || role.isEmpty) return '—';
+  for (final r in _kRoleOptions) {
+    if (r['value'] == role) return r['label'] as String;
+  }
+  return role;
+}
+
+IconData roleIcon(String? role) {
+  if (role == null || role.isEmpty) return Icons.person_outline;
+  for (final r in _kRoleOptions) {
+    if (r['value'] == role) return r['icon'] as IconData;
+  }
+  return Icons.person_outline;
+}
+
+/// Bottom sheet wyboru roli. Zwraca value (np. 'parent') lub null gdy anulowano.
+Future<String?> pickRole(
+  BuildContext context, {
+  String? title,
+  String? current,
+}) async {
+  return showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: SerenityColors.surfaceContainerLowest,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(SerenityShapes.radiusXl),
+      ),
+    ),
+    builder: (ctx) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: SerenitySpacing.md),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: SerenitySpacing.sm),
+              decoration: BoxDecoration(
+                color: SerenityColors.outlineVariant,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: SerenitySpacing.xl,
+                vertical: SerenitySpacing.sm,
+              ),
+              child: Text(
+                title ?? 'Wybierz rolę',
+                style: SerenityText.headlineHeroMobile.copyWith(fontSize: 20),
+              ),
+            ),
+            for (final r in _kRoleOptions)
+              ListTile(
+                leading: Icon(
+                  r['icon'] as IconData,
+                  color: SerenityColors.primary,
+                ),
+                title: Text(
+                  r['label'] as String,
+                  style: SerenityText.labelButton.copyWith(fontSize: 15),
+                ),
+                subtitle: Text(
+                  r['desc'] as String,
+                  style: SerenityText.bodyMain.copyWith(
+                    fontSize: 12,
+                    color: SerenityColors.onSurfaceVariant,
+                  ),
+                ),
+                trailing: current == r['value']
+                    ? const Icon(
+                        Icons.check_circle,
+                        color: SerenityColors.secondary,
+                      )
+                    : null,
+                onTap: () => Navigator.pop(ctx, r['value'] as String),
+              ),
+          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+/// Dane jednej karty szybkiej akcji w siatce Funkcji rodziny.
+/// Wzorowane na Aqoir: białe karty z subtelnym mint/aqua glow w rogu,
+/// czarna typografia, mała ikona w półprzezroczystym container.
+class _QuickActionData {
+  final IconData icon;
+  final String label;
+  final String desc;
+  final Color glow;
+  final VoidCallback onTap;
+  const _QuickActionData({
+    required this.icon,
+    required this.label,
+    required this.desc,
+    required this.glow,
+    required this.onTap,
+  });
+}
+
+class _QuickActionCard extends StatelessWidget {
+  final _QuickActionData data;
+  const _QuickActionCard({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: SerenityColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+        boxShadow: [
+          BoxShadow(
+            color: SerenityColors.primary.withValues(alpha: 0.06),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: data.onTap,
+          splashColor: data.glow.withValues(alpha: 0.18),
+          highlightColor: data.glow.withValues(alpha: 0.08),
+          child: Stack(
+            children: [
+              // Aqoir-style radial glow w prawym górnym rogu karty.
+              Positioned(
+                top: -40,
+                right: -40,
+                child: IgnorePointer(
+                  child: Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: RadialGradient(
+                        colors: [
+                          data.glow.withValues(alpha: 0.55),
+                          data.glow.withValues(alpha: 0.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(SerenitySpacing.md),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: data.glow.withValues(alpha: 0.22),
+                        borderRadius:
+                            BorderRadius.circular(SerenityShapes.radiusMd),
+                      ),
+                      child: Icon(
+                        data.icon,
+                        size: 22,
+                        color: SerenityColors.primary,
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data.label,
+                          style: SerenityText.headlineHeroMobile.copyWith(
+                            fontSize: 16,
+                            height: 20 / 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          data.desc,
+                          style: SerenityText.bodyMain.copyWith(
+                            fontSize: 12,
+                            height: 16 / 12,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class FamilyScreen extends StatefulWidget {
   const FamilyScreen({super.key});
@@ -168,10 +437,74 @@ class _FamilyScreenState extends State<FamilyScreen> {
     final code = await _showInputDialog('Kod zaproszenia');
     if (code == null || code.isEmpty) return;
     if (!mounted) return;
-    await context
-        .read<ApiService>()
-        .post('/family/groups/join', {'invite_code': code});
-    _loadGroups();
+    final role = await pickRole(
+      context,
+      title: 'Twoja rola w tej rodzinie',
+    );
+    if (role == null) return;
+    if (!mounted) return;
+    try {
+      await context.read<ApiService>().post('/family/groups/join', {
+        'invite_code': code,
+        'role': role,
+      });
+      _loadGroups();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nie udało się dołączyć: $e')),
+      );
+    }
+  }
+
+  /// F35: otwiera profil członka. Dla 'child' jeśli ja jestem parent/guardian
+  /// pokazuję ChildProfileScreen (historia + safe routes). Inaczej MemberProfileScreen.
+  void _openMember(Map member) {
+    if (_groups.isEmpty) return;
+    final group = _groups[_activeGroup] as Map;
+    final groupId = group['id'] as String;
+    final myRole = group['your_role'] as String?;
+    final targetRole = member['role'] as String?;
+    final guardian = myRole == 'parent' || myRole == 'guardian';
+    final userId = (member['user_id'] ?? member['id']).toString();
+    final userName =
+        (member['username'] ?? member['display_name'] ?? '?').toString();
+    final lat = member['lat'] is num ? (member['lat'] as num).toDouble() : null;
+    final lng = member['lng'] is num ? (member['lng'] as num).toDouble() : null;
+
+    if (targetRole == 'child' && guardian) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ChildProfileScreen(
+            groupId: groupId,
+            userId: userId,
+            userName: userName,
+            initialLat: lat,
+            initialLng: lng,
+          ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => MemberProfileScreen(
+            groupId: groupId,
+            userId: userId,
+            userName: userName,
+            role: targetRole,
+            initialLat: lat,
+            initialLng: lng,
+          ),
+        ),
+      ).then((_) {
+        // Refresh po powrocie — mogła się zmienić rola.
+        if (mounted && _groups.isNotEmpty) {
+          _loadMembers(_groups[_activeGroup]['id'] as String);
+        }
+      });
+    }
   }
 
   void _showQr(String name, String code) {
@@ -254,6 +587,8 @@ class _FamilyScreenState extends State<FamilyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: SerenityColors.surfaceBright,
+      extendBody: true,
+      // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
       body: SafeArea(
         bottom: false,
         child: _loading
@@ -336,12 +671,14 @@ class _FamilyScreenState extends State<FamilyScreen> {
                 IconButton(
                   icon: const Icon(Icons.qr_code_2, size: 26),
                   color: SerenityColors.primary,
+                  tooltip: 'Pokaż kod zaproszenia',
                   onPressed: () =>
                       _showQr(active['name'], active['invite_code']),
                 ),
                 IconButton(
                   icon: const Icon(Icons.more_horiz, size: 28),
                   color: SerenityColors.primary,
+                  tooltip: 'Więcej opcji grupy',
                   onPressed: () => _openGroupMenu(active),
                 ),
               ],
@@ -363,7 +700,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                       crossAxisCount: 2,
                       mainAxisSpacing: SerenitySpacing.md,
                       crossAxisSpacing: SerenitySpacing.md,
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 0.78,
                     ),
                     delegate: SliverChildBuilderDelegate(
                       (_, i) => _MemberCard(
@@ -371,6 +708,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                         online: _isOnline(_members[i] as Map),
                         statusLabel: _statusLabel(_members[i] as Map),
                         lastSeen: _lastSeenText(_members[i] as Map),
+                        onTap: () => _openMember(_members[i] as Map),
                       ),
                       childCount: _members.length,
                     ),
@@ -397,6 +735,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
             color: SerenityColors.primary,
+            tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
           Row(
@@ -502,34 +841,161 @@ class _FamilyScreenState extends State<FamilyScreen> {
   }
 
   Widget _buildActions() {
+    final active = _groups[_activeGroup];
+    final groupId = active['id'] as String;
+    final groupName = (active['name'] ?? 'Rodzina').toString();
+
+    void openFamilyMap() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => FamilyGroupScreen(
+            groupId: groupId,
+            groupName: groupName,
+          ),
+        ),
+      );
+    }
+
+    void openChat() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => FamilyChatScreen(
+            groupId: groupId,
+            groupName: groupName,
+          ),
+        ),
+      );
+    }
+
+    void openPlanner() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => FamilyPlannerScreen(
+            groupId: groupId,
+            groupName: groupName,
+          ),
+        ),
+      );
+    }
+
+    void openPets() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PetsScreen(
+            groupId: groupId,
+            groupName: groupName,
+          ),
+        ),
+      );
+    }
+
+    Future<void> openAddGeofence() async {
+      final firstWith = _members.firstWhere(
+        (m) => m['lat'] != null && m['lng'] != null,
+        orElse: () => <String, dynamic>{},
+      );
+      final center = firstWith['lat'] != null && firstWith['lng'] != null
+          ? LatLng(
+              (firstWith['lat'] as num).toDouble(),
+              (firstWith['lng'] as num).toDouble(),
+            )
+          : const LatLng(52.325, 17.565);
+      final added = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => AddGeofenceScreen(
+            groupId: groupId,
+            initialCenter: center,
+          ),
+        ),
+      );
+      if (added == true && mounted) _loadMembers(groupId);
+    }
+
+    // Glow accent per tile — subtelny mint/aqua/coral akcent w rogu karty.
+    // Tła zawsze białe (surfaceContainerLowest), tekst zawsze primary.
+    final tiles = <_QuickActionData>[
+      _QuickActionData(
+        icon: Icons.map_outlined,
+        label: 'Mapa rodziny',
+        desc: 'Lokalizacje, strefy',
+        glow: SerenityColors.glowSafeMint,
+        onTap: openFamilyMap,
+      ),
+      _QuickActionData(
+        icon: Icons.chat_bubble_outline,
+        label: 'Czat rodzinny',
+        desc: 'Wspólne wiadomości',
+        glow: SerenityColors.glowCalmAqua,
+        onTap: openChat,
+      ),
+      _QuickActionData(
+        icon: Icons.event_note_outlined,
+        label: 'Planner',
+        desc: 'Plany i przypomnienia',
+        glow: SerenityColors.glowSafeMint,
+        onTap: openPlanner,
+      ),
+      _QuickActionData(
+        icon: Icons.pets_outlined,
+        label: 'Zwierzaki',
+        desc: 'Pets i zgubienie',
+        glow: SerenityColors.glowCalmAqua,
+        onTap: openPets,
+      ),
+      _QuickActionData(
+        icon: Icons.add_location_alt_outlined,
+        label: 'Bezpieczne strefy',
+        desc: 'Dom, szkoła, praca',
+        glow: SerenityColors.glowSafeMint,
+        onTap: openAddGeofence,
+      ),
+      _QuickActionData(
+        icon: Icons.qr_code_2,
+        label: 'Zaproś bliskich',
+        desc: 'Pokaż kod QR',
+        glow: SerenityColors.glowCalmAqua,
+        onTap: () => _showQr(active['name'], active['invite_code']),
+      ),
+    ];
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: SerenitySpacing.xl,
         vertical: SerenitySpacing.md,
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _PrimaryPillButton(
             label: 'Wyślij sygnał',
             icon: Icons.notifications_active_outlined,
             onTap: _members.isEmpty ? null : _sendSignal,
           ),
-          const SizedBox(height: 12),
-          _OutlinePillButton(
-            label: 'Sprawdź trasę',
-            icon: Icons.timeline,
-            onTap: () {
-              final g = _groups[_activeGroup];
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => FamilyGroupScreen(
-                    groupId: g['id'],
-                    groupName: g['name'],
-                  ),
-                ),
-              );
-            },
+          const SizedBox(height: SerenitySpacing.xxl),
+          // Aqoir-style sekcyjny nagłówek: lekki, mały, uppercase tracking.
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: SerenitySpacing.md),
+            child: Text(
+              'Funkcje rodziny',
+              style: SerenityText.headlineHeroMobile.copyWith(fontSize: 22),
+            ),
+          ),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: tiles.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: SerenitySpacing.md,
+              crossAxisSpacing: SerenitySpacing.md,
+              childAspectRatio: 1.15,
+            ),
+            itemBuilder: (_, i) => _QuickActionCard(data: tiles[i]),
           ),
         ],
       ),
@@ -639,24 +1105,28 @@ class _MemberCard extends StatelessWidget {
   final bool online;
   final String statusLabel;
   final String lastSeen;
+  final VoidCallback? onTap;
 
   const _MemberCard({
     required this.member,
     required this.online,
     required this.statusLabel,
     required this.lastSeen,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     final name = member['username'] ?? member['display_name'] ?? '?';
     final avatarUrl = member['avatar_url'];
+    final role = member['role'] as String?;
     final ringColor = online
         ? SerenityColors.glowSafeMint
         : SerenityColors.outlineVariant;
 
     return SerenityCard(
       padding: const EdgeInsets.all(SerenitySpacing.md),
+      onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -678,7 +1148,7 @@ class _MemberCard extends StatelessWidget {
                   : _AvatarFallback(name: name),
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Text(
             name,
             style: SerenityText.labelButton.copyWith(
@@ -712,6 +1182,33 @@ class _MemberCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: SerenityColors.primaryFixed,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  roleIcon(role),
+                  size: 11,
+                  color: SerenityColors.primary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  roleLabel(role),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: SerenityColors.primary,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

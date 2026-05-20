@@ -5,6 +5,11 @@ import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import 'location_history_screen.dart';
+import 'add_geofence_screen.dart';
+import 'safe_routes_screen.dart';
+import 'family_chat_screen.dart';
+import 'family_planner_screen.dart';
+import '../pets/pets_screen.dart';
 
 class FamilyGroupScreen extends StatefulWidget {
   final String groupId;
@@ -54,40 +59,21 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
   }
 
   Future<void> _addGeofence() async {
-    final nameCtrl = TextEditingController();
-    final center = _members.where((m) => m['lat'] != null).map((m) => LatLng(m['lat'], m['lng'])).firstOrNull ?? const LatLng(52.325, 17.565);
-    LatLng picked = center;
-
-    final result = await showDialog<Map<String, dynamic>>(context: context, builder: (ctx) {
-      return StatefulBuilder(builder: (ctx, setDlgState) => AlertDialog(
-        title: const Text('Nowa bezpieczna strefa'),
-        content: SizedBox(width: double.maxFinite, height: 350, child: Column(mainAxisSize: MainAxisSize.min, children: [
-          TextField(controller: nameCtrl, decoration: const InputDecoration(labelText: 'Nazwa (np. Dom, Szkoła)')),
-          const SizedBox(height: 8),
-          const Text('Kliknij na mapę aby wybrać lokalizację:', style: TextStyle(fontSize: 12)),
-          const SizedBox(height: 4),
-          Expanded(child: ClipRRect(borderRadius: BorderRadius.circular(8), child: GoogleMap(
-            initialCameraPosition: CameraPosition(target: center, zoom: 15),
-            onTap: (p) => setDlgState(() => picked = p),
-            markers: {Marker(markerId: const MarkerId('picked'), position: picked, icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen))},
-            circles: {Circle(circleId: const CircleId('zone'), center: picked, radius: 200,
-              fillColor: Colors.green.withValues(alpha: 0.2), strokeColor: Colors.green, strokeWidth: 2)},
-            myLocationEnabled: false, zoomControlsEnabled: false, mapToolbarEnabled: false,
-            style: Theme.of(context).brightness == Brightness.dark ? _darkStyle : null,
-          ))),
-        ])),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Anuluj')),
-          TextButton(onPressed: () => Navigator.pop(ctx, {'name': nameCtrl.text, 'lat': picked.latitude, 'lng': picked.longitude}), child: const Text('Dodaj')),
-        ],
-      ));
-    });
-    if (result == null || (result['name'] as String).isEmpty) return;
-
-    await context.read<ApiService>().post('/family/groups/${widget.groupId}/geofences', {
-      'name': result['name'], 'lat': result['lat'], 'lng': result['lng'], 'radius_m': 200,
-    });
-    _load();
+    final center = _members
+            .where((m) => m['lat'] != null)
+            .map((m) => LatLng(m['lat'], m['lng']))
+            .firstOrNull ??
+        const LatLng(52.325, 17.565);
+    final added = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => AddGeofenceScreen(
+          groupId: widget.groupId,
+          initialCenter: center,
+        ),
+      ),
+    );
+    if (added == true) _load();
   }
 
   Future<void> _uploadChildAvatar(String userId) async {
@@ -95,6 +81,38 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
     if (picked == null) return;
     // Upload as avatar for child user
     await context.read<ApiService>().multipart('/users/$userId/avatar', {}, filePath: picked.path, fileField: 'avatar');
+    _load();
+  }
+
+  // F20: Toggle school hours silent mode (cichy pn-pt 8-15)
+  Future<void> _toggleSchoolMode(Map<String, dynamic> m) async {
+    final current = m['school_hours_silent'] == true;
+    final name = m['username'] ?? 'dziecka';
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(current ? 'Wyłączyć tryb szkolny?' : 'Włączyć tryb szkolny?'),
+        content: Text(current
+            ? 'Powiadomienia dla $name znów będą głośne we wszystkie godziny.'
+            : 'W godzinach 8:00–15:00 w dni szkolne (pn-pt) powiadomienia dla $name będą wyciszone (priorytet niski, brak dźwięku). Alerty SOS i zagrożenia nadal dotrą.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Anuluj')),
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: current ? SerenityColors.error : SerenityColors.onSecondaryContainer,
+            ),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(current ? 'Wyłącz' : 'Włącz'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    if (!mounted) return;
+    await context.read<ApiService>().patch(
+      '/family/groups/${widget.groupId}/members/${m['user_id']}',
+      {'school_hours_silent': !current},
+    );
     _load();
   }
 
@@ -144,8 +162,29 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: SerenityColors.primary),
         title: Text(widget.groupName, style: SerenityText.headlineHeroMobile), actions: [
+        IconButton(
+          icon: const Icon(Icons.chat_bubble_outline),
+          tooltip: 'Czat rodzinny',
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => FamilyChatScreen(groupId: widget.groupId, groupName: widget.groupName),
+          )),
+        ),
+        IconButton(
+          icon: const Icon(Icons.event_note_outlined),
+          tooltip: 'Planner rodzinny',
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => FamilyPlannerScreen(groupId: widget.groupId, groupName: widget.groupName),
+          )),
+        ),
+        IconButton(
+          icon: const Icon(Icons.pets),
+          tooltip: 'Zwierzaki',
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => PetsScreen(groupId: widget.groupId, groupName: widget.groupName),
+          )),
+        ),
         IconButton(icon: const Icon(Icons.add_location_alt), onPressed: _addGeofence, tooltip: 'Dodaj bezpieczną strefę'),
-        IconButton(icon: const Icon(Icons.refresh), onPressed: _load),
+        IconButton(icon: const Icon(Icons.refresh), onPressed: _load, tooltip: 'Odśwież listę'),
       ]),
       body: Column(children: [
         Expanded(
@@ -177,8 +216,38 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
                   ),
                 ),
                 title: Text(m['username'] ?? 'Nieznany'),
-                subtitle: Text(m['role'] == 'parent' ? 'Rodzic' : 'Dziecko'),
+                subtitle: Text(
+                  m['role'] == 'parent'
+                      ? 'Rodzic'
+                      : (m['school_hours_silent'] == true
+                          ? 'Dziecko · 🎒 Tryb szkolny'
+                          : 'Dziecko'),
+                ),
               trailing: m['role'] == 'child' ? Row(mainAxisSize: MainAxisSize.min, children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.school_outlined,
+                    size: 22,
+                    color: m['school_hours_silent'] == true
+                        ? SerenityColors.onSecondaryContainer
+                        : null,
+                  ),
+                  tooltip: m['school_hours_silent'] == true
+                      ? 'Tryb szkolny: WŁĄCZONY (cichy pn-pt 8-15)'
+                      : 'Tryb szkolny: wyłączony',
+                  onPressed: () => _toggleSchoolMode(m),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.route_outlined, size: 22),
+                  tooltip: 'Bezpieczne trasy',
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(
+                    builder: (_) => SafeRoutesScreen(
+                      groupId: widget.groupId,
+                      userId: m['user_id'],
+                      userName: m['username'] ?? 'Dziecko',
+                    ),
+                  )),
+                ),
                 IconButton(
                   icon: const Icon(Icons.history, size: 22),
                   tooltip: 'Historia tras',
@@ -193,6 +262,35 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
                 Switch(
                   value: m['tracking_enabled'] ?? true,
                   onChanged: (v) async {
+                    // Confirm before disabling tracking (safety-critical for child)
+                    if (!v) {
+                      final name = m['username'] ?? 'tego dziecka';
+                      final ok = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: const Text('Wyłączyć śledzenie?'),
+                          content: Text(
+                            'Stracisz wgląd w lokalizację $name. Nie otrzymasz '
+                            'powiadomień gdy opuści strefę bezpieczeństwa.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx, false),
+                              child: const Text('Anuluj'),
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: SerenityColors.error,
+                              ),
+                              onPressed: () => Navigator.pop(ctx, true),
+                              child: const Text('Wyłącz'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (ok != true) return;
+                    }
+                    if (!mounted) return;
                     await context.read<ApiService>().patch(
                       '/family/groups/${widget.groupId}/members/${m['user_id']}',
                       {'tracking_enabled': v},
@@ -212,7 +310,34 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
                 subtitle: Text('Promień: ${g['radius_m']}m'),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  tooltip: 'Usuń strefę',
                   onPressed: () async {
+                    final name = g['name'] ?? 'tę strefę';
+                    final ok = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Usunąć strefę?'),
+                        content: Text(
+                          'Strefa «$name» zostanie usunięta. Nie otrzymasz '
+                          'powiadomień gdy ktoś z rodziny wejdzie lub opuści ten obszar.',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Anuluj'),
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: SerenityColors.error,
+                            ),
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: const Text('Usuń'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (ok != true) return;
+                    if (!mounted) return;
                     await context.read<ApiService>().delete('/family/groups/${widget.groupId}/geofences/${g['id']}');
                     _load();
                   },
