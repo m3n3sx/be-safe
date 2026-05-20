@@ -114,12 +114,45 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
 
   Future<void> _vote(String type) async {
     HapticFeedback.lightImpact();
+    final isConfirm = type == 'confirm';
+    // Confirmation dialog — zapobiega pomyłkowemu tapnięciu (głos jest
+    // jednorazowy, nie ma cofania na backendzie).
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          isConfirm ? 'Potwierdzić zagrożenie?' : 'Oznaczyć jako nieaktualne?',
+        ),
+        content: Text(
+          isConfirm
+              ? 'Potwierdzasz, że zagrożenie nadal istnieje. Tego głosu nie można cofnąć.'
+              : 'Oznaczasz alert jako nieaktualny. Po kilku takich głosach alert zostanie ukryty. Tego głosu nie można cofnąć.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Anuluj'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(
+              foregroundColor: isConfirm
+                  ? SerenityColors.secondary
+                  : SerenityColors.error,
+            ),
+            child: Text(isConfirm ? 'Potwierdzam' : 'Nieaktualne'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    if (!mounted) return;
     try {
       await context.read<AlertProvider>().vote(widget.alert.id, type);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: type == 'confirm'
+          backgroundColor: isConfirm
               ? SerenityColors.secondary
               : SerenityColors.onSurfaceVariant,
           behavior: SnackBarBehavior.floating,
@@ -128,13 +161,13 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
             borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
           ),
           content: Text(
-            type == 'confirm'
+            isConfirm
                 ? 'Potwierdzono zagrożenie'
                 : 'Oznaczono jako nieaktualne',
           ),
         ),
       );
-      Navigator.pop(context);
+      // NIE pop-ujemy — niech user zostaje na widoku alertu i widzi efekt głosu
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -326,6 +359,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
             color: SerenityColors.primary,
+            tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
           const SizedBox(width: 8),
@@ -338,6 +372,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
           IconButton(
             icon: const Icon(Icons.share_outlined),
             color: SerenityColors.primary,
+            tooltip: 'Udostępnij alert',
             onPressed: () => Share.share(
               '⚠️ ${a.title}\n\n${a.description ?? ""}\n\n'
               'Lokalizacja: https://www.google.com/maps?q=${a.location.latitude},${a.location.longitude}\n\n'
@@ -537,7 +572,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
             onTap: () => _vote('confirm'),
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 24),
         Expanded(
           child: _voteButton(
             label: 'Nieaktualne',

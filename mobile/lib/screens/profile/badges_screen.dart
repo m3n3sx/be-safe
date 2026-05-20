@@ -150,6 +150,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 28),
                     color: SerenityColors.primary,
+                    tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
                   const SizedBox(width: 8),

@@ -122,6 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: SerenityColors.onSurfaceVariant,
                     size: 20,
                   ),
+                  tooltip: _obscurePass ? 'Pokaż hasło' : 'Ukryj hasło',
                   onPressed: () =>
                       setState(() => _obscurePass = !_obscurePass),
                 ),
@@ -341,27 +342,27 @@ class _LoginScreenState extends State<LoginScreen> {
       onTap: () => onChanged(!value),
       borderRadius: BorderRadius.circular(12),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Checkbox(
               value: value,
               onChanged: onChanged,
-              visualDensity: VisualDensity.compact,
               activeColor: SerenityColors.primary,
+              materialTapTargetSize: MaterialTapTargetSize.padded,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 8),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 2),
                 child: RichText(
                   text: TextSpan(
                     style: SerenityText.bodyMain.copyWith(
-                      fontSize: 13,
+                      fontSize: 14,
                       color: SerenityColors.primary,
                     ),
                     children: [label],

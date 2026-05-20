@@ -6,6 +6,7 @@
 /// Design source: design/stitch_v2/screens/sos_be_safe/
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -13,8 +14,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../services/api_service.dart';
+import '../../services/sos_audio_service.dart';
 import '../../theme/design_tokens.dart';
+import '../../widgets/nav_routes.dart';
 import '../../widgets/serenity_card.dart';
+import '../fake_call/fake_call_setup_screen.dart';
+import '../escort/escort_screen.dart';
 
 class SosScreen extends StatefulWidget {
   const SosScreen({super.key});
@@ -27,12 +32,13 @@ class _SosScreenState extends State<SosScreen>
     with SingleTickerProviderStateMixin {
   bool _notifyCommunity = true;
   bool _notifyFamily = true;
-  bool _call112 = false;
+  bool _call112 = true; // SOS12: default true for emergencies
   bool _sending = false;
   bool _holding = false;
   int _familyCount = 0;
 
   late final AnimationController _holdCtrl;
+  Timer? _hapticTimer;
 
   @override
   void initState() {
@@ -62,6 +68,7 @@ class _SosScreenState extends State<SosScreen>
 
   @override
   void dispose() {
+    _hapticTimer?.cancel();
     _holdCtrl.dispose();
     super.dispose();
   }
@@ -70,9 +77,15 @@ class _SosScreenState extends State<SosScreen>
     HapticFeedback.mediumImpact();
     setState(() => _holding = true);
     _holdCtrl.forward();
+    // SOS12: pulsująca informacja zwrotna co 500ms żeby user wiedział, że hold działa
+    _hapticTimer?.cancel();
+    _hapticTimer = Timer.periodic(const Duration(milliseconds: 500), (_) {
+      if (_holding) HapticFeedback.lightImpact();
+    });
   }
 
   void _onHoldEnd() {
+    _hapticTimer?.cancel();
     if (_holdCtrl.status != AnimationStatus.completed) {
       _holdCtrl.reverse();
     }
@@ -84,6 +97,13 @@ class _SosScreenState extends State<SosScreen>
     setState(() => _sending = true);
     await HapticFeedback.heavyImpact();
     await HapticFeedback.vibrate();
+
+    // F02: Start audio recording (jeśli user wyraził zgodę RODO + włączona)
+    final audio = SosAudioService();
+    if (audio.enabled && audio.hasConsent) {
+      // Fire-and-forget — nie blokuje SOS flow
+      audio.startRecording().catchError((_) => false);
+    }
 
     try {
       final pos = await _getPosition();
@@ -124,7 +144,15 @@ class _SosScreenState extends State<SosScreen>
           ),
         ),
       );
-      Navigator.pop(context);
+      if (!mounted) return;
+      // SOS jest tabem (Nav2 unifikacja) — pop może zostawić pusty stack.
+      // Wracamy do mapy przez navigateToTab.
+      if (Navigator.of(context).canPop()) {
+        Navigator.pop(context);
+      } else {
+        navigateToTab(context,
+            targetIndex: NavTabs.map, currentIndex: NavTabs.sos);
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -154,14 +182,42 @@ class _SosScreenState extends State<SosScreen>
     return Scaffold(
       backgroundColor: SerenityColors.surfaceBright,
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            _buildHeader(),
-            Expanded(child: Center(child: _buildOrb())),
-            _buildOptions(),
-            _buildCancel(),
-          ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Na dużych ekranach (>700 dostępnej wysokości) zachowujemy
+            // klasyczny layout z Expanded+Center wokół orb.
+            // Na mniejszych — całość jest przewijalna żeby SOS button był
+            // zawsze widoczny, mimo globalnego docka na dole.
+            final tall = constraints.maxHeight >= 700;
+            if (tall) {
+              return Column(
+                children: [
+                  const SizedBox(height: 16),
+                  _buildHeader(),
+                  Expanded(child: Center(child: _buildOrb())),
+                  _buildFakeCallShortcut(),
+                  _buildEscortShortcut(),
+                  _buildOptions(),
+                  _buildCancel(),
+                ],
+              );
+            }
+            return SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 16),
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  const SizedBox(height: 24),
+                  Center(child: _buildOrb()),
+                  const SizedBox(height: 24),
+                  _buildFakeCallShortcut(),
+                  _buildEscortShortcut(),
+                  _buildOptions(),
+                  _buildCancel(),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
@@ -258,6 +314,28 @@ class _SosScreenState extends State<SosScreen>
                                 : 'Wciśnij i przytrzymaj'),
                         style: SerenityText.bodyMain,
                       ),
+                      if (!_sending) ...[
+                        const SizedBox(height: 8),
+                        TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.5, end: 1.0),
+                          duration: const Duration(milliseconds: 900),
+                          curve: Curves.easeInOut,
+                          builder: (_, value, child) {
+                            return Opacity(opacity: value, child: child);
+                          },
+                          onEnd: () {
+                            if (mounted) setState(() {});
+                          },
+                          child: Text(
+                            'PRZYTRZYMAJ 2 SEKUNDY',
+                            style: SerenityText.labelCaps.copyWith(
+                              color: SerenityColors.glowAlertCoral,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ],
@@ -265,6 +343,140 @@ class _SosScreenState extends State<SosScreen>
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildFakeCallShortcut() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+          SerenitySpacing.xl, SerenitySpacing.xs, SerenitySpacing.xl, 0),
+      child: Material(
+        color: SerenityColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+        child: InkWell(
+          onTap: _sending
+              ? null
+              : () {
+                  HapticFeedback.selectionClick();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const FakeCallSetupScreen(),
+                    ),
+                  );
+                },
+          borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+          child: Padding(
+            padding: const EdgeInsets.all(SerenitySpacing.md),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: SerenityColors.secondaryContainer
+                        .withValues(alpha: 0.6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.phone_in_talk,
+                    color: SerenityColors.onSecondaryContainer,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: SerenitySpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Fałszywy telefon',
+                        style: SerenityText.labelButton.copyWith(
+                          fontSize: 15,
+                          color: SerenityColors.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Atrapa połączenia — wyjście z niezręcznej sytuacji',
+                        style:
+                            SerenityText.bodyMain.copyWith(fontSize: 12.5),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right,
+                    color: SerenityColors.onSurfaceVariant),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEscortShortcut() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+          SerenitySpacing.xl, SerenitySpacing.xs, SerenitySpacing.xl, 0),
+      child: Material(
+        color: SerenityColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+        child: InkWell(
+          onTap: _sending
+              ? null
+              : () {
+                  HapticFeedback.selectionClick();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const EscortScreen()),
+                  );
+                },
+          borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
+          child: Padding(
+            padding: const EdgeInsets.all(SerenitySpacing.md),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: SerenityColors.glowCalmAqua.withValues(alpha: 0.45),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.shield_outlined,
+                    color: SerenityColors.primaryContainer,
+                    size: 22,
+                  ),
+                ),
+                const SizedBox(width: SerenitySpacing.md),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Eskorta — Follow Me',
+                        style: SerenityText.labelButton.copyWith(
+                          fontSize: 15,
+                          color: SerenityColors.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Rodzina widzi Twoją trasę i alarmuje gdy nie dotrzesz',
+                        style: SerenityText.bodyMain.copyWith(fontSize: 12.5),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right,
+                    color: SerenityColors.onSurfaceVariant),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -354,7 +566,16 @@ class _SosScreenState extends State<SosScreen>
         top: 8,
       ),
       child: TextButton(
-        onPressed: _sending ? null : () => Navigator.pop(context),
+        onPressed: _sending
+            ? null
+            : () {
+                if (Navigator.of(context).canPop()) {
+                  Navigator.pop(context);
+                } else {
+                  navigateToTab(context,
+                      targetIndex: NavTabs.map, currentIndex: NavTabs.sos);
+                }
+              },
         child: Text(
           'Anuluj',
           style: SerenityText.labelButton.copyWith(fontSize: 16),

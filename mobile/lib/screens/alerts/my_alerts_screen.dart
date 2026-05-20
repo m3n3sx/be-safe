@@ -156,6 +156,7 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
             color: SerenityColors.primary,
+            tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
           const SizedBox(width: 8),

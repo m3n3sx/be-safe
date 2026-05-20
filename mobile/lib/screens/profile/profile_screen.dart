@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadStats() async {
     try {
       final api = context.read<ApiService>();
-      final res = await api.get('/users/me/alerts');
+      final res = await api.get('/alerts/mine');
       int count = 0;
       if (res is List) {
         count = res.length;
@@ -111,6 +111,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = context.watch<AuthProvider>().user;
     return Scaffold(
       backgroundColor: SerenityColors.surfaceBright,
+      extendBody: true,
+      // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
       body: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -183,6 +185,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () => Navigator.pushNamed(context, '/settings'),
                   ),
                   _RowTile(
+                    icon: Icons.verified_user_outlined,
+                    label: 'Uprawnienia',
+                    subtitle: 'Lokalizacja, kamera, mikrofon, sensory',
+                    onTap: () =>
+                        Navigator.pushNamed(context, '/permissions'),
+                  ),
+                  _RowTile(
                     icon: Icons.lock_outline,
                     label: 'Prywatność',
                     onTap: () => Navigator.pushNamed(context, '/privacy'),
@@ -199,7 +208,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(height: SerenitySpacing.xl),
                   _buildLogout(),
-                  const SizedBox(height: SerenitySpacing.xxxl),
+                  // Padding na docka z nawigacją (PillNavBar ~84 + safe area + margin)
+                  SizedBox(
+                    height: 96 + MediaQuery.of(context).padding.bottom,
+                  ),
                 ]),
               ),
             ),
@@ -221,12 +233,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
             color: SerenityColors.primary,
+            tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
           Text('Twój Profil', style: SerenityText.headlineHeroMobile),
           IconButton(
             icon: const Icon(Icons.settings_outlined, size: 26),
             color: SerenityColors.primary,
+            tooltip: 'Ustawienia',
             onPressed: () => Navigator.pushNamed(context, '/settings'),
           ),
         ],
@@ -385,6 +399,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: InkWell(
           borderRadius: SerenityShapes.pill(),
           onTap: () async {
+            final confirmed = await showDialog<bool>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Wylogować się?'),
+                content: const Text(
+                  'Stracisz dostęp do alertów i lokalizacji rodziny do następnego zalogowania.',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, false),
+                    child: const Text('Anuluj'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, true),
+                    style: TextButton.styleFrom(
+                      foregroundColor: SerenityColors.error,
+                    ),
+                    child: const Text('Wyloguj'),
+                  ),
+                ],
+              ),
+            );
+            if (confirmed != true) return;
+            if (!mounted) return;
             await context.read<AuthProvider>().logout();
             if (!mounted) return;
             Navigator.pushReplacementNamed(context, '/login');

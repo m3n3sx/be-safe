@@ -38,6 +38,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
   late LatLng _selectedPos;
   XFile? _photo;
   bool _submitting = false;
+  bool _isAnonymous = false; // F17: Anonimowe zgłoszenia
 
   @override
   void initState() {
@@ -45,10 +46,20 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
     _selectedPos = widget.position;
     _category = widget.presetCategory;
     if (widget.presetTitle != null) _title.text = widget.presetTitle!;
+    // Odświeżaj button gdy user wpisuje tytuł / opis (potrzebne do walidacji
+    // _enabled w submit-button).
+    _title.addListener(_onFormChanged);
+    _desc.addListener(_onFormChanged);
+  }
+
+  void _onFormChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
+    _title.removeListener(_onFormChanged);
+    _desc.removeListener(_onFormChanged);
     _title.dispose();
     _desc.dispose();
     super.dispose();
@@ -79,6 +90,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
         'lat': _selectedPos.latitude.toString(),
         'lng': _selectedPos.longitude.toString(),
         'duration_hours': _durationHours.toString(),
+        if (_isAnonymous) 'is_anonymous': 'true',
       }, filePath: _photo?.path);
       if (mounted) Navigator.pop(context);
     } finally {
@@ -86,9 +98,47 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
     }
   }
 
+  bool get _hasUnsavedChanges =>
+      _category != null ||
+      _title.text.isNotEmpty ||
+      _desc.text.isNotEmpty ||
+      _photo != null;
+
+  Future<bool> _confirmDiscard() async {
+    if (!_hasUnsavedChanges || _submitting) return true;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Porzucić zgłoszenie?'),
+        content: const Text(
+          'Wpisane dane (kategoria, tytuł, opis, zdjęcie) zostaną utracone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Wróć do edycji'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: SerenityColors.error),
+            child: const Text('Porzuć'),
+          ),
+        ],
+      ),
+    );
+    return ok ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: !_hasUnsavedChanges || _submitting,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final shouldPop = await _confirmDiscard();
+        if (shouldPop && mounted) Navigator.pop(context);
+      },
+      child: Scaffold(
       backgroundColor: SerenityColors.surfaceBright,
       body: SafeArea(
         child: Column(
@@ -133,17 +183,20 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
                     _sectionLabel('CZAS WAŻNOŚCI'),
                     const SizedBox(height: SerenitySpacing.sm),
                     _buildDurationChips(),
+                    const SizedBox(height: SerenitySpacing.xl),
+                    _buildAnonymousToggle(),
                     const SizedBox(height: SerenitySpacing.xxxl),
                     _buildSubmitButton(),
                     SizedBox(
                       height: MediaQuery.of(context).padding.bottom + 16,
                     ),
-                  ],
+                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -157,9 +210,13 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
       child: Row(
         children: [
           IconButton(
+            tooltip: 'Zamknij',
             icon: const Icon(Icons.close, size: 28),
             color: SerenityColors.primary,
-            onPressed: () => Navigator.pop(context),
+            onPressed: () async {
+              final ok = await _confirmDiscard();
+              if (ok && mounted) Navigator.pop(context);
+            },
           ),
           const SizedBox(width: 8),
           Text(
@@ -233,41 +290,97 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
   }
 
   Widget _buildCategoryChips() {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: AlertCategory.values.map((c) {
-        final selected = _category == c;
-        return Material(
-          color: selected
-              ? SerenityColors.primaryContainer
-              : SerenityColors.surfaceContainerLowest,
-          borderRadius: SerenityShapes.pill(),
-          child: InkWell(
-            borderRadius: SerenityShapes.pill(),
-            onTap: () => setState(() => _category = c),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 10,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: SerenityShapes.pill(),
-                boxShadow: selected ? null : SerenityElevation.card(),
-              ),
-              child: Text(
-                '${c.emoji} ${c.label}',
-                style: SerenityText.labelButton.copyWith(
-                  fontSize: 13,
-                  color: selected
-                      ? SerenityColors.onPrimary
-                      : SerenityColors.primary,
+    // Cat10: group 18 categories into 4 sections for easier scanning
+    final groups = <String, List<AlertCategory>>{
+      'Pilne': [
+        AlertCategory.aggression,
+        AlertCategory.theft,
+        AlertCategory.fire,
+        AlertCategory.accident,
+        AlertCategory.police,
+        AlertCategory.strangerDanger,
+      ],
+      'Drogowe': [
+        AlertCategory.ice,
+        AlertCategory.construction,
+        AlertCategory.trafficDanger,
+        AlertCategory.weather,
+      ],
+      'Dla dzieci': [
+        AlertCategory.playgroundHazard,
+        AlertCategory.waterHazard,
+        AlertCategory.schoolZone,
+      ],
+      'Inne': [
+        AlertCategory.flood,
+        AlertCategory.animal,
+        AlertCategory.darkArea,
+        AlertCategory.drugs,
+        AlertCategory.other,
+      ],
+    };
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: groups.entries.map((entry) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8, left: 2),
+                child: Text(
+                  entry.key.toUpperCase(),
+                  style: SerenityText.labelCaps.copyWith(
+                    fontSize: 11,
+                    letterSpacing: 1.2,
+                    color: SerenityColors.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: entry.value.map((c) => _categoryChip(c)).toList(),
+              ),
+            ],
           ),
         );
       }).toList(),
+    );
+  }
+
+  Widget _categoryChip(AlertCategory c) {
+    final selected = _category == c;
+    return Material(
+      color: selected
+          ? SerenityColors.primaryContainer
+          : SerenityColors.surfaceContainerLowest,
+      borderRadius: SerenityShapes.pill(),
+      child: InkWell(
+        borderRadius: SerenityShapes.pill(),
+        onTap: () => setState(() => _category = c),
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
+          ),
+          decoration: BoxDecoration(
+            borderRadius: SerenityShapes.pill(),
+            boxShadow: selected ? null : SerenityElevation.card(),
+          ),
+          child: Text(
+            '${c.emoji} ${c.label}',
+            style: SerenityText.labelButton.copyWith(
+              fontSize: 13,
+              color: selected
+                  ? SerenityColors.onPrimary
+                  : SerenityColors.primary,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -429,42 +542,119 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
     );
   }
 
-  Widget _buildSubmitButton() {
-    final enabled = !_submitting && _category != null && _title.text.isNotEmpty;
-    return Material(
-      color: enabled
-          ? SerenityColors.primaryContainer
-          : SerenityColors.surfaceContainerHigh,
-      borderRadius: SerenityShapes.pill(),
-      child: InkWell(
-        borderRadius: SerenityShapes.pill(),
-        onTap: enabled ? _submit : null,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          child: Center(
-            child: _submitting
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation(
-                        SerenityColors.onPrimary,
-                      ),
-                    ),
-                  )
-                : Text(
-                    'Zgłoś zagrożenie',
-                    style: SerenityText.labelButton.copyWith(
-                      fontSize: 16,
-                      color: enabled
-                          ? SerenityColors.onPrimary
-                          : SerenityColors.onSurfaceVariant,
-                    ),
-                  ),
-          ),
+  // F17: Anonimowe zgłoszenia - toggle
+  Widget _buildAnonymousToggle() {
+    return Container(
+      decoration: BoxDecoration(
+        color: SerenityColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(SerenityShapes.radiusLg),
+        border: Border.all(
+          color: _isAnonymous
+              ? SerenityColors.primaryContainer.withValues(alpha: 0.6)
+              : SerenityColors.outlineVariant,
+          width: _isAnonymous ? 1.5 : 1.0,
         ),
       ),
+      child: SwitchListTile(
+        value: _isAnonymous,
+        onChanged: _submitting ? null : (v) => setState(() => _isAnonymous = v),
+        secondary: Container(
+          width: 40, height: 40,
+          decoration: BoxDecoration(
+            color: _isAnonymous
+                ? SerenityColors.primaryContainer.withValues(alpha: 0.1)
+                : SerenityColors.surfaceContainer,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            _isAnonymous ? Icons.visibility_off : Icons.person_outline,
+            color: _isAnonymous
+                ? SerenityColors.primaryContainer
+                : SerenityColors.onSurfaceVariant,
+            size: 22,
+          ),
+        ),
+        title: const Text(
+          'Zgłoszenie anonimowe',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+        ),
+        subtitle: Text(
+          _isAnonymous
+              ? 'Twoja nazwa NIE będzie widoczna dla innych'
+              : 'Inni zobaczą Twój nick przy alercie',
+          style: TextStyle(
+            fontSize: 12,
+            color: SerenityColors.onSurfaceVariant,
+          ),
+        ),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    final enabled = !_submitting && _category != null && _title.text.isNotEmpty;
+    final String? hint = enabled
+        ? null
+        : _category == null && _title.text.isEmpty
+              ? 'Wybierz kategorię i wpisz tytuł aby zgłosić'
+              : _category == null
+              ? 'Wybierz kategorię zagrożenia'
+              : _title.text.isEmpty
+              ? 'Wpisz krótki tytuł zagrożenia'
+              : null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Material(
+          color: enabled
+              ? SerenityColors.primaryContainer
+              : SerenityColors.surfaceContainerHigh,
+          borderRadius: SerenityShapes.pill(),
+          child: InkWell(
+            borderRadius: SerenityShapes.pill(),
+            onTap: enabled ? _submit : null,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 18),
+              child: Center(
+                child: _submitting
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation(
+                            SerenityColors.onPrimary,
+                          ),
+                        ),
+                      )
+                    : Text(
+                        'Zgłoś zagrożenie',
+                        style: SerenityText.labelButton.copyWith(
+                          fontSize: 16,
+                          color: enabled
+                              ? SerenityColors.onPrimary
+                              : SerenityColors.onSurfaceVariant,
+                        ),
+                      ),
+              ),
+            ),
+          ),
+        ),
+        if (hint != null) ...[
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
+              hint,
+              style: SerenityText.bodyMain.copyWith(
+                fontSize: 12,
+                color: SerenityColors.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

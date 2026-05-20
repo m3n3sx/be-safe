@@ -1,19 +1,23 @@
 import 'dart:convert';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as gcm;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../models/alert.dart';
 import '../../providers/alert_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../services/location_service.dart';
 import '../../services/i18n.dart';
 import '../alerts/create_alert_screen.dart';
 import '../alerts/alert_detail_screen.dart';
+import '../family/child_profile_screen.dart';
+import '../family/member_profile_screen.dart';
 import '../../theme/design_tokens.dart';
-import '../../widgets/pill_nav_bar.dart';
 import '../../widgets/map_markers.dart';
 
 /// Wrapper for AlertModel to satisfy ClusterItem contract.
@@ -36,9 +40,15 @@ class _MapScreenState extends State<MapScreen> {
   LatLng _currentPos = const LatLng(52.325, 17.565);
   bool _showFilters = false;
   bool _showAlertList = false;
-  final Map<AlertCategory, BitmapDescriptor> _iconCache = {};
-  List<Map<String, dynamic>> _children = [];
+  List<Map<String, dynamic>> _familyMembers = [];
   final Map<String, BitmapDescriptor> _childIconCache = {};
+  BitmapDescriptor? _familyParentPin;
+
+  // F11: AED Locator
+  bool _aedsVisible = false;
+  List<Map<String, dynamic>> _aeds = [];
+  BitmapDescriptor? _aedIcon;
+  bool _loadingAeds = false;
 
   // Clustering state
   gcm.ClusterManager<_ClusterableAlert>? _clusterManager;
@@ -61,7 +71,7 @@ class _MapScreenState extends State<MapScreen> {
     );
     _initLocation();
     _precacheIcons();
-    _loadFamilyChildren();
+    _loadFamilyMembers();
   }
 
   void _updateClusterMarkers(Set<Marker> markers) {
@@ -76,16 +86,17 @@ class _MapScreenState extends State<MapScreen> {
         icon: await MapMarkers.clusterPin(cluster.count),
         onTap: () {
           HapticFeedback.selectionClick();
-          _mapController?.animateCamera(CameraUpdate.newLatLngZoom(cluster.location, 15));
+          _zoomToCluster(cluster);
         },
       );
     }
-    // Single item → render as alert pin with category color.
+    // Single item → render as alert pin with category-aware icon + variant.
     final a = cluster.items.first.alert;
+    final variant = _variantFor(a);
     return Marker(
       markerId: MarkerId(a.id),
       position: a.location,
-      icon: _iconCache[a.category] ?? await MapMarkers.alertPin(a.category),
+      icon: await MapMarkers.alertPin(a.category, variant: variant),
       onTap: () {
         HapticFeedback.selectionClick();
         Navigator.push(context, MaterialPageRoute(builder: (_) => AlertDetailScreen(alert: a)));
@@ -96,10 +107,185 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _precacheIcons() async {
     await Future.delayed(const Duration(milliseconds: 100));
     if (!mounted) return;
+    // Warm-up the marker cache so first map paint has icons ready.
     for (final cat in AlertCategory.values) {
-      _iconCache[cat] = await MapMarkers.alertPin(cat);
+      await MapMarkers.alertPin(cat);
     }
+    _aedIcon = await MapMarkers.aedPin();
     if (mounted) setState(() {});
+  }
+
+  /// F11: Toggle AED layer on map.
+  Future<void> _toggleAeds() async {
+    HapticFeedback.selectionClick();
+    setState(() => _aedsVisible = !_aedsVisible);
+    if (_aedsVisible && _aeds.isEmpty) {
+      await _loadAeds();
+    }
+  }
+
+  Future<void> _loadAeds() async {
+    if (_loadingAeds) return;
+    _loadingAeds = true;
+    try {
+      final api = context.read<ApiService>();
+      final center = _currentPos;
+      final res = await api.get(
+        '/aeds/nearby?lat=${center.latitude}&lng=${center.longitude}&radius=5000',
+      );
+      if (!mounted) return;
+      final list = (res['aeds'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+      setState(() {
+        _aeds = list;
+      });
+      // ignore: unused_local_variable
+      final _ = center; // keep for future refetch-on-move heuristic
+    } catch (_) {
+      // silent — banner pokazuje empty state
+    } finally {
+      _loadingAeds = false;
+    }
+  }
+
+  void _showAedDetail(Map<String, dynamic> aed) {
+    HapticFeedback.selectionClick();
+    final lat = (aed['lat'] as num).toDouble();
+    final lng = (aed['lng'] as num).toDouble();
+    final description = aed['description'] as String?;
+    final address = aed['address'] as String?;
+    final operator = aed['operator'] as String?;
+    final openingHours = aed['opening_hours'] as String?;
+    final indoor = aed['indoor'] as bool?;
+    final distance = aed['distance_m'] as int?;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+        child: SafeArea(top: false, child: Column(
+          mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(2)))),
+            Row(children: [
+              Container(width: 56, height: 56, decoration: BoxDecoration(
+                color: const Color(0xFF9DF4CB), shape: BoxShape.circle),
+                child: const Icon(Icons.favorite, color: Color(0xFF0F7252), size: 28)),
+              const SizedBox(width: 16),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('Defibrylator AED',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                if (distance != null) Text(
+                  distance < 1000 ? '${distance}m od Ciebie' : '${(distance / 1000).toStringAsFixed(1)}km',
+                  style: const TextStyle(fontSize: 13, color: Colors.black54)),
+              ])),
+            ]),
+            const SizedBox(height: 16),
+            if (description != null) Padding(padding: const EdgeInsets.only(bottom: 6),
+              child: Text(description, style: const TextStyle(fontSize: 15, height: 1.4))),
+            if (address != null) _aedDetailRow(Icons.location_on_outlined, address),
+            if (operator != null) _aedDetailRow(Icons.business_outlined, operator),
+            if (openingHours != null) _aedDetailRow(Icons.schedule_outlined, openingHours),
+            if (indoor != null) _aedDetailRow(
+              indoor ? Icons.meeting_room_outlined : Icons.park_outlined,
+              indoor ? 'Wewnątrz budynku' : 'Na zewnątrz'),
+            const SizedBox(height: 20),
+            Row(children: [
+              Expanded(child: FilledButton.icon(
+                onPressed: () async {
+                  final uri = Uri.parse('google.navigation:q=$lat,$lng&mode=w');
+                  try {
+                    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+                      final web = Uri.parse('https://maps.google.com/?daddr=$lat,$lng&directionsmode=walking');
+                      await launchUrl(web, mode: LaunchMode.externalApplication);
+                    }
+                  } catch (_) {}
+                },
+                icon: const Icon(Icons.directions_walk), label: const Text('Nawiguj'),
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF1A2027), foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))))),
+              const SizedBox(width: 12),
+              Expanded(child: OutlinedButton.icon(
+                onPressed: () async {
+                  try { await launchUrl(Uri.parse('tel:112'), mode: LaunchMode.externalApplication); } catch (_) {}
+                },
+                icon: const Icon(Icons.call, color: Color(0xFFFF7A7A)),
+                label: const Text('Zadzwoń 112', style: TextStyle(color: Color(0xFF1A2027))),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFFFF7A7A), width: 2),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))))),
+            ]),
+          ],
+        )),
+      ),
+    );
+  }
+
+  Widget _aedDetailRow(IconData icon, String text) => Padding(
+    padding: const EdgeInsets.only(bottom: 4),
+    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Icon(icon, size: 18, color: Colors.black54),
+      const SizedBox(width: 8),
+      Expanded(child: Text(text, style: const TextStyle(fontSize: 14, height: 1.4))),
+    ]),
+  );
+
+  /// Decide which visual variant best represents this alert today.
+  AlertPinVariant _variantFor(AlertModel a) {
+    if (a.confirms >= 3 && a.confirms > a.denies) {
+      return AlertPinVariant.confirmed;
+    }
+    return AlertPinVariant.defaultV;
+  }
+
+  /// Tap on a cluster → fit the camera to the bounding box of all items in it
+  /// so the individual pins reveal themselves. Falls back to a step-zoom when
+  /// every alert sits on the same coordinate.
+  Future<void> _zoomToCluster(gcm.Cluster<_ClusterableAlert> cluster) async {
+    final ctl = _mapController;
+    if (ctl == null) return;
+
+    final positions = cluster.items.map((c) => c.alert.location).toList();
+    if (positions.isEmpty) return;
+
+    if (positions.length == 1) {
+      await ctl.animateCamera(CameraUpdate.newLatLngZoom(positions.first, 16));
+      return;
+    }
+
+    double minLat = positions.first.latitude;
+    double maxLat = positions.first.latitude;
+    double minLng = positions.first.longitude;
+    double maxLng = positions.first.longitude;
+    for (final p in positions) {
+      if (p.latitude < minLat) minLat = p.latitude;
+      if (p.latitude > maxLat) maxLat = p.latitude;
+      if (p.longitude < minLng) minLng = p.longitude;
+      if (p.longitude > maxLng) maxLng = p.longitude;
+    }
+
+    // All alerts at virtually the same spot → just zoom in two steps.
+    if ((maxLat - minLat).abs() < 1e-6 && (maxLng - minLng).abs() < 1e-6) {
+      final z = await ctl.getZoomLevel();
+      await ctl.animateCamera(
+        CameraUpdate.newLatLngZoom(cluster.location, (z + 2).clamp(3.0, 19.0)),
+      );
+      return;
+    }
+
+    final bounds = LatLngBounds(
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
+    );
+    await ctl.animateCamera(CameraUpdate.newLatLngBounds(bounds, 80));
   }
 
   Future<void> _initLocation() async {
@@ -107,34 +293,87 @@ class _MapScreenState extends State<MapScreen> {
     if (pos != null && mounted) {
       setState(() => _currentPos = LatLng(pos.latitude, pos.longitude));
       _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_currentPos, 15));
-      context.read<ApiService>().post('/users/me/location', {'lat': pos.latitude, 'lng': pos.longitude}).catchError((_) {});
+      context.read<ApiService>().put('/users/me/location', {'lat': pos.latitude, 'lng': pos.longitude}).catchError((_) => <String, dynamic>{});
     }
     if (mounted) context.read<AlertProvider>().loadNearby(_currentPos, radiusM: 10000);
   }
 
-  Future<void> _loadFamilyChildren() async {
+  Future<void> _loadFamilyMembers() async {
     try {
       final api = context.read<ApiService>();
+      final myId = context.read<AuthProvider>().user?.id;
       final res = await api.get('/family/groups');
-      final kids = <Map<String, dynamic>>[];
+      debugPrint('[family] groups response: ${res['groups']?.length ?? 0} groups');
+      final members = <Map<String, dynamic>>[];
+      final seen = <String>{};
       for (final g in (res['groups'] as List? ?? [])) {
         final m = await api.get('/family/groups/${g['id']}/members');
+        debugPrint('[family] group ${g['id']}: ${m['members']?.length ?? 0} members');
         for (final member in (m['members'] as List? ?? [])) {
-          if (member['role'] == 'child' && member['lat'] != null) kids.add(member);
+          final userId = member['user_id']?.toString();
+          // Skip self & duplicates (member może być w kilku grupach)
+          if (userId == null || userId == myId || seen.contains(userId)) continue;
+          if (member['lat'] == null || member['lng'] == null) continue;
+          seen.add(userId);
+          members.add({
+            ...member,
+            'group_id': g['id'],
+            'group_name': g['name'],
+            'your_role': g['your_role'], // moja rola w tej grupie (parent/child)
+          });
         }
       }
-      for (final k in kids) {
-        final name = k['username'] ?? '?';
-        if (!_childIconCache.containsKey(name)) {
-          _childIconCache[name] = await MapMarkers.childPin(name);
+      debugPrint('[family] total members with location: ${members.length}');
+      _familyParentPin ??= await MapMarkers.familyPin();
+      for (final mem in members) {
+        if (mem['role'] == 'child') {
+          final name = (mem['username'] ?? '?').toString();
+          if (!_childIconCache.containsKey(name)) {
+            _childIconCache[name] = await MapMarkers.childPin(name);
+          }
         }
       }
-      if (mounted) setState(() => _children = kids);
-    } catch (_) {}
+      if (mounted) setState(() => _familyMembers = members);
+    } catch (e) {
+      debugPrint('[family] ERROR: $e');
+    }
   }
 
   void _dismissOverlays() {
     if (_showAlertList || _showFilters) setState(() { _showAlertList = false; _showFilters = false; });
+  }
+
+  /// Counts how many other alerts sit within [neighborhoodM] metres of [a].
+  /// Used to scale danger-zone circles: dense areas get bigger circles.
+  int _neighborCount(AlertModel a, List<AlertModel> all, {double neighborhoodM = 800}) {
+    int n = 0;
+    for (final b in all) {
+      if (identical(a, b) || a.id == b.id) continue;
+      final dLat = (a.location.latitude - b.location.latitude) * 111320.0;
+      final dLng = (a.location.longitude - b.location.longitude) *
+          111320.0 * math.cos(a.location.latitude * math.pi / 180.0);
+      final dist = math.sqrt(dLat * dLat + dLng * dLng);
+      if (dist <= neighborhoodM) n++;
+    }
+    return n;
+  }
+
+  /// Builds a Circle for an alert with radius scaled by local density.
+  /// - base radius from a.radiusM (alert's declared range)
+  /// - +8% per neighbor in 800m radius, capped at +40%
+  /// - minimum visual radius of 80m so tiny alerts stay readable
+  Circle _zoneCircle(AlertModel a, List<AlertModel> all, bool isDark) {
+    final neighbors = _neighborCount(a, all);
+    final densityBonus = 1.0 + math.min(0.4, neighbors * 0.08);
+    final scaled = math.max(80.0, a.radiusM.toDouble() * densityBonus);
+    return Circle(
+      circleId: CircleId(a.id),
+      center: a.location,
+      radius: scaled,
+      fillColor: const Color(0xFFFF7A7A).withValues(alpha: isDark ? 0.06 : 0.10),
+      strokeColor: const Color(0xFFFF7A7A).withValues(alpha: isDark ? 0.30 : 0.42),
+      strokeWidth: 1,
+    );
   }
 
   /// Push current alerts into the ClusterManager if the list has changed.
@@ -174,17 +413,64 @@ class _MapScreenState extends State<MapScreen> {
             zoomControlsEnabled: false, mapToolbarEnabled: false,
             markers: {
               ..._clusterMarkers,
-              ..._children.map((c) => Marker(markerId: MarkerId('child_${c['user_id']}'), position: LatLng(c['lat'], c['lng']),
-                icon: _childIconCache[c['username']] ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  _mapController?.animateCamera(CameraUpdate.newLatLngZoom(LatLng(c['lat'], c['lng']), 17));
-                })),
+              if (_aedsVisible) ..._aeds.map((aed) => Marker(
+                markerId: MarkerId('aed_${aed['id']}'),
+                position: LatLng((aed['lat'] as num).toDouble(), (aed['lng'] as num).toDouble()),
+                icon: _aedIcon ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+                onTap: () => _showAedDetail(aed),
+                zIndexInt: 1,
+              )),
+              ..._familyMembers.map((c) {
+                final role = c['role']?.toString();
+                final isChild = role == 'child';
+                final icon = isChild
+                    ? (_childIconCache[(c['username'] ?? '').toString()] ?? BitmapDescriptor.defaultMarker)
+                    : (_familyParentPin ?? BitmapDescriptor.defaultMarker);
+                return Marker(
+                  markerId: MarkerId('member_${c['user_id']}'),
+                  position: LatLng(c['lat'], c['lng']),
+                  icon: icon,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    final groupId = c['group_id'] as String?;
+                    final userId = c['user_id'] as String?;
+                    final name = (c['username'] as String?) ?? '?';
+                    final myRole = c['your_role'] as String?;
+                    if (groupId == null || userId == null) return;
+                    final lat = (c['lat'] as num?)?.toDouble();
+                    final lng = (c['lng'] as num?)?.toDouble();
+                    // Pełny profil dziecka (z trasami/historią) — tylko dla rodzica.
+                    // Pozostali członkowie (inni rodzice, dzieci patrzące na rodzica
+                    // lub na inne dziecko) dostają zwykły MemberProfileScreen.
+                    if (isChild && myRole == 'parent') {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => ChildProfileScreen(
+                          groupId: groupId,
+                          userId: userId,
+                          userName: name,
+                          initialLat: lat,
+                          initialLng: lng,
+                        ),
+                      ));
+                    } else {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => MemberProfileScreen(
+                          groupId: groupId,
+                          userId: userId,
+                          userName: name,
+                          role: role,
+                          initialLat: lat,
+                          initialLng: lng,
+                        ),
+                      ));
+                    }
+                  },
+                );
+              }),
             },
             circles: {
-              ...alerts.map((a) => Circle(circleId: CircleId(a.id), center: a.location, radius: a.radiusM.toDouble(),
-                fillColor: const Color(0xFFFF7A7A).withValues(alpha: 0.06), strokeColor: const Color(0xFFFF7A7A).withValues(alpha: 0.25), strokeWidth: 1)),
-              ..._children.map((c) => Circle(circleId: CircleId('child_${c['user_id']}'), center: LatLng(c['lat'], c['lng']),
+              ...alerts.map((a) => _zoneCircle(a, alerts, isDark)),
+              ..._familyMembers.map((c) => Circle(circleId: CircleId('member_${c['user_id']}'), center: LatLng(c['lat'], c['lng']),
                 radius: 150, fillColor: cs.primary.withValues(alpha: 0.08), strokeColor: cs.primary.withValues(alpha: 0.4), strokeWidth: 2)),
             },
             style: isDark ? _darkMapStyle : _lightMapStyle,
@@ -212,6 +498,7 @@ class _MapScreenState extends State<MapScreen> {
                     button: true,
                     child: IconButton(
                       icon: const Icon(Icons.my_location, color: SerenityColors.primary, size: 22),
+                      tooltip: 'Moja lokalizacja',
                       onPressed: () {
                         HapticFeedback.selectionClick();
                         _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_currentPos, 15));
@@ -241,26 +528,59 @@ class _MapScreenState extends State<MapScreen> {
         // Alert list (overlay on mobile; hidden on tablets where side pane takes over)
         if (_showAlertList && !showSidePane) Positioned(bottom: 130, left: 16, right: 16,
           child: Container(
-            constraints: const BoxConstraints(maxHeight: 250),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
-              boxShadow: [BoxShadow(blurRadius: 12, color: Colors.black.withValues(alpha: 0.15))]),
-            child: ClipRRect(borderRadius: BorderRadius.circular(16),
-              child: ListView.separated(shrinkWrap: true, padding: EdgeInsets.zero, itemCount: alerts.length,
-                separatorBuilder: (_, __) => const Divider(height: 1),
-                itemBuilder: (_, i) {
-                  final a = alerts[i];
-                  return ListTile(dense: true,
-                    leading: Icon(a.category.iconData, color: a.category.color, size: 28),
-                    title: Text(a.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 1, overflow: TextOverflow.ellipsis),
-                    subtitle: Text('${a.category.label} • ${a.distanceM?.round() ?? '?'}m', style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      setState(() => _showAlertList = false);
-                      _mapController?.animateCamera(CameraUpdate.newLatLngZoom(a.location, 17));
+            constraints: const BoxConstraints(maxHeight: 380),
+            decoration: BoxDecoration(color: SerenityColors.surfaceContainerLowest, borderRadius: BorderRadius.circular(20),
+              boxShadow: [BoxShadow(blurRadius: 16, color: Colors.black.withValues(alpha: 0.15))]),
+            child: ClipRRect(borderRadius: BorderRadius.circular(20),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 12, 8),
+                  child: Row(children: [
+                    Icon(Icons.notifications_active, size: 18, color: SerenityColors.primaryContainer),
+                    const SizedBox(width: 8),
+                    Text('Alerty w okolicy (${alerts.length})',
+                        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.close, size: 20),
+                      tooltip: 'Zamknij',
+                      onPressed: () => setState(() => _showAlertList = false),
+                      constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+                      padding: EdgeInsets.zero,
+                    ),
+                  ]),
+                ),
+                const Divider(height: 1),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    itemCount: alerts.length,
+                    separatorBuilder: (_, __) => Divider(
+                      height: 1,
+                      color: SerenityColors.outlineVariant.withValues(alpha: 0.3),
+                    ),
+                    itemBuilder: (_, i) {
+                      final a = alerts[i];
+                      return _AlertListItem(
+                        alert: a,
+                        onTap: () {
+                          HapticFeedback.selectionClick();
+                          setState(() => _showAlertList = false);
+                          _mapController?.animateCamera(CameraUpdate.newLatLngZoom(a.location, 17));
+                        },
+                        onDetails: () async {
+                          HapticFeedback.selectionClick();
+                          setState(() => _showAlertList = false);
+                          await Navigator.push(context, MaterialPageRoute(
+                            builder: (_) => AlertDetailScreen(alert: a),
+                          ));
+                        },
+                      );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+              ]),
             ),
           ),
         ),
@@ -268,6 +588,23 @@ class _MapScreenState extends State<MapScreen> {
         // "Zgłoś" pill button (Serenity style: primaryContainer navy + white text)
         Positioned(bottom: 104, right: 16,
           child: Row(mainAxisSize: MainAxisSize.min, children: [
+            // F11: AED toggle pill
+            Container(
+              decoration: BoxDecoration(
+                color: _aedsVisible ? const Color(0xFF9DF4CB) : SerenityColors.surfaceContainerLowest,
+                borderRadius: SerenityShapes.pill(),
+                boxShadow: SerenityElevation.floating(),
+              ),
+              child: IconButton(
+                icon: Icon(Icons.favorite,
+                  color: _aedsVisible ? const Color(0xFF0F7252) : SerenityColors.primaryContainer),
+                tooltip: _aedsVisible ? 'Ukryj AED' : 'Pokaż defibrylatory (AED)',
+                onPressed: _toggleAeds,
+                padding: const EdgeInsets.all(16),
+                constraints: const BoxConstraints(minWidth: 56, minHeight: 56),
+              ),
+            ),
+            const SizedBox(width: 12),
             // Location button (pill)
             Container(
               decoration: BoxDecoration(
@@ -277,6 +614,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
               child: IconButton(
                 icon: const Icon(Icons.my_location, color: SerenityColors.onPrimary),
+                tooltip: 'Wycentruj mapę',
                 onPressed: () {
                   HapticFeedback.selectionClick();
                   _mapController?.animateCamera(CameraUpdate.newLatLngZoom(_currentPos, 15));
@@ -318,71 +656,131 @@ class _MapScreenState extends State<MapScreen> {
           ]),
         ),
 
-        // Bottom info bar — "X aktywnych alertów w twojej okolicy"
-        if (alerts.isNotEmpty) Positioned(bottom: 8, left: 16, right: 16,
-          child: GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() => _showAlertList = !_showAlertList);
-            },
+        // Bottom bell badge — kompaktowy dzwoneczek z liczbą zagrożeń
+        if (alerts.isNotEmpty) Positioned(bottom: 16, left: 16,
+          child: Tooltip(
+            message: 'Lista alertów w okolicy',
+            child: GestureDetector(
+              onTap: () {
+                HapticFeedback.selectionClick();
+                setState(() => _showAlertList = !_showAlertList);
+              },
+              child: Container(
+                width: 64, height: 64,
+                decoration: BoxDecoration(
+                  color: SerenityColors.surfaceContainerLowest,
+                  shape: BoxShape.circle,
+                  boxShadow: SerenityElevation.card(),
+                ),
+                child: Stack(clipBehavior: Clip.none, alignment: Alignment.center, children: [
+                  Icon(Icons.notifications_active, color: SerenityColors.onTertiaryContainer, size: 28),
+                  Positioned(top: -2, right: -2,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                      constraints: const BoxConstraints(minWidth: 22, minHeight: 22),
+                      decoration: BoxDecoration(
+                        color: SerenityColors.glowAlertCoral,
+                        borderRadius: BorderRadius.circular(11),
+                        border: Border.all(color: SerenityColors.surfaceContainerLowest, width: 2),
+                      ),
+                      child: Center(child: Text(
+                        alerts.length > 99 ? '99+' : '${alerts.length}',
+                        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700, height: 1.1),
+                      )),
+                    ),
+                  ),
+                ]),
+              ),
+            ),
+          ),
+        ),
+
+        // Empty state when 0 alerts (Empty18)
+        if (alerts.isEmpty && !alertProv.loading) Positioned(
+          left: 16, right: 16, bottom: 100,
+          child: IgnorePointer(
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: SerenityColors.surfaceContainerLowest,
-                borderRadius: BorderRadius.circular(20),
+                color: SerenityColors.surfaceContainerLowest.withValues(alpha: 0.92),
+                borderRadius: BorderRadius.circular(16),
                 boxShadow: SerenityElevation.card(),
               ),
               child: Row(children: [
-                Container(
-                  width: 40, height: 40,
-                  decoration: BoxDecoration(
-                    color: SerenityColors.tertiaryFixed,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.notifications_active, color: SerenityColors.onTertiaryContainer, size: 20),
-                ),
+                Icon(Icons.verified_user_outlined, color: SerenityColors.secondary, size: 32),
                 const SizedBox(width: 12),
-                Expanded(child: Text(
-                  '${alerts.length} aktywn${alerts.length == 1 ? 'y alert' : (alerts.length < 5 ? 'e alerty' : 'ych alertów')} w twojej okolicy',
-                  style: SerenityText.labelButton.copyWith(fontSize: 15, color: SerenityColors.primary),
+                Expanded(child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Brak zagrożeń w okolicy', style: SerenityText.bodyMain.copyWith(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Tapnij «Zgłoś» w prawym dolnym rogu aby ostrzec sąsiadów.',
+                      style: SerenityText.bodyMain.copyWith(fontSize: 13, color: SerenityColors.onSurfaceVariant),
+                    ),
+                  ],
                 )),
-                Container(
-                  width: 28, height: 28,
-                  decoration: BoxDecoration(
-                    color: SerenityColors.tertiaryFixed,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(child: Text('${alerts.length}',
-                    style: SerenityText.labelCaps.copyWith(color: SerenityColors.onTertiaryContainer, fontSize: 12))),
-                ),
               ]),
             ),
           ),
         ),
 
-        // Floating family avatars
-        if (_children.isNotEmpty) Positioned(right: 12, top: MediaQuery.of(context).padding.top + 80,
-          child: Column(mainAxisSize: MainAxisSize.min, children: _children.map((c) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
-            child: GestureDetector(
-              onTap: () {
-                HapticFeedback.selectionClick();
-                _mapController?.animateCamera(CameraUpdate.newLatLngZoom(LatLng(c['lat'], c['lng']), 16));
-              },
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                Container(width: 46, height: 46,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white,
-                    border: Border.all(color: Colors.green, width: 2.5),
-                    boxShadow: [BoxShadow(blurRadius: 6, color: Colors.black.withValues(alpha: 0.15))]),
-                  child: const Center(child: Icon(Icons.child_care, color: Colors.green, size: 24))),
-                const SizedBox(height: 2),
-                Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),
-                    boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black.withValues(alpha: 0.1))]),
-                  child: Text(c['username'] ?? '', style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold))),
-              ]),
-            ),
-          )).toList()),
+        // Floating family avatars (wszyscy widoczni członkowie grupy)
+        if (_familyMembers.isNotEmpty) Positioned(right: 12, top: MediaQuery.of(context).padding.top + 80,
+          child: Column(mainAxisSize: MainAxisSize.min, children: _familyMembers.map((c) {
+            final role = c['role']?.toString();
+            final isChild = role == 'child';
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: GestureDetector(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  final groupId = c['group_id'] as String?;
+                  final userId = c['user_id'] as String?;
+                  final name = (c['username'] as String?) ?? '?';
+                  final myRole = c['your_role'] as String?;
+                  if (groupId == null || userId == null) return;
+                  final lat = (c['lat'] as num?)?.toDouble();
+                  final lng = (c['lng'] as num?)?.toDouble();
+                  if (isChild && myRole == 'parent') {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => ChildProfileScreen(
+                        groupId: groupId,
+                        userId: userId,
+                        userName: name,
+                        initialLat: lat,
+                        initialLng: lng,
+                      ),
+                    ));
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => MemberProfileScreen(
+                        groupId: groupId,
+                        userId: userId,
+                        userName: name,
+                        role: role,
+                        initialLat: lat,
+                        initialLng: lng,
+                      ),
+                    ));
+                  }
+                },
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  Container(width: 46, height: 46,
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white,
+                      border: Border.all(color: SerenityColors.secondaryContainer, width: 2.5),
+                      boxShadow: [BoxShadow(blurRadius: 6, color: Colors.black.withValues(alpha: 0.15))]),
+                    child: Center(child: Icon(isChild ? Icons.face : Icons.person, color: SerenityColors.primaryContainer, size: 24))),
+                  const SizedBox(height: 2),
+                  Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),
+                      boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black.withValues(alpha: 0.1))]),
+                    child: Text(c['username'] ?? '', style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold))),
+                ]),
+              ),
+            );
+          }).toList()),
         ),
 
         if (alertProv.loading) Positioned(top: 120, left: 0, right: 0, child: Center(child: CircularProgressIndicator(color: cs.primary))),
@@ -403,7 +801,7 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
       ]),
-      bottomNavigationBar: isTablet ? null : _buildBottomNav(cs, alerts),
+      // bottomNavigationBar globalny przez MaterialApp.builder (zachowany tylko desktop NavigationRail)
     );
   }
 
@@ -444,67 +842,6 @@ class _MapScreenState extends State<MapScreen> {
         const NavigationRailDestination(icon: Icon(Icons.family_restroom), label: Text('Rodzina')),
         const NavigationRailDestination(icon: Icon(Icons.person), label: Text('Profil')),
       ],
-    );
-  }
-
-  Widget _buildBottomNav(ColorScheme cs, List<AlertModel> alerts) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 24,
-        right: 24,
-        bottom: MediaQuery.of(context).padding.bottom + 12,
-        top: 8,
-      ),
-      child: PillNavBar(
-        currentIndex: 0, // Map is active
-        items: const [
-          PillNavItem(
-            icon: Icons.map_outlined,
-            activeIcon: Icons.map,
-            label: 'Mapa',
-          ),
-          PillNavItem(
-            icon: Icons.home_outlined,
-            activeIcon: Icons.home,
-            label: 'Home',
-          ),
-          PillNavItem(
-            icon: Icons.family_restroom_outlined,
-            activeIcon: Icons.family_restroom,
-            label: 'Rodzina',
-          ),
-          PillNavItem(
-            icon: Icons.person_outline,
-            activeIcon: Icons.person,
-            label: 'Profil',
-          ),
-          PillNavItem(
-            icon: Icons.sos_outlined,
-            activeIcon: Icons.sos,
-            label: 'SOS',
-          ),
-        ],
-        onTap: (i) {
-          HapticFeedback.selectionClick();
-          switch (i) {
-            case 0:
-              _dismissOverlays();
-              break;
-            case 1:
-              Navigator.pop(context);
-              break;
-            case 2:
-              Navigator.pushNamed(context, '/family');
-              break;
-            case 3:
-              Navigator.pushNamed(context, '/profile');
-              break;
-            case 4:
-              Navigator.pushNamed(context, '/sos');
-              break;
-          }
-        },
-      ),
     );
   }
 
@@ -666,29 +1003,55 @@ class _MapScreenState extends State<MapScreen> {
     } catch (_) {}
   }
 
+  // Monochrome map styles — Serenity Guard. Strip saturation so coral / mint /
+  // navy markers pop. Light = warm-neutral greys vs #fcf8f9 surface;
+  // dark = navy-tinted neutrals vs #1a2027 surface.
   static const String _lightMapStyle = '''[
+    {"elementType":"geometry","stylers":[{"color":"#e6e6ea"},{"saturation":-100}]},
+    {"elementType":"labels.text.fill","stylers":[{"color":"#5e5e66"}]},
+    {"elementType":"labels.text.stroke","stylers":[{"color":"#fcf8f9"},{"weight":3}]},
+    {"elementType":"labels.icon","stylers":[{"visibility":"off"}]},
+    {"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#dcdce0"},{"saturation":-100}]},
+    {"featureType":"landscape.natural","elementType":"geometry","stylers":[{"color":"#d6d6da"}]},
+    {"featureType":"road","elementType":"geometry","stylers":[{"color":"#ffffff"}]},
+    {"featureType":"road","elementType":"geometry.stroke","stylers":[{"color":"#cfcfd4"}]},
+    {"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#f0f0f3"}]},
+    {"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#c5c6cb"}]},
+    {"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#fafafc"}]},
+    {"featureType":"water","elementType":"geometry","stylers":[{"color":"#c4c4cc"},{"saturation":-100}]},
+    {"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#7a7a80"}]},
+    {"featureType":"poi","elementType":"geometry","stylers":[{"color":"#d1d1d5"},{"saturation":-100}]},
+    {"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#cfd4d2"}]},
     {"featureType":"poi.business","stylers":[{"visibility":"off"}]},
-    {"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},
-    {"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#e5f5e0"}]},
-    {"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#f5d142"}]},
-    {"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#e8c430"}]},
-    {"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"}]},
-    {"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#f0f0f0"}]},
-    {"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#7b7b7b"}]},
-    {"featureType":"water","elementType":"geometry","stylers":[{"color":"#c9e8f5"}]},
-    {"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"}]},
+    {"featureType":"poi.medical","stylers":[{"visibility":"off"}]},
+    {"featureType":"poi.attraction","stylers":[{"visibility":"off"}]},
     {"featureType":"transit","stylers":[{"visibility":"off"}]},
-    {"elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"},{"weight":3}]},
-    {"elementType":"labels.text.fill","stylers":[{"color":"#616161"}]}
+    {"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#b6b6bc"}]},
+    {"featureType":"administrative.land_parcel","stylers":[{"visibility":"off"}]}
   ]''';
 
   static const String _darkMapStyle = '''[
-    {"elementType":"geometry","stylers":[{"color":"#212121"}]},
-    {"elementType":"labels.text.fill","stylers":[{"color":"#757575"}]},
-    {"elementType":"labels.text.stroke","stylers":[{"color":"#212121"}]},
-    {"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#2c2c2c"}]},
-    {"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"}]},
-    {"featureType":"poi.business","stylers":[{"visibility":"off"}]}
+    {"elementType":"geometry","stylers":[{"color":"#232a32"},{"saturation":-100}]},
+    {"elementType":"labels.text.fill","stylers":[{"color":"#9ea1a8"}]},
+    {"elementType":"labels.text.stroke","stylers":[{"color":"#1a2027"},{"weight":3}]},
+    {"elementType":"labels.icon","stylers":[{"visibility":"off"}]},
+    {"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#1f262d"},{"saturation":-100}]},
+    {"featureType":"landscape.natural","elementType":"geometry","stylers":[{"color":"#222931"}]},
+    {"featureType":"road","elementType":"geometry","stylers":[{"color":"#2c343d"}]},
+    {"featureType":"road","elementType":"geometry.stroke","stylers":[{"color":"#1a2027"}]},
+    {"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#3b454f"}]},
+    {"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#1a2027"}]},
+    {"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#303841"}]},
+    {"featureType":"water","elementType":"geometry","stylers":[{"color":"#11171c"},{"saturation":-100}]},
+    {"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#4a525a"}]},
+    {"featureType":"poi","elementType":"geometry","stylers":[{"color":"#1c232a"},{"saturation":-100}]},
+    {"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#1d262b"}]},
+    {"featureType":"poi.business","stylers":[{"visibility":"off"}]},
+    {"featureType":"poi.medical","stylers":[{"visibility":"off"}]},
+    {"featureType":"poi.attraction","stylers":[{"visibility":"off"}]},
+    {"featureType":"transit","stylers":[{"visibility":"off"}]},
+    {"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#3a424c"}]},
+    {"featureType":"administrative.land_parcel","stylers":[{"visibility":"off"}]}
   ]''';
 }
 
@@ -728,15 +1091,16 @@ class _AlertSidePane extends StatelessWidget {
                 )
               : ListView.separated(
                   itemCount: alerts.length,
-                  separatorBuilder: (_, __) => const Divider(height: 1),
+                  separatorBuilder: (_, __) => Divider(
+                    height: 1,
+                    color: SerenityColors.outlineVariant.withValues(alpha: 0.3),
+                  ),
                   itemBuilder: (_, i) {
                     final a = alerts[i];
-                    return ListTile(
-                      leading: Icon(a.category.iconData, color: a.category.color, size: 32),
-                      title: Text(a.title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14), maxLines: 2, overflow: TextOverflow.ellipsis),
-                      subtitle: Text('${a.category.label} • ${a.distanceM?.round() ?? '?'}m',
-                        style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
+                    return _AlertListItem(
+                      alert: a,
                       onTap: () => onAlertTap(a),
+                      onDetails: () => onAlertTap(a),
                     );
                   },
                 ),
@@ -893,4 +1257,330 @@ class _CategoryRow extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Wzbogacony rząd listy alertów na mapie: ikona kategorii, tytuł, opis (1-2 linie),
+/// chip statusu (aktywny/wygasł), czas powstania, dystans od użytkownika, liczba
+/// potwierdzeń i sprzeciwów, plus przycisk szczegółów.
+class _AlertListItem extends StatelessWidget {
+  final AlertModel alert;
+  final VoidCallback onTap;
+  final VoidCallback onDetails;
+
+  const _AlertListItem({
+    required this.alert,
+    required this.onTap,
+    required this.onDetails,
+  });
+
+  String _formatAge(DateTime t) {
+    final diff = DateTime.now().difference(t);
+    if (diff.inSeconds < 60) return 'przed chwilą';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} min temu';
+    if (diff.inHours < 24) return '${diff.inHours} h temu';
+    return '${diff.inDays} d temu';
+  }
+
+  String _formatDistance(double? m) {
+    if (m == null) return '? m';
+    if (m < 1000) return '${m.round()} m';
+    return '${(m / 1000).toStringAsFixed(1)} km';
+  }
+
+  // F15: skrócona etykieta zweryfikowanej roli (police/firefighter/...)
+  String _verifiedRoleLabel(String? role) {
+    switch (role) {
+      case 'police':
+        return 'Policja';
+      case 'firefighter':
+        return 'Straż';
+      case 'emt':
+      case 'ambulance':
+        return 'Ratownictwo';
+      case 'city':
+      case 'gov':
+        return 'Urząd';
+      case 'school':
+        return 'Szkoła';
+      default:
+        return 'Zweryfikowany';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isActive = alert.expiresAt.isAfter(DateTime.now());
+    final confirmed = alert.confirms >= 3 && alert.confirms > alert.denies;
+    final disputed = alert.denies >= 2;
+    final descTrim = alert.description?.trim();
+
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Category icon w kółku
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isActive
+                    ? alert.category.color.withValues(alpha: 0.15)
+                    : SerenityColors.outlineVariant.withValues(alpha: 0.25),
+              ),
+              child: Icon(
+                alert.category.iconData,
+                color: isActive
+                    ? alert.category.color
+                    : SerenityColors.onSurfaceVariant,
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Środek - title, desc, meta
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          alert.title,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: isActive
+                                ? SerenityColors.primary
+                                : SerenityColors.onSurfaceVariant,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (!isActive)
+                        Container(
+                          margin: const EdgeInsets.only(left: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: SerenityColors.outlineVariant
+                                .withValues(alpha: 0.4),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'wygasły',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w600,
+                              color: SerenityColors.onSurfaceVariant,
+                            ),
+                          ),
+                        )
+                      else if (confirmed)
+                        Container(
+                          margin: const EdgeInsets.only(left: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: SerenityColors.glowSafeMint
+                                .withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              Icon(Icons.verified,
+                                  size: 10, color: Color(0xFF1B873A)),
+                              SizedBox(width: 3),
+                              Text(
+                                'potwierdz.',
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF1B873A),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      else if (disputed)
+                        Container(
+                          margin: const EdgeInsets.only(left: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: SerenityColors.glowAlertCoral
+                                .withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'sporne',
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w600,
+                              color: SerenityColors.glowAlertCoral,
+                            ),
+                          ),
+                        ),
+                      // F15: chip 'Zweryfikowany' (instytucja)
+                      if (alert.authorVerified)
+                        Container(
+                          margin: const EdgeInsets.only(left: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: SerenityColors.secondaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Tooltip(
+                            message:
+                                'Konto zweryfikowane (${_verifiedRoleLabel(alert.authorRole)})',
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.verified,
+                                    size: 10,
+                                    color:
+                                        SerenityColors.onSecondaryContainer),
+                                const SizedBox(width: 3),
+                                Text(
+                                  _verifiedRoleLabel(alert.authorRole),
+                                  style: const TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w700,
+                                    color:
+                                        SerenityColors.onSecondaryContainer,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      // F31: chip zaufania autora
+                      if (isActive && !alert.authorVerified && alert.authorReputation >= 120)
+                        Container(
+                          margin: const EdgeInsets.only(left: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: SerenityColors.glowCalmAqua
+                                .withValues(alpha: 0.35),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Tooltip(
+                            message: 'Zaufany autor (wysoka reputacja)',
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.shield,
+                                    size: 10,
+                                    color: SerenityColors.primaryContainer),
+                                SizedBox(width: 3),
+                                Text(
+                                  'zaufany',
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w700,
+                                    color: SerenityColors.primaryContainer,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  if (descTrim != null && descTrim.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      descTrim,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: SerenityColors.onSurfaceVariant,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 6),
+                  // Meta: czas, dystans, votes, kategoria
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 2,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      _metaChip(
+                        icon: Icons.schedule,
+                        text: _formatAge(alert.createdAt),
+                      ),
+                      _metaChip(
+                        icon: Icons.near_me,
+                        text: _formatDistance(alert.distanceM),
+                      ),
+                      if (alert.confirms > 0 || alert.denies > 0)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.thumb_up,
+                                size: 12, color: Color(0xFF1B873A)),
+                            const SizedBox(width: 3),
+                            Text('${alert.confirms}',
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF1B873A),
+                                )),
+                            const SizedBox(width: 8),
+                            Icon(Icons.thumb_down,
+                                size: 12,
+                                color: SerenityColors.glowAlertCoral),
+                            const SizedBox(width: 3),
+                            Text('${alert.denies}',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: SerenityColors.glowAlertCoral,
+                                )),
+                          ],
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 4),
+            IconButton(
+              icon: const Icon(Icons.chevron_right, size: 22),
+              color: SerenityColors.onSurfaceVariant,
+              tooltip: 'Szczegóły alertu',
+              onPressed: onDetails,
+              constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+              padding: EdgeInsets.zero,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _metaChip({required IconData icon, required String text}) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 12, color: SerenityColors.onSurfaceVariant),
+          const SizedBox(width: 3),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: SerenityColors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      );
 }

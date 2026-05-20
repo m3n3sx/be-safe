@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/design_tokens.dart';
 import '../../widgets/serenity_card.dart';
+import '../mental_health/mental_health_sos_screen.dart';
 
 class EmergencyNumbersScreen extends StatelessWidget {
   const EmergencyNumbersScreen({super.key});
@@ -57,6 +58,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 28),
                     color: SerenityColors.primary,
+                    tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
                   const SizedBox(width: 8),
@@ -103,6 +105,39 @@ class EmergencyNumbersScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: SerenitySpacing.md),
+                  // F26: Mental Health SOS tile
+                  Builder(builder: (context) => SerenityCard(
+                    padding: const EdgeInsets.all(SerenitySpacing.md),
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => const MentalHealthSosScreen(),
+                      ));
+                    },
+                    child: Row(children: [
+                      Container(
+                        width: 44, height: 44,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: SerenityColors.secondaryContainer,
+                        ),
+                        child: Icon(Icons.favorite, color: SerenityColors.onSecondaryContainer, size: 22),
+                      ),
+                      const SizedBox(width: SerenitySpacing.md),
+                      Expanded(child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Wsparcie psychologiczne',
+                              style: SerenityText.labelButton.copyWith(fontSize: 15)),
+                          const SizedBox(height: 2),
+                          Text('Telefony zaufania 116 123, 116 111 i więcej',
+                              style: SerenityText.labelCaps),
+                        ],
+                      )),
+                      Icon(Icons.chevron_right, color: SerenityColors.onSurfaceVariant),
+                    ]),
+                  )),
                   const SizedBox(height: SerenitySpacing.md),
                   ..._numbers.map(
                     (n) => Padding(

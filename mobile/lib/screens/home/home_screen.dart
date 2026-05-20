@@ -7,6 +7,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'package:provider/provider.dart';
@@ -15,16 +16,18 @@ import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import '../../widgets/glow_orb.dart';
-import '../../widgets/pill_nav_bar.dart';
 import '../../widgets/serenity_card.dart';
+import '../../widgets/aqi_widget.dart';
 import '../alerts/create_alert_screen.dart';
 import '../alerts/my_alerts_screen.dart';
 import '../family/family_screen.dart';
+import '../family/child_profile_screen.dart';
+import '../family/member_profile_screen.dart';
 import '../map/map_screen.dart';
 import '../profile/profile_screen.dart';
 import '../settings/settings_screen.dart';
 import '../emergency/emergency_numbers_screen.dart';
-import '../sos/sos_screen.dart';
+import '../fake_call/fake_call_setup_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,32 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _communityConfirmations = 0;
   int _familyOnline = 0;
   int _familyTotal = 0;
-  int _navIndex = 1; // Home tab highlighted by default
-
-  static const _navItems = [
-    PillNavItem(icon: Icons.map_outlined, activeIcon: Icons.map, label: 'Mapa'),
-    PillNavItem(
-      icon: Icons.home_outlined,
-      activeIcon: Icons.home,
-      label: 'Home',
-    ),
-    PillNavItem(
-      icon: Icons.family_restroom_outlined,
-      activeIcon: Icons.family_restroom,
-      label: 'Rodzina',
-    ),
-    PillNavItem(
-      icon: Icons.person_outline,
-      activeIcon: Icons.person,
-      label: 'Profil',
-    ),
-    PillNavItem(icon: Icons.sos_outlined, activeIcon: Icons.sos, label: 'SOS'),
-    PillNavItem(
-      icon: Icons.apps_outlined,
-      activeIcon: Icons.apps,
-      label: 'Więcej',
-    ),
-  ];
+  List<Map<String, dynamic>> _children = []; // {user_id, username, lat, lng, last_location_at, group_id, group_name, avatar_url}
 
   @override
   void initState() {
@@ -78,8 +56,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final api = context.read<ApiService>();
     final alertProv = context.read<AlertProvider>();
+    final myId = context.read<AuthProvider>().user?.id;
 
-    // 1. Get location + alerts nearby (reuse AlertProvider which handles cache)
+    // Równolegle: lokalizacja+alerty ORAZ rodzina — żeby nie blokować się sekwencyjnie.
+    await Future.wait<void>([
+      _loadAlertsNearby(alertProv).timeout(
+        const Duration(seconds: 8),
+        onTimeout: () {
+          _alertsNearby = alertProv.allAlerts.length;
+        },
+      ),
+      _loadFamily(api, myId).timeout(
+        const Duration(seconds: 8),
+        onTimeout: () {},
+      ),
+    ]);
+
+    // 3. Community confirmations — sum of confirms on nearby alerts as proxy
+    _communityConfirmations = alertProv.allAlerts
+        .fold(0, (sum, a) => sum + a.confirms);
+
+    if (mounted) setState(() => _loading = false);
+  }
+
+  Future<void> _loadAlertsNearby(AlertProvider alertProv) async {
     try {
       final pos = await _getPosition();
       if (pos != null) {
@@ -92,35 +92,116 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (_) {
       _alertsNearby = alertProv.allAlerts.length;
     }
+  }
 
-    // 2. Family online count (best-effort, ignore errors)
+  Future<void> _loadFamily(ApiService api, String? myId) async {
     try {
       final groups = await api.get('/family/groups');
       final groupsList = ((groups as dynamic)['groups'] as List?) ?? [];
-      if (groupsList.isNotEmpty) {
-        final groupId = groupsList.first['id'];
-        final m = await api.get('/family/groups/$groupId/members');
-        final members = ((m as dynamic)['members'] as List?) ?? [];
-        _familyTotal = members.length;
-        final now = DateTime.now();
-        _familyOnline = members.where((m) {
-          final last = m['last_seen_at'] ?? m['updated_at'];
-          if (last == null) return false;
-          try {
-            final dt = DateTime.parse(last.toString());
-            return now.difference(dt).inMinutes < 15;
-          } catch (_) {
-            return false;
-          }
-        }).length;
+      if (groupsList.isEmpty) {
+        _familyTotal = 0;
+        _familyOnline = 0;
+        _children = [];
+        return;
       }
+
+      // Równolegle: pobieramy wszystkich members dla wszystkich grup naraz.
+      final memberFetches = await Future.wait<Map<String, dynamic>>(
+        groupsList.map<Future<Map<String, dynamic>>>((g) async {
+          final groupId = g['id'];
+          final groupName = (g['name'] ?? 'Rodzina').toString();
+          final yourRole = (g['your_role'] ?? '').toString();
+          try {
+            final results = await Future.wait<dynamic>([
+              api.get('/family/groups/$groupId/members'),
+              api.get('/family/groups/$groupId/checkins/today').catchError(
+                (_) => <String, dynamic>{'members': []},
+              ),
+            ]);
+            final m = results[0];
+            final c = results[1];
+            final members = ((m as dynamic)['members'] as List?) ?? [];
+            final checkins = ((c as dynamic)['members'] as List?) ?? [];
+            // Mapowanie user_id -> checked_in_today (bool? - true/false/null)
+            final ciMap = <String, dynamic>{};
+            for (final r in checkins) {
+              final uid = r['user_id']?.toString();
+              if (uid != null) {
+                ciMap[uid] = {
+                  'checked_in_today': r['checked_in_today'],
+                  'last_checkin_at': r['last_checkin_at'],
+                  'app_mode': r['app_mode'],
+                };
+              }
+            }
+            return {
+              'group_id': groupId,
+              'group_name': groupName,
+              'your_role': yourRole,
+              'members': members,
+              'checkins': ciMap,
+            };
+          } catch (_) {
+            return {
+              'group_id': groupId,
+              'group_name': groupName,
+              'your_role': yourRole,
+              'members': const <dynamic>[],
+              'checkins': const <String, dynamic>{},
+            };
+          }
+        }),
+      );
+
+      final family = <Map<String, dynamic>>[];
+      final seen = <String>{};
+      var totalMembers = 0;
+      var onlineMembers = 0;
+      final now = DateTime.now();
+      for (final entry in memberFetches) {
+        final groupId = entry['group_id'];
+        final groupName = entry['group_name'];
+        final yourRole = entry['your_role'];
+        final members = entry['members'] as List;
+        final ciMap = (entry['checkins'] as Map?)?.cast<String, dynamic>() ?? {};
+        totalMembers += members.length;
+        for (final mem in members) {
+          final last = mem['last_location_at'] ?? mem['last_seen_at'] ?? mem['updated_at'];
+          if (last != null) {
+            try {
+              final dt = DateTime.parse(last.toString());
+              if (now.difference(dt).inMinutes < 15) onlineMembers++;
+            } catch (_) {}
+          }
+          final memberId = mem['user_id']?.toString();
+          if (memberId == null || memberId == myId || seen.contains(memberId)) continue;
+          if (mem['lat'] == null || mem['lng'] == null) continue;
+          seen.add(memberId);
+          final ci = (ciMap[memberId] as Map?)?.cast<String, dynamic>() ?? const {};
+          family.add({
+            'user_id': mem['user_id'],
+            'username': (mem['username'] ?? '').toString(),
+            'avatar_url': mem['avatar_url'],
+            'role': mem['role'],
+            'your_role': yourRole,
+            'app_mode': mem['app_mode'] ?? ci['app_mode'],
+            'lat': (mem['lat'] as num).toDouble(),
+            'lng': (mem['lng'] as num).toDouble(),
+            'last_location_at': mem['last_location_at'],
+            'last_seen_at': mem['last_seen_at'],
+            'battery_level': mem['last_battery_level'] ?? mem['battery_level'],
+            'phone': mem['phone'],
+            'group_id': groupId,
+            'group_name': groupName,
+            'checked_in_today': ci['checked_in_today'],
+            'last_checkin_at': ci['last_checkin_at'],
+          });
+        }
+      }
+      _familyTotal = totalMembers;
+      _familyOnline = onlineMembers;
+      _children = family;
     } catch (_) {}
-
-    // 3. Community confirmations — sum of confirms on nearby alerts as proxy
-    _communityConfirmations = alertProv.allAlerts
-        .fold(0, (sum, a) => sum + a.confirms);
-
-    if (mounted) setState(() => _loading = false);
   }
 
   Future<Position?> _getPosition() async {
@@ -163,49 +244,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return SerenityColors.glowAlertCoral;
   }
 
-  void _onNavTap(int i) {
-    if (i == 1 || i == _navIndex) return;
-    setState(() => _navIndex = i);
-    // Navigate via push; restore index on return
-    Future<void> route;
-    switch (i) {
-      case 0:
-        route = Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const MapScreen()),
-        );
-        break;
-      case 2:
-        route = Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const FamilyScreen()),
-        );
-        break;
-      case 3:
-        route = Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const ProfileScreen()),
-        );
-        break;
-      case 4:
-        route = Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const SosScreen()),
-        );
-        break;
-      case 5:
-        // "Więcej" — open the same menu sheet that was in the topBar
-        _openMenu();
-        setState(() => _navIndex = 1);
-        return;
-      default:
-        return;
-    }
-    route.then((_) {
-      if (mounted) setState(() => _navIndex = 1);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
@@ -225,25 +263,21 @@ class _HomeScreenState extends State<HomeScreen> {
             slivers: [
               SliverToBoxAdapter(child: _buildTopBar(userName)),
               SliverToBoxAdapter(child: _buildHero()),
+              if (_children.isNotEmpty)
+                SliverToBoxAdapter(child: _buildChildrenCard()),
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
+                  child: AqiWidget(),
+                ),
+              ),
               SliverToBoxAdapter(child: _buildActivitySection()),
               const SliverToBoxAdapter(child: SizedBox(height: 180)),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-          left: 24,
-          right: 24,
-          bottom: MediaQuery.of(context).padding.bottom + 12,
-          top: 8,
-        ),
-        child: PillNavBar(
-          currentIndex: _navIndex,
-          onTap: _onNavTap,
-          items: _navItems,
-        ),
-      ),
+      // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 88),
         child: FloatingActionButton.extended(
@@ -295,26 +329,29 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Avatar -> profile
-          GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const ProfileScreen()),
-            ),
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: SerenityColors.surfaceContainerLowest,
-                boxShadow: SerenityElevation.card(),
+          Tooltip(
+            message: 'Mój profil',
+            child: GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
               ),
-              child: Center(
-                child: Text(
-                  userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-                  style: SerenityText.labelButton.copyWith(
-                    fontSize: 16,
-                    color: SerenityColors.primary,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: SerenityColors.surfaceContainerLowest,
+                  boxShadow: SerenityElevation.card(),
+                ),
+                child: Center(
+                  child: Text(
+                    userName.isNotEmpty ? userName[0].toUpperCase() : '?',
+                    style: SerenityText.labelButton.copyWith(
+                      fontSize: 16,
+                      color: SerenityColors.primary,
+                    ),
                   ),
                 ),
               ),
@@ -328,11 +365,22 @@ class _HomeScreenState extends State<HomeScreen> {
               Text('be:Safe', style: SerenityText.headlineHeroMobile),
             ],
           ),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, size: 28),
-            color: SerenityColors.primary,
-            onPressed: () => Navigator.pushNamed(context, '/my-alerts'),
-            tooltip: 'Powiadomienia',
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.notifications_outlined, size: 28),
+                color: SerenityColors.primary,
+                onPressed: () => Navigator.pushNamed(context, '/my-alerts'),
+                tooltip: 'Powiadomienia',
+              ),
+              IconButton(
+                icon: const Icon(Icons.more_horiz, size: 28),
+                color: SerenityColors.primary,
+                onPressed: _openMenu,
+                tooltip: 'Więcej',
+              ),
+            ],
           ),
         ],
       ),
@@ -389,6 +437,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (_) => const EmergencyNumbersScreen()),
+                );
+              },
+            ),
+            _MenuTile(
+              icon: Icons.phone_in_talk,
+              label: 'Fałszywy telefon',
+              onTap: () {
+                Navigator.pop(ctx);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const FakeCallSetupScreen()),
                 );
               },
             ),
@@ -565,10 +625,305 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (_) => const FamilyScreen()),
                         ),
                       ),
-                    ],
-                  ),
+                     ],
+                   ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  //  Karta "Moje dzieci" — top of HomeScreen
+  // ─────────────────────────────────────────────────────────────
+
+  String _formatAge(dynamic raw) {
+    if (raw == null) return 'Brak kontaktu';
+    try {
+      final dt = DateTime.parse(raw.toString());
+      final diff = DateTime.now().difference(dt);
+      if (diff.inSeconds < 60) return 'przed chwilą';
+      if (diff.inMinutes < 60) return '${diff.inMinutes} min temu';
+      if (diff.inHours < 24) return '${diff.inHours} h temu';
+      return '${diff.inDays} dni temu';
+    } catch (_) {
+      return '—';
+    }
+  }
+
+  /// Świeżość lokalizacji: zielony < 5min, żółty 5-30min, czerwony > 30min lub null.
+  Color _freshnessColor(dynamic raw) {
+    if (raw == null) return SerenityColors.glowAlertCoral;
+    try {
+      final dt = DateTime.parse(raw.toString());
+      final mins = DateTime.now().difference(dt).inMinutes;
+      if (mins < 5) return const Color(0xFF1B873A); // green
+      if (mins < 30) return const Color(0xFFFFA000); // amber
+      return SerenityColors.glowAlertCoral;
+    } catch (_) {
+      return SerenityColors.glowAlertCoral;
+    }
+  }
+
+  /// Status online dziecka: <2min = online (zielony), <15min = recent (amber), >15min lub null = offline.
+  ({Color color, String label, IconData icon}) _onlineStatus(dynamic raw) {
+    if (raw == null) {
+      return (color: const Color(0xFF999999), label: 'Offline', icon: Icons.wifi_off);
+    }
+    try {
+      final dt = DateTime.parse(raw.toString());
+      final mins = DateTime.now().difference(dt).inMinutes;
+      if (mins < 2) return (color: const Color(0xFF1B873A), label: 'Online', icon: Icons.wifi);
+      if (mins < 15) return (color: const Color(0xFFFFA000), label: 'Niedawno', icon: Icons.access_time);
+      return (color: const Color(0xFF999999), label: 'Offline', icon: Icons.wifi_off);
+    } catch (_) {
+      return (color: const Color(0xFF999999), label: 'Offline', icon: Icons.wifi_off);
+    }
+  }
+
+  Widget _buildChildrenCard() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+        decoration: BoxDecoration(
+          color: SerenityColors.surfaceContainerLowest,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: SerenityColors.primaryContainer.withValues(alpha: 0.06),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.groups_2_outlined, color: SerenityColors.primaryContainer, size: 18),
+                const SizedBox(width: 6),
+                const Text(
+                  'MOJA RODZINA',
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1.2),
+                ),
+                const Spacer(),
+                Text(
+                  '${_children.length}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            ..._children.map(_buildChildTile),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChildTile(Map<String, dynamic> c) {
+    final username = c['username']?.toString() ?? 'Członek rodziny';
+    final last = c['last_location_at'];
+    final color = _freshnessColor(last);
+    final battery = c['battery_level'];
+    final online = _onlineStatus(c['last_seen_at']);
+    final role = c['role']?.toString();
+    final isChild = role == 'child';
+    final myRole = c['your_role']?.toString();
+    final appMode = c['app_mode']?.toString();
+    final isSenior = appMode == 'senior';
+    final checkedToday = c['checked_in_today'] == true;
+    return InkWell(
+      onTap: () {
+        final groupId = c['group_id']?.toString();
+        final userId = c['user_id']?.toString();
+        if (groupId == null || userId == null) return;
+        HapticFeedback.selectionClick();
+        final lat = (c['lat'] as num?)?.toDouble();
+        final lng = (c['lng'] as num?)?.toDouble();
+        // Pełny profil dziecka (z trasami/historią) — tylko dla rodzica.
+        // Inni członkowie dostają zwykły MemberProfileScreen.
+        if (isChild && myRole == 'parent') {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (_) => ChildProfileScreen(
+              groupId: groupId,
+              userId: userId,
+              userName: username,
+              initialLat: lat,
+              initialLng: lng,
+            ),
+          ));
+        } else {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (_) => MemberProfileScreen(
+              groupId: groupId,
+              userId: userId,
+              userName: username,
+              role: role,
+              initialLat: lat,
+              initialLng: lng,
+            ),
+          ));
+        }
+      },
+      borderRadius: BorderRadius.circular(14),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+        child: Row(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: SerenityColors.secondaryContainer.withValues(alpha: 0.25),
+                    border: Border.all(color: color, width: 2.5),
+                  ),
+                  child: Icon(isChild ? Icons.face : Icons.person, color: SerenityColors.primaryContainer, size: 22),
+                ),
+                // Online dot - bottom-right of avatar
+                Positioned(
+                  right: -1,
+                  bottom: -1,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: online.color,
+                      border: Border.all(color: SerenityColors.surfaceContainerLowest, width: 2),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          username,
+                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: online.color.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(online.icon, size: 11, color: online.color),
+                            const SizedBox(width: 4),
+                            Text(
+                              online.label,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: online.color,
+                                letterSpacing: 0.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Container(
+                        width: 8, height: 8,
+                        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        _formatAge(last),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                        ),
+                      ),
+                      if (battery is num) ...[
+                        const SizedBox(width: 10),
+                        Icon(
+                          battery < 20 ? Icons.battery_alert : Icons.battery_full,
+                          size: 13,
+                          color: battery < 20
+                              ? SerenityColors.glowAlertCoral
+                              : SerenityColors.primaryContainer.withValues(alpha: 0.5),
+                        ),
+                        const SizedBox(width: 2),
+                        Text(
+                          '${battery.toInt()}%',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: battery < 20
+                                ? SerenityColors.glowAlertCoral
+                                : SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
+                      if (isSenior) ...[
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: checkedToday
+                                ? SerenityColors.secondaryContainer
+                                : SerenityColors.glowAlertCoral.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                checkedToday ? Icons.check_circle : Icons.schedule,
+                                size: 11,
+                                color: checkedToday
+                                    ? SerenityColors.onSecondaryContainer
+                                    : SerenityColors.glowAlertCoral,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                checkedToday ? 'Zameldowany' : 'Brak meldunku',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.2,
+                                  color: checkedToday
+                                      ? SerenityColors.onSecondaryContainer
+                                      : SerenityColors.glowAlertCoral,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: Color(0xFFAAAAAA)),
+          ],
+        ),
       ),
     );
   }
