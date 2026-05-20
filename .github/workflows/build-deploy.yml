@@ -62,17 +62,9 @@ jobs:
           flutter build apk --release --no-tree-shake-icons --dart-define=SENTRY_DSN=$SENTRY_DSN
           flutter build appbundle --release --no-tree-shake-icons --dart-define=SENTRY_DSN=$SENTRY_DSN
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: beSafe-apk
-          path: mobile/build/app/outputs/flutter-apk/app-release.apk
-
-      - name: Upload AAB artifact (for Google Play Console)
-        uses: actions/upload-artifact@v4
-        with:
-          name: beSafe-aab
-          path: mobile/build/app/outputs/bundle/release/app-release.aab
+      # NOTE: APK/AAB artifact uploads usunięte — APK leci do prod via SCP poniżej,
+      # AAB tylko dla Play Console (na żądanie tymczasowo wgrać upload-artifact step).
+      # Free storage quota (500MB) szybko się wypełniała 70+50 MB per run.
 
       - name: Deploy to VPS
         env:
@@ -112,7 +104,10 @@ jobs:
           echo "$VPS_KEY" > ~/.ssh/vps_key
           chmod 600 ~/.ssh/vps_key
           # Sync całego backend/src/ do prod (NIE /home/ubuntu/alertmap/!)
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/vps_key -r \
-            backend/src/* ubuntu@$VPS_HOST:/home/ubuntu/besafe/backend/src/
+          # Używamy rsync (scp z `*` próbuje robić remote mkdir per file i pada).
+          # ssh-key musi mieć dostęp; --delete usuwa lokalnie usunięte pliki.
+          # rsync -e wymusza klucz ssh, port 22.
+          rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/vps_key" \
+            backend/src/ ubuntu@$VPS_HOST:/home/ubuntu/besafe/backend/src/
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/vps_key ubuntu@$VPS_HOST \
-            "pm2 restart besafe-backend"
+            "pm2 restart besafe-backend --update-env"
