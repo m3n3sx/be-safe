@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>be:Safe - Ekran główny - Tryb Seniora</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#41474f",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#313031",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#480008",
+                    "on-background": "#1c1b1c",
+                    "primary": "#03080e",
+                    "on-tertiary-container": "#db5f60",
+                    "inverse-primary": "#c1c7d0",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed": "#161c23",
+                    "surface-container": "#f0eded",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#595f67",
+                    "error-container": "#ffdad6",
+                    "on-surface": "#1c1b1c",
+                    "surface-container-highest": "#e5e2e2",
+                    "surface-dim": "#dcd9da",
+                    "surface-bright": "#fcf8f9",
+                    "primary-container": "#1a2027",
+                    "on-tertiary-fixed-variant": "#862026",
+                    "tertiary": "#190001",
+                    "secondary-fixed-dim": "#81d7b0",
+                    "on-primary-container": "#828790",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed-variant": "#005138",
+                    "outline-variant": "#c5c6cb",
+                    "surface-container-low": "#f6f3f3",
+                    "on-tertiary-fixed": "#410007",
+                    "surface": "#fcf8f9",
+                    "on-surface-variant": "#44474b",
+                    "outline": "#75777b",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "secondary": "#006c4c",
+                    "background": "#fcf8f9",
+                    "primary-fixed-dim": "#c1c7d0",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface-variant": "#e5e2e2",
+                    "tertiary-fixed": "#ffdad8",
+                    "primary-fixed": "#dde3ed",
+                    "on-secondary-container": "#0f7252",
+                    "surface-container-high": "#eae7e8",
+                    "secondary-container": "#9df4cb",
+                    "secondary-fixed": "#9df4cb",
+                    "on-secondary-fixed": "#002115",
+                    "on-secondary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-margin": "48px",
+                    "card-gap": "20px",
+                    "gutter": "16px",
+                    "unit": "8px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "headline-hero-mobile": ["Inter"],
+                    "headline-hero": ["Inter"],
+                    "label-button": ["Inter"],
+                    "display-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-main": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-hero-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "300"}],
+                    "headline-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300"}],
+                    "label-button": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "display-md": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200"}],
+                    "display-lg": ["80px", {"lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100"}],
+                    "body-main": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48; font-size: 24px; vertical-align: middle; }
+        .glass-orb {
+            background: radial-gradient(circle, rgba(157, 244, 203, 0.4) 0%, rgba(157, 244, 203, 0) 70%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- Top AppBar (Injected Styles from JSON applied where logical) -->
+<header class="w-full sticky top-0 bg-surface/80 backdrop-blur-xl z-40">
+<div class="flex justify-between items-center w-full px-container-padding h-24 max-w-7xl mx-auto">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps uppercase tracking-[1.5px] text-on-surface-variant">DZIEŃ DOBRY</span>
+<h1 class="font-headline-hero-mobile text-headline-hero-mobile font-normal text-primary-container">Jadwiga</h1>
+</div>
+<button class="w-14 h-14 rounded-full bg-white border border-outline-variant flex items-center justify-center hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary-container">notifications</span>
+</button>
+</div>
+</header>
+<main class="px-container-padding max-w-7xl mx-auto">
+<!-- Main Status Card -->
+<section class="mb-section-margin">
+<div class="bg-white rounded-[24px] p-8 shadow-[0px_40px_40px_rgba(26,32,39,0.04)] relative overflow-hidden">
+<!-- Glow Orb background element -->
+<div class="absolute -right-10 -top-10 w-40 h-40 glass-orb rounded-full"></div>
+<div class="relative z-10">
+<span class="inline-flex bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-full font-label-button text-label-button mb-4 uppercase tracking-wider">
+                        WSZYSTKO W PORZĄDKU
+                    </span>
+<h2 class="text-[22px] font-normal text-primary-container mb-1">Twoja okolica jest bezpieczna</h2>
+<p class="text-[16px] text-on-surface-variant mb-8">Ostatnia aktualizacja: 14:32</p>
+<button class="w-full h-20 bg-primary-container text-white rounded-[16px] flex items-center justify-center gap-4 hover:opacity-90 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-[18px] font-semibold tracking-wide uppercase">ZAMELDUJ SIĘ</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Big Action Buttons -->
+<section class="space-y-card-gap">
+<!-- Item 1: WEZWIJ POMOC -->
+<button class="w-full h-[88px] bg-[#FF7A7A] rounded-[20px] flex items-center px-5 text-white shadow-lg active:scale-[0.97] transition-all">
+<div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-[32px]">local_hospital</span>
+</div>
+<div class="flex flex-col text-left flex-1">
+<span class="text-[20px] font-semibold leading-tight">WEZWIJ POMOC</span>
+<span class="text-[14px] opacity-90">Naciśnij gdy potrzebujesz</span>
+</div>
+<span class="material-symbols-outlined opacity-60">chevron_right</span>
+</button>
+<!-- Item 2: MOJA RODZINA -->
+<button class="w-full h-[88px] bg-white border-2 border-primary-container rounded-[20px] flex items-center px-5 text-primary-container shadow-sm active:scale-[0.97] transition-all">
+<div class="w-14 h-14 bg-secondary-container rounded-full flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-on-secondary-container text-[32px]">family_restroom</span>
+</div>
+<div class="flex flex-col text-left flex-1">
+<span class="text-[20px] font-semibold leading-tight">MOJA RODZINA</span>
+<span class="text-[14px] text-on-surface-variant">Anna, Tomek</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</button>
+<!-- Item 3: TELEFON DO LEKARZA -->
+<button class="w-full h-[88px] bg-white border-2 border-primary-container rounded-[20px] flex items-center px-5 text-primary-container shadow-sm active:scale-[0.97] transition-all">
+<div class="w-14 h-14 bg-[#9EEBEC] rounded-full flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-primary-container text-[32px]">phone_in_talk</span>
+</div>
+<div class="flex flex-col text-left flex-1">
+<span class="text-[20px] font-semibold leading-tight">TELEFON DO LEKARZA</span>
+<span class="text-[14px] text-on-surface-variant">dr Kowalska</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</button>
+<!-- Item 4: PORADNIK BEZPIECZEŃSTWA -->
+<button class="w-full h-[88px] bg-white border-2 border-primary-container rounded-[20px] flex items-center px-5 text-primary-container shadow-sm active:scale-[0.97] transition-all">
+<div class="w-14 h-14 bg-[#FFE0E0] rounded-full flex items-center justify-center mr-4">
+<span class="material-symbols-outlined text-[#FF7A7A] text-[32px]">menu_book</span>
+</div>
+<div class="flex flex-col text-left flex-1">
+<span class="text-[20px] font-semibold leading-tight">PORADNIK BEZPIECZEŃSTWA</span>
+<span class="text-[14px] text-on-surface-variant">12 wskazówek</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</button>
+</section>
+<!-- Visual Context Image -->
+<section class="mt-section-margin">
+<div class="rounded-[24px] overflow-hidden aspect-video relative group shadow-sm">
+<img class="w-full h-full object-cover" data-alt="A serene, high-fidelity lifestyle photograph of a peaceful suburban neighborhood in the golden hour. The lighting is warm and comforting, reflecting a sense of security and tranquility. The composition is clean and minimalist, with lush greenery and modern architectural elements that align with the Premium Wellness aesthetic. The mood is calm, vigilant, and restorative, with soft focus transitions that avoid high-stress visual triggers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwmVkEeHqGMFjlfRh5W7bFmMUf8wPDzjgeYwk9WYU5ZBsWg0bCTiBRgFk4vp1BVJkEp2OfKWkNzhGQj9opOr5Hzm47euA7mzsskWL4Y_BCHNJAhft9ohVkAMUBNBtelRduJjbBFJZiTFFl05B35mbL4QDK16sqkHADbinV5D8f9g0gasfLFv0NQNafuxL4DdfJnpIbxr3dbFSaCcppPFjMlWJsY_fc-vBX3_6fPQQhtn7xMqBd8r5tMHEJCWtlk3pdgvnJqzKYcxk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-6 left-6 text-white">
+<p class="font-semibold text-lg">Twój bezpieczny dom</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom NavBar (Using Shared Component Logic) -->
+<nav class="fixed bottom-0 left-0 right-0 h-24 bg-white border-t border-outline-variant z-50 flex justify-around items-center px-4">
+<!-- Start (Active) -->
+<button class="flex flex-col items-center justify-center relative px-4 h-full">
+<span class="material-symbols-outlined text-primary-container mb-1" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-button text-label-button text-primary-container">Start</span>
+<div class="absolute bottom-0 w-8 h-1 bg-secondary-container rounded-full"></div>
+</button>
+<!-- Rodzina -->
+<button class="flex flex-col items-center justify-center px-4 h-full text-on-surface-variant hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined mb-1">group</span>
+<span class="font-label-button text-label-button">Rodzina</span>
+</button>
+<!-- Pomoc -->
+<button class="flex flex-col items-center justify-center px-4 h-full text-on-surface-variant hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined mb-1">contact_support</span>
+<span class="font-label-button text-label-button">Pomoc</span>
+</button>
+<!-- Ustawienia -->
+<button class="flex flex-col items-center justify-center px-4 h-full text-on-surface-variant hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined mb-1">settings</span>
+<span class="font-label-button text-label-button">Ustawienia</span>
+</button>
+</nav>
+</body></html>

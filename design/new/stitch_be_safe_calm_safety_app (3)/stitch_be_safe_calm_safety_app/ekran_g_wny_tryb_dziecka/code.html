@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-dim": "#dcd9da",
+                    "background": "#fcf8f9",
+                    "primary-fixed-dim": "#c1c7d0",
+                    "surface-container-low": "#f6f3f3",
+                    "secondary-container": "#9df4cb",
+                    "on-tertiary-container": "#db5f60",
+                    "on-surface": "#1c1b1c",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface-variant": "#e5e2e2",
+                    "on-secondary-container": "#0f7252",
+                    "secondary-fixed": "#9df4cb",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#862026",
+                    "surface": "#fcf8f9",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#002115",
+                    "surface-container-highest": "#e5e2e2",
+                    "surface-container-high": "#eae7e8",
+                    "inverse-primary": "#c1c7d0",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#161c23",
+                    "on-primary-fixed-variant": "#41474f",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#ffdad8",
+                    "primary-container": "#1a2027",
+                    "secondary-fixed-dim": "#81d7b0",
+                    "primary": "#03080e",
+                    "on-background": "#1c1b1c",
+                    "primary-fixed": "#dde3ed",
+                    "error": "#ba1a1a",
+                    "tertiary": "#190001",
+                    "on-secondary-fixed-variant": "#005138",
+                    "secondary": "#006c4c",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#410007",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#480008",
+                    "on-primary-container": "#828790",
+                    "on-surface-variant": "#44474b",
+                    "surface-tint": "#595f67",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "inverse-surface": "#313031",
+                    "outline-variant": "#c5c6cb",
+                    "outline": "#75777b",
+                    "surface-container": "#f0eded",
+                    "surface-bright": "#fcf8f9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "section-margin": "48px",
+                    "gutter": "16px",
+                    "container-padding": "24px",
+                    "unit": "8px",
+                    "card-gap": "20px"
+            },
+            "fontFamily": {
+                    "label-button": ["Inter"],
+                    "headline-hero-mobile": ["Inter"],
+                    "body-main": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-hero": ["Inter"],
+                    "display-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-button": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "headline-hero-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "300"}],
+                    "body-main": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "display-lg": ["80px", {"lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100"}],
+                    "headline-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300"}],
+                    "display-md": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-orb {
+            background: radial-gradient(circle, #9DF4CB 0%, #9EEBEC 100%);
+            box-shadow: 0 0 30px rgba(157, 244, 203, 0.4);
+        }
+        .pulse-slow {
+            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.85; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gradient-to-b from-[#FCF8F9] to-[#E8F8F2] min-h-screen text-on-surface selection:bg-secondary-container">
+<!-- TopAppBar Section -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl flex items-center justify-between px-6 h-[84px]">
+<div class="relative w-[56px] h-[56px] rounded-full border-[3px] border-secondary-container bg-surface-container-lowest overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A charming close-up portrait of a cheerful 8-year-old girl with bright eyes and a warm smile. She has a soft, natural aesthetic with gentle lighting reflecting her friendly personality. The background is a soft-focus minimalist interior with pastel tones, perfectly aligning with the clean and safe wellness brand identity. High-fidelity photography style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJSb2AF0xKxGeMfb5hTpUAkuto2gUFvSd31jZdSIKX3RqKRqsXqTNfTQIuN5DB3to449u7L4CFULGacygUFHbKGFennqIwGnB8KJ9mcPSOv_86yYjjZtgceSXicVyByFe4EjDFz3bocbBTA5Q-EkVkUpX5xuk0T1MUVgE9oK0xhtqYB9-MnrKBiGQSjcBfV9y6bTgA7YHy1nwJ68iT1qBJDj69M4XRG-9rjz390IpaWZZSuyg9h0tj5ZSW1-4vUsaJBFM77CdDqBs"/>
+</div>
+<div class="relative w-[56px] h-[56px] bg-surface-container-lowest rounded-2xl flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[#1A2027] text-[32px]">notifications</span>
+<div class="absolute top-3 right-3 w-[10px] h-[10px] bg-secondary-container rounded-full ring-2 ring-surface-container-lowest"></div>
+</div>
+</header>
+<!-- Content Canvas -->
+<main class="pt-[104px] pb-[100px] px-4 max-w-md mx-auto">
+<!-- Large Status Card -->
+<section class="bg-surface-container-lowest rounded-[28px] p-6 shadow-[0_20px_40px_rgba(26,32,39,0.04)] flex justify-between items-center mb-10 transition-all active:scale-[0.98]">
+<div class="space-y-3">
+<h1 class="text-[#1A2027] font-semibold text-[24px] tracking-tight">Cześć, Ania!</h1>
+<div class="inline-flex items-center px-4 py-2 bg-secondary-container rounded-full">
+<span class="text-[#0f7252] font-bold text-[11px] tracking-[1.2px]">JESTEŚ BEZPIECZNA</span>
+</div>
+</div>
+<div class="relative">
+<div class="glass-orb w-20 h-20 rounded-full pulse-slow flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl" data-weight="fill" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+</div>
+</section>
+<!-- Grid Section Heading -->
+<h2 class="ml-2 mb-4 font-medium text-on-surface-variant text-[16px]">Co chcesz zrobić?</h2>
+<!-- Action Grid -->
+<div class="grid grid-cols-2 gap-3">
+<!-- HELP TILE -->
+<button class="bg-[#FF7A7A] aspect-square rounded-[24px] p-5 flex flex-col items-center justify-center text-center space-y-2 transition-transform active:scale-90 shadow-lg shadow-[#FF7A7A]/20">
+<span class="material-symbols-outlined text-white text-[48px]">local_hospital</span>
+<div>
+<div class="text-white font-bold text-[20px]">POMOC</div>
+<div class="text-white/85 text-[12px]">Naciśnij 3 razy</div>
+</div>
+</button>
+<!-- MAP TILE -->
+<button class="bg-[#1A2027] aspect-square rounded-[24px] p-5 flex flex-col items-center justify-center text-center space-y-2 transition-transform active:scale-90 shadow-lg shadow-[#1A2027]/20">
+<span class="material-symbols-outlined text-white text-[48px]">map</span>
+<div>
+<div class="text-white font-bold text-[20px]">MAPA</div>
+<div class="text-white/85 text-[12px]">Zobacz okolicę</div>
+</div>
+</button>
+<!-- FAMILY TILE -->
+<button class="bg-gradient-to-br from-[#9DF4CB] to-[#9EEBEC] aspect-square rounded-[24px] p-5 flex flex-col items-center justify-center text-center space-y-2 transition-transform active:scale-90 shadow-lg shadow-[#9DF4CB]/30">
+<span class="material-symbols-outlined text-[#1A2027] text-[48px]">family_restroom</span>
+<div>
+<div class="text-[#1A2027] font-bold text-[20px]">RODZINA</div>
+<div class="text-[#1A2027]/70 text-[12px]">Mama i Tata</div>
+</div>
+</button>
+<!-- I'M OK TILE -->
+<button class="bg-surface-container-lowest border-2 border-secondary-container aspect-square rounded-[24px] p-5 flex flex-col items-center justify-center text-center space-y-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-secondary-container text-[48px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<div class="text-[#1A2027] font-bold text-[20px]">JESTEM OK</div>
+<div class="text-on-surface-variant text-[12px]">Wyślij wiadomość</div>
+</div>
+</button>
+</div>
+<!-- Secondary Banner / Activity -->
+<div class="mt-8 bg-surface-container-high/50 rounded-[24px] p-6 flex items-center space-x-4 border border-surface-variant/50">
+<div class="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[#1A2027]">directions_walk</span>
+</div>
+<div>
+<p class="text-[14px] font-semibold text-[#1A2027]">W drodze do szkoły</p>
+<p class="text-[12px] text-on-surface-variant">Pozostało 15 minut spaceru</p>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 right-0 h-[84px] bg-surface-container-lowest border-t border-[#E0E0E0] flex items-center justify-around z-50">
+<!-- Home (Active) -->
+<button class="flex flex-col items-center justify-center min-w-[64px] min-h-[64px] space-y-1">
+<div class="relative">
+<span class="material-symbols-outlined text-[#1A2027] text-[28px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">home</span>
+<div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-secondary-container rounded-full"></div>
+</div>
+<span class="text-[11px] font-medium text-[#1A2027]">Start</span>
+</button>
+<!-- Map (Inactive) -->
+<button class="flex flex-col items-center justify-center min-w-[64px] min-h-[64px] space-y-1">
+<span class="material-symbols-outlined text-outline text-[28px]">location_on</span>
+<span class="text-[11px] font-medium text-outline">Mapa</span>
+</button>
+<!-- Family (Inactive) -->
+<button class="flex flex-col items-center justify-center min-w-[64px] min-h-[64px] space-y-1">
+<span class="material-symbols-outlined text-outline text-[28px]">group</span>
+<span class="text-[11px] font-medium text-outline">Rodzina</span>
+</button>
+</nav>
+</body></html>

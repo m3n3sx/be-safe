@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#44474b",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface": "#fcf8f9",
+                    "on-primary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "outline": "#75777b",
+                    "secondary": "#006c4c",
+                    "surface-variant": "#e5e2e2",
+                    "on-primary-container": "#828790",
+                    "surface-container-low": "#f6f3f3",
+                    "inverse-primary": "#c1c7d0",
+                    "inverse-surface": "#313031",
+                    "surface-container-highest": "#e5e2e2",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "surface-bright": "#fcf8f9",
+                    "primary": "#03080e",
+                    "surface-container-high": "#eae7e8",
+                    "tertiary": "#190001",
+                    "on-secondary-fixed-variant": "#005138",
+                    "primary-container": "#1a2027",
+                    "on-tertiary-fixed-variant": "#862026",
+                    "tertiary-fixed": "#ffdad8",
+                    "surface-dim": "#dcd9da",
+                    "primary-fixed-dim": "#c1c7d0",
+                    "secondary-fixed": "#9df4cb",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#81d7b0",
+                    "surface-tint": "#595f67",
+                    "primary-fixed": "#dde3ed",
+                    "outline-variant": "#c5c6cb",
+                    "on-secondary-fixed": "#002115",
+                    "tertiary-container": "#480008",
+                    "on-tertiary-container": "#db5f60",
+                    "on-primary-fixed": "#161c23",
+                    "surface-container": "#f0eded",
+                    "on-tertiary-fixed": "#410007",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#9df4cb",
+                    "background": "#fcf8f9",
+                    "on-surface": "#1c1b1c",
+                    "on-primary-fixed-variant": "#41474f",
+                    "on-error": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#0f7252",
+                    "on-background": "#1c1b1c",
+                    "tertiary-fixed-dim": "#ffb3b1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "unit": "8px",
+                    "section-margin": "48px",
+                    "card-gap": "20px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "display-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "headline-hero-mobile": ["Inter"],
+                    "label-button": ["Inter"],
+                    "body-main": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "headline-hero": ["Inter"]
+            },
+            "fontSize": {
+                    "display-md": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-hero-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "300"}],
+                    "label-button": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "body-main": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "display-lg": ["80px", {"lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100"}],
+                    "headline-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-orb {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(157, 244, 203, 0.15) 0%, rgba(252, 248, 249, 0) 70%);
+            filter: blur(40px);
+            z-index: -1;
+            top: -100px;
+            right: -100px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-main selection:bg-secondary-container">
+<!-- Decorative Glow Orb -->
+<div class="glass-orb"></div>
+<main class="min-h-screen flex flex-col items-center px-container-padding pb-section-margin pt-16 max-w-[480px] mx-auto">
+<!-- Header Section -->
+<header class="flex flex-col items-center text-center mb-10 w-full">
+<img alt="be:Safe" class="h-11 mb-8 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0ugrhGjFZ2NzzFdlV7Ts3UesEzeSXfoXXTPVv7XkNPxAfQGhlsX_YjwHRJVFFhyV-kFYW1eZ73Lnvlz1zekIFmKHtkozbXrVQ2MhjnTJH1rWAWhKSss44fFseGolUsgMOL69plN4NMUVM9R1USwVC0APJAhCLr7z9LQyIy3-5eAVhKiKxR_XrNcSsdvqr0E79nVTNfVHKufla53nEy6JN1EQLAdxFwElEXtKGZNc0NZ3DgsIIaLW-ldxDA"/>
+<h1 class="font-headline-hero-mobile text-headline-hero-mobile text-primary tracking-[-0.5px] mb-2">Wybierz tryb</h1>
+<p class="text-on-surface-variant font-body-main text-label-button">Możesz to zmienić w dowolnym momencie</p>
+</header>
+<!-- Mode Cards Stack -->
+<section class="flex flex-col gap-card-gap w-full mb-12">
+<!-- Card 1: Dla dziecka -->
+<button class="flex items-start text-left bg-surface-container-lowest p-6 rounded-[24px] shadow-[0_8px_24px_rgba(26,32,39,0.06)] hover:translate-y-[-2px] transition-transform duration-300 group">
+<div class="flex-shrink-0 w-[64px] h-[64px] rounded-full flex items-center justify-center bg-gradient-to-br from-[#9DF4CB] to-[#9EEBEC] mr-5">
+<span class="material-symbols-outlined text-white text-[32px]">child_friendly</span>
+</div>
+<div class="flex-grow pr-4">
+<h3 class="font-headline-hero-mobile text-[20px] font-semibold text-primary mb-2">Dla dziecka</h3>
+<p class="text-on-surface-variant text-[14px] leading-relaxed mb-4">Duże kafelki, krótkie napisy, max 4 akcje. Wielki czerwony przycisk SOS. Bez ustawień i ukrytych funkcji.</p>
+<span class="inline-flex items-center px-3 py-1 bg-surface-container-low text-on-surface-variant text-[10px] font-bold tracking-wider uppercase rounded-full">
+                        POLECANE DLA: 7–12 lat
+                    </span>
+</div>
+<div class="flex-shrink-0 self-center">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</button>
+<!-- Card 2: Dla seniora -->
+<button class="flex items-start text-left bg-surface-container-lowest p-6 rounded-[24px] shadow-[0_8px_24px_rgba(26,32,39,0.06)] hover:translate-y-[-2px] transition-transform duration-300 group">
+<div class="flex-shrink-0 w-[64px] h-[64px] rounded-full flex items-center justify-center bg-primary-container mr-5">
+<span class="material-symbols-outlined text-white text-[32px]">elderly</span>
+</div>
+<div class="flex-grow pr-4">
+<h3 class="font-headline-hero-mobile text-[20px] font-semibold text-primary mb-2">Dla seniora</h3>
+<p class="text-on-surface-variant text-[14px] leading-relaxed mb-4">Duża czcionka, wysokie kontrasty, sound + haptic feedback. Codzienny check-in. Numery alarmowe zawsze pod ręką.</p>
+<span class="inline-flex items-center px-3 py-1 bg-surface-container-low text-on-surface-variant text-[10px] font-bold tracking-wider uppercase rounded-full">
+                        POLECANE DLA: 60+
+                    </span>
+</div>
+<div class="flex-shrink-0 self-center">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</button>
+<!-- Card 3: Standardowy -->
+<button class="flex items-start text-left bg-surface-container-lowest p-6 rounded-[24px] shadow-[0_8px_24px_rgba(26,32,39,0.06)] hover:translate-y-[-2px] transition-transform duration-300 group">
+<div class="flex-shrink-0 w-[64px] h-[64px] rounded-full flex items-center justify-center bg-[#FF7A7A] mr-5">
+<span class="material-symbols-outlined text-white text-[32px]">shield</span>
+</div>
+<div class="flex-grow pr-4">
+<h3 class="font-headline-hero-mobile text-[20px] font-semibold text-primary mb-2">Standardowy</h3>
+<p class="text-on-surface-variant text-[14px] leading-relaxed mb-4">Pełna funkcjonalność: mapa, alerty, rodzina, statystyki, SOS, czat sąsiedzki. Wszystkie ustawienia dostępne.</p>
+<span class="inline-flex items-center px-3 py-1 bg-surface-container-low text-on-surface-variant text-[10px] font-bold tracking-wider uppercase rounded-full">
+                        POLECANE DLA: 13–59 lat
+                    </span>
+</div>
+<div class="flex-shrink-0 self-center">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-primary transition-colors">chevron_right</span>
+</div>
+</button>
+</section>
+<!-- Footer Actions -->
+<footer class="mt-auto w-full flex flex-col items-center">
+<button class="text-on-surface-variant text-[13px] font-medium underline mb-6 hover:text-primary transition-colors">
+                Pomiń wybór — zdecyduję później
+            </button>
+<div class="inline-flex items-center px-4 py-2 border border-outline-variant bg-surface rounded-full">
+<span class="text-outline-variant text-[11px] font-medium text-center">
+                    Wybór możesz zmienić w Ustawienia → Tryb aplikacji
+                </span>
+</div>
+</footer>
+</main>
+</body></html>

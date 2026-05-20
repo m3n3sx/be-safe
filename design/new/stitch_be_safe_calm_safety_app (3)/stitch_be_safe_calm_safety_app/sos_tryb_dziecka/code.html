@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-high": "#eae7e8",
+                        "secondary-fixed-dim": "#81d7b0",
+                        "on-secondary-container": "#0f7252",
+                        "on-error": "#ffffff",
+                        "on-background": "#1c1b1c",
+                        "outline-variant": "#c5c6cb",
+                        "tertiary-fixed": "#ffdad8",
+                        "tertiary-container": "#480008",
+                        "outline": "#75777b",
+                        "on-surface": "#1c1b1c",
+                        "inverse-primary": "#c1c7d0",
+                        "secondary": "#006c4c",
+                        "inverse-surface": "#313031",
+                        "secondary-container": "#9df4cb",
+                        "on-primary-fixed-variant": "#41474f",
+                        "surface-variant": "#e5e2e2",
+                        "on-error-container": "#93000a",
+                        "background": "#fcf8f9",
+                        "secondary-fixed": "#9df4cb",
+                        "surface-container": "#f0eded",
+                        "primary-fixed": "#dde3ed",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed": "#002115",
+                        "surface-dim": "#dcd9da",
+                        "on-surface-variant": "#44474b",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#fcf8f9",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f6f3f3",
+                        "primary-container": "#1a2027",
+                        "primary": "#03080e",
+                        "on-primary-container": "#828790",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#e5e2e2",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#190001",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#410007",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-primary-fixed": "#161c23",
+                        "primary-fixed-dim": "#c1c7d0",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "on-secondary-fixed-variant": "#005138",
+                        "on-tertiary-fixed-variant": "#862026",
+                        "on-tertiary-container": "#db5f60",
+                        "surface": "#fcf8f9",
+                        "surface-tint": "#595f67",
+                        "kid-coral": "#FF7A7A"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-padding": "24px",
+                        "unit": "8px",
+                        "section-margin": "48px",
+                        "card-gap": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-hero-mobile": ["Inter"],
+                        "display-md": ["Inter"],
+                        "headline-hero": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "label-button": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-main": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-hero-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "300"}],
+                        "display-md": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "200"}],
+                        "headline-hero": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "300"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "label-button": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                        "display-lg": ["80px", {"lineHeight": "96px", "letterSpacing": "-0.04em", "fontWeight": "100"}],
+                        "body-main": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glow-ring {
+            border: 2px solid white;
+            border-radius: 9999px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-kid-coral min-h-screen flex flex-col items-center overflow-hidden selection:bg-white/30">
+<!-- Top AppBar Strategy: Simplified for Kids SOS -->
+<header class="w-full h-[80px] flex items-center px-container-padding z-10">
+<button aria-label="Zamknij" class="w-8 h-8 bg-white rounded-full flex items-center justify-center transition-transform active:scale-90 shadow-sm">
+<span class="material-symbols-outlined text-kid-coral text-[20px]" data-icon="close">close</span>
+</button>
+</header>
+<!-- Main Content: Focused SOS Action -->
+<main class="flex-1 flex flex-col items-center justify-center w-full px-container-padding relative">
+<!-- Text Group -->
+<div class="text-center mb-section-margin z-10">
+<h1 class="font-semibold text-white tracking-[0.5px] mb-2" style="font-size: 32px; line-height: 40px;">
+                POTRZEBUJESZ POMOCY?
+            </h1>
+<p class="font-body-main text-white opacity-90" style="font-size: 18px;">
+                Mama i Tata dostaną wiadomość
+            </p>
+</div>
+<!-- SOS Central Button & Decorative Rings -->
+<div class="relative flex items-center justify-center w-[360px] h-[360px] mb-section-margin">
+<!-- Concentric Decorative Rings -->
+<div class="glow-ring w-[360px] h-[360px] opacity-[0.1]"></div>
+<div class="glow-ring w-[320px] h-[320px] opacity-[0.2]"></div>
+<div class="glow-ring w-[280px] h-[280px] opacity-[0.3]"></div>
+<!-- The Main Action Button -->
+<button class="relative z-20 w-[280px] h-[280px] bg-white rounded-full border-[12px] border-kid-coral flex flex-col items-center justify-center shadow-2xl transition-all active:scale-95 duration-200">
+<span class="font-bold text-primary-container mb-2" style="font-size: 28px;">NACIŚNIJ</span>
+<span class="material-symbols-outlined text-kid-coral" data-icon="emergency_share" data-weight="fill" style="font-size: 80px; font-variation-settings: 'FILL' 1;">emergency_share</span>
+</button>
+</div>
+<!-- Secondary Instruction -->
+<div class="z-10">
+<p class="font-medium text-white" style="font-size: 16px;">
+                Trzymaj wciśnięty 3 sekundy
+            </p>
+</div>
+</main>
+<!-- Footer: Cancel Action -->
+<footer class="pb-12 pt-4 w-full flex justify-center z-10">
+<button class="inline-block py-4 px-8 active:opacity-70 transition-opacity">
+<span class="font-medium text-white underline decoration-white/50 underline-offset-8" style="font-size: 18px;">
+                Anuluj
+            </span>
+</button>
+</footer>
+<!-- Background Polish: Subtle Glow Orbs for Premium Wellness feel even in SOS -->
+<div class="fixed top-1/4 -left-20 w-64 h-64 bg-white/10 blur-[80px] rounded-full pointer-events-none"></div>
+<div class="fixed bottom-1/4 -right-20 w-80 h-80 bg-white/10 blur-[100px] rounded-full pointer-events-none"></div>
+</body></html>
