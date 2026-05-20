@@ -70,45 +70,34 @@ jobs:
         run: |
           flutter build ios --release --no-codesign --dart-define=SENTRY_DSN=${SENTRY_DSN:-}
 
-      - name: Package as IPA (unsigned)
-        working-directory: mobile
+      - name: Compress Runner.app (zstd, lowest size)
+        working-directory: mobile/build/ios/iphoneos
         run: |
-          APP_PATH="build/ios/iphoneos/Runner.app"
-          if [ ! -d "$APP_PATH" ]; then
-            echo "ERROR: $APP_PATH nie istnieje"
-            ls -la build/ios/iphoneos/ || true
+          if [ ! -d Runner.app ]; then
+            echo "ERROR: Runner.app nie istnieje"
+            ls -la
             exit 1
           fi
-          mkdir -p build/ios/Payload
-          cp -R "$APP_PATH" build/ios/Payload/
-          cd build/ios
-          zip -r9 beSafe-unsigned.ipa Payload
-          ls -la beSafe-unsigned.ipa
+          # tar+zstd ~50% mniejsze niz zip GH Actions
+          tar -cf - Runner.app | zstd -19 -T0 -o Runner.app.tar.zst
+          ls -lh Runner.app.tar.zst
 
-      - name: Upload unsigned IPA artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: beSafe-ios-unsigned
-          path: mobile/build/ios/beSafe-unsigned.ipa
-          retention-days: 14
-
-      - name: Upload Runner.app (for Appetize.io)
+      - name: Upload Runner.app (for Appetize.io / resigning)
         uses: actions/upload-artifact@v4
         with:
           name: beSafe-ios-runner-app
-          path: mobile/build/ios/iphoneos/Runner.app
-          retention-days: 14
+          path: mobile/build/ios/iphoneos/Runner.app.tar.zst
+          retention-days: 3
+          compression-level: 0  # juz skompresowany zstd
 
       - name: Summary
         run: |
           echo "## Build iOS unsigned — zakończony ✅" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Artefakty:" >> $GITHUB_STEP_SUMMARY
-          echo "- **beSafe-ios-unsigned** — .ipa (unsigned, nie zainstalujesz na realnym iPhone bez resignowania)" >> $GITHUB_STEP_SUMMARY
-          echo "- **beSafe-ios-runner-app** — Runner.app do uploadu na https://appetize.io" >> $GITHUB_STEP_SUMMARY
+          echo "Artefakt: **beSafe-ios-runner-app** (Runner.app.tar.zst, retention 3 dni)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Jak testować:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Pobierz \`beSafe-ios-runner-app\` z sekcji Artifacts poniżej" >> $GITHUB_STEP_SUMMARY
-          echo "2. Rozpakuj zip — dostaniesz \`Runner.app\` (folder)" >> $GITHUB_STEP_SUMMARY
-          echo "3. Zaloguj się na https://appetize.io → Upload → wybierz \`Runner.app\`" >> $GITHUB_STEP_SUMMARY
-          echo "4. Dostaniesz link z emulatorem iPhone'a w przeglądarce" >> $GITHUB_STEP_SUMMARY
+          echo "### Jak użyć:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Pobierz artefakt z sekcji Artifacts poniżej" >> $GITHUB_STEP_SUMMARY
+          echo "2. \`unzip beSafe-ios-runner-app.zip && zstd -d Runner.app.tar.zst && tar -xf Runner.app.tar\`" >> $GITHUB_STEP_SUMMARY
+          echo "3. **Appetize.io**: Upload Runner.app → emulator iPhone w przeglądarce" >> $GITHUB_STEP_SUMMARY
+          echo "4. **Real iPhone**: podpisz \`codesign\` z Apple Developer cert, zapakuj w IPA, sideload" >> $GITHUB_STEP_SUMMARY
