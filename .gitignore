@@ -55,3 +55,6 @@ mobile/android/app/google-services.json
 alert.md
 backend/firebase-admin.json
 design/besafe-figma-export.zip
+
+# OpenCode local
+.opencode/

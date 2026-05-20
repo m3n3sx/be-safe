@@ -58,8 +58,9 @@ jobs:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           flutter pub get
-          flutter build apk --release --dart-define=SENTRY_DSN=$SENTRY_DSN
-          flutter build appbundle --release --dart-define=SENTRY_DSN=$SENTRY_DSN
+          # --no-tree-shake-icons KRYTYCZNE: Canvas markery używają dynamicznych IconData
+          flutter build apk --release --no-tree-shake-icons --dart-define=SENTRY_DSN=$SENTRY_DSN
+          flutter build appbundle --release --no-tree-shake-icons --dart-define=SENTRY_DSN=$SENTRY_DSN
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -81,19 +82,20 @@ jobs:
           mkdir -p ~/.ssh
           echo "$VPS_KEY" > ~/.ssh/vps_key
           chmod 600 ~/.ssh/vps_key
-          # Upload APK
+          # Upload APK do /home/ubuntu/besafe/backend/ (NIE alertmap!)
           scp -o StrictHostKeyChecking=no -i ~/.ssh/vps_key \
             mobile/build/app/outputs/flutter-apk/app-release.apk \
-            ubuntu@$VPS_HOST:/home/ubuntu/alertmap/AlertMap.apk
-          # Bump version & restart backend
+            ubuntu@$VPS_HOST:/home/ubuntu/besafe/backend/AlertMap.apk
+          # Bump version w backend/src/index.js + sync mobile update_service.dart
+          # (double-source-of-truth wersji - oba MUSZĄ być w sync)
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/vps_key ubuntu@$VPS_HOST \
-            "cd /home/ubuntu/alertmap && node -e \"
+            "cd /home/ubuntu/besafe/backend && node -e \"
               const fs = require('fs');
               const f = 'src/index.js';
               let c = fs.readFileSync(f,'utf8');
               const m = c.match(/version: (\\d+)/);
-              if(m) { const v = parseInt(m[1])+1; c = c.replace(/version: \\d+/, 'version: '+v); fs.writeFileSync(f,c); console.log('Version bumped to '+v); }
-            \" && pm2 restart alertmap"
+              if(m) { const v = parseInt(m[1])+1; c = c.replace(/version: \\d+/, 'version: '+v); fs.writeFileSync(f,c); console.log('Backend version bumped to '+v); }
+            \" && pm2 restart besafe-backend"
 
   deploy-backend:
     runs-on: ubuntu-latest
@@ -109,7 +111,8 @@ jobs:
           mkdir -p ~/.ssh
           echo "$VPS_KEY" > ~/.ssh/vps_key
           chmod 600 ~/.ssh/vps_key
+          # Sync całego backend/src/ do prod (NIE /home/ubuntu/alertmap/!)
           scp -o StrictHostKeyChecking=no -i ~/.ssh/vps_key -r \
-            backend/src/* ubuntu@$VPS_HOST:/home/ubuntu/alertmap/src/
+            backend/src/* ubuntu@$VPS_HOST:/home/ubuntu/besafe/backend/src/
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/vps_key ubuntu@$VPS_HOST \
-            "pm2 restart alertmap"
+            "pm2 restart besafe-backend"
