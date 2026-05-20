@@ -1,0 +1,69 @@
+workflows:
+  ios-unsigned:
+    name: iOS Unsigned IPA (sideload)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: 3.29.3
+      xcode: latest
+      cocoapods: default
+      vars:
+        BUNDLE_ID: "pl.u235.alertmap"
+      groups:
+        - sentry  # SENTRY_DSN secret z Codemagic UI (Settings → Variables → group "sentry")
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+      cancel_previous_builds: true
+    scripts:
+      - name: Set Flutter version
+        script: flutter --version
+
+      - name: Flutter packages
+        working_directory: mobile
+        script: |
+          flutter pub get
+
+      - name: Set iOS deployment target
+        working_directory: mobile/ios
+        script: |
+          sed -i.bak "s/platform :ios, '12.0'/platform :ios, '14.0'/" Podfile || true
+          sed -i.bak "s/# platform :ios, '12.0'/platform :ios, '14.0'/" Podfile || true
+
+      - name: Install CocoaPods
+        working_directory: mobile/ios
+        script: |
+          pod repo update
+          pod install
+
+      - name: Build iOS (unsigned, no codesign)
+        working_directory: mobile
+        script: |
+          # KRYTYCZNE: --no-tree-shake-icons bo Canvas markery używają dynamicznych IconData
+          flutter build ios --release --no-codesign \
+            --no-tree-shake-icons \
+            --dart-define=SENTRY_DSN="${SENTRY_DSN:-}"
+
+      - name: Package as IPA (unsigned)
+        working_directory: mobile/build/ios/iphoneos
+        script: |
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -qr AlertMap-unsigned.ipa Payload
+          ls -lh AlertMap-unsigned.ipa
+          echo "IPA size: $(du -h AlertMap-unsigned.ipa | cut -f1)"
+
+    artifacts:
+      - mobile/build/ios/iphoneos/AlertMap-unsigned.ipa
+      - mobile/build/ios/iphoneos/Runner.app
+
+    publishing:
+      email:
+        recipients:
+          - meneswczesny@gmail.com
+        notify:
+          success: true
+          failure: true

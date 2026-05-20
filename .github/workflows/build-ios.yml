@@ -1,11 +1,9 @@
-name: Build iOS (unsigned)
+name: Build iOS (unsigned) — DISABLED (use Codemagic)
 
+# WYŁĄCZONE: macos-15 runner kosztuje 10x linux i free tier się wyczerpał.
+# Build iOS przeniesiony do Codemagic (codemagic.yaml w root repo).
+# Pozostawione `workflow_dispatch` żeby ręcznie uruchomić jeśli kiedyś trzeba.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'mobile/**'
-      - '.github/workflows/build-ios.yml'
   workflow_dispatch:
 
 jobs:
