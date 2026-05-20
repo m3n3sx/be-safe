@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -25,6 +26,10 @@ export default function RootLayout({
     <html lang="pl" className={`${inter.variable} h-full`} suppressHydrationWarning>
       <body className="h-full bg-neutral-50 dark:bg-neutral-950 font-sans antialiased">
         <Providers>{children}</Providers>
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

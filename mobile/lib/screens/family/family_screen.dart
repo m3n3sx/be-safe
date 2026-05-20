@@ -307,19 +307,31 @@ class _FamilyScreenState extends State<FamilyScreen> {
 
   Future<void> _loadGroups() async {
     if (!mounted) return;
+    final sw = Stopwatch()..start();
+    debugPrint('[family] _loadGroups START');
     setState(() => _loading = true);
     try {
       final api = context.read<ApiService>();
       final res = await api.get('/family/groups');
+      debugPrint('[family] GET /family/groups done in ${sw.elapsedMilliseconds}ms');
       final groups = (res['groups'] as List?) ?? [];
       _groups = groups;
+      debugPrint('[family] groups count=${groups.length}');
       if (groups.isNotEmpty) {
         if (_activeGroup >= groups.length) _activeGroup = 0;
+        // Render group chips natychmiast.
+        if (mounted) setState(() => _loading = false);
+        debugPrint('[family] setState _loading=false @${sw.elapsedMilliseconds}ms, group=${groups[0]['name']}');
         await _loadMembers(groups[_activeGroup]['id']);
+        debugPrint('[family] members loaded in ${sw.elapsedMilliseconds}ms');
+        if (mounted) setState(() {});
+        return;
       } else {
         _members = [];
       }
-    } catch (_) {}
+    } catch (e, st) {
+      debugPrint('[family] _loadGroups ERROR: $e\n$st');
+    }
     if (mounted) setState(() => _loading = false);
   }
 
@@ -685,7 +697,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
             ),
           ),
           SliverToBoxAdapter(child: _buildHero()),
-          if (_groups.length > 1)
+          if (_groups.isNotEmpty)
             SliverToBoxAdapter(child: _buildGroupChips()),
           SliverPadding(
             padding: const EdgeInsets.symmetric(

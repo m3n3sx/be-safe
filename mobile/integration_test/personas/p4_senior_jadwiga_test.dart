@@ -5,6 +5,8 @@
 /// 3. Czy dialog wylogowania działa (UX 4 z audytu).
 library;
 
+import 'package:flutter/widgets.dart' show Scrollable;
+import 'package:flutter_test/flutter_test.dart' show find;
 import 'package:patrol/patrol.dart';
 
 import 'package:alertmap/main.dart' as app;
@@ -70,6 +72,15 @@ void main() {
       await $('Profil').tap();
       await $.pump(const Duration(seconds: 2));
     }
+    // Wyloguj się button może być poza viewport — scroll go do widoku.
+    try {
+      await $.tester.scrollUntilVisible(
+        find.text('Wyloguj się'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await $.pump(const Duration(milliseconds: 300));
+    } catch (_) {}
     await ScreenshotHelper.take($, persona, 'p4_profile');
 
     final hasLogout = $('Wyloguj się').exists;

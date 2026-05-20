@@ -51,6 +51,12 @@ void main() {
       await $('Rodzina').tap();
       await $.pump(const Duration(seconds: 2));
     }
+    // Pump-loop: _loadGroups() w family_screen może zająć kilkanaście sekund.
+    final deadline = DateTime.now().add(const Duration(seconds: 30));
+    while (DateTime.now().isBefore(deadline) &&
+        !$('Rodzina Testowa E2E').exists) {
+      await $.pump(const Duration(milliseconds: 500));
+    }
     final groupVisible = $('Rodzina Testowa E2E').exists;
     await TestMetrics.check(persona, suite, 'family_group_visible', groupVisible);
     await ScreenshotHelper.take($, persona, 'p3_family');

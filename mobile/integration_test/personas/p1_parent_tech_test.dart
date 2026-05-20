@@ -5,6 +5,8 @@
 /// DIAGNOSTIC MODE — pomiary nie failują testu.
 library;
 
+import 'package:flutter/widgets.dart' show Scrollable;
+import 'package:flutter_test/flutter_test.dart' show find;
 import 'package:patrol/patrol.dart';
 
 import 'package:alertmap/main.dart' as app;
@@ -57,7 +59,13 @@ void main() {
     final swFamily = Stopwatch()..start();
     if ($('Rodzina').exists) {
       await $('Rodzina').tap();
-      await $.pump(const Duration(seconds: 2));
+      // Czekaj na ladowanie grup (async _loadGroups w postFrameCallback) —
+      // pumpuj az do max 15s sprawdzajac co 500ms.
+      final famDeadline = DateTime.now().add(const Duration(seconds: 30));
+      while (DateTime.now().isBefore(famDeadline)) {
+        await $.pump(const Duration(milliseconds: 500));
+        if ($('Rodzina Testowa E2E').exists) break;
+      }
     }
     swFamily.stop();
     await TestMetrics.duration(persona, suite, 'open_family', swFamily.elapsed);
@@ -103,6 +111,18 @@ void main() {
     }
     swSettings.stop();
     await TestMetrics.duration(persona, suite, 'open_settings', swSettings.elapsed);
+
+    // Czekaj na renderowanie Settings + ewentualnie scroll w dol bo 'Wyloguj sie'
+    // jest pod sekcjami Konto/Uprawnienia/Wsparcie.
+    await $.pump(const Duration(seconds: 1));
+    try {
+      await $.tester.scrollUntilVisible(
+        find.text('Wyloguj się'),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+    } catch (_) {}
+    await $.pump(const Duration(milliseconds: 300));
     await ScreenshotHelper.take($, persona, 'p1_settings');
 
     // Logout (sprawdza czy 'Wyloguj się' jest widoczne i klikalne)

@@ -311,6 +311,7 @@ class _AuthGateState extends State<_AuthGate> {
         // F24: Biometric auth (opt-in)
         BiometricService().init();
         context.read<BackgroundService>().init().then((_) {
+          if (!mounted) return;
           context.read<BackgroundService>().startTracking(token);
           context.read<AlertProvider>().connectSocket(token);
         });

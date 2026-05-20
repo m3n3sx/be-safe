@@ -9,7 +9,7 @@ import 'package:patrol/src/native/contracts/contracts.dart';
 import 'package:test_api/src/backend/invoker.dart';
 
 // START: GENERATED TEST IMPORTS
-import 'personas/_smoke_login_test.dart' as personas___smoke_login_test;
+import 'personas/p4_senior_jadwiga_test.dart' as personas__p4_senior_jadwiga_test;
 // END: GENERATED TEST IMPORTS
 
 Future<void> main() async {
@@ -69,7 +69,7 @@ Future<void> main() async {
   });
 
   // START: GENERATED TEST GROUPS
-  group('personas._smoke_login_test', personas___smoke_login_test.main);
+  group('personas.p4_senior_jadwiga_test', personas__p4_senior_jadwiga_test.main);
   // END: GENERATED TEST GROUPS
 
   final dartTestGroup = await testExplorationCompleter.future;

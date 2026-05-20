@@ -40,12 +40,16 @@ for entry in "${SUITES[@]}"; do
   echo ""
   echo "[$(date +%H:%M:%S)] >>> ${name} (${target})"
 
-  patrol test \
+  # timeout 600s żeby UTP launcher nie wisiał (b36 issue)
+  timeout --kill-after=30s 600s patrol test \
     --target "$target" \
     --dart-define=TEST_RESET_SECRET="$SECRET" \
     --dart-define=RUN_ID="${name}_${RUN_TS}" \
     -d "$DEVICE" \
     > "$log" 2>&1 || true
+
+  # Kill UTP launcher (Google Unified Test Platform) jeśli zombie
+  pkill -9 -f "com.google.testing.platform.launcher" 2>/dev/null || true
 
   # Zlicz pass/fail z logu Patrol
   ok=$(grep -oE "Successful: [0-9]+" "$log" | head -1)
