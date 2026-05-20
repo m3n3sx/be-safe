@@ -16,9 +16,13 @@ CREATE TABLE users (
     alert_radius_m INT NOT NULL DEFAULT 500,
     reputation_score INT NOT NULL DEFAULT 100,
     is_child BOOLEAN NOT NULL DEFAULT FALSE,
+    phone VARCHAR(20),
     fcm_token TEXT,
     last_location GEOGRAPHY(POINT, 4326),
     last_location_at TIMESTAMPTZ,
+    last_seen_at TIMESTAMPTZ,
+    last_battery_level INT,
+    last_battery_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -52,6 +56,7 @@ CREATE TABLE alerts (
     status alert_status NOT NULL DEFAULT 'active',
     confirms INT NOT NULL DEFAULT 0,
     denies INT NOT NULL DEFAULT 0,
+    trust_score REAL NOT NULL DEFAULT 0,
     expires_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -96,7 +101,18 @@ CREATE TABLE family_groups (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TYPE family_role AS ENUM ('parent', 'child');
+-- F35: rozszerzone role rodzinne (v69)
+-- Original: ('parent', 'child') — na prod rozszerzone przez ALTER TYPE
+CREATE TYPE family_role AS ENUM (
+    'parent',
+    'child',
+    'senior',
+    'guardian',
+    'family_member',
+    'partner',
+    'friend',
+    'other'
+);
 
 CREATE TABLE family_members (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -104,6 +120,7 @@ CREATE TABLE family_members (
     user_id UUID NOT NULL REFERENCES users(id),
     role family_role NOT NULL,
     tracking_enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    school_hours_silent BOOLEAN NOT NULL DEFAULT FALSE,
     joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE(group_id, user_id)
 );
@@ -122,6 +139,49 @@ CREATE TABLE geofences (
 );
 
 CREATE INDEX idx_geofences_center ON geofences USING GIST(center);
+
+-- ============================================
+-- SAFE ROUTES (bezpieczne trasy dziecka)
+-- ============================================
+CREATE TABLE safe_routes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_by UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    group_id UUID NOT NULL REFERENCES family_groups(id) ON DELETE CASCADE,
+    name VARCHAR(120) NOT NULL,
+    polyline GEOGRAPHY(LINESTRING, 4326) NOT NULL,
+    threshold_m INT NOT NULL DEFAULT 100 CHECK (threshold_m BETWEEN 30 AND 1000),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_safe_routes_user ON safe_routes(user_id) WHERE is_active = TRUE;
+CREATE INDEX idx_safe_routes_polyline ON safe_routes USING GIST(polyline);
+
+-- ============================================
+-- ESCORT SESSIONS (F03 Follow Me)
+-- ============================================
+CREATE TABLE escort_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    requester_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    watcher_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    group_id UUID REFERENCES family_groups(id) ON DELETE SET NULL,
+    destination_lat DOUBLE PRECISION NOT NULL,
+    destination_lng DOUBLE PRECISION NOT NULL,
+    destination_name VARCHAR(200),
+    eta_seconds INTEGER NOT NULL CHECK (eta_seconds > 0 AND eta_seconds <= 14400),
+    status VARCHAR(16) NOT NULL DEFAULT 'active' CHECK (status IN ('active','completed','expired','panic')),
+    last_location_lat DOUBLE PRECISION,
+    last_location_lng DOUBLE PRECISION,
+    last_update_at TIMESTAMPTZ,
+    started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at TIMESTAMPTZ
+);
+
+CREATE INDEX idx_escort_active_requester ON escort_sessions(requester_id) WHERE status='active';
+CREATE INDEX idx_escort_active_watcher ON escort_sessions(watcher_id) WHERE status='active';
+CREATE INDEX idx_escort_active_started ON escort_sessions(started_at) WHERE status='active';
 
 -- ============================================
 -- ALERT COMMENTS
@@ -206,3 +266,25 @@ RETURNS void AS $$
     UPDATE alerts SET status = 'expired'
     WHERE status = 'active' AND expires_at < NOW();
 $$ LANGUAGE sql;
+
+-- ============================================
+-- ADMIN / CAPABILITIES (v68+)
+-- ============================================
+-- NOTE: schema.sql is partially out of date — many ALTER TABLE migrations
+-- live only on prod. New additions below are also applied on prod via migrations.
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- F34 capability matrix (user's recorded permission preferences).
+-- Tracks app-side intent (toggle ON/OFF) — actual system grant is checked via
+-- permission_handler on device. This table is the SOURCE OF TRUTH for "user
+-- chose to enable feature X" so we can re-prompt or skip features cleanly.
+CREATE TABLE IF NOT EXISTS user_capabilities (
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    capability VARCHAR(32) NOT NULL,
+    granted BOOLEAN NOT NULL DEFAULT FALSE,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (user_id, capability)
+);
+
+-- Capabilities: 'location', 'camera', 'microphone', 'notifications', 'biometrics', 'sensors'
