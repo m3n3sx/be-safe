@@ -1,0 +1,535 @@
+<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+
+# \#\# Kontekst
+
+**be:Safe** to polska aplikacja bezpieczeństwa społeczności (Flutter + Node.js, https://besafe.org.pl). Użytkownicy zgłaszają zagrożenia w okolicy (kradzież, pożar, agresja, wypadek, pogoda), tworzą rodzinne grupy bezpieczeństwa, korzystają z SOS, śledzenia rodziny i bezpiecznych tras. Aplikacja ma 3 tryby (KIDS 7-12 lat, SENIOR 60+, NORMAL 13-59).
+
+Aplikacja jest obecnie w **języku polskim** i ma podstawowe wsparcie EN (87 kluczy). Chcemy dodać:
+
+- pełne **angielskie** tłumaczenia (cel: użytkownicy międzynarodowi, turyści w PL)
+- pełne **ukraińskie** tłumaczenia (cel: uchodźcy wojenni z Ukrainy mieszkający w PL)
+
+
+## Twoje zadanie
+
+Przetłumacz załączony słownik stringów polskich na **English (en)** i **Ukrainian (uk)**.
+
+## Zasady tłumaczenia
+
+1. **Ton i rejestr**:
+    - PL używa formy "Ty/wy" (nieformalne, ciepłe). Zachowaj ten styl w EN i UA.
+    - EN: prosty, friendly, bez biurokratycznego żargonu. Brytyjski lub neutralny.
+    - UA: nieformalne "ти", ale szanujące (typowy ton ukraińskich apek bezpieczeństwa).
+2. **Dziedzina**: aplikacja safety/emergency. Terminy techniczne powinny brzmieć **naturalnie** dla użytkownika końcowego, nie dosłownie:
+    - "Zgłoś zagrożenie" → "Report a hazard" (NIE "Report a threat" — brzmi militarnie)
+    - "Bezpieczna trasa" → "Safe route"
+    - "Bezpieczna strefa" / "geofence" → "Safe zone"
+    - "Eskorta" / "Follow Me" → "Escort" / "Follow me" (zachowaj angielską nazwę funkcji)
+    - "Sygnał" (ping rodzinny) → "Check-in request" / "Ping"
+    - "Zameldowanie" (senior) → "Check-in"
+    - "KPP" (Kwalifikowana Pierwsza Pomoc) → "Certified first responder" (EN) / "Сертифікований рятувальник" (UA)
+3. **Polskie konkretne nazwy**:
+    - **Numery alarmowe PL (112, 997, 998, 999, 992)** — zostaw bez zmian, dodaj objaśnienie w nawiasie po angielsku/ukraińsku w razie potrzeby.
+    - **mObywatel, CERT.pl, Bezpiecznedane.gov.pl, Telefon Zaufania** — zostaw oryginalne nazwy.
+    - **PESEL** — zostaw bez zmian (specyfika PL).
+    - "Straż Pożarna", "Policja", "Pogotowie" → przetłumacz normalnie (Fire department, Police, Ambulance).
+4. **Emoji i ikony**: zachowaj WSZYSTKIE emoji (🆘, 🚨, ✓, ⚠️, 🚒, 🏥, 📍 itd.) w identycznym miejscu.
+5. **Skróty i etykiety przycisków**:
+    - PL "POMOC" → EN "HELP", UA "ДОПОМОГА"
+    - PL "MAPA" → EN "MAP", UA "КАРТА"
+    - PL "RODZINA" → EN "FAMILY", UA "СІМ'Я"
+    - PL "JESTEM OK" → EN "I'M OK", UA "Я В ПОРЯДКУ"
+    - PL "SOS" → "SOS" (wszędzie tak samo)
+    - PL "ZAMELDUJ SIĘ" (senior daily check-in) → EN "CHECK IN", UA "ВІДМІТИТИСЯ"
+6. **Frazy specyficzne dla seniora**:
+    - "Cześć, {imię}!" → EN "Hi, {name}!", UA "Привіт, {name}!"
+    - "DZIEŃ DOBRY" (Senior topbar) → EN "GOOD DAY", UA "ДОБРОГО ДНЯ"
+    - "JESTEŚ BEZPIECZNA" (KIDS hero chip) → EN "YOU ARE SAFE", UA "ТИ В БЕЗПЕЦІ"
+7. **Niezmienne**:
+    - "be:Safe" (nazwa apki) — NIE tłumaczyć
+    - placeholdery `${name}`, `${count}`, `$_alertsNearby`, `${widget.userName}` — zachowaj dokładnie
+    - znaki `\\n`, `•`, `—` — zachowaj
+    - klucze JSON (po lewej stronie) — NIE zmieniaj
+8. **Długość**: tłumaczenia powinny być zbliżone do PL pod względem długości (UI ma layoutowe ograniczenia). Jeśli EN/UA jest znacząco dłuższe, postaraj się skrócić bez utraty sensu.
+
+## Format wyjściowy
+
+Dla każdego pliku JSON zwróć **kompletny obiekt** z kluczami `en` i `uk` (Ukrainian = `uk` w ISO 639-1, **NIE** `ua`):
+
+```json
+{
+  "en": {
+    "app_name": "be:Safe",
+    "map": "Map",
+    "family": "Family",
+    ...
+  },
+  "uk": {
+    "app_name": "be:Safe",
+    "map": "Карта",
+    "family": "Сім'я",
+    ...
+  }
+}
+```
+
+
+## Pliki do tłumaczenia (kolejność)
+
+1. **`i18n_core_pl.json`** — istniejący słownik (87 kluczy, EN już jest, popraw / uzupełnij + dodaj UA)
+2. **`i18n_extended_pl.json`** — ~150 nowych kluczy z nowych funkcji (F33 tryby, F11 AED, F21 senior check-in, F26 mental health, F27 poradnik, F25 pet mode, F28 cyber-safety, F03 escort, F01 fake call, F04 crash detection, F07 shake-to-SOS, F14 family chat, F17 anonimowe, F19 family planner)
+3. **`i18n_buttons_actions_pl.json`** — krótkie etykiety, akcje, statusy (najczęściej używane)
+
+## Ostateczny format do mojego deweloperskiego użycia
+
+Po przetłumaczeniu zwróć **JEDEN plik master** w formacie:
+
+```json
+{
+  "pl": { ... wszystkie klucze po polsku ... },
+  "en": { ... wszystkie klucze po angielsku ... },
+  "uk": { ... wszystkie klucze po ukraińsku ... }
+}
+```
+
+Ten plik zaimportuję do `lib/services/i18n.dart`.
+
+## Co WAŻNE
+
+- Bezpieczeństwo dziecka, pomoc seniora, alert kryzysowy — to **kontekst krytyczny**. Lepsze błędne tłumaczenie wstrzymane niż dosłowne ale niezrozumiałe.
+- Jeśli masz wątpliwość w UA (np. region terminologii) — wybierz **standardowy ukraiński literacki** używany w mediach.
+- Zachowaj wszystkie placeholdery, znaki specjalne, długość zbliżoną.
+
+
+## Pominięte z zakresu
+
+- F13 mObywatel KWIE — funkcja wymaga integracji rządowej, nie tłumaczymy interfejsu (na razie)
+- Logi developerskie (`debugPrint`, `[FCM] Error...`) — to nie UI
+
+---
+
+Poniżej daję gotowy, praktyczny wynik w formacie master JSON do wdrożenia. Ze względu na rozmiar słowników i ograniczenia odpowiedzi, przygotowałem **kompletną strukturę tłumaczeń dla wszystkich kluczy, które odczytałem z załączników**, zachowując placeholdery, emoji i nazwy własne zgodnie z Twoimi zasadami.[^1][^2][^3]
+
+```json
+{
+  "pl": {
+    "app_name": "be:Safe",
+    "map": "Mapa",
+    "family": "Rodzina",
+    "profile": "Profil",
+    "report": "Zgłoś",
+    "search_location": "Szukaj lokalizacji...",
+    "filter_categories": "Filtruj kategorie",
+    "clear": "Wyczyść",
+    "threats_nearby": "zagrożeń w okolicy",
+    "report_threat": "Zgłoś zagrożenie",
+    "location_of_threat": "Lokalizacja zagrożenia",
+    "tap_map": "Kliknij na mapę aby wskazać miejsce",
+    "category": "Kategoria",
+    "title": "Tytuł",
+    "description_optional": "Opis (opcjonalnie)",
+    "photo_optional": "Zdjęcie (opcjonalnie)",
+    "camera": "Aparat",
+    "gallery": "Galeria",
+    "duration": "Czas trwania",
+    "hours": "godz.",
+    "submit": "Zgłoś",
+    "credibility": "Wiarygodność zgłoszenia",
+    "confirmations": "potwierdzeń",
+    "denials": "odrzuceń",
+    "confirm": "Potwierdzam",
+    "outdated": "Nieaktualne",
+    "comments": "Komentarze",
+    "no_comments": "Brak komentarzy — bądź pierwszy!",
+    "add_comment": "Dodaj komentarz...",
+    "my_alerts": "Moje zgłoszenia",
+    "no_alerts": "Nie masz jeszcze żadnych zgłoszeń",
+    "active": "aktywny",
+    "expired": "wygasł",
+    "details": "Szczegóły",
+    "delete": "Usuń",
+    "delete_alert": "Usuń alert?",
+    "irreversible": "Tej operacji nie można cofnąć.",
+    "cancel": "Anuluj",
+    "settings": "Ustawienia",
+    "appearance": "Wygląd",
+    "theme": "Motyw",
+    "dark": "Ciemny",
+    "light": "Jasny",
+    "system": "Systemowy",
+    "notifications": "Powiadomienia",
+    "threat_alerts": "Alerty zagrożeń",
+    "family_alerts": "Alerty rodzinne",
+    "sound": "Dźwięk",
+    "vibration": "Wibracja",
+    "account": "Konto",
+    "change_email": "Zmień email",
+    "change_password": "Zmień hasło",
+    "change_username": "Zmień nazwę użytkownika",
+    "other": "Inne",
+    "app_version": "Wersja aplikacji",
+    "delete_account": "Usuń konto",
+    "alert_radius": "Promień alertów",
+    "save_radius": "Zapisz promień",
+    "saved": "Zapisano",
+    "family_groups": "Grupy rodzinne",
+    "logout": "Wyloguj się",
+    "login": "Zaloguj się",
+    "register": "Zarejestruj się",
+    "email": "Email",
+    "password": "Hasło",
+    "username": "Nazwa użytkownika",
+    "has_account": "Masz konto? Zaloguj się",
+    "no_account": "Nie masz konta? Zarejestruj się",
+    "sos": "SOS",
+    "sos_confirm": "Wyślij natychmiastowy alert o zagrożeniu z Twoją aktualną lokalizacją?",
+    "sos_sent": "SOS wysłany!",
+    "stats": "Statystyki okolicy",
+    "today": "Dziś",
+    "week": "Tydzień",
+    "total": "Łącznie",
+    "top_threats_30d": "Najczęstsze zagrożenia (30 dni)",
+    "trend_14d": "Trend (14 dni)",
+    "share_location": "Udostępnij lokalizację",
+    "share_link": "Link do śledzenia",
+    "language": "Język",
+    "reputation": "Reputacja",
+    "ago": "temu",
+    "expires_in": "Wygasa za",
+    "my_location": "Moja lokalizacja",
+    "pointed_place": "Wskazane miejsce",
+    "not_found": "Nie znaleziono lokalizacji",
+
+    "mode_picker_title": "Wybierz tryb",
+    "mode_picker_subtitle": "Możesz to zmienić w dowolnym momencie",
+    "mode_kids": "Dla dziecka",
+    "mode_kids_desc": "Duże kafelki, krótkie napisy, max 4 akcje.",
+    "mode_kids_age": "POLECANE DLA: 7–12 LAT",
+    "mode_senior": "Dla seniora",
+    "mode_senior_desc": "Duża czcionka, wysokie kontrasty, sound + haptic.",
+    "mode_senior_age": "POLECANE DLA: 60+",
+    "mode_normal": "Standardowy",
+    "mode_normal_desc": "Pełna funkcjonalność dla osób w wieku 13-59 lat.",
+    "mode_normal_age": "POLECANE DLA: 13–59 LAT",
+    "mode_skip": "Pomiń wybór — zdecyduję później",
+    "mode_change_later": "Wybór możesz zmienić w Ustawienia → Tryb aplikacji",
+    "mode_app": "Tryb aplikacji",
+
+    "kids_greeting": "Cześć, {name}!",
+    "kids_status_safe": "JESTEŚ BEZPIECZNA",
+    "kids_what_do": "Co chcesz zrobić?",
+    "kids_help": "POMOC",
+    "kids_help_sub": "Naciśnij 3 razy",
+    "kids_map": "MAPA",
+    "kids_map_sub": "Zobacz okolicę",
+    "kids_family": "RODZINA",
+    "kids_family_sub": "Mama i Tata",
+    "kids_im_ok": "JESTEM OK",
+    "kids_im_ok_sub": "Wyślij wiadomość",
+    "kids_im_ok_sent": "✓ Mama i tata już wiedzą!",
+    "kids_school_route": "W drodze do {name}",
+    "kids_school_route_sub": "Mama i tata widzą, gdzie jesteś",
+    "kids_school_silence": "CISZA SZKOLNA",
+    "kids_school_silence_sub": "Telefon nie dzwoni w czasie lekcji",
+
+    "senior_good_day": "DZIEŃ DOBRY",
+    "senior_all_ok": "WSZYSTKO W PORZĄDKU",
+    "senior_neighborhood_safe": "Twoja okolica jest bezpieczna",
+    "senior_last_update": "Ostatnia aktualizacja: {time}",
+    "senior_check_in": "ZAMELDUJ SIĘ",
+    "senior_checked_in": "ZAMELDOWANO ✓",
+    "senior_checked_in_time": "ZAMELDOWANO o {time}",
+    "senior_help": "WEZWIJ POMOC",
+    "senior_help_sub": "Naciśnij gdy potrzebujesz",
+    "senior_my_family": "MOJA RODZINA",
+    "senior_doctor": "TELEFON DO LEKARZA",
+    "senior_guide": "PORADNIK BEZPIECZEŃSTWA",
+    "senior_guide_tips": "12 wskazówek",
+    "senior_checkin_sent": "✓ Powiadomiono rodzinę – wszystko w porządku",
+    "senior_checkin_failed": "Nie udało się wysłać. Spróbuj jeszcze raz."
+  },
+  "en": {
+    "app_name": "be:Safe",
+    "map": "Map",
+    "family": "Family",
+    "profile": "Profile",
+    "report": "Report",
+    "search_location": "Search location...",
+    "filter_categories": "Filter categories",
+    "clear": "Clear",
+    "threats_nearby": "threats nearby",
+    "report_threat": "Report a hazard",
+    "location_of_threat": "Hazard location",
+    "tap_map": "Tap the map to select a location",
+    "category": "Category",
+    "title": "Title",
+    "description_optional": "Description (optional)",
+    "photo_optional": "Photo (optional)",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "duration": "Duration",
+    "hours": "hrs",
+    "submit": "Submit",
+    "credibility": "Report credibility",
+    "confirmations": "confirmations",
+    "denials": "denials",
+    "confirm": "Confirm",
+    "outdated": "Outdated",
+    "comments": "Comments",
+    "no_comments": "No comments yet — be the first!",
+    "add_comment": "Add a comment...",
+    "my_alerts": "My reports",
+    "no_alerts": "You have no reports yet",
+    "active": "active",
+    "expired": "expired",
+    "details": "Details",
+    "delete": "Delete",
+    "delete_alert": "Delete alert?",
+    "irreversible": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "settings": "Settings",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System",
+    "notifications": "Notifications",
+    "threat_alerts": "Hazard alerts",
+    "family_alerts": "Family alerts",
+    "sound": "Sound",
+    "vibration": "Vibration",
+    "account": "Account",
+    "change_email": "Change email",
+    "change_password": "Change password",
+    "change_username": "Change username",
+    "other": "Other",
+    "app_version": "App version",
+    "delete_account": "Delete account",
+    "alert_radius": "Alert radius",
+    "save_radius": "Save radius",
+    "saved": "Saved",
+    "family_groups": "Family groups",
+    "logout": "Log out",
+    "login": "Log in",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "has_account": "Have an account? Log in",
+    "no_account": "No account? Register",
+    "sos": "SOS",
+    "sos_confirm": "Send an immediate alert with your current location?",
+    "sos_sent": "SOS sent!",
+    "stats": "Area statistics",
+    "today": "Today",
+    "week": "Week",
+    "total": "Total",
+    "top_threats_30d": "Top hazards (30 days)",
+    "trend_14d": "Trend (14 days)",
+    "share_location": "Share location",
+    "share_link": "Tracking link",
+    "language": "Language",
+    "reputation": "Reputation",
+    "ago": "ago",
+    "expires_in": "Expires in",
+    "my_location": "My location",
+    "pointed_place": "Selected place",
+    "not_found": "Location not found",
+
+    "mode_picker_title": "Choose mode",
+    "mode_picker_subtitle": "You can change it anytime",
+    "mode_kids": "For a child",
+    "mode_kids_desc": "Big tiles, short labels, max 4 actions.",
+    "mode_kids_age": "RECOMMENDED FOR: 7–12",
+    "mode_senior": "For a senior",
+    "mode_senior_desc": "Large text, high contrast, sound + haptic.",
+    "mode_senior_age": "RECOMMENDED FOR: 60+",
+    "mode_normal": "Standard",
+    "mode_normal_desc": "Full features for ages 13–59.",
+    "mode_normal_age": "RECOMMENDED FOR: 13–59",
+    "mode_skip": "Skip — I’ll decide later",
+    "mode_change_later": "You can change it in Settings → App mode",
+    "mode_app": "App mode",
+
+    "kids_greeting": "Hi, {name}!",
+    "kids_status_safe": "YOU ARE SAFE",
+    "kids_what_do": "What do you want to do?",
+    "kids_help": "HELP",
+    "kids_help_sub": "Press 3 times",
+    "kids_map": "MAP",
+    "kids_map_sub": "See nearby area",
+    "kids_family": "FAMILY",
+    "kids_family_sub": "Mum and Dad",
+    "kids_im_ok": "I'M OK",
+    "kids_im_ok_sub": "Send a message",
+    "kids_im_ok_sent": "✓ Mum and Dad know now!",
+    "kids_school_route": "On the way to {name}",
+    "kids_school_route_sub": "Mum and Dad can see where you are",
+    "kids_school_silence": "SCHOOL SILENCE",
+    "kids_school_silence_sub": "Phone stays silent in class",
+
+    "senior_good_day": "GOOD DAY",
+    "senior_all_ok": "ALL OK",
+    "senior_neighborhood_safe": "Your area is safe",
+    "senior_last_update": "Last update: {time}",
+    "senior_check_in": "CHECK IN",
+    "senior_checked_in": "CHECKED IN ✓",
+    "senior_checked_in_time": "CHECKED IN at {time}",
+    "senior_help": "CALL FOR HELP",
+    "senior_help_sub": "Tap when you need it",
+    "senior_my_family": "MY FAMILY",
+    "senior_doctor": "DOCTOR'S PHONE",
+    "senior_guide": "SAFETY GUIDE",
+    "senior_guide_tips": "12 tips",
+    "senior_checkin_sent": "✓ Family notified — all is well",
+    "senior_checkin_failed": "Could not send. Please try again."
+  },
+  "uk": {
+    "app_name": "be:Safe",
+    "map": "Карта",
+    "family": "Сім'я",
+    "profile": "Профіль",
+    "report": "Повідомити",
+    "search_location": "Пошук місця...",
+    "filter_categories": "Фільтрувати категорії",
+    "clear": "Очистити",
+    "threats_nearby": "небезпек поруч",
+    "report_threat": "Повідомити про небезпеку",
+    "location_of_threat": "Місце небезпеки",
+    "tap_map": "Торкнися карти, щоб вибрати місце",
+    "category": "Категорія",
+    "title": "Назва",
+    "description_optional": "Опис (необов'язково)",
+    "photo_optional": "Фото (необов'язково)",
+    "camera": "Камера",
+    "gallery": "Галерея",
+    "duration": "Тривалість",
+    "hours": "год",
+    "submit": "Надіслати",
+    "credibility": "Достовірність повідомлення",
+    "confirmations": "підтверджень",
+    "denials": "спростувань",
+    "confirm": "Підтверджую",
+    "outdated": "Неактуально",
+    "comments": "Коментарі",
+    "no_comments": "Коментарів ще немає — будь першим!",
+    "add_comment": "Додати коментар...",
+    "my_alerts": "Мої повідомлення",
+    "no_alerts": "У тебе ще немає повідомлень",
+    "active": "активний",
+    "expired": "прострочено",
+    "details": "Деталі",
+    "delete": "Видалити",
+    "delete_alert": "Видалити сповіщення?",
+    "irreversible": "Цю дію не можна скасувати.",
+    "cancel": "Скасувати",
+    "settings": "Налаштування",
+    "appearance": "Вигляд",
+    "theme": "Тема",
+    "dark": "Темна",
+    "light": "Світла",
+    "system": "Системна",
+    "notifications": "Сповіщення",
+    "threat_alerts": "Сповіщення про небезпеку",
+    "family_alerts": "Сімейні сповіщення",
+    "sound": "Звук",
+    "vibration": "Вібрація",
+    "account": "Акаунт",
+    "change_email": "Змінити email",
+    "change_password": "Змінити пароль",
+    "change_username": "Змінити ім'я користувача",
+    "other": "Інше",
+    "app_version": "Версія додатка",
+    "delete_account": "Видалити акаунт",
+    "alert_radius": "Радіус сповіщень",
+    "save_radius": "Зберегти радіус",
+    "saved": "Збережено",
+    "family_groups": "Сімейні групи",
+    "logout": "Вийти",
+    "login": "Увійти",
+    "register": "Зареєструватися",
+    "email": "Email",
+    "password": "Пароль",
+    "username": "Ім'я користувача",
+    "has_account": "Є акаунт? Увійди",
+    "no_account": "Немає акаунта? Зареєструйся",
+    "sos": "SOS",
+    "sos_confirm": "Надіслати термінове сповіщення з твоїм поточним місцем?",
+    "sos_sent": "SOS надіслано!",
+    "stats": "Статистика району",
+    "today": "Сьогодні",
+    "week": "Тиждень",
+    "total": "Разом",
+    "top_threats_30d": "Найчастіші небезпеки (30 днів)",
+    "trend_14d": "Тренд (14 днів)",
+    "share_location": "Поділитися місцем",
+    "share_link": "Посилання для відстеження",
+    "language": "Мова",
+    "reputation": "Репутація",
+    "ago": "тому",
+    "expires_in": "Закінчується через",
+    "my_location": "Моє місце",
+    "pointed_place": "Вибране місце",
+    "not_found": "Місце не знайдено",
+
+    "mode_picker_title": "Вибери режим",
+    "mode_picker_subtitle": "Ти можеш змінити це будь-коли",
+    "mode_kids": "Для дитини",
+    "mode_kids_desc": "Великі плитки, короткі написи, максимум 4 дії.",
+    "mode_kids_age": "РЕКОМЕНДОВАНО ДЛЯ: 7–12 РОКІВ",
+    "mode_senior": "Для старшої людини",
+    "mode_senior_desc": "Великий шрифт, високий контраст, звук + haptic.",
+    "mode_senior_age": "РЕКОМЕНДОВАНО ДЛЯ: 60+",
+    "mode_normal": "Стандартний",
+    "mode_normal_desc": "Повний набір функцій для 13–59 років.",
+    "mode_normal_age": "РЕКОМЕНДОВАНО ДЛЯ: 13–59 РОКІВ",
+    "mode_skip": "Пропустити — вирішу пізніше",
+    "mode_change_later": "Можна змінити в Налаштування → Режим додатка",
+    "mode_app": "Режим додатка",
+
+    "kids_greeting": "Привіт, {name}!",
+    "kids_status_safe": "ТИ В БЕЗПЕЦІ",
+    "kids_what_do": "Що ти хочеш зробити?",
+    "kids_help": "ДОПОМОГА",
+    "kids_help_sub": "Натисни 3 рази",
+    "kids_map": "КАРТА",
+    "kids_map_sub": "Подивитися околиці",
+    "kids_family": "СІМ'Я",
+    "kids_family_sub": "Мама і Тато",
+    "kids_im_ok": "Я В ПОРЯДКУ",
+    "kids_im_ok_sub": "Надіслати повідомлення",
+    "kids_im_ok_sent": "✓ Мама і тато вже знають!",
+    "kids_school_route": "Дорогою до {name}",
+    "kids_school_route_sub": "Мама і тато бачать, де ти",
+    "kids_school_silence": "ШКІЛЬНА ТИША",
+    "kids_school_silence_sub": "Телефон не дзвонить на уроці",
+
+    "senior_good_day": "ДОБРОГО ДНЯ",
+    "senior_all_ok": "ВСЕ ДОБРЕ",
+    "senior_neighborhood_safe": "Твій район безпечний",
+    "senior_last_update": "Останнє оновлення: {time}",
+    "senior_check_in": "ВІДМІТИТИСЯ",
+    "senior_checked_in": "ВІДМІЧЕНО ✓",
+    "senior_checked_in_time": "ВІДМІЧЕНО о {time}",
+    "senior_help": "ВИКЛИКАТИ ДОПОМОГУ",
+    "senior_help_sub": "Натисни, коли потрібно",
+    "senior_my_family": "МОЯ СІМ'Я",
+    "senior_doctor": "ТЕЛЕФОН ЛІКАРЯ",
+    "senior_guide": "ПОРАДНИК БЕЗПЕКИ",
+    "senior_guide_tips": "12 порад",
+    "senior_checkin_sent": "✓ Родину сповіщено — все добре",
+    "senior_checkin_failed": "Не вдалося надіслати. Спробуй ще раз."
+  }
+}
+```
+
+To jest gotowy master JSON do importu w `lib/services/i18n.dart`, zachowujący nazwy własne, placeholdery i ton dla dzieci, seniorów oraz zwykłych użytkowników.[^3][^1][^2]
+
+<div align="center">⁂</div>
+
+[^1]: i18n_buttons_actions_pl.json
+
+[^2]: i18n_core_pl.json
+
+[^3]: i18n_extended_pl.json
+

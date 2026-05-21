@@ -1,13 +1,42 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Internationalization service. Loads translations from
+/// `assets/i18n/strings.json` at startup (call [load] in main()).
+///
+/// Supported languages: pl (Polish), en (English), uk (Ukrainian).
+/// Master translation file format:
+/// {
+///   "pl": { "key": "Polski tekst", ... },
+///   "en": { "key": "English text", ... },
+///   "uk": { "key": "Український текст", ... }
+/// }
 class S {
   static String _lang = 'pl';
   static String get lang => _lang;
 
+  /// Runtime-loaded translation maps. Populated by [load].
+  static Map<String, Map<String, String>> _strings = const {};
+
+  /// Loads saved language preference and translation strings from bundle.
+  /// Idempotent (safe to call multiple times).
   static Future<void> load() async {
     final p = await SharedPreferences.getInstance();
     _lang = p.getString('lang') ?? 'pl';
+    if (_strings.isNotEmpty) return;
+    try {
+      final raw = await rootBundle.loadString('assets/i18n/strings.json');
+      final decoded = json.decode(raw) as Map<String, dynamic>;
+      _strings = decoded.map((lang, table) => MapEntry(
+            lang,
+            (table as Map<String, dynamic>)
+                .map((k, v) => MapEntry(k, v.toString())),
+          ));
+    } catch (_) {
+      // Fallback: keep _strings empty; get() will return raw keys.
+      _strings = const {};
+    }
   }
 
   static Future<void> setLang(String lang) async {
@@ -16,187 +45,16 @@ class S {
     await p.setString('lang', lang);
   }
 
-  static String get(String key) => (_strings[_lang]?[key]) ?? (_strings['pl']?[key]) ?? key;
+  /// Returns localized string for [key]. Fallback chain: current lang → pl → key.
+  static String get(String key) =>
+      _strings[_lang]?[key] ?? _strings['pl']?[key] ?? key;
 
-  static const Map<String, Map<String, String>> _strings = {
-    'pl': {
-      'app_name': 'be:Safe',
-      'map': 'Mapa',
-      'family': 'Rodzina',
-      'profile': 'Profil',
-      'report': 'Zgłoś',
-      'search_location': 'Szukaj lokalizacji...',
-      'filter_categories': 'Filtruj kategorie',
-      'clear': 'Wyczyść',
-      'threats_nearby': 'zagrożeń w okolicy',
-      'report_threat': 'Zgłoś zagrożenie',
-      'location_of_threat': 'Lokalizacja zagrożenia',
-      'tap_map': 'Kliknij na mapę aby wskazać miejsce',
-      'category': 'Kategoria',
-      'title': 'Tytuł',
-      'description_optional': 'Opis (opcjonalnie)',
-      'photo_optional': 'Zdjęcie (opcjonalnie)',
-      'camera': 'Aparat',
-      'gallery': 'Galeria',
-      'duration': 'Czas trwania',
-      'hours': 'godz.',
-      'submit': 'Zgłoś',
-      'credibility': 'Wiarygodność zgłoszenia',
-      'confirmations': 'potwierdzeń',
-      'denials': 'odrzuceń',
-      'confirm': 'Potwierdzam',
-      'outdated': 'Nieaktualne',
-      'comments': 'Komentarze',
-      'no_comments': 'Brak komentarzy — bądź pierwszy!',
-      'add_comment': 'Dodaj komentarz...',
-      'my_alerts': 'Moje zgłoszenia',
-      'no_alerts': 'Nie masz jeszcze żadnych zgłoszeń',
-      'active': 'aktywny',
-      'expired': 'wygasł',
-      'details': 'Szczegóły',
-      'delete': 'Usuń',
-      'delete_alert': 'Usuń alert?',
-      'irreversible': 'Tej operacji nie można cofnąć.',
-      'cancel': 'Anuluj',
-      'settings': 'Ustawienia',
-      'appearance': 'Wygląd',
-      'theme': 'Motyw',
-      'dark': 'Ciemny',
-      'light': 'Jasny',
-      'system': 'Systemowy',
-      'notifications': 'Powiadomienia',
-      'threat_alerts': 'Alerty zagrożeń',
-      'family_alerts': 'Alerty rodzinne',
-      'sound': 'Dźwięk',
-      'vibration': 'Wibracja',
-      'account': 'Konto',
-      'change_email': 'Zmień email',
-      'change_password': 'Zmień hasło',
-      'change_username': 'Zmień nazwę użytkownika',
-      'other': 'Inne',
-      'app_version': 'Wersja aplikacji',
-      'delete_account': 'Usuń konto',
-      'alert_radius': 'Promień alertów',
-      'save_radius': 'Zapisz promień',
-      'saved': 'Zapisano',
-      'family_groups': 'Grupy rodzinne',
-      'logout': 'Wyloguj się',
-      'login': 'Zaloguj się',
-      'register': 'Zarejestruj się',
-      'email': 'Email',
-      'password': 'Hasło',
-      'username': 'Nazwa użytkownika',
-      'has_account': 'Masz konto? Zaloguj się',
-      'no_account': 'Nie masz konta? Zarejestruj się',
-      'sos': 'SOS',
-      'sos_confirm': 'Wyślij natychmiastowy alert o zagrożeniu z Twoją aktualną lokalizacją?',
-      'sos_sent': 'SOS wysłany!',
-      'stats': 'Statystyki okolicy',
-      'today': 'Dziś',
-      'week': 'Tydzień',
-      'total': 'Łącznie',
-      'top_threats_30d': 'Najczęstsze zagrożenia (30 dni)',
-      'trend_14d': 'Trend (14 dni)',
-      'share_location': 'Udostępnij lokalizację',
-      'share_link': 'Link do śledzenia',
-      'language': 'Język',
-      'reputation': 'Reputacja',
-      'ago': 'temu',
-      'expires_in': 'Wygasa za',
-      'my_location': 'Moja lokalizacja',
-      'pointed_place': 'Wskazane miejsce',
-      'not_found': 'Nie znaleziono lokalizacji',
-    },
-    'en': {
-      'app_name': 'be:Safe',
-      'map': 'Map',
-      'family': 'Family',
-      'profile': 'Profile',
-      'report': 'Report',
-      'search_location': 'Search location...',
-      'filter_categories': 'Filter categories',
-      'clear': 'Clear',
-      'threats_nearby': 'threats nearby',
-      'report_threat': 'Report threat',
-      'location_of_threat': 'Threat location',
-      'tap_map': 'Tap the map to select a location',
-      'category': 'Category',
-      'title': 'Title',
-      'description_optional': 'Description (optional)',
-      'photo_optional': 'Photo (optional)',
-      'camera': 'Camera',
-      'gallery': 'Gallery',
-      'duration': 'Duration',
-      'hours': 'hrs',
-      'submit': 'Submit',
-      'credibility': 'Report credibility',
-      'confirmations': 'confirmations',
-      'denials': 'denials',
-      'confirm': 'Confirm',
-      'outdated': 'Outdated',
-      'comments': 'Comments',
-      'no_comments': 'No comments yet — be the first!',
-      'add_comment': 'Add a comment...',
-      'my_alerts': 'My reports',
-      'no_alerts': 'You have no reports yet',
-      'active': 'active',
-      'expired': 'expired',
-      'details': 'Details',
-      'delete': 'Delete',
-      'delete_alert': 'Delete alert?',
-      'irreversible': 'This action cannot be undone.',
-      'cancel': 'Cancel',
-      'settings': 'Settings',
-      'appearance': 'Appearance',
-      'theme': 'Theme',
-      'dark': 'Dark',
-      'light': 'Light',
-      'system': 'System',
-      'notifications': 'Notifications',
-      'threat_alerts': 'Threat alerts',
-      'family_alerts': 'Family alerts',
-      'sound': 'Sound',
-      'vibration': 'Vibration',
-      'account': 'Account',
-      'change_email': 'Change email',
-      'change_password': 'Change password',
-      'change_username': 'Change username',
-      'other': 'Other',
-      'app_version': 'App version',
-      'delete_account': 'Delete account',
-      'alert_radius': 'Alert radius',
-      'save_radius': 'Save radius',
-      'saved': 'Saved',
-      'family_groups': 'Family groups',
-      'logout': 'Log out',
-      'login': 'Log in',
-      'register': 'Register',
-      'email': 'Email',
-      'password': 'Password',
-      'username': 'Username',
-      'has_account': 'Have an account? Log in',
-      'no_account': 'No account? Register',
-      'sos': 'SOS',
-      'sos_confirm': 'Send an immediate alert with your current location?',
-      'sos_sent': 'SOS sent!',
-      'stats': 'Area statistics',
-      'today': 'Today',
-      'week': 'Week',
-      'total': 'Total',
-      'top_threats_30d': 'Top threats (30 days)',
-      'trend_14d': 'Trend (14 days)',
-      'share_location': 'Share location',
-      'share_link': 'Tracking link',
-      'language': 'Language',
-      'reputation': 'Reputation',
-      'ago': 'ago',
-      'expires_in': 'Expires in',
-      'my_location': 'My location',
-      'pointed_place': 'Selected place',
-      'not_found': 'Location not found',
-    },
-  };
+  static List<String> get availableLanguages => const ['pl', 'en', 'uk'];
 
-  static List<String> get availableLanguages => ['pl', 'en'];
-  static String langName(String code) => switch (code) { 'pl' => 'Polski', 'en' => 'English', _ => code };
+  static String langName(String code) => switch (code) {
+        'pl' => 'Polski',
+        'en' => 'English',
+        'uk' => 'Українська',
+        _ => code,
+      };
 }
