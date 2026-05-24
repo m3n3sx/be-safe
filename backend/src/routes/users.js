@@ -41,6 +41,7 @@ router.get('/me', async (req, res) => {
   const { rows } = await db.query(
     `SELECT u.id, u.email, u.username, u.avatar_url, u.alert_radius_m, u.reputation_score,
             u.is_child, u.phone, u.is_kpp, u.kpp_certificate, u.email_verified, u.referral_code, u.app_mode, u.created_at,
+            u.is_admin, u.is_banned, u.is_verified, u.verified_role,
             (SELECT COUNT(*)::int FROM users WHERE referred_by = u.id) AS referrals_count
      FROM users u WHERE u.id = $1`,
     [req.user.id]

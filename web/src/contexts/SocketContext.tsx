@@ -6,6 +6,16 @@ import { SOCKET_URL } from '@/lib/constants';
 import { useAuth } from './AuthContext';
 import type { Alert } from '@/types';
 
+export interface FamilyMessage {
+  id: string;
+  body: string;
+  created_at: string;
+  author_id: string;
+  author_username: string;
+  author_avatar: string | null;
+  group_id: string;
+}
+
 interface SocketContextType {
   connected: boolean;
   onNewAlert: (cb: (alert: Alert) => void) => () => void;
@@ -13,6 +23,7 @@ interface SocketContextType {
   onAlertExpired: (cb: (data: { alert_id: string }) => void) => () => void;
   onFamilyLocation: (cb: (data: { user_id: string; lat: number; lng: number; recorded_at: string }) => void) => () => void;
   onGeofenceExit: (cb: (data: { user_id: string; username: string; geofence_name: string }) => void) => () => void;
+  onFamilyMessage: (cb: (msg: FamilyMessage) => void) => () => void;
   updateLocation: (lat: number, lng: number) => void;
 }
 
@@ -29,12 +40,14 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     'alert:expired': Set<(d: { alert_id: string }) => void>;
     'family:location': Set<(d: { user_id: string; lat: number; lng: number; recorded_at: string }) => void>;
     'family:geofence_exit': Set<(d: { user_id: string; username: string; geofence_name: string }) => void>;
+    'family:message': Set<(m: FamilyMessage) => void>;
   }>({
     'alert:new': new Set(),
     'alert:updated': new Set(),
     'alert:expired': new Set(),
     'family:location': new Set(),
     'family:geofence_exit': new Set(),
+    'family:message': new Set(),
   });
 
   useEffect(() => {
@@ -71,6 +84,9 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     socket.on('family:geofence_exit', (data: { user_id: string; username: string; geofence_name: string }) => {
       listenersRef.current['family:geofence_exit'].forEach(cb => cb(data));
     });
+    socket.on('family:message', (data: FamilyMessage) => {
+      listenersRef.current['family:message'].forEach(cb => cb(data));
+    });
 
     socketRef.current = socket;
 
@@ -102,6 +118,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         onAlertExpired: createListener<{ alert_id: string }>('alert:expired'),
         onFamilyLocation: createListener<{ user_id: string; lat: number; lng: number; recorded_at: string }>('family:location'),
         onGeofenceExit: createListener<{ user_id: string; username: string; geofence_name: string }>('family:geofence_exit'),
+        onFamilyMessage: createListener<FamilyMessage>('family:message'),
         updateLocation,
       }}
     >

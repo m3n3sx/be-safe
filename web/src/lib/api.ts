@@ -70,6 +70,10 @@ class ApiService {
     return this.request<T>('PATCH', path, body);
   }
 
+  put<T = Record<string, unknown>>(path: string, body?: Record<string, unknown>) {
+    return this.request<T>('PUT', path, body);
+  }
+
   delete<T = Record<string, unknown>>(path: string) {
     return this.request<T>('DELETE', path);
   }

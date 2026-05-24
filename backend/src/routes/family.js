@@ -56,6 +56,140 @@ const ownerOnly = async (req, res, next) => {
   next();
 };
 
+// ============================================
+// F23 Ghost Mode - per-field visibility
+// ============================================
+// 7 pól które można ukryć przed konkretnym członkiem grupy:
+const VISIBILITY_FIELDS = new Set([
+  'location',  // live last_location lat/lng
+  'history',   // location_history 24h
+  'battery',   // last_battery_level
+  'online',    // last_seen_at, online indicator
+  'phone',     // phone number
+  'alerts',    // czy widzi że ja zgłaszam alerty
+  'checkin',   // senior check-in status
+]);
+
+// Defaultnie wszystko widoczne (TRUE) - przesłaniane przez DB row.
+function defaultVisibility() {
+  const o = {};
+  for (const f of VISIBILITY_FIELDS) o[f] = true;
+  return o;
+}
+
+// Zwraca obiekt { location:true, history:false, ... } - jak `viewer` widzi `target` w `group`.
+async function getVisibility(groupId, viewerId, targetId) {
+  if (viewerId === targetId) return defaultVisibility(); // siebie zawsze
+  const out = defaultVisibility();
+  const { rows } = await db.query(
+    `SELECT field, granted FROM family_visibility
+     WHERE group_id = $1 AND viewer_id = $2 AND target_id = $3`,
+    [groupId, viewerId, targetId]
+  );
+  for (const r of rows) {
+    if (VISIBILITY_FIELDS.has(r.field)) out[r.field] = r.granted;
+  }
+  return out;
+}
+
+// Sprawdza czy viewer może edytować ustawienia visibility:
+// - zawsze może edytować swoje (viewer_id == self)
+// - parent/guardian może edytować jak inni widzą jego DZIECKO (target_id ma role=child w tej grupie)
+async function canEditVisibility(groupId, editorId, viewerId, targetId, editorRole) {
+  if (viewerId === editorId) return true; // mojej widoczności wobec kogoś
+  if (!GUARDIAN_ROLES.has(editorRole)) return false;
+  // muszę być parent/guardian I target musi być child w tej samej grupie
+  const { rows } = await db.query(
+    `SELECT role FROM family_members WHERE group_id = $1 AND user_id = $2`,
+    [groupId, targetId]
+  );
+  return rows[0]?.role === 'child';
+}
+
+// GET /family/groups/:id/visibility/:targetId
+// Zwraca matrycę: jak ja widzę :targetId (default + DB overrides).
+// Jeśli targetId == 'children-overrides', zwraca grupowo dla wszystkich dzieci których jestem parent/guardian.
+router.get('/groups/:id/visibility/:targetId', memberOf, async (req, res) => {
+  const visibility = await getVisibility(req.params.id, req.user.id, req.params.targetId);
+  res.json({ visibility, fields: Array.from(VISIBILITY_FIELDS) });
+});
+
+// GET /family/groups/:id/visibility-matrix/:childId
+// Dla rodzica/opiekuna: jak WSZYSCY członkowie grupy widzą :childId.
+// Zwraca { viewers: [{viewer_id, viewer_username, visibility: {...}}] }
+router.get('/groups/:id/visibility-matrix/:childId', memberOf, async (req, res) => {
+  // czek: muszę być parent/guardian I childId musi być child
+  if (!GUARDIAN_ROLES.has(req.memberRole)) {
+    return res.status(403).json({ error: 'Parent or guardian required' });
+  }
+  const { rows: childCheck } = await db.query(
+    `SELECT role FROM family_members WHERE group_id = $1 AND user_id = $2`,
+    [req.params.id, req.params.childId]
+  );
+  if (!childCheck[0] || childCheck[0].role !== 'child') {
+    return res.status(403).json({ error: 'Target must be a child member' });
+  }
+  // wszyscy członkowie grupy oprócz dziecka i mnie
+  const { rows: viewers } = await db.query(
+    `SELECT m.user_id AS viewer_id, u.username AS viewer_username, u.avatar_url, m.role
+     FROM family_members m JOIN users u ON m.user_id = u.id
+     WHERE m.group_id = $1 AND m.user_id <> $2`,
+    [req.params.id, req.params.childId]
+  );
+  const matrix = [];
+  for (const v of viewers) {
+    const visibility = await getVisibility(req.params.id, v.viewer_id, req.params.childId);
+    matrix.push({
+      viewer_id: v.viewer_id,
+      viewer_username: v.viewer_username,
+      avatar_url: v.avatar_url,
+      role: v.role,
+      visibility,
+    });
+  }
+  res.json({ matrix, fields: Array.from(VISIBILITY_FIELDS) });
+});
+
+// PUT /family/groups/:id/visibility/:targetId
+// Body: { viewer_id?, field, granted } - viewer_id default self.
+// Self może ustawić jak go inni widzą; parent/guardian może ustawić jak inni widzą jego DZIECKO.
+router.put('/groups/:id/visibility/:targetId', memberOf, async (req, res) => {
+  const { field, granted } = req.body || {};
+  const viewerId = req.body.viewer_id || req.user.id;
+  if (!VISIBILITY_FIELDS.has(field)) {
+    return res.status(400).json({ error: 'Invalid field', allowed: Array.from(VISIBILITY_FIELDS) });
+  }
+  if (typeof granted !== 'boolean') {
+    return res.status(400).json({ error: 'granted must be boolean' });
+  }
+  // Walidacja uprawnień:
+  // Przypadek A: viewer_id == self I target jakikolwiek (ja ustawiam jak ja widzę kogoś — nieużyteczne, ale dozwolone? nie - to bez sensu)
+  // Przypadek B: target_id == self (jak inni widzą mnie) — viewer_id musi być != self
+  // Przypadek C: parent/guardian edytuje jak inni widzą jego dziecko (viewer_id != target_id, target_id == child)
+  const targetId = req.params.targetId;
+  const selfId = req.user.id;
+
+  let allowed = false;
+  if (targetId === selfId) {
+    // Ja ustawiam jak ktoś widzi mnie — OK, viewer_id musi być != self
+    if (viewerId === selfId) return res.status(400).json({ error: 'Cannot set visibility for self viewing self' });
+    allowed = true;
+  } else {
+    // target != self - możliwe tylko jeśli parent/guardian edytuje dla dziecka
+    allowed = await canEditVisibility(req.params.id, selfId, viewerId, targetId, req.memberRole);
+  }
+  if (!allowed) return res.status(403).json({ error: 'Not allowed to edit this visibility' });
+
+  await db.query(
+    `INSERT INTO family_visibility (group_id, viewer_id, target_id, field, granted, updated_at)
+     VALUES ($1, $2, $3, $4, $5, NOW())
+     ON CONFLICT (group_id, viewer_id, target_id, field)
+     DO UPDATE SET granted = EXCLUDED.granted, updated_at = NOW()`,
+    [req.params.id, viewerId, targetId, field, granted]
+  );
+  res.json({ ok: true });
+});
+
 // --- Groups ---
 
 router.post('/groups', async (req, res) => {
@@ -114,7 +248,23 @@ router.get('/groups/:id/members', memberOf, async (req, res) => {
      FROM family_members m JOIN users u ON m.user_id = u.id WHERE m.group_id = $1`,
     [req.params.id]
   );
-  res.json({ members: rows });
+  // F23 Ghost mode: filtrowanie pól wg family_visibility względem req.user.id.
+  const filtered = [];
+  for (const r of rows) {
+    if (r.user_id === req.user.id) {
+      filtered.push(r); // siebie zawsze pełna widoczność
+      continue;
+    }
+    const vis = await getVisibility(req.params.id, req.user.id, r.user_id);
+    const out = { ...r };
+    if (!vis.location) { out.lat = null; out.lng = null; out.last_location_at = null; }
+    if (!vis.battery) out.last_battery_level = null;
+    if (!vis.online) out.last_seen_at = null;
+    if (!vis.phone) out.phone = null;
+    out._visibility = vis; // klient może chcieć wiedzieć co jest ukryte
+    filtered.push(out);
+  }
+  res.json({ members: filtered });
 });
 
 router.patch('/groups/:id/members/:uid', memberOf, async (req, res, next) => {
@@ -358,6 +508,11 @@ router.delete('/groups/:id/geofences/:gid', memberOf, parentOnly, async (req, re
 // --- Location tracking ---
 
 router.get('/groups/:id/members/:uid/location', memberOf, parentOnly, async (req, res) => {
+  // F23: szanuj visibility nawet dla parent/guardian (rodzic może świadomie ukryć location dziecka przed sobą? raczej nie - ale viewer != target wciąż egzekwujemy)
+  if (req.params.uid !== req.user.id) {
+    const vis = await getVisibility(req.params.id, req.user.id, req.params.uid);
+    if (!vis.location) return res.json({ hidden: true });
+  }
   const { rows } = await db.query(
     `SELECT ST_Y(last_location::geometry) AS lat, ST_X(last_location::geometry) AS lng, last_location_at
      FROM users WHERE id = $1`,
@@ -367,6 +522,10 @@ router.get('/groups/:id/members/:uid/location', memberOf, parentOnly, async (req
 });
 
 router.get('/groups/:id/members/:uid/location/history', memberOf, parentOnly, async (req, res) => {
+  if (req.params.uid !== req.user.id) {
+    const vis = await getVisibility(req.params.id, req.user.id, req.params.uid);
+    if (!vis.history) return res.json({ history: [], hidden: true });
+  }
   const { from, to, limit = 100 } = req.query;
   let q = `SELECT ST_Y(location::geometry) AS lat, ST_X(location::geometry) AS lng, recorded_at
            FROM location_history WHERE user_id = $1`;

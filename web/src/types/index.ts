@@ -55,6 +55,18 @@ export interface User {
   alert_radius_m: number;
   reputation_score: number;
   is_child: boolean;
+  app_mode?: 'kids' | 'senior' | 'normal' | string | null;
+  phone?: string | null;
+  is_kpp?: boolean;
+  email_verified?: boolean;
+  referral_code?: string | null;
+  is_admin?: boolean;
+  is_banned?: boolean;
+  banned_at?: string | null;
+  ban_reason?: string | null;
+  is_verified?: boolean;
+  verified_role?: string | null;
+  created_at?: string;
 }
 
 export interface Alert {
@@ -71,6 +83,8 @@ export interface Alert {
   confirms: number;
   denies: number;
   distance_m?: number;
+  trust_score?: number;
+  is_anonymous?: boolean;
   expires_at: string;
   created_at: string;
   author_username?: string;
@@ -102,7 +116,15 @@ export interface FamilyMember {
   tracking_enabled: boolean;
   lat?: number;
   lng?: number;
+  last_lat?: number;
+  last_lng?: number;
   last_location_at?: string;
+  last_seen_at?: string;
+  last_battery_level?: number | null;
+  avatar_url?: string | null;
+  phone?: string | null;
+  app_mode?: string | null;
+  school_hours_silent?: boolean;
 }
 
 export interface Geofence {

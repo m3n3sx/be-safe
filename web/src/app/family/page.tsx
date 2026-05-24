@@ -133,12 +133,30 @@ export default function FamilyPage() {
             {/* Group details */}
             {selectedGroup && (
               <div className="lg:col-span-2 space-y-6">
+                {/* Quick actions */}
+                <div className="grid grid-cols-2 gap-3">
+                  <a href={`/family/${selectedGroup.id}/chat`} className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 hover:bg-[#9DF4CB]/10 transition-colors">
+                    <p className="text-2xl mb-1">💬</p>
+                    <p className="font-medium text-sm">Czat rodzinny</p>
+                    <p className="text-xs text-neutral-500">Wiadomości w czasie rzeczywistym</p>
+                  </a>
+                  <a href={`/family/${selectedGroup.id}/planner`} className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 hover:bg-[#9EEBEC]/10 transition-colors">
+                    <p className="text-2xl mb-1">📅</p>
+                    <p className="font-medium text-sm">Planner</p>
+                    <p className="text-xs text-neutral-500">Wspólne wydarzenia</p>
+                  </a>
+                </div>
+
                 {/* Members */}
                 <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4">
                   <h3 className="font-medium text-neutral-900 dark:text-white mb-3">{t('members')}</h3>
                   <div className="space-y-2">
                     {members.map(m => (
-                      <div key={m.id} className="flex items-center justify-between px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800">
+                      <a
+                        key={m.id}
+                        href={`/family/${selectedGroup.id}/members/${m.user_id}`}
+                        className="flex items-center justify-between px-3 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors"
+                      >
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 text-xs font-bold">
                             {m.username?.charAt(0).toUpperCase()}
@@ -146,13 +164,13 @@ export default function FamilyPage() {
                           <div>
                             <p className="text-sm font-medium text-neutral-900 dark:text-white">{m.username}</p>
                             <p className="text-xs text-neutral-500">
-                              {m.role === 'parent' ? t('parent') : t('child')}
+                              {m.role === 'parent' ? t('parent') : m.role === 'child' ? t('child') : m.role}
                               {m.lat && m.lng && ` · ${m.lat.toFixed(3)}, ${m.lng.toFixed(3)}`}
                             </p>
                           </div>
                         </div>
                         <span className={`w-2 h-2 rounded-full ${m.tracking_enabled ? 'bg-green-500' : 'bg-neutral-400'}`} />
-                      </div>
+                      </a>
                     ))}
                   </div>
                 </div>

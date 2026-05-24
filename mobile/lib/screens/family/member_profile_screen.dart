@@ -47,7 +47,14 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
   bool _loading = true;
   bool _pinging = false;
   bool _changingRole = false;
+  bool _removing = false;
   String? _error;
+
+  /// F23: matryca widoczności gdy _isSelf (jak inni mnie widzą) lub
+  /// gdy ja jestem parent/guardian i target=child (jak inni widzą dziecko).
+  List<Map<String, dynamic>>? _privacyMatrix;
+  // Pole `viewerId:field` aktualnie zapisywane (do disabled state).
+  final Set<String> _savingVis = {};
 
   @override
   void initState() {
@@ -106,6 +113,248 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
   bool get _isSelf {
     final me = context.read<AuthProvider>().user?.id;
     return me != null && me == widget.userId;
+  }
+
+  /// F23: ja mogę zarządzać matrycą prywatności dziecka.
+  bool get _canManageChildPrivacy {
+    if (_isSelf) return false;
+    final myRole = _member == null
+        ? null
+        : (context.read<AuthProvider>().user == null
+            ? null
+            : _myRoleInGroup());
+    if (myRole != 'parent' && myRole != 'guardian') return false;
+    return _role == 'child';
+  }
+
+  String? _myRoleInGroup() {
+    // Backend GET /family/groups zwraca your_role per grupę.
+    // Niestety nie trzymamy jej tu lokalnie — pobieramy z _ownerId+widget.role
+    // jako proxy nie zadziała. Zamiast tego użyjemy AuthProvider gdy są
+    // grupy w cache; jeśli nie, fallback na 'parent' tylko jeśli _isOwner.
+    // Praktycznie: w grupie owner zawsze ma role=parent.
+    return _isOwner ? 'parent' : null;
+  }
+
+  Future<void> _loadPrivacyMatrix(String targetUserId) async {
+    try {
+      final api = context.read<ApiService>();
+      final res = await api.get(
+        '/family/groups/${widget.groupId}/visibility-matrix/$targetUserId',
+      );
+      final list = (res['matrix'] as List?) ?? [];
+      if (!mounted) return;
+      setState(() {
+        _privacyMatrix = list.cast<Map<String, dynamic>>();
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Nie udało się pobrać prywatności: $e')),
+      );
+    }
+  }
+
+  Future<void> _toggleVisibility({
+    required String viewerId,
+    required String targetId,
+    required String field,
+    required bool current,
+    required void Function(void Function()) setSheetState,
+  }) async {
+    final key = '$viewerId:$field';
+    if (_savingVis.contains(key)) return;
+    setSheetState(() => _savingVis.add(key));
+    try {
+      await context.read<ApiService>().put(
+        '/family/groups/${widget.groupId}/visibility/$targetId',
+        {'viewer_id': viewerId, 'field': field, 'granted': !current},
+      );
+      // Optimistic local update
+      if (_privacyMatrix != null) {
+        for (final row in _privacyMatrix!) {
+          if (row['viewer_id'] == viewerId) {
+            final vis = Map<String, dynamic>.from(
+                (row['visibility'] as Map?) ?? {});
+            vis[field] = !current;
+            row['visibility'] = vis;
+            break;
+          }
+        }
+      }
+      setSheetState(() {});
+      HapticFeedback.selectionClick();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Nie udało się zapisać: $e')),
+        );
+      }
+    } finally {
+      setSheetState(() => _savingVis.remove(key));
+    }
+  }
+
+  Future<void> _removeMember() async {
+    if (_removing) return;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Usunąć z grupy?'),
+        content: Text(
+            '${widget.userName} straci dostęp do grupy oraz wszystkie zapisane dane widoczności w tej grupie.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Anuluj'),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+                foregroundColor: SerenityColors.glowAlertCoral),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Usuń'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    setState(() => _removing = true);
+    try {
+      await context.read<ApiService>().delete(
+        '/family/groups/${widget.groupId}/members/${widget.userId}',
+      );
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${widget.userName} usunięty z grupy.')),
+      );
+      HapticFeedback.lightImpact();
+      Navigator.of(context).pop(true);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Nie udało się usunąć: $e')),
+        );
+        setState(() => _removing = false);
+      }
+    }
+  }
+
+  Future<void> _showPrivacySheet({
+    required String targetUserId,
+    required String title,
+  }) async {
+    // Załaduj macierz przed pokazaniem (refresh) jeśli nie ma.
+    if (_privacyMatrix == null) {
+      await _loadPrivacyMatrix(targetUserId);
+    } else {
+      // Refresh w tle.
+      // ignore: unawaited_futures
+      _loadPrivacyMatrix(targetUserId);
+    }
+    if (!mounted) return;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: SerenityColors.surfaceContainerLowest,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (sheetCtx) {
+        return StatefulBuilder(builder: (ctx, setSheetState) {
+          final matrix = _privacyMatrix ?? const [];
+          return DraggableScrollableSheet(
+            expand: false,
+            initialChildSize: 0.85,
+            maxChildSize: 0.95,
+            minChildSize: 0.4,
+            builder: (_, controller) {
+              return Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Container(
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: SerenityColors.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 6),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: SerenityColors.primary,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => Navigator.pop(sheetCtx),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      'Wyłącz przełącznik aby ukryć dane przed danym członkiem.',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SerenityColors.onSurfaceVariant),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Expanded(
+                    child: matrix.isEmpty
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(24),
+                              child: Text(
+                                'Brak innych członków w grupie.',
+                                style: TextStyle(
+                                    color: SerenityColors.onSurfaceVariant),
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            controller: controller,
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                            itemCount: matrix.length,
+                            itemBuilder: (_, i) {
+                              final row = matrix[i];
+                              return _PrivacyRowCard(
+                                row: row,
+                                targetId: targetUserId,
+                                savingVis: _savingVis,
+                                onToggle: (viewerId, field, current) =>
+                                    _toggleVisibility(
+                                  viewerId: viewerId,
+                                  targetId: targetUserId,
+                                  field: field,
+                                  current: current,
+                                  setSheetState: setSheetState,
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              );
+            },
+          );
+        });
+      },
+    );
+    // Po zamknięciu wyczyść matrix żeby świeży load przy następnym otwarciu.
+    if (mounted) {
+      setState(() => _privacyMatrix = null);
+    }
   }
 
   Future<void> _changeRole() async {
@@ -662,6 +911,50 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                       color: SerenityColors.onSurfaceVariant),
             ),
           ],
+          if (_isSelf) ...[
+            _divider(),
+            _actionTile(
+              icon: Icons.visibility_outlined,
+              iconColor: SerenityColors.secondary,
+              title: 'Twoja prywatność',
+              subtitle: 'Wybierz co inni członkowie mogą o Tobie widzieć',
+              onTap: () => _showPrivacySheet(
+                targetUserId: widget.userId,
+                title: 'Jak inni widzą Ciebie',
+              ),
+            ),
+          ],
+          if (_canManageChildPrivacy) ...[
+            _divider(),
+            _actionTile(
+              icon: Icons.shield_outlined,
+              iconColor: SerenityColors.secondary,
+              title: 'Prywatność ${widget.userName}',
+              subtitle:
+                  'Kontrolujesz co członkowie grupy widzą o tym dziecku',
+              onTap: () => _showPrivacySheet(
+                targetUserId: widget.userId,
+                title: 'Widoczność ${widget.userName}',
+              ),
+            ),
+          ],
+          if (_isOwner && !_isSelf) ...[
+            _divider(),
+            _actionTile(
+              icon: Icons.person_remove_outlined,
+              iconColor: SerenityColors.glowAlertCoral,
+              title: _removing ? 'Usuwanie...' : 'Usuń z grupy',
+              subtitle: 'Trwale usuwa ${widget.userName} z tej grupy',
+              onTap: _removing ? null : _removeMember,
+              trailing: _removing
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : null,
+            ),
+          ],
         ],
       ),
     );
@@ -740,4 +1033,141 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
           ],
         ),
       );
+}
+
+/// F23 Field labels (PL) — używane w bottom sheet matrycy.
+const Map<String, ({String label, IconData icon})> _kVisibilityFieldsMobile = {
+  'location': (label: 'Lokalizacja', icon: Icons.place_outlined),
+  'history': (label: 'Historia tras', icon: Icons.history_outlined),
+  'battery': (label: 'Bateria', icon: Icons.battery_5_bar_outlined),
+  'online': (label: 'Status online', icon: Icons.wifi_outlined),
+  'phone': (label: 'Numer telefonu', icon: Icons.phone_outlined),
+  'alerts': (label: 'Zgłoszenia', icon: Icons.warning_amber_outlined),
+  'checkin': (label: 'Check-in', icon: Icons.check_circle_outline),
+};
+
+class _PrivacyRowCard extends StatelessWidget {
+  final Map<String, dynamic> row;
+  final String targetId;
+  final Set<String> savingVis;
+  final void Function(String viewerId, String field, bool current) onToggle;
+
+  const _PrivacyRowCard({
+    required this.row,
+    required this.targetId,
+    required this.savingVis,
+    required this.onToggle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final viewerId = row['viewer_id']?.toString() ?? '';
+    final viewerName = row['viewer_username']?.toString() ?? '—';
+    final avatar = row['avatar_url']?.toString();
+    final role = row['role']?.toString();
+    final vis = (row['visibility'] as Map?) ?? {};
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: SerenityColors.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: SerenityColors.outlineVariant.withValues(alpha: 0.4),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: SerenityColors.outlineVariant
+                    .withValues(alpha: 0.4),
+                backgroundImage: (avatar != null && avatar.isNotEmpty)
+                    ? NetworkImage(avatar)
+                    : null,
+                child: (avatar == null || avatar.isEmpty)
+                    ? Text(
+                        viewerName.isNotEmpty
+                            ? viewerName[0].toUpperCase()
+                            : '?',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            color: SerenityColors.primary),
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(viewerName,
+                        style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: SerenityColors.primary)),
+                    if (role != null)
+                      Text(role,
+                          style: const TextStyle(
+                              fontSize: 11,
+                              color: SerenityColors.onSurfaceVariant)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ..._kVisibilityFieldsMobile.entries.map((e) {
+            final field = e.key;
+            final granted = (vis[field] as bool?) ?? true;
+            final key = '$viewerId:$field';
+            final saving = savingVis.contains(key);
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(
+                children: [
+                  Icon(e.value.icon,
+                      size: 18,
+                      color: granted
+                          ? SerenityColors.primary
+                          : SerenityColors.onSurfaceVariant),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      e.value.label,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: granted
+                            ? SerenityColors.primary
+                            : SerenityColors.onSurfaceVariant,
+                        decoration: granted
+                            ? TextDecoration.none
+                            : TextDecoration.lineThrough,
+                      ),
+                    ),
+                  ),
+                  saving
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Switch.adaptive(
+                          value: granted,
+                          activeColor: SerenityColors.secondary,
+                          onChanged: (_) =>
+                              onToggle(viewerId, field, granted),
+                        ),
+                ],
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
 }

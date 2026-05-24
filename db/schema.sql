@@ -288,3 +288,16 @@ CREATE TABLE IF NOT EXISTS user_capabilities (
 );
 
 -- Capabilities: 'location', 'camera', 'microphone', 'notifications', 'biometrics', 'sensors'
+
+-- F23 Ghost mode (granular visibility per viewer x target x field) - dodano 2026-05-21
+CREATE TABLE IF NOT EXISTS family_visibility (
+  group_id UUID NOT NULL REFERENCES family_groups(id) ON DELETE CASCADE,
+  viewer_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  target_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  field VARCHAR(32) NOT NULL,
+  granted BOOLEAN NOT NULL DEFAULT TRUE,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (group_id, viewer_id, target_id, field)
+);
+CREATE INDEX IF NOT EXISTS idx_visibility_target ON family_visibility(group_id, target_id);
+CREATE INDEX IF NOT EXISTS idx_visibility_viewer ON family_visibility(group_id, viewer_id);

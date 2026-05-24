@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import LoginPage from '@/components/auth/LoginPage';
 import Sidebar from '@/components/ui/Sidebar';
@@ -8,6 +9,14 @@ import MapView from '@/components/map/MapView';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (!loading && user && localStorage.getItem('besafe.onboarded') !== '1') {
+      router.replace('/onboarding');
+    }
+  }, [user, loading, router]);
 
   if (loading) {
     return (

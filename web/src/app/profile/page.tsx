@@ -128,6 +128,31 @@ export default function ProfilePage() {
             </button>
           )}
         </div>
+
+        {/* Quick links */}
+        <div className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-5 mt-4">
+          <h3 className="text-sm font-medium mb-3">Skróty</h3>
+          <div className="grid grid-cols-2 gap-2">
+            <a href="/alerts/mine" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">📋 Moje alerty</a>
+            <a href="/badges" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🏅 Odznaki</a>
+            <a href="/referral" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🎁 Poleć znajomych</a>
+            <a href="/permissions" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🔐 Uprawnienia</a>
+            <a href="/escort" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🛡 Eskorta</a>
+            <a href="/fakecall" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">📞 Fake Call</a>
+            <a href="/news" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">📰 Aktualności</a>
+            <a href="/guide" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">📖 Poradnik</a>
+            <a href="/emergency" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🆘 Numery</a>
+            <a href="/aed" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">❤️ AED</a>
+            <a href="/aqi" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🌫 Powietrze</a>
+            <a href="/cyber" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🛡️ Cyber</a>
+            <a href="/pets" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🐾 Zwierzaki</a>
+             <a href="/parental-controls" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">👨‍👩‍👧 Kontrola rodzicielska</a>
+             <a href="/mode" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🎚️ Tryb aplikacji</a>
+             <a href="/onboarding" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🎓 Wprowadzenie</a>
+            <a href="/sos" className="px-3 py-2 rounded-xl bg-red-500/10 text-red-500 text-sm font-medium">🚨 SOS</a>
+            <a href="/sos/mental" className="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-neutral-800 text-sm">🧠 Wsparcie psych.</a>
+          </div>
+        </div>
       </div>
     </AppLayout>
   );

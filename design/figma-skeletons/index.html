@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>be:Safe — Figma Skeletons</title>
+<style>
+:root {
+  --navy: #1A2027;
+  --mint: #9DF4CB;
+  --aqua: #9EEBEC;
+  --coral: #FF7A7A;
+  --bg: #FAFAFA;
+  --surface: #FFFFFF;
+  --outline: #E5E7EB;
+  --muted: #6B7280;
+  --primary-container: #1A2027;
+  --on-primary: #FFFFFF;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; }
+body {
+  background: #F4F5F7;
+  padding: 32px;
+  color: var(--navy);
+}
+h1 { font-weight: 300; font-size: 36px; margin-bottom: 8px; letter-spacing: -0.5px; }
+.subtitle { color: var(--muted); font-size: 16px; margin-bottom: 32px; }
+
+.frames {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 390px);
+  gap: 40px;
+  margin-top: 24px;
+}
+
+.frame {
+  width: 390px;
+  height: 844px;
+  background: var(--bg);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(26,32,39,0.08);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.frame-label {
+  position: absolute;
+  top: -32px;
+  left: 0;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* iPhone notch */
+.notch {
+  height: 32px;
+  background: var(--bg);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* AppBar */
+.appbar {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--mint), var(--aqua));
+}
+.appbar h2 {
+  flex: 1;
+  font-weight: 400;
+  font-size: 17px;
+}
+.appbar h2 small {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 300;
+  display: block;
+}
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--surface);
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--outline);
+}
+.icon-btn::after {
+  content: '🔔';
+  font-size: 18px;
+}
+
+/* Card base */
+.card {
+  margin: 16px 20px;
+  padding: 20px;
+  background: var(--surface);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(26,32,39,0.04);
+}
+.card.glow::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, var(--mint) 0%, transparent 70%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.hero-shield {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--mint), var(--aqua));
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+.card h3 {
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
+}
+.card .desc {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+/* Alert items */
+.section-title {
+  padding: 8px 20px 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.alert-row {
+  margin: 8px 20px;
+  padding: 14px;
+  background: var(--surface);
+  border-radius: 18px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--outline);
+}
+.alert-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--mint), var(--aqua));
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+.alert-text { flex: 1; min-width: 0; }
+.alert-text .t { font-size: 14px; font-weight: 500; }
+.alert-text .meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Grid actions */
+.grid-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 12px 20px;
+}
+.grid-actions.cols-2 {
+  grid-template-columns: 1fr 1fr;
+}
+.action-card {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 14px;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(26,32,39,0.04);
+}
+.action-card::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, var(--mint) 0%, transparent 70%);
+  opacity: 0.4;
+}
+.action-card .a-icon {
+  font-size: 24px;
+  position: relative;
+  z-index: 1;
+}
+.action-card .a-label {
+  font-size: 12px;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+/* AQI Widget */
+.aqi {
+  margin: 12px 20px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #DCFCE7, #F0FDFA);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.aqi-num { font-size: 28px; font-weight: 300; }
+.aqi-label { font-size: 12px; color: var(--muted); }
+
+/* Bottom dock */
+.dock {
+  margin-top: auto;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 8px;
+  height: 64px;
+  background: var(--navy);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  box-shadow: 0 -4px 24px rgba(26,32,39,0.12);
+}
+.dock-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+  color: rgba(255,255,255,0.55);
+  font-size: 10px;
+}
+.dock-btn.active { color: #FFFFFF; }
+.dock-btn .d-icon { font-size: 20px; }
+
+/* Bottom safe area for non-dock */
+.safe-bottom { height: 34px; }
+
+/* SOS specific */
+.sos-orb {
+  width: 280px;
+  height: 280px;
+  border-radius: 999px;
+  background: radial-gradient(circle, var(--navy) 30%, transparent 70%);
+  position: relative;
+  margin: 40px auto;
+  display: grid;
+  place-items: center;
+  color: var(--coral);
+  font-size: 48px;
+  font-weight: 200;
+}
+.sos-orb::before, .sos-orb::after {
+  content: '';
+  position: absolute;
+  border-radius: 999px;
+  border: 2px solid var(--coral);
+  opacity: 0.3;
+}
+.sos-orb::before {
+  width: 100%; height: 100%;
+  animation: pulse 2s infinite;
+}
+.sos-orb::after {
+  width: 130%; height: 130%;
+  opacity: 0.15;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.1); opacity: 0; }
+}
+
+/* Onboarding specific */
+.onb-shield {
+  width: 200px;
+  height: 200px;
+  border-radius: 999px;
+  background: radial-gradient(circle, var(--mint) 0%, transparent 70%);
+  margin: 60px auto 32px;
+  display: grid;
+  place-items: center;
+  font-size: 80px;
+}
+.onb-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 200;
+  padding: 0 32px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+.onb-desc {
+  text-align: center;
+  font-size: 16px;
+  color: var(--muted);
+  padding: 16px 40px 0;
+  line-height: 1.5;
+}
+.onb-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+.onb-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--outline); }
+.onb-dot.active { background: var(--navy); width: 24px; }
+
+/* Pill button */
+.pill-btn {
+  margin: 20px;
+  height: 56px;
+  background: var(--navy);
+  color: var(--on-primary);
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+.pill-btn.outline {
+  background: transparent;
+  border: 1px solid var(--navy);
+  color: var(--navy);
+}
+.pill-btn.coral {
+  background: var(--coral);
+}
+
+/* TextField */
+.text-field {
+  margin: 0 20px 16px;
+  height: 56px;
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--outline);
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Mode picker card */
+.mode-card {
+  margin: 12px 20px;
+  padding: 24px;
+  background: var(--surface);
+  border-radius: 24px;
+  border: 1px solid var(--outline);
+  position: relative;
+}
+.mode-card h4 {
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.mode-card p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.mode-card .m-icon {
+  position: absolute;
+  right: 24px;
+  top: 24px;
+  font-size: 28px;
+}
+
+/* Permission card */
+.perm-card {
+  margin: 8px 20px;
+  padding: 16px;
+  background: var(--surface);
+  border-radius: 18px;
+  border: 1px solid var(--outline);
+}
+.perm-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.perm-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(157,244,203,0.3);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+.perm-title { font-size: 15px; font-weight: 500; flex: 1; }
+.toggle {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--mint);
+  position: relative;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #fff;
+}
+.toggle.off { background: var(--outline); }
+.toggle.off::after { right: auto; left: 2px; }
+.perm-desc { font-size: 12px; color: var(--muted); padding-left: 52px; }
+.perm-badge { font-size: 10px; padding: 2px 8px; border-radius: 999px; background: rgba(157,244,203,0.3); color: #047857; }
+
+/* Settings row */
+.setting-row {
+  margin: 0 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--outline);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-icon { font-size: 20px; }
+.setting-text { flex: 1; }
+.setting-text .t { font-size: 15px; font-weight: 500; }
+.setting-text .v { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.chevron { color: var(--muted); }
+
+/* Map specific */
+.map-bg {
+  flex: 1;
+  background:
+    linear-gradient(to bottom, #E0F2FE 0%, #F0FDFA 100%),
+    repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(26,32,39,0.03) 40px, rgba(26,32,39,0.03) 41px);
+  position: relative;
+}
+.map-pin {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.map-pin span {
+  transform: rotate(45deg);
+  font-size: 16px;
+}
+.map-pin.coral { background: var(--coral); }
+.map-pin.orange { background: #FB923C; }
+.map-pin.mint { background: var(--mint); color: var(--navy); }
+.fab {
+  position: absolute;
+  bottom: 90px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: var(--coral);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  box-shadow: 0 8px 24px rgba(255,122,122,0.4);
+}
+
+/* Family group chip */
+.chip-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 20px 16px;
+  overflow-x: auto;
+}
+.chip {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--outline);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.chip.active {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+.family-hero {
+  margin: 0 20px 16px;
+  padding: 20px;
+  background: var(--surface);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.family-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, var(--mint) 0%, transparent 70%);
+  opacity: 0.45;
+}
+.family-avatars {
+  display: flex;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+}
+.family-avatars .a {
+  width: 48px; height: 48px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--mint), var(--aqua));
+  border: 3px solid var(--surface);
+  margin-left: -16px;
+}
+.family-avatars .a:first-child { margin-left: 0; }
+
+/* SOS Kids */
+.kids-bg {
+  background: linear-gradient(135deg, #FFF0F0, #FFE4E4);
+}
+.kids-orb {
+  background: radial-gradient(circle, var(--coral) 30%, transparent 70%);
+  color: #fff;
+}
+
+/* Senior */
+.senior .pill-btn { height: 72px; font-size: 20px; font-weight: 500; }
+.senior .text-field { height: 64px; font-size: 16px; }
+</style>
+</head>
+<body>
+<h1>be:Safe — Figma Skeletons</h1>
+<p class="subtitle">10 ekranów aplikacji. Eksport: screenshot każdej ramki (Cmd+Shift+4) lub Save as PDF z przeglądarki, import do Figma.</p>
+
+<div class="frames">
+
+<!-- 1. ONBOARDING -->
+<div class="frame">
+  <span class="frame-label">1. Onboarding</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div style="text-align:right;padding:8px 24px;font-size:14px;color:#6B7280;">Pomiń</div>
+  <div class="onb-shield">🛡️</div>
+  <div class="onb-title">Witaj w be:Safe</div>
+  <div class="onb-desc">Twoja spokojna strefa bezpieczeństwa. Razem dbamy o siebie.</div>
+  <div class="onb-dots">
+    <span class="onb-dot active"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+    <span class="onb-dot"></span>
+  </div>
+  <div style="flex:1"></div>
+  <div class="pill-btn">Dalej</div>
+  <div class="safe-bottom"></div>
+</div>
+
+<!-- 2. MODE PICKER -->
+<div class="frame">
+  <span class="frame-label">2. Mode Picker</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div style="padding:32px 20px 16px;">
+    <h3 style="font-size:28px;font-weight:200;margin-bottom:8px;">Wybierz tryb</h3>
+    <p style="color:#6B7280;font-size:14px;">Możesz to zmienić później</p>
+  </div>
+  <div class="mode-card">
+    <div class="m-icon">🧒</div>
+    <h4>Dla dziecka</h4>
+    <p>Duży przycisk SOS, prosty interfejs, kontakt z rodzicami</p>
+  </div>
+  <div class="mode-card">
+    <div class="m-icon">👴</div>
+    <h4>Dla seniora</h4>
+    <p>Większe litery, większe przyciski, codzienne check-in</p>
+  </div>
+  <div class="mode-card" style="border-color:#1A2027;border-width:2px;">
+    <div class="m-icon">👤</div>
+    <h4>Standardowy</h4>
+    <p>Pełna funkcjonalność, mapy, rodzina, alerty społeczności</p>
+  </div>
+  <div style="flex:1"></div>
+  <div class="safe-bottom"></div>
+</div>
+
+<!-- 3. LOGIN -->
+<div class="frame">
+  <span class="frame-label">3. Login</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div style="padding:80px 24px 32px;">
+    <h2 style="font-size:36px;font-weight:200;margin-bottom:8px;letter-spacing:-0.5px;">Zaloguj się</h2>
+    <p style="color:#6B7280;font-size:15px;">Witaj z powrotem</p>
+  </div>
+  <div class="text-field">✉️ email@adres.pl</div>
+  <div class="text-field">🔒 Hasło</div>
+  <div style="text-align:right;padding:0 20px 16px;font-size:13px;color:#6B7280;">Zapomniałeś hasła?</div>
+  <div class="pill-btn">Zaloguj się</div>
+  <div style="text-align:center;padding:8px;color:#6B7280;font-size:13px;">— lub —</div>
+  <div class="pill-btn outline">🔵 Kontynuuj z Google</div>
+  <div style="flex:1"></div>
+  <div style="text-align:center;padding:16px;font-size:14px;">Nie masz konta? <strong>Zarejestruj się</strong></div>
+  <div class="safe-bottom"></div>
+</div>
+
+<!-- 4. HOME NORMAL -->
+<div class="frame">
+  <span class="frame-label">4. Home (NORMAL)</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div class="appbar">
+    <div class="avatar"></div>
+    <h2>Dzień dobry, Marek<small>Wszystko spokojnie</small></h2>
+    <div class="icon-btn"></div>
+  </div>
+  <div class="card glow">
+    <div class="hero-shield">🛡️</div>
+    <h3>Twoja okolica jest spokojna</h3>
+    <p class="desc">Brak nowych alertów w promieniu 1 km</p>
+  </div>
+  <div class="section-title">NAJNOWSZE ALERTY</div>
+  <div class="alert-row">
+    <div class="alert-icon">🚨</div>
+    <div class="alert-text"><div class="t">Kradzież roweru</div><div class="meta">200 m • 12 min temu</div></div>
+  </div>
+  <div class="alert-row">
+    <div class="alert-icon">🌑</div>
+    <div class="alert-text"><div class="t">Ciemny zaułek</div><div class="meta">500 m • 1 h temu</div></div>
+  </div>
+  <div class="aqi">
+    <div>
+      <div class="aqi-num">32</div>
+      <div class="aqi-label">AQI Dobry</div>
+    </div>
+    <div style="font-size:32px;">🌿</div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="dock">
+    <div class="dock-btn"><div class="d-icon">🗺️</div>Mapa</div>
+    <div class="dock-btn active"><div class="d-icon">🏠</div>Home</div>
+    <div class="dock-btn"><div class="d-icon">👨‍👩‍👧</div>Rodzina</div>
+    <div class="dock-btn"><div class="d-icon" style="color:#FF7A7A;">⚠️</div>SOS</div>
+    <div class="dock-btn"><div class="d-icon">👤</div>Profil</div>
+  </div>
+</div>
+
+<!-- 5. MAP -->
+<div class="frame">
+  <span class="frame-label">5. Mapa</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div class="appbar">
+    <div class="icon-btn" style="background:#fff;"></div>
+    <h2>Mapa<small>Września</small></h2>
+    <div class="icon-btn"></div>
+  </div>
+  <div class="map-bg">
+    <div class="map-pin coral" style="top:30%;left:35%;"><span>🚨</span></div>
+    <div class="map-pin orange" style="top:50%;left:60%;"><span>🌑</span></div>
+    <div class="map-pin mint" style="top:65%;left:25%;"><span>💡</span></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:999px;background:#1A2027;border:3px solid #fff;box-shadow:0 0 0 8px rgba(26,32,39,0.15);"></div>
+    <div class="fab">+</div>
+  </div>
+  <div class="dock">
+    <div class="dock-btn active"><div class="d-icon">🗺️</div>Mapa</div>
+    <div class="dock-btn"><div class="d-icon">🏠</div>Home</div>
+    <div class="dock-btn"><div class="d-icon">👨‍👩‍👧</div>Rodzina</div>
+    <div class="dock-btn"><div class="d-icon" style="color:#FF7A7A;">⚠️</div>SOS</div>
+    <div class="dock-btn"><div class="d-icon">👤</div>Profil</div>
+  </div>
+</div>
+
+<!-- 6. FAMILY -->
+<div class="frame">
+  <span class="frame-label">6. Rodzina</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div class="appbar">
+    <div class="avatar"></div>
+    <h2>Rodzina<small>4 osoby online</small></h2>
+    <div class="icon-btn"></div>
+  </div>
+  <div class="chip-row">
+    <div class="chip active">Rodzina Testowa</div>
+    <div class="chip">Babcia Solo</div>
+  </div>
+  <div class="family-hero">
+    <div class="family-avatars">
+      <div class="a"></div>
+      <div class="a"></div>
+      <div class="a"></div>
+      <div class="a"></div>
+    </div>
+    <h3 style="position:relative;z-index:1;font-size:18px;font-weight:500;">Wszyscy bezpiecznie w domu</h3>
+    <p class="desc" style="position:relative;z-index:1;margin-top:4px;">Ostatnia aktualizacja 2 min temu</p>
+  </div>
+  <div class="section-title">FUNKCJE RODZINY</div>
+  <div class="grid-actions cols-2">
+    <div class="action-card"><div class="a-icon">🗺️</div><div class="a-label">Mapa rodziny</div></div>
+    <div class="action-card"><div class="a-icon">💬</div><div class="a-label">Czat</div></div>
+    <div class="action-card"><div class="a-icon">📅</div><div class="a-label">Planner</div></div>
+    <div class="action-card"><div class="a-icon">🐕</div><div class="a-label">Zwierzaki</div></div>
+    <div class="action-card"><div class="a-icon">🛡️</div><div class="a-label">Strefy</div></div>
+    <div class="action-card"><div class="a-icon">📨</div><div class="a-label">Zaproś</div></div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="dock">
+    <div class="dock-btn"><div class="d-icon">🗺️</div>Mapa</div>
+    <div class="dock-btn"><div class="d-icon">🏠</div>Home</div>
+    <div class="dock-btn active"><div class="d-icon">👨‍👩‍👧</div>Rodzina</div>
+    <div class="dock-btn"><div class="d-icon" style="color:#FF7A7A;">⚠️</div>SOS</div>
+    <div class="dock-btn"><div class="d-icon">👤</div>Profil</div>
+  </div>
+</div>
+
+<!-- 7. SOS NORMAL -->
+<div class="frame">
+  <span class="frame-label">7. SOS (NORMAL)</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div style="padding:32px 20px 0;text-align:center;">
+    <h3 style="font-size:24px;font-weight:300;color:#1A2027;">Wezwanie pomocy</h3>
+    <p style="color:#6B7280;font-size:14px;margin-top:4px;">Przytrzymaj 3 sekundy</p>
+  </div>
+  <div class="sos-orb">SOS</div>
+  <div style="margin:16px 20px;padding:16px;background:#fff;border-radius:18px;border:1px solid #E5E7EB;display:flex;gap:12px;align-items:center;">
+    <div style="font-size:24px;">📞</div>
+    <div style="flex:1;"><div style="font-size:14px;font-weight:500;">Fake Call</div><div style="font-size:12px;color:#6B7280;">Symuluj telefon</div></div>
+  </div>
+  <div style="margin:8px 20px;padding:16px;background:#fff;border-radius:18px;border:1px solid #E5E7EB;display:flex;gap:12px;align-items:center;">
+    <div style="font-size:24px;">🚶</div>
+    <div style="flex:1;"><div style="font-size:14px;font-weight:500;">Eskorta</div><div style="font-size:12px;color:#6B7280;">Follow Me</div></div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="dock">
+    <div class="dock-btn"><div class="d-icon">🗺️</div>Mapa</div>
+    <div class="dock-btn"><div class="d-icon">🏠</div>Home</div>
+    <div class="dock-btn"><div class="d-icon">👨‍👩‍👧</div>Rodzina</div>
+    <div class="dock-btn active"><div class="d-icon" style="color:#FF7A7A;">⚠️</div>SOS</div>
+    <div class="dock-btn"><div class="d-icon">👤</div>Profil</div>
+  </div>
+</div>
+
+<!-- 8. PROFILE -->
+<div class="frame">
+  <span class="frame-label">8. Profil</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div style="padding:32px 24px 16px;text-align:center;">
+    <div style="width:80px;height:80px;border-radius:999px;background:linear-gradient(135deg,#9DF4CB,#9EEBEC);margin:0 auto 16px;"></div>
+    <h3 style="font-size:22px;font-weight:500;">Marek Skweres</h3>
+    <p style="color:#6B7280;font-size:13px;margin-top:2px;">meneswczesny@gmail.com</p>
+  </div>
+  <div style="display:flex;gap:8px;padding:0 20px 16px;justify-content:center;">
+    <div style="padding:8px 16px;background:#fff;border-radius:999px;border:1px solid #E5E7EB;font-size:12px;"><strong>87</strong> reputacji</div>
+    <div style="padding:8px 16px;background:#fff;border-radius:999px;border:1px solid #E5E7EB;font-size:12px;"><strong>5</strong> odznak</div>
+  </div>
+  <div class="section-title">USTAWIENIA</div>
+  <div class="setting-row"><span class="setting-icon">✏️</span><div class="setting-text"><div class="t">Edytuj profil</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon">🔔</span><div class="setting-text"><div class="t">Powiadomienia</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon">🔐</span><div class="setting-text"><div class="t">Uprawnienia</div><div class="v">Lokalizacja, kamera, mikrofon</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon">👥</span><div class="setting-text"><div class="t">Tryb aplikacji</div><div class="v">Standardowy</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon" style="color:#FF7A7A;">↗</span><div class="setting-text"><div class="t" style="color:#FF7A7A;">Wyloguj się</div></div></div>
+  <div style="flex:1"></div>
+  <div class="dock">
+    <div class="dock-btn"><div class="d-icon">🗺️</div>Mapa</div>
+    <div class="dock-btn"><div class="d-icon">🏠</div>Home</div>
+    <div class="dock-btn"><div class="d-icon">👨‍👩‍👧</div>Rodzina</div>
+    <div class="dock-btn"><div class="d-icon" style="color:#FF7A7A;">⚠️</div>SOS</div>
+    <div class="dock-btn active"><div class="d-icon">👤</div>Profil</div>
+  </div>
+</div>
+
+<!-- 9. PERMISSIONS -->
+<div class="frame">
+  <span class="frame-label">9. Uprawnienia</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div class="appbar">
+    <div class="icon-btn" style="background:#fff;"></div>
+    <h2>Uprawnienia<small>Co aplikacja może</small></h2>
+    <div></div>
+  </div>
+  <div style="padding:0 24px 16px;font-size:13px;color:#6B7280;line-height:1.5;">Możesz kontrolować, do czego aplikacja ma dostęp. Toggle = preferencja, system pokazuje rzeczywisty stan.</div>
+  <div class="perm-card">
+    <div class="perm-head">
+      <div class="perm-icon-box">📍</div>
+      <div class="perm-title">Lokalizacja <span class="perm-badge">system: zezwolono</span></div>
+      <div class="toggle"></div>
+    </div>
+    <div class="perm-desc">Mapy, alerty w pobliżu, mapa rodziny</div>
+  </div>
+  <div class="perm-card">
+    <div class="perm-head">
+      <div class="perm-icon-box">📷</div>
+      <div class="perm-title">Kamera <span class="perm-badge">system: zezwolono</span></div>
+      <div class="toggle"></div>
+    </div>
+    <div class="perm-desc">Zdjęcia do alertów</div>
+  </div>
+  <div class="perm-card">
+    <div class="perm-head">
+      <div class="perm-icon-box">🎙️</div>
+      <div class="perm-title">Mikrofon <span class="perm-badge" style="background:#FEE2E2;color:#B91C1C;">brak zgody</span></div>
+      <div class="toggle off"></div>
+    </div>
+    <div class="perm-desc">Audio SOS (RODO)</div>
+  </div>
+  <div class="perm-card">
+    <div class="perm-head">
+      <div class="perm-icon-box">🔔</div>
+      <div class="perm-title">Powiadomienia <span class="perm-badge">system: zezwolono</span></div>
+      <div class="toggle"></div>
+    </div>
+    <div class="perm-desc">Alerty społeczności, sygnały</div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="safe-bottom"></div>
+</div>
+
+<!-- 10. SETTINGS -->
+<div class="frame">
+  <span class="frame-label">10. Ustawienia</span>
+  <div class="notch"><span>9:41</span><span>•••</span></div>
+  <div class="appbar">
+    <div class="icon-btn" style="background:#fff;"></div>
+    <h2>Ustawienia<small>Aplikacja v79</small></h2>
+    <div></div>
+  </div>
+  <div class="section-title">KONTO</div>
+  <div class="setting-row"><span class="setting-icon">👤</span><div class="setting-text"><div class="t">Nazwa użytkownika</div><div class="v">m3n3s</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon">✉️</span><div class="setting-text"><div class="t">Email</div><div class="v">meneswczesny@gmail.com</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon">🔒</span><div class="setting-text"><div class="t">Zmień hasło</div></div><span class="chevron">›</span></div>
+  <div class="section-title">WYGLĄD</div>
+  <div class="setting-row"><span class="setting-icon">🌐</span><div class="setting-text"><div class="t">Język</div><div class="v">Polski</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon">🎨</span><div class="setting-text"><div class="t">Motyw</div><div class="v">Jasny</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon">👥</span><div class="setting-text"><div class="t">Tryb aplikacji</div><div class="v">Standardowy</div></div><span class="chevron">›</span></div>
+  <div class="section-title">PRYWATNOŚĆ</div>
+  <div class="setting-row"><span class="setting-icon">👁️</span><div class="setting-text"><div class="t">Widoczność lokalizacji</div></div><span class="chevron">›</span></div>
+  <div class="setting-row"><span class="setting-icon">🛡️</span><div class="setting-text"><div class="t">Uprawnienia</div></div><span class="chevron">›</span></div>
+  <div style="flex:1"></div>
+  <div class="safe-bottom"></div>
+</div>
+
+</div>
+</body>
+</html>
