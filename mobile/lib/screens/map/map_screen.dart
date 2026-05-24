@@ -13,6 +13,7 @@ import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../services/location_service.dart';
 import '../../services/i18n.dart';
+import '../../services/pinned_family_service.dart';
 import '../alerts/create_alert_screen.dart';
 import '../alerts/alert_detail_screen.dart';
 import '../family/child_profile_screen.dart';
@@ -41,6 +42,9 @@ class _MapScreenState extends State<MapScreen> {
   bool _showFilters = false;
   bool _showAlertList = false;
   List<Map<String, dynamic>> _familyMembers = [];
+  // F23-pin: lista user_id przypiętych przez usera (max 3) — pokazywani
+  // zawsze na pasku karuzeli. Persystencja w SharedPreferences.
+  List<String> _pinnedIds = [];
   final Map<String, BitmapDescriptor> _childIconCache = {};
   BitmapDescriptor? _familyParentPin;
 
@@ -72,6 +76,13 @@ class _MapScreenState extends State<MapScreen> {
     _initLocation();
     _precacheIcons();
     _loadFamilyMembers();
+    _loadPinned();
+  }
+
+  Future<void> _loadPinned() async {
+    final list = await PinnedFamilyService.load();
+    if (!mounted) return;
+    setState(() => _pinnedIds = list);
   }
 
   void _updateClusterMarkers(Set<Marker> markers) {
@@ -757,13 +768,29 @@ class _MapScreenState extends State<MapScreen> {
 
   /// Floating compact carousel for family members.
   ///
-  /// Collapsed: pokazuje max 3 awatary (kółka 40px) + chip "+N" gdy więcej.
-  /// Tap chip "+N" lub long-press dowolnego awatara → otwiera bottom sheet
-  /// z pełną listą członków (imię, rola, online status, nawigacja do profilu).
+  /// Domyślnie 1 awatar widoczny + chip "+N" gdy są inni. Jeśli user przypiął
+  /// członków (max 3 via PinnedFamilyService), pokazujemy wszystkich pinned
+  /// na pasku + chip "+N" dla pozostałych. Tap "+N" / chevron → bottom sheet.
   Widget _buildFamilyCarousel() {
-    const maxAvatars = 3;
     const avatarSize = 40.0;
-    final visible = _familyMembers.take(maxAvatars).toList();
+
+    // 1) Wyciągnij pinned w kolejności jaką user ustawił.
+    final pinned = <Map<String, dynamic>>[];
+    final rest = <Map<String, dynamic>>[];
+    final byId = {
+      for (final m in _familyMembers)
+        if (m['user_id'] is String) m['user_id'] as String: m,
+    };
+    for (final id in _pinnedIds) {
+      final m = byId[id];
+      if (m != null) pinned.add(m);
+    }
+    for (final m in _familyMembers) {
+      if (!_pinnedIds.contains(m['user_id'])) rest.add(m);
+    }
+
+    // 2) Widoczne na pasku: pinned, jeśli brak — pierwszy z listy.
+    final visible = pinned.isNotEmpty ? pinned : (rest.isNotEmpty ? [rest.first] : <Map<String, dynamic>>[]);
     final overflow = _familyMembers.length - visible.length;
 
     return Material(
@@ -917,6 +944,24 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
+  Future<void> _togglePin(String userId, void Function(VoidCallback) setSheetState) async {
+    final wasPinned = _pinnedIds.contains(userId);
+    final after = await PinnedFamilyService.toggle(userId);
+    if (!mounted) return;
+    final nowPinned = after.contains(userId);
+    if (!wasPinned && !nowPinned) {
+      // Nie przypięto bo limit 3.
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Możesz przypiąć maksymalnie 3 osoby. Odepnij kogoś najpierw.'),
+        duration: Duration(seconds: 2),
+      ));
+      return;
+    }
+    HapticFeedback.selectionClick();
+    setState(() => _pinnedIds = after);
+    setSheetState(() {});
+  }
+
   void _showFamilySheet() {
     showModalBottomSheet(
       context: context,
@@ -925,7 +970,7 @@ class _MapScreenState extends State<MapScreen> {
       builder: (ctx) => DraggableScrollableSheet(
         initialChildSize: 0.55, minChildSize: 0.35, maxChildSize: 0.9,
         expand: false,
-        builder: (_, scrollController) => Container(
+        builder: (_, scrollController) => StatefulBuilder(builder: (ctx2, setSheetState) => Container(
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
@@ -1016,6 +1061,19 @@ class _MapScreenState extends State<MapScreen> {
                             ),
                           ]),
                         ])),
+                        Builder(builder: (_) {
+                          final uid = c['user_id'] as String?;
+                          final isPinned = uid != null && _pinnedIds.contains(uid);
+                          return IconButton(
+                            tooltip: isPinned ? 'Odepnij' : 'Przypnij do paska',
+                            icon: Icon(
+                              isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+                              color: isPinned ? SerenityColors.glowAlertCoral : SerenityColors.onSurfaceVariant,
+                              size: 22,
+                            ),
+                            onPressed: uid == null ? null : () => _togglePin(uid, setSheetState),
+                          );
+                        }),
                         IconButton(
                           icon: const Icon(Icons.chevron_right),
                           onPressed: () {
@@ -1030,7 +1088,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ]),
-        ),
+        )),
       ),
     );
   }
