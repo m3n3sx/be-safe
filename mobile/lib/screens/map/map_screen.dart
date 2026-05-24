@@ -726,61 +726,11 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
 
-        // Floating family avatars (wszyscy widoczni członkowie grupy)
-        if (_familyMembers.isNotEmpty) Positioned(right: 12, top: MediaQuery.of(context).padding.top + 80,
-          child: Column(mainAxisSize: MainAxisSize.min, children: _familyMembers.map((c) {
-            final role = c['role']?.toString();
-            final isChild = role == 'child';
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: GestureDetector(
-                onTap: () {
-                  HapticFeedback.selectionClick();
-                  final groupId = c['group_id'] as String?;
-                  final userId = c['user_id'] as String?;
-                  final name = (c['username'] as String?) ?? '?';
-                  final myRole = c['your_role'] as String?;
-                  if (groupId == null || userId == null) return;
-                  final lat = (c['lat'] as num?)?.toDouble();
-                  final lng = (c['lng'] as num?)?.toDouble();
-                  if (isChild && myRole == 'parent') {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => ChildProfileScreen(
-                        groupId: groupId,
-                        userId: userId,
-                        userName: name,
-                        initialLat: lat,
-                        initialLng: lng,
-                      ),
-                    ));
-                  } else {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => MemberProfileScreen(
-                        groupId: groupId,
-                        userId: userId,
-                        userName: name,
-                        role: role,
-                        initialLat: lat,
-                        initialLng: lng,
-                      ),
-                    ));
-                  }
-                },
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Container(width: 46, height: 46,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white,
-                      border: Border.all(color: SerenityColors.secondaryContainer, width: 2.5),
-                      boxShadow: [BoxShadow(blurRadius: 6, color: Colors.black.withValues(alpha: 0.15))]),
-                    child: Center(child: Icon(isChild ? Icons.face : Icons.person, color: SerenityColors.primaryContainer, size: 24))),
-                  const SizedBox(height: 2),
-                  Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8),
-                      boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black.withValues(alpha: 0.1))]),
-                    child: Text(c['username'] ?? '', style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold))),
-                ]),
-              ),
-            );
-          }).toList()),
+        // Floating family carousel (compact, collapsible)
+        if (_familyMembers.isNotEmpty) Positioned(
+          right: 12,
+          top: MediaQuery.of(context).padding.top + 80,
+          child: _buildFamilyCarousel(),
         ),
 
         if (alertProv.loading) Positioned(top: 120, left: 0, right: 0, child: Center(child: CircularProgressIndicator(color: cs.primary))),
@@ -803,6 +753,299 @@ class _MapScreenState extends State<MapScreen> {
       ]),
       // bottomNavigationBar globalny przez MaterialApp.builder (zachowany tylko desktop NavigationRail)
     );
+  }
+
+  /// Floating compact carousel for family members.
+  ///
+  /// Collapsed: pokazuje max 3 awatary (kółka 40px) + chip "+N" gdy więcej.
+  /// Tap chip "+N" lub long-press dowolnego awatara → otwiera bottom sheet
+  /// z pełną listą członków (imię, rola, online status, nawigacja do profilu).
+  Widget _buildFamilyCarousel() {
+    const maxAvatars = 3;
+    const avatarSize = 40.0;
+    final visible = _familyMembers.take(maxAvatars).toList();
+    final overflow = _familyMembers.length - visible.length;
+
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(blurRadius: 12, color: Colors.black.withValues(alpha: 0.15), offset: const Offset(0, 4)),
+          ],
+        ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          ...visible.map((c) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: _buildAvatarChip(c, size: avatarSize),
+          )),
+          if (overflow > 0)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: InkWell(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  _showFamilySheet();
+                },
+                customBorder: const CircleBorder(),
+                child: Container(
+                  width: avatarSize, height: avatarSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: SerenityColors.primaryContainer,
+                    border: Border.all(color: SerenityColors.secondary, width: 2),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '+$overflow',
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          if (_familyMembers.length > 1)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: InkWell(
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  _showFamilySheet();
+                },
+                customBorder: const CircleBorder(),
+                child: Container(
+                  width: 28, height: 22,
+                  decoration: BoxDecoration(
+                    color: SerenityColors.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: const Center(child: Icon(Icons.expand_more, size: 16, color: SerenityColors.onSurfaceVariant)),
+                ),
+              ),
+            ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildAvatarChip(Map<String, dynamic> c, {required double size}) {
+    final role = c['role']?.toString();
+    final isChild = role == 'child';
+    final username = (c['username'] as String?) ?? '?';
+    final initial = username.isNotEmpty ? username[0].toUpperCase() : '?';
+    final avatarUrl = c['avatar_url'] as String?;
+
+    return GestureDetector(
+      onTap: () => _openMemberProfile(c),
+      onLongPress: () {
+        HapticFeedback.mediumImpact();
+        _showFamilySheet();
+      },
+      child: Tooltip(
+        message: username,
+        child: Container(
+          width: size, height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            border: Border.all(
+              color: isChild ? SerenityColors.glowAlertCoral : SerenityColors.secondary,
+              width: 2.5,
+            ),
+            boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black.withValues(alpha: 0.12))],
+          ),
+          child: ClipOval(
+            child: avatarUrl != null && avatarUrl.isNotEmpty
+              ? Image.network(
+                  avatarUrl, fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => _avatarFallback(initial, isChild),
+                )
+              : _avatarFallback(initial, isChild),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _avatarFallback(String initial, bool isChild) {
+    return Container(
+      color: SerenityColors.surfaceContainerHighest,
+      child: Center(
+        child: Text(initial, style: TextStyle(
+          fontSize: 16, fontWeight: FontWeight.w700,
+          color: isChild ? SerenityColors.glowAlertCoral : SerenityColors.primary,
+        )),
+      ),
+    );
+  }
+
+  void _openMemberProfile(Map<String, dynamic> c) {
+    HapticFeedback.selectionClick();
+    final groupId = c['group_id'] as String?;
+    final userId = c['user_id'] as String?;
+    final name = (c['username'] as String?) ?? '?';
+    final role = c['role']?.toString();
+    final myRole = c['your_role'] as String?;
+    final isChild = role == 'child';
+    if (groupId == null || userId == null) return;
+    final lat = (c['lat'] as num?)?.toDouble();
+    final lng = (c['lng'] as num?)?.toDouble();
+    if (isChild && (myRole == 'parent' || myRole == 'guardian')) {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => ChildProfileScreen(
+          groupId: groupId,
+          userId: userId,
+          userName: name,
+          initialLat: lat,
+          initialLng: lng,
+        ),
+      ));
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => MemberProfileScreen(
+          groupId: groupId,
+          userId: userId,
+          userName: name,
+          role: role,
+          initialLat: lat,
+          initialLng: lng,
+        ),
+      ));
+    }
+  }
+
+  void _showFamilySheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (ctx) => DraggableScrollableSheet(
+        initialChildSize: 0.55, minChildSize: 0.35, maxChildSize: 0.9,
+        expand: false,
+        builder: (_, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: Column(children: [
+            const SizedBox(height: 10),
+            Container(width: 44, height: 4, decoration: BoxDecoration(
+              color: SerenityColors.outlineVariant, borderRadius: BorderRadius.circular(2),
+            )),
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(children: [
+                const Icon(Icons.family_restroom, color: SerenityColors.primary),
+                const SizedBox(width: 8),
+                Expanded(child: Text('Rodzina na mapie (${_familyMembers.length})',
+                  style: SerenityText.headlineHeroMobile.copyWith(fontSize: 18),
+                )),
+                IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx)),
+              ]),
+            ),
+            const Divider(height: 16),
+            Expanded(
+              child: ListView.separated(
+                controller: scrollController,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                itemCount: _familyMembers.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 6),
+                itemBuilder: (_, i) {
+                  final c = _familyMembers[i];
+                  final username = (c['username'] as String?) ?? '?';
+                  final role = c['role']?.toString();
+                  final isChild = role == 'child';
+                  final hasLocation = c['lat'] != null && c['lng'] != null;
+                  final lastSeenStr = c['last_location_at']?.toString();
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      // Centruj mapę na członka
+                      final lat = (c['lat'] as num?)?.toDouble();
+                      final lng = (c['lng'] as num?)?.toDouble();
+                      if (lat != null && lng != null) {
+                        _mapController?.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 16));
+                      }
+                    },
+                    onLongPress: () {
+                      Navigator.pop(ctx);
+                      _openMemberProfile(c);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: SerenityColors.surfaceContainerLowest,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(children: [
+                        _buildAvatarChip(c, size: 44),
+                        const SizedBox(width: 12),
+                        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text(username, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                          const SizedBox(height: 2),
+                          Row(children: [
+                            Container(width: 7, height: 7, decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: hasLocation ? SerenityColors.secondary : SerenityColors.outlineVariant,
+                            )),
+                            const SizedBox(width: 6),
+                            Text(
+                              hasLocation
+                                ? (lastSeenStr != null ? 'Aktywny' : 'Lokalizacja')
+                                : 'Brak lokalizacji',
+                              style: const TextStyle(fontSize: 12, color: SerenityColors.onSurfaceVariant),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: isChild
+                                  ? SerenityColors.glowAlertCoral.withValues(alpha: 0.15)
+                                  : SerenityColors.secondaryContainer,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(_roleLabel(role), style: TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.w600,
+                                color: isChild ? SerenityColors.glowAlertCoral : SerenityColors.primary,
+                              )),
+                            ),
+                          ]),
+                        ])),
+                        IconButton(
+                          icon: const Icon(Icons.chevron_right),
+                          onPressed: () {
+                            Navigator.pop(ctx);
+                            _openMemberProfile(c);
+                          },
+                        ),
+                      ]),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+
+  String _roleLabel(String? role) {
+    switch (role) {
+      case 'parent': return 'Rodzic';
+      case 'child': return 'Dziecko';
+      case 'senior': return 'Senior';
+      case 'guardian': return 'Opiekun';
+      case 'family_member': return 'Rodzina';
+      case 'partner': return 'Partner';
+      case 'friend': return 'Znajomy';
+      default: return 'Inny';
+    }
   }
 
   Widget _buildNavigationRail(ColorScheme cs, List<AlertModel> alerts) {
