@@ -250,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final userName = auth.user?.username.split(' ').first ?? '';
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: SerenityColors.groupedBackground,
       extendBody: true,
       body: SafeArea(
         bottom: false,
@@ -556,35 +556,27 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildActivitySection() {
     return Padding(
-      padding: const EdgeInsets.only(top: SerenitySpacing.xxxl),
+      padding: const EdgeInsets.only(top: SerenitySpacing.xxl),
       child: Column(
         children: [
-          Container(
-            width: 64,
-            height: 1,
-            color: SerenityColors.outlineVariant.withValues(alpha: 0.3),
-            margin: const EdgeInsets.only(bottom: 32),
-          ),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: SerenitySpacing.xl),
+            padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Dzisiejsza aktywność',
-                style: SerenityText.labelButton.copyWith(fontSize: 16),
+                'DZISIEJSZA AKTYWNOŚĆ',
+                style: SerenityText.iosSectionHeader,
               ),
             ),
           ),
-          const SizedBox(height: SerenitySpacing.lg),
+          const SizedBox(height: SerenitySpacing.sm),
           SizedBox(
             height: 160,
             child: _loading
                 ? const _CardsSkeleton()
                 : ListView(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: SerenitySpacing.xl),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     physics: const BouncingScrollPhysics(),
                     children: [
                       _ActivityCard(
@@ -683,19 +675,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildChildrenCard() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
         decoration: BoxDecoration(
-          color: SerenityColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: SerenityColors.primaryContainer.withValues(alpha: 0.06),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          color: SerenityColors.groupedSurface,
+          borderRadius: BorderRadius.circular(SerenityShapes.iosInline),
+          boxShadow: SerenityElevation.ios(),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -954,7 +940,7 @@ class _ActivityCard extends StatelessWidget {
       width: 180,
       onTap: onTap,
       padding: const EdgeInsets.all(SerenitySpacing.md + 4),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(SerenityShapes.iosInline),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -995,12 +981,12 @@ class _CardsSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: SerenitySpacing.xl),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       itemCount: 3,
       separatorBuilder: (_, __) => const SizedBox(width: SerenitySpacing.md),
       itemBuilder: (_, __) => SerenityCard(
         width: 180,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(SerenityShapes.iosInline),
         child: const SizedBox.shrink(),
       ),
     );

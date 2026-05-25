@@ -194,11 +194,16 @@ class _PermissionsScreenState extends State<PermissionsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: SerenityColors.groupedBackground,
       appBar: AppBar(
         title: const Text('Uprawnienia'),
-        backgroundColor: SerenityColors.surface,
+        backgroundColor: SerenityColors.groupedBackground,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 22),
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: _refresh,
@@ -217,22 +222,19 @@ class _PermissionsScreenState extends State<PermissionsScreen>
                     ],
                   )
                 : ListView(
-                    padding: const EdgeInsets.fromLTRB(
-                      SerenitySpacing.xl,
-                      SerenitySpacing.md,
-                      SerenitySpacing.xl,
-                      SerenitySpacing.xl,
-                    ),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
                     children: [
-                      Text(
-                        'Zarządzaj uprawnieniami aplikacji. Wyłączenie tutaj nie usuwa zgody systemowej — musisz to zrobić w ustawieniach Androida.',
-                        style: SerenityText.bodyMain,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        child: Text(
+                          'Zarządzaj uprawnieniami aplikacji. Wyłączenie tutaj nie usuwa zgody systemowej — musisz to zrobić w ustawieniach Androida.',
+                          style: SerenityText.iosSubhead,
+                        ),
                       ),
-                      const SizedBox(height: SerenitySpacing.lg),
                       for (final cap in _kCapabilities)
                         Padding(
                           padding: const EdgeInsets.only(
-                            bottom: SerenitySpacing.md,
+                            bottom: SerenitySpacing.sm,
                           ),
                           child: _CapabilityCard(
                             cap: cap,
@@ -290,11 +292,9 @@ class _CapabilityCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(SerenitySpacing.md),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainer,
-        borderRadius: SerenityShapes.card(),
-        border: Border.all(
-          color: SerenityColors.outline.withValues(alpha: 0.18),
-        ),
+        color: SerenityColors.groupedSurface,
+        borderRadius: BorderRadius.circular(SerenityShapes.iosInline),
+        boxShadow: SerenityElevation.ios(),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

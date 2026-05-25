@@ -598,7 +598,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: SerenityColors.groupedBackground,
       extendBody: true,
       // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
       body: SafeArea(
