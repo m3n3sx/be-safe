@@ -14,6 +14,8 @@ import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import '../../widgets/serenity_card.dart';
+import '../../widgets/inset_grouped_section.dart';
+import '../../widgets/apple_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -37,11 +39,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final api = context.read<ApiService>();
       final res = await api.get('/alerts/mine');
       int count = 0;
-      if (res is List) {
-        count = res.length;
-      } else if (res is Map) {
-        final list = res['alerts'];
-        if (list is List) count = list.length;
+      final list = res['alerts'];
+      if (list is List) {
+        count = list.length;
       }
       if (mounted) {
         setState(() {
@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final user = context.watch<AuthProvider>().user;
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: SerenityColors.groupedBackground,
       extendBody: true,
       // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
       body: SafeArea(
@@ -121,94 +121,127 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SliverToBoxAdapter(child: _buildHero(user)),
             SliverToBoxAdapter(child: _buildStatsRow(user)),
             SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: SerenitySpacing.xl,
-                vertical: SerenitySpacing.md,
-              ),
+              padding: const EdgeInsets.only(top: 8),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  _buildCheckIn(),
-                  const SizedBox(height: SerenitySpacing.lg),
-                  _SectionLabel('Konto'),
-                  _RowTile(
-                    icon: Icons.manage_accounts_outlined,
-                    label: 'Dane konta',
-                    onTap: () => Navigator.pushNamed(context, '/settings'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: SerenitySpacing.md,
+                      vertical: SerenitySpacing.sm,
+                    ),
+                    child: _buildCheckIn(),
                   ),
-                  _RowTile(
-                    icon: Icons.tune,
-                    label: 'Promień powiadomień',
-                    subtitle:
-                        '${user?.alertRadiusM ?? 500}m od twojej lokalizacji',
-                    onTap: () => _showRadiusSheet(user?.alertRadiusM ?? 500),
+                  InsetGroupedSection(
+                    header: 'Konto',
+                    children: [
+                      InsetGroupedRow(
+                        icon: Icons.manage_accounts_outlined,
+                        iconColor: SerenityColors.primaryContainer,
+                        title: 'Dane konta',
+                        onTap: () => Navigator.pushNamed(context, '/settings'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.tune,
+                        iconColor: SerenityColors.secondary,
+                        title: 'Promień powiadomień',
+                        value: '${user?.alertRadiusM ?? 500}m',
+                        onTap: () => _showRadiusSheet(user?.alertRadiusM ?? 500),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.share_location_outlined,
+                        iconColor: SerenityColors.secondary,
+                        title: 'Udostępnij lokalizację',
+                        subtitle: 'Tymczasowy link na 1 godzinę',
+                        onTap: _shareLocation,
+                      ),
+                    ],
                   ),
-                  _RowTile(
-                    icon: Icons.share_location_outlined,
-                    label: 'Udostępnij lokalizację',
-                    subtitle: 'Tymczasowy link na 1 godzinę',
-                    onTap: _shareLocation,
+                  InsetGroupedSection(
+                    header: 'Społeczność',
+                    children: [
+                      InsetGroupedRow(
+                        icon: Icons.workspace_premium_outlined,
+                        iconColor: SerenityColors.secondary,
+                        title: 'Odznaki',
+                        subtitle: 'Twoje osiągnięcia',
+                        onTap: () => Navigator.pushNamed(context, '/badges'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.leaderboard_outlined,
+                        iconColor: SerenityColors.secondary,
+                        title: 'Ranking',
+                        onTap: () => Navigator.pushNamed(context, '/ranking'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.history,
+                        iconColor: SerenityColors.primaryContainer,
+                        title: 'Moje zgłoszenia',
+                        onTap: () => Navigator.pushNamed(context, '/my-alerts'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.card_giftcard_outlined,
+                        iconColor: SerenityColors.glowAlertCoral,
+                        title: 'Polecaj znajomym',
+                        subtitle: 'Twój kod polecający',
+                        onTap: () => Navigator.pushNamed(context, '/referral'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.article_outlined,
+                        iconColor: SerenityColors.primaryContainer,
+                        title: 'Aktualności',
+                        onTap: () => Navigator.pushNamed(context, '/news'),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: SerenitySpacing.lg),
-                  _SectionLabel('Społeczność'),
-                  _RowTile(
-                    icon: Icons.workspace_premium_outlined,
-                    label: 'Odznaki',
-                    subtitle: 'Twoje osiągnięcia',
-                    onTap: () => Navigator.pushNamed(context, '/badges'),
+                  InsetGroupedSection(
+                    header: 'Ustawienia',
+                    children: [
+                      InsetGroupedRow(
+                        icon: Icons.notifications_outlined,
+                        iconColor: SerenityColors.primaryContainer,
+                        title: 'Powiadomienia',
+                        onTap: () => Navigator.pushNamed(context, '/settings'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.verified_user_outlined,
+                        iconColor: SerenityColors.secondary,
+                        title: 'Uprawnienia',
+                        subtitle: 'Lokalizacja, kamera, mikrofon',
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/permissions'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.lock_outline,
+                        iconColor: SerenityColors.primaryContainer,
+                        title: 'Prywatność',
+                        onTap: () => Navigator.pushNamed(context, '/privacy'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.description_outlined,
+                        iconColor: SerenityColors.primaryContainer,
+                        title: 'Regulamin',
+                        onTap: () => Navigator.pushNamed(context, '/terms'),
+                      ),
+                      InsetGroupedRow(
+                        icon: Icons.help_outline,
+                        iconColor: SerenityColors.primaryContainer,
+                        title: 'Pomoc i wsparcie',
+                        onTap: () => Navigator.pushNamed(context, '/emergency'),
+                      ),
+                    ],
                   ),
-                  _RowTile(
-                    icon: Icons.leaderboard_outlined,
-                    label: 'Ranking',
-                    onTap: () => Navigator.pushNamed(context, '/ranking'),
+                  InsetGroupedSection(
+                    footer: 'Zostaniesz wylogowany ze wszystkich urządzeń.',
+                    children: [
+                      InsetGroupedRow(
+                        icon: Icons.logout,
+                        title: 'Wyloguj się',
+                        destructive: true,
+                        onTap: _doLogout,
+                      ),
+                    ],
                   ),
-                  _RowTile(
-                    icon: Icons.history,
-                    label: 'Moje zgłoszenia',
-                    onTap: () => Navigator.pushNamed(context, '/my-alerts'),
-                  ),
-                  _RowTile(
-                    icon: Icons.card_giftcard_outlined,
-                    label: 'Polecaj znajomym',
-                    subtitle: 'Twój kod polecający',
-                    onTap: () => Navigator.pushNamed(context, '/referral'),
-                  ),
-                  _RowTile(
-                    icon: Icons.article_outlined,
-                    label: 'Aktualności',
-                    onTap: () => Navigator.pushNamed(context, '/news'),
-                  ),
-                  const SizedBox(height: SerenitySpacing.lg),
-                  _SectionLabel('Ustawienia'),
-                  _RowTile(
-                    icon: Icons.notifications_outlined,
-                    label: 'Powiadomienia',
-                    onTap: () => Navigator.pushNamed(context, '/settings'),
-                  ),
-                  _RowTile(
-                    icon: Icons.verified_user_outlined,
-                    label: 'Uprawnienia',
-                    subtitle: 'Lokalizacja, kamera, mikrofon, sensory',
-                    onTap: () =>
-                        Navigator.pushNamed(context, '/permissions'),
-                  ),
-                  _RowTile(
-                    icon: Icons.lock_outline,
-                    label: 'Prywatność',
-                    onTap: () => Navigator.pushNamed(context, '/privacy'),
-                  ),
-                  _RowTile(
-                    icon: Icons.description_outlined,
-                    label: 'Regulamin',
-                    onTap: () => Navigator.pushNamed(context, '/terms'),
-                  ),
-                  _RowTile(
-                    icon: Icons.help_outline,
-                    label: 'Pomoc i wsparcie',
-                    onTap: () => Navigator.pushNamed(context, '/emergency'),
-                  ),
-                  const SizedBox(height: SerenitySpacing.xl),
-                  _buildLogout(),
-                  // Padding na docka z nawigacją (PillNavBar ~84 + safe area + margin)
+                  // Padding na docka z nawigacją (~96px + safe area)
                   SizedBox(
                     height: 96 + MediaQuery.of(context).padding.bottom,
                   ),
@@ -252,7 +285,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final name = user?.username ?? '';
     final email = user?.email ?? '';
     final avatarUrl = user?.avatarUrl;
-    return Padding(
+    return AppleCard(
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       padding: const EdgeInsets.symmetric(vertical: SerenitySpacing.xl),
       child: Column(
         children: [
@@ -390,69 +424,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildLogout() {
-    return SizedBox(
-      width: double.infinity,
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: SerenityShapes.pill(),
-        child: InkWell(
-          borderRadius: SerenityShapes.pill(),
-          onTap: () async {
-            final confirmed = await showDialog<bool>(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text('Wylogować się?'),
-                content: const Text(
-                  'Stracisz dostęp do alertów i lokalizacji rodziny do następnego zalogowania.',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx, false),
-                    child: const Text('Anuluj'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(ctx, true),
-                    style: TextButton.styleFrom(
-                      foregroundColor: SerenityColors.error,
-                    ),
-                    child: const Text('Wyloguj'),
-                  ),
-                ],
-              ),
-            );
-            if (confirmed != true) return;
-            if (!mounted) return;
-            await context.read<AuthProvider>().logout();
-            if (!mounted) return;
-            Navigator.pushReplacementNamed(context, '/login');
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            decoration: BoxDecoration(
-              borderRadius: SerenityShapes.pill(),
-              border: Border.all(
-                color: SerenityColors.error.withValues(alpha: 0.3),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.logout, color: SerenityColors.error, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Wyloguj się',
-                  style: SerenityText.labelButton.copyWith(
-                    fontSize: 16,
-                    color: SerenityColors.error,
-                  ),
-                ),
-              ],
-            ),
-          ),
+  Future<void> _doLogout() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Wylogować się?'),
+        content: const Text(
+          'Stracisz dostęp do alertów i lokalizacji rodziny do następnego zalogowania.',
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Anuluj'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: SerenityColors.error),
+            child: const Text('Wyloguj'),
+          ),
+        ],
       ),
     );
+    if (confirmed != true) return;
+    if (!mounted) return;
+    await context.read<AuthProvider>().logout();
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   void _showRadiusSheet(int current) {
@@ -608,80 +605,4 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-class _SectionLabel extends StatelessWidget {
-  final String text;
-  const _SectionLabel(this.text);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 4,
-        bottom: SerenitySpacing.sm,
-      ),
-      child: Text(
-        text.toUpperCase(),
-        style: SerenityText.labelCaps.copyWith(
-          color: SerenityColors.onSurfaceVariant,
-        ),
-      ),
-    );
-  }
-}
-
-class _RowTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String? subtitle;
-  final VoidCallback onTap;
-
-  const _RowTile({
-    required this.icon,
-    required this.label,
-    this.subtitle,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: SerenitySpacing.xs),
-      child: SerenityCard(
-        onTap: onTap,
-        padding: const EdgeInsets.symmetric(
-          horizontal: SerenitySpacing.lg,
-          vertical: SerenitySpacing.md,
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: SerenityColors.primary, size: 24),
-            const SizedBox(width: SerenitySpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: SerenityText.labelButton.copyWith(fontSize: 16),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle!,
-                      style: SerenityText.bodyMain.copyWith(fontSize: 13),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            Icon(
-              Icons.chevron_right,
-              color: SerenityColors.outline,
-              size: 20,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

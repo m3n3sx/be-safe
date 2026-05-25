@@ -91,6 +91,23 @@ class SerenityColors {
   static const glowSafeMint = Color(0xFF9DF4CB);   // "wszystko OK"
   static const glowCalmAqua = Color(0xFF9EEBEC);   // passive monitoring
   static const glowAlertCoral = Color(0xFFFF7A7A); // urgent (non-panic)
+
+  // ============================================================================
+  // iOS-STYLE EXTENSIONS (v83+)
+  // Apple-feel groupedBackground + system separators. Serenity Guard accents stay.
+  // ============================================================================
+
+  /// iOS systemGroupedBackground (light) — neutral cool grey behind cards.
+  static const groupedBackground = Color(0xFFF2F2F7);
+
+  /// iOS systemBackground (light) — pure white card surface.
+  static const groupedSurface = Color(0xFFFFFFFF);
+
+  /// iOS separator (opaque on white) — 1pt hairlines inside grouped lists.
+  static const separator = Color(0xFFC6C6C8);
+
+  /// iOS secondaryLabel — subtle grey for subtitles and chevrons.
+  static const secondaryLabel = Color(0xFF8E8E93);
 }
 
 // ============================================================================
@@ -168,6 +185,67 @@ class SerenityText {
     letterSpacing: 0.05 * 12,
     color: SerenityColors.onSurfaceVariant,
   );
+
+  // ============================================================================
+  // iOS-STYLE EXTENSIONS (v83+)
+  // ============================================================================
+
+  /// iOS LargeTitle — 34px / 700w / -0.026em (expanded SliverAppBar state).
+  static const largeTitle = TextStyle(
+    fontFamily: _family,
+    fontSize: 34,
+    height: 41 / 34,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.026 * 34,
+    color: SerenityColors.primary,
+  );
+
+  /// iOS Title2 — 22px / 700w — section heroes inline.
+  static const iosTitle2 = TextStyle(
+    fontFamily: _family,
+    fontSize: 22,
+    height: 28 / 22,
+    fontWeight: FontWeight.w700,
+    letterSpacing: -0.022 * 22,
+    color: SerenityColors.primary,
+  );
+
+  /// iOS Body — 17px / 400w — main row text in InsetGroupedSection.
+  static const iosBody = TextStyle(
+    fontFamily: _family,
+    fontSize: 17,
+    height: 22 / 17,
+    fontWeight: FontWeight.w400,
+    color: SerenityColors.primary,
+  );
+
+  /// iOS Footnote — 13px / 400w — section footer hints (below grouped list).
+  static const iosFootnote = TextStyle(
+    fontFamily: _family,
+    fontSize: 13,
+    height: 18 / 13,
+    fontWeight: FontWeight.w400,
+    color: SerenityColors.secondaryLabel,
+  );
+
+  /// iOS Section Header — 13px / 600w / uppercase — above InsetGroupedSection.
+  static const iosSectionHeader = TextStyle(
+    fontFamily: _family,
+    fontSize: 13,
+    height: 16 / 13,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 0.5,
+    color: SerenityColors.secondaryLabel,
+  );
+
+  /// iOS Subhead — 15px / 400w — row subtitles.
+  static const iosSubhead = TextStyle(
+    fontFamily: _family,
+    fontSize: 15,
+    height: 20 / 15,
+    fontWeight: FontWeight.w400,
+    color: SerenityColors.secondaryLabel,
+  );
 }
 
 // ============================================================================
@@ -186,9 +264,17 @@ class SerenityShapes {
 
   static const cardRadius = radiusXl;
 
+  /// iOS InsetGrouped card radius (10pt) — used for grouped lists.
+  static const iosGrouped = 10.0;
+
+  /// iOS inline card radius (16pt) — single cards like AppleCard widget.
+  static const iosInline = 16.0;
+
   static BorderRadius card() => BorderRadius.circular(radiusXl);
   static BorderRadius pill() => BorderRadius.circular(radiusFull);
   static BorderRadius input() => BorderRadius.circular(radiusXl);
+  static BorderRadius iosGroupedCard() => BorderRadius.circular(iosGrouped);
+  static BorderRadius iosInlineCard() => BorderRadius.circular(iosInline);
 }
 
 // ============================================================================
@@ -244,6 +330,26 @@ class SerenityElevation {
       color: SerenityColors.primaryContainer.withValues(alpha: 0.25),
       blurRadius: 40,
       offset: const Offset(0, 20),
+      spreadRadius: 0,
+    ),
+  ];
+
+  /// iOS-style soft shadow for AppleCard — short, low-opacity, intimate.
+  static List<BoxShadow> ios() => [
+    BoxShadow(
+      color: SerenityColors.primaryContainer.withValues(alpha: 0.06),
+      blurRadius: 20,
+      offset: const Offset(0, 4),
+      spreadRadius: 0,
+    ),
+  ];
+
+  /// iOS strong shadow — for sticky headers, pressed cards.
+  static List<BoxShadow> iosStrong() => [
+    BoxShadow(
+      color: SerenityColors.primaryContainer.withValues(alpha: 0.10),
+      blurRadius: 28,
+      offset: const Offset(0, 8),
       spreadRadius: 0,
     ),
   ];

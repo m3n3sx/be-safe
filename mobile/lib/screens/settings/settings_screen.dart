@@ -55,33 +55,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final user = context.watch<AuthProvider>().user;
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: SerenityColors.groupedBackground,
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: SerenitySpacing.md,
-                vertical: SerenitySpacing.md,
-              ),
+              padding: const EdgeInsets.fromLTRB(8, 8, 16, 8),
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_back, size: 28),
+                    icon: const Icon(Icons.arrow_back_ios_new, size: 22),
                     color: SerenityColors.primary,
                     tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 4),
                   Text(
                     'Ustawienia',
-                    style: SerenityText.headlineHeroMobile,
+                    style: SerenityText.largeTitle.copyWith(fontSize: 28),
                   ),
                 ],
               ),
             ),
             Expanded(
-              child: ListView(children: [
+              child: ListTileTheme(
+                data: ListTileThemeData(
+                  tileColor: SerenityColors.groupedSurface,
+                  selectedTileColor: SerenityColors.groupedSurface,
+                  iconColor: SerenityColors.primaryContainer,
+                  textColor: SerenityColors.primary,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  minVerticalPadding: 12,
+                ),
+                child: ListView(children: [
         // === WYGLĄD ===
         _header(S.get('appearance')),
         ListTile(
@@ -522,7 +528,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: Text(S.get('delete_account'), style: const TextStyle(color: Colors.red)),
           onTap: () => _showDeleteAccount(),
         ),
+        const SizedBox(height: 96),
       ]),
+              ),
             ),
           ],
         ),
@@ -531,12 +539,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _header(String text) => Padding(
-    padding: const EdgeInsets.fromLTRB(SerenitySpacing.xl, 24, SerenitySpacing.xl, 8),
+    padding: const EdgeInsets.fromLTRB(32, 24, 32, 8),
     child: Text(
       text.toUpperCase(),
-      style: SerenityText.labelCaps.copyWith(
-        color: SerenityColors.onSurfaceVariant,
-      ),
+      style: SerenityText.iosSectionHeader,
     ),
   );
 
