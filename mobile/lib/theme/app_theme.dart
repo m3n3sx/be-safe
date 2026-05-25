@@ -7,6 +7,20 @@ library;
 import 'package:flutter/material.dart';
 import 'design_tokens.dart';
 
+/// iOS-style bouncy scroll behavior. Use as `MaterialApp.scrollBehavior`
+/// to give all ListView/CustomScrollView the rubber-band bounce-back at
+/// the edges (matches Cupertino feel on every platform).
+class SerenityScrollBehavior extends MaterialScrollBehavior {
+  const SerenityScrollBehavior();
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics(
+      parent: AlwaysScrollableScrollPhysics(),
+    );
+  }
+}
+
 ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {
   final isDark = brightness == Brightness.dark;
 

@@ -1,15 +1,15 @@
 /// PressableScale — Apple-style press feedback wrapper.
 ///
 /// Wraps any child with a subtle scale-down on press (0.97) + spring-back
-/// on release. Optional haptic feedback. Use around AppleCard, list rows,
-/// big CTA buttons — anywhere a "tap" should feel tactile.
+/// on release using real SpringSimulation physics (mass/stiffness/damping)
+/// for a natural iOS feel. Optional haptic feedback.
 ///
 /// If [onTap] is null, no scale is applied (read-only mode).
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:flutter/services.dart';
-import '../theme/design_tokens.dart';
 
 class PressableScale extends StatefulWidget {
   final Widget child;
@@ -43,24 +43,20 @@ class PressableScale extends StatefulWidget {
 class _PressableScaleState extends State<PressableScale>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
-  late final Animation<double> _scale;
+
+  // Spring tuned to feel like iOS button press: snappy down, soft bounce up.
+  // mass=1, stiffness=320, damping=20 → ~critically damped with slight bounce.
+  static const SpringDescription _spring = SpringDescription(
+    mass: 1,
+    stiffness: 320,
+    damping: 20,
+  );
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: SerenityAnim.tap,
-      reverseDuration: const Duration(milliseconds: 260),
-    );
-    // Spring-like curve for release (overshoot a little).
-    _scale = Tween<double>(begin: 1.0, end: widget.pressedScale).animate(
-      CurvedAnimation(
-        parent: _ctrl,
-        curve: Curves.easeOut,
-        reverseCurve: Curves.elasticOut,
-      ),
-    );
+    // Range [0..1] where 0 = released, 1 = fully pressed.
+    _ctrl = AnimationController.unbounded(vsync: this, value: 0);
   }
 
   @override
@@ -69,28 +65,24 @@ class _PressableScaleState extends State<PressableScale>
     super.dispose();
   }
 
-  void _down(_) {
-    if (widget.onTap == null && widget.onLongPress == null) return;
-    _ctrl.forward();
+  void _animateTo(double target) {
+    final sim = SpringSimulation(_spring, _ctrl.value, target, 0);
+    _ctrl.animateWith(sim);
   }
 
-  void _up(_) {
-    if (widget.onTap == null && widget.onLongPress == null) return;
-    _ctrl.reverse();
-  }
-
-  void _cancel() {
-    _ctrl.reverse();
-  }
+  void _down() => _animateTo(1.0);
+  void _up() => _animateTo(0.0);
 
   @override
   Widget build(BuildContext context) {
     final scaled = AnimatedBuilder(
-      animation: _scale,
-      builder: (_, child) => Transform.scale(
-        scale: _scale.value,
-        child: child,
-      ),
+      animation: _ctrl,
+      builder: (_, child) {
+        // Map t∈[0..1] to scale [1.0 .. pressedScale].
+        final t = _ctrl.value.clamp(0.0, 1.0);
+        final scale = 1.0 + (widget.pressedScale - 1.0) * t;
+        return Transform.scale(scale: scale, child: child);
+      },
       child: widget.child,
     );
 
@@ -99,13 +91,9 @@ class _PressableScaleState extends State<PressableScale>
       // Inner InkWell / GestureDetector will still receive the tap.
       return Listener(
         behavior: HitTestBehavior.translucent,
-        onPointerDown: (_) {
-          _ctrl.forward();
-        },
-        onPointerUp: (_) {
-          _ctrl.reverse();
-        },
-        onPointerCancel: (_) => _cancel(),
+        onPointerDown: (_) => _down(),
+        onPointerUp: (_) => _up(),
+        onPointerCancel: (_) => _up(),
         child: scaled,
       );
     }
@@ -113,9 +101,9 @@ class _PressableScaleState extends State<PressableScale>
     final disabled = widget.onTap == null && widget.onLongPress == null;
     return GestureDetector(
       behavior: widget.behavior,
-      onTapDown: _down,
-      onTapUp: _up,
-      onTapCancel: _cancel,
+      onTapDown: disabled ? null : (_) => _down(),
+      onTapUp: disabled ? null : (_) => _up(),
+      onTapCancel: disabled ? null : _up,
       onTap: disabled
           ? null
           : () {

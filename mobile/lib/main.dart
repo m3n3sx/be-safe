@@ -109,6 +109,7 @@ class AlertMapApp extends StatelessWidget {
           return MaterialApp(
           title: 'be:Safe',
           navigatorKey: appNavigatorKey,
+          scrollBehavior: const SerenityScrollBehavior(),
           debugShowCheckedModeBanner: false,
           themeMode: themeProv.mode,
           theme: useSerenity
