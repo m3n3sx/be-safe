@@ -1,10 +1,11 @@
-/// be:Safe — Global Dock (rounded, near-edge, bottom-aligned)
+/// be:Safe — Global Dock (edge-to-edge, top-rounded)
 ///
 /// Pasek nawigacji renderowany przez MaterialApp.builder, widoczny na każdym
 /// ekranie po zalogowaniu (poza auth/onboarding/biometric/session-check).
 ///
-/// Styl: macOS-dock — przyklejony do dolnej krawędzi z małymi marginesami z
-/// boków, zaokrąglone rogi. Bez floating high above gestures area.
+/// Styl v87+: dock klei się do dolnej i bocznych krawędzi ekranu, zaokrąglone
+/// tylko lewy i prawy GÓRNY narożnik (większość telefonów ma już zaokrąglone
+/// rogi obudowy). Pełna szerokość, bez bocznych/dolnych marginesów.
 ///
 /// Aktywny tab kontrolowany przez globalny `dockActiveIndex` (ValueNotifier),
 /// który aktualizuje `navigateToTab()` w nav_routes.dart.
@@ -28,14 +29,11 @@ final ValueNotifier<bool> dockVisible = ValueNotifier<bool>(false);
 /// No-op (kept for backwards compat z main.dart `await initDockState()`).
 Future<void> initDockState() async {}
 
-/// Wysokość samego paska.
+/// Wysokość samego paska (powyżej safe-area bottom).
 const double _kBarHeight = 64;
 
-/// Margines z boków (mały, jak macOS dock).
-const double _kSideMargin = 10;
-
-/// Margines od dolnej krawędzi safe-area (gesture/nav bar Androida).
-const double _kBottomMargin = 6;
+/// Promień zaokrąglenia GÓRNYCH narożników docka.
+const double _kTopRadius = 22;
 
 /// Wrapper do owinięcia child z MaterialApp.builder.
 class GlobalDockOverlay extends StatelessWidget {
@@ -48,23 +46,21 @@ class GlobalDockOverlay extends StatelessWidget {
       valueListenable: dockVisible,
       builder: (_, visible, __) {
         final mq = MediaQuery.of(context);
-        // Rezerwuj wysokość paska + margines (gesture bar już w mq.padding).
-        final reserved = visible ? _kBarHeight + _kBottomMargin : 0.0;
+        // Dock zajmuje _kBarHeight + safe-area bottom (gesture/nav bar).
+        final reserved = visible ? _kBarHeight + mq.padding.bottom : 0.0;
         return Stack(
           children: [
-            // Child dostaje powiększone bottom padding (przez padding, NIE
-            // viewPadding — viewPadding wpływa na SafeArea dock'a niżej).
+            // Child dostaje powiększone bottom padding tak, że content
+            // mieści się NAD dockiem. Usuwamy też viewPadding.bottom żeby
+            // SafeArea wewnątrz ekranów nie dodawała kolejnej rezerwacji.
             MediaQuery(
               data: mq.copyWith(
-                padding: mq.padding.copyWith(
-                  bottom: mq.padding.bottom + reserved,
-                ),
+                padding: mq.padding.copyWith(bottom: reserved),
+                viewPadding: mq.viewPadding.copyWith(bottom: reserved),
               ),
               child: child,
             ),
             if (visible)
-              // Dock używa ORYGINALNEGO MediaQuery — SafeArea respektuje
-              // tylko prawdziwy system nav bar, bez naszej rezerwacji.
               const Positioned(
                 left: 0,
                 right: 0,
@@ -73,12 +69,7 @@ class GlobalDockOverlay extends StatelessWidget {
                   // Material ancestor — żeby Text nie dostawał żółtego
                   // podkreślenia z DefaultTextStyle.
                   type: MaterialType.transparency,
-                  child: SafeArea(
-                    top: false,
-                    left: false,
-                    right: false,
-                    child: _EdgeDock(),
-                  ),
+                  child: _EdgeDock(),
                 ),
               ),
           ],
@@ -93,44 +84,47 @@ class _EdgeDock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        _kSideMargin,
-        0,
-        _kSideMargin,
-        _kBottomMargin,
-      ),
-      child: Container(
-        height: _kBarHeight,
-        decoration: BoxDecoration(
-          color: SerenityColors.primaryContainer,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: SerenityElevation.nav(),
+    final mq = MediaQuery.of(context);
+    return Container(
+      // Pełna szerokość, brak bocznych marginesów.
+      decoration: BoxDecoration(
+        color: SerenityColors.primaryContainer,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(_kTopRadius),
+          topRight: Radius.circular(_kTopRadius),
         ),
-        clipBehavior: Clip.antiAlias,
-        child: ValueListenableBuilder<int>(
-          valueListenable: dockActiveIndex,
-          builder: (_, idx, __) => Row(
-            children: [
-              for (var i = 0; i < _kItems.length; i++)
-                Expanded(
-                  child: _DockButton(
-                    item: _kItems[i],
-                    selected: i == idx,
-                    onTap: () {
-                      if (i == idx) {
-                        HapticFeedback.selectionClick();
-                        return;
-                      }
-                      navigateToTab(
-                        context,
-                        targetIndex: i,
-                        currentIndex: idx,
-                      );
-                    },
+        boxShadow: SerenityElevation.nav(),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: SizedBox(
+        height: _kBarHeight + mq.padding.bottom,
+        child: Padding(
+          // Dolny padding = gesture/nav bar, żeby ikony były nad nim.
+          padding: EdgeInsets.only(bottom: mq.padding.bottom),
+          child: ValueListenableBuilder<int>(
+            valueListenable: dockActiveIndex,
+            builder: (_, idx, __) => Row(
+              children: [
+                for (var i = 0; i < _kItems.length; i++)
+                  Expanded(
+                    child: _DockButton(
+                      item: _kItems[i],
+                      selected: i == idx,
+                      onTap: () {
+                        if (i == idx) {
+                          HapticFeedback.selectionClick();
+                          return;
+                        }
+                        navigateToTab(
+                          context,
+                          targetIndex: i,
+                          currentIndex: idx,
+                        );
+                      },
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
