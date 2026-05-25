@@ -32,8 +32,12 @@ Future<void> initDockState() async {}
 /// Wysokość samego paska (powyżej safe-area bottom).
 const double _kBarHeight = 64;
 
-/// Promień zaokrąglenia GÓRNYCH narożników docka.
-const double _kTopRadius = 22;
+/// Promień zaokrąglenia wszystkich 4 narożników docka.
+const double _kRadius = 22;
+
+/// Delikatne odstępy docka od krawędzi ekranu.
+const double _kSideMargin = 8;
+const double _kBottomMargin = 6;
 
 /// Wrapper do owinięcia child z MaterialApp.builder.
 class GlobalDockOverlay extends StatelessWidget {
@@ -46,8 +50,9 @@ class GlobalDockOverlay extends StatelessWidget {
       valueListenable: dockVisible,
       builder: (_, visible, __) {
         final mq = MediaQuery.of(context);
-        // Dock zajmuje _kBarHeight + safe-area bottom (gesture/nav bar).
-        final reserved = visible ? _kBarHeight + mq.padding.bottom : 0.0;
+        // Dock zajmuje _kBarHeight + safe-area bottom + _kBottomMargin.
+        final reserved =
+            visible ? _kBarHeight + mq.padding.bottom + _kBottomMargin : 0.0;
         return Stack(
           children: [
             // Child dostaje powiększone bottom padding tak, że content
@@ -85,22 +90,22 @@ class _EdgeDock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    return Container(
-      // Pełna szerokość, brak bocznych marginesów.
-      decoration: BoxDecoration(
-        color: SerenityColors.primaryContainer,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(_kTopRadius),
-          topRight: Radius.circular(_kTopRadius),
-        ),
-        boxShadow: SerenityElevation.nav(),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        _kSideMargin,
+        0,
+        _kSideMargin,
+        mq.padding.bottom + _kBottomMargin,
       ),
-      clipBehavior: Clip.antiAlias,
-      child: SizedBox(
-        height: _kBarHeight + mq.padding.bottom,
-        child: Padding(
-          // Dolny padding = gesture/nav bar, żeby ikony były nad nim.
-          padding: EdgeInsets.only(bottom: mq.padding.bottom),
+      child: Container(
+        decoration: BoxDecoration(
+          color: SerenityColors.primaryContainer,
+          borderRadius: BorderRadius.circular(_kRadius),
+          boxShadow: SerenityElevation.nav(),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: SizedBox(
+          height: _kBarHeight,
           child: ValueListenableBuilder<int>(
             valueListenable: dockActiveIndex,
             builder: (_, idx, __) => Row(
