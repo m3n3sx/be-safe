@@ -78,6 +78,17 @@ ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {
     scaffoldBackgroundColor: colorScheme.surface,
     canvasColor: colorScheme.surface,
 
+    // iOS-style page transitions globally (slide-right + parallax).
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+      },
+    ),
+
     textTheme: _textTheme(colorScheme),
 
     // App bar — flat, transparent, light text

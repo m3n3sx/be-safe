@@ -18,6 +18,7 @@ library;
 
 import 'package:flutter/material.dart';
 import '../theme/design_tokens.dart';
+import 'pressable_scale.dart';
 
 /// A grouped, inset section like iOS Settings.
 class InsetGroupedSection extends StatelessWidget {
@@ -134,7 +135,7 @@ class InsetGroupedRow extends StatelessWidget {
     final iconBgColor =
         iconColor ?? (destructive ? SerenityColors.glowAlertCoral : SerenityColors.primaryContainer);
 
-    return Material(
+    final row = Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
@@ -195,6 +196,13 @@ class InsetGroupedRow extends StatelessWidget {
           ),
         ),
       ),
+    );
+
+    if (onTap == null) return row;
+    return PressableScale(
+      scaleOnly: true,
+      pressedScale: 0.985,
+      child: row,
     );
   }
 }

@@ -7,6 +7,7 @@ library;
 
 import 'package:flutter/material.dart';
 import '../theme/design_tokens.dart';
+import 'pressable_scale.dart';
 
 class AppleCard extends StatelessWidget {
   final Widget child;
@@ -29,29 +30,35 @@ class AppleCard extends StatelessWidget {
     final bg = backgroundColor ?? SerenityColors.groupedSurface;
     final child0 = Padding(padding: padding, child: child);
 
+    final card = ClipRRect(
+      borderRadius: SerenityShapes.iosInlineCard(),
+      child: Container(
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: SerenityShapes.iosInlineCard(),
+          boxShadow: SerenityElevation.ios(),
+        ),
+        child: onTap == null
+            ? child0
+            : Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: onTap,
+                  splashColor:
+                      SerenityColors.separator.withValues(alpha: 0.4),
+                  highlightColor:
+                      SerenityColors.separator.withValues(alpha: 0.2),
+                  child: child0,
+                ),
+              ),
+      ),
+    );
+
     return Padding(
       padding: margin,
-      child: ClipRRect(
-        borderRadius: SerenityShapes.iosInlineCard(),
-        child: Container(
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: SerenityShapes.iosInlineCard(),
-            boxShadow: SerenityElevation.ios(),
-          ),
-          child: onTap == null
-              ? child0
-              : Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: onTap,
-                    splashColor: SerenityColors.separator.withValues(alpha: 0.4),
-                    highlightColor: SerenityColors.separator.withValues(alpha: 0.2),
-                    child: child0,
-                  ),
-                ),
-        ),
-      ),
+      child: onTap == null
+          ? card
+          : PressableScale(scaleOnly: true, child: card),
     );
   }
 }
