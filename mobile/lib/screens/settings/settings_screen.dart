@@ -528,7 +528,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: Text(S.get('delete_account'), style: const TextStyle(color: Colors.red)),
           onTap: () => _showDeleteAccount(),
         ),
-        const SizedBox(height: 96),
+        SizedBox(height: 96 + MediaQuery.of(context).padding.bottom),
       ]),
               ),
             ),

@@ -727,7 +727,9 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   ),
           ),
           SliverToBoxAdapter(child: _buildActions()),
-          const SliverToBoxAdapter(child: SizedBox(height: 120)),
+          SliverToBoxAdapter(
+            child: SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
+          ),
         ],
       ),
     );

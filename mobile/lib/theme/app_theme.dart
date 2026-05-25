@@ -19,6 +19,16 @@ class SerenityScrollBehavior extends MaterialScrollBehavior {
       parent: AlwaysScrollableScrollPhysics(),
     );
   }
+
+  // Ukrywamy scrollbary globalnie — iOS-style invisible scroll (rubber-band only).
+  @override
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
+    return child;
+  }
 }
 
 ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {

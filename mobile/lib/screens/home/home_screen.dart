@@ -272,14 +272,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SliverToBoxAdapter(child: _buildActivitySection()),
-              const SliverToBoxAdapter(child: SizedBox(height: 180)),
+              // Spacer pod dockiem — bottom inset z GlobalDockOverlay (dock + safe area).
+              SliverToBoxAdapter(
+                child: SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
+              ),
             ],
           ),
         ),
       ),
       // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 88),
+        // Bottom inset z GlobalDockOverlay (dock + safe area) + odstęp.
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 12),
         child: FloatingActionButton.extended(
           heroTag: 'home_report',
           backgroundColor: SerenityColors.primaryContainer,
