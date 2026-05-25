@@ -33,8 +33,7 @@ Future<void> initDockState() async {}
 const double _kBarHeight = 64;
 
 /// Promień zaokrąglenia GÓRNYCH narożników docka.
-/// Większy radius daje wyraźny "scoop"/wcięcie w dolnych rogach ekranu.
-const double _kTopRadius = 44;
+const double _kTopRadius = 22;
 
 /// Wrapper do owinięcia child z MaterialApp.builder.
 class GlobalDockOverlay extends StatelessWidget {
