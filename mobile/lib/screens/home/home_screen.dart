@@ -18,7 +18,6 @@ import '../../theme/design_tokens.dart';
 import '../../widgets/glow_orb.dart';
 import '../../widgets/serenity_card.dart';
 import '../../widgets/aqi_widget.dart';
-import '../alerts/create_alert_screen.dart';
 import '../alerts/my_alerts_screen.dart';
 import '../family/family_screen.dart';
 import '../family/child_profile_screen.dart';
@@ -272,52 +271,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SliverToBoxAdapter(child: _buildActivitySection()),
-              // Spacer pod dockiem — bottom inset z GlobalDockOverlay (dock + safe area).
-              SliverToBoxAdapter(
-                child: SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
-              ),
+              // Mały odstęp pod ostatnim widgetem.
+              // MediaQuery.padding.bottom już zawiera reserved space dla docka (~100pt z GlobalDockOverlay).
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
             ],
           ),
         ),
       ),
-      // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
-      floatingActionButton: Padding(
-        // Bottom inset z GlobalDockOverlay (dock + safe area) + odstęp.
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 12),
-        child: FloatingActionButton.extended(
-          heroTag: 'home_report',
-          backgroundColor: SerenityColors.primaryContainer,
-          foregroundColor: SerenityColors.onPrimary,
-          elevation: 0,
-          onPressed: () async {
-            // Prefer fresh location; fall back to cached nearby alert position
-            LatLng? pos;
-            final p = await _getPosition();
-            if (!context.mounted) return;
-            if (p != null) {
-              pos = LatLng(p.latitude, p.longitude);
-            } else {
-              final alerts = context.read<AlertProvider>().allAlerts;
-              if (alerts.isNotEmpty) pos = alerts.first.location;
-            }
-            pos ??= const LatLng(52.2297, 21.0122); // Warsaw fallback
-            if (!context.mounted) return;
-            await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => CreateAlertScreen(position: pos!),
-              ),
-            );
-          },
-          icon: const Icon(Icons.warning, size: 20),
-          label: Text(
-            'Zgłoś',
-            style: SerenityText.labelButton.copyWith(
-              color: SerenityColors.onPrimary,
-            ),
-          ),
-        ),
-      ),
+      // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder.
+      // FAB "Zgłoś" przeniesiony do globalnego docka jako center button (v94+).
     );
   }
 

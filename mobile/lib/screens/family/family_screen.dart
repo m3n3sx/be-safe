@@ -727,9 +727,9 @@ class _FamilyScreenState extends State<FamilyScreen> {
                   ),
           ),
           SliverToBoxAdapter(child: _buildActions()),
-          SliverToBoxAdapter(
-            child: SizedBox(height: MediaQuery.of(context).padding.bottom + 24),
-          ),
+          // Mały odstęp pod ostatnim widgetem.
+          // MediaQuery.padding.bottom zawiera reserved space dla docka (~100pt z GlobalDockOverlay).
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
       ),
     );

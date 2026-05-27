@@ -1,11 +1,13 @@
-/// Unified navigation helper for the 5-tab PillNavBar across the app.
+/// Unified navigation helper for the 5-tab dock across the app.
 ///
-/// Tab indexes (same on every screen):
-///   0 = Mapa
-///   1 = Home
-///   2 = Rodzina
-///   3 = SOS
+/// Tab indexes (v94+ new order with center Zgłoś FAB):
+///   0 = Home
+///   1 = Mapa
+///   2 = SOS
+///   3 = Rodzina
 ///   4 = Profil
+///
+/// Center FAB "Zgłoś" is a non-tab action that opens CreateAlertScreen.
 ///
 /// Use [navigateToTab] from any screen with [PillNavBar] to switch tabs
 /// in a consistent way (no stack-pop tricks, always reach the destination).
@@ -31,10 +33,10 @@ import 'collapsible_dock.dart' show dockActiveIndex;
 
 /// The canonical 5-tab order used by [PillNavBar.defaultItems].
 class NavTabs {
-  static const int map = 0;
-  static const int home = 1;
-  static const int family = 2;
-  static const int sos = 3;
+  static const int home = 0;
+  static const int map = 1;
+  static const int sos = 2;
+  static const int family = 3;
   static const int profile = 4;
 }
 
