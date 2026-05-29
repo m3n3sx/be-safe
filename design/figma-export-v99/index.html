@@ -1,9 +1,13 @@
 <!doctype html><html><head><meta charset="utf-8"><title>be:Safe v99 — Figma Export</title>
-<style>body{font-family:Inter,sans-serif;background:#0A0E14;color:#F5F7FA;margin:0;padding:32px}h1{font-weight:700;letter-spacing:-0.5px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;margin-top:24px}.card{background:#131820;border-radius:18px;padding:12px;border:1px solid #1F2730}.card img,.card object{width:100%;height:auto;border-radius:12px;background:#F2F2F7}.lbl{font-size:11px;color:#9CA3AF;margin-top:8px}.tit{font-size:13px;font-weight:600;color:#F5F7FA}</style></head><body>
+<style>body{font-family:Inter,sans-serif;background:#0A0E14;color:#F5F7FA;margin:0;padding:32px}h1{font-weight:700;letter-spacing:-0.5px}.tabs{display:flex;gap:12px;margin:24px 0}.tab{padding:10px 24px;border-radius:14px;background:#131820;border:1px solid #2A323D;cursor:pointer;color:#9CA3AF;font-weight:600;font-size:14px}.tab.active{background:#C7F73E;color:#1A2206;border-color:#C7F73E}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;margin-top:24px}.card{background:#131820;border-radius:18px;padding:12px;border:1px solid #1F2730}.card object{width:100%;height:auto;border-radius:12px}.lbl{font-size:11px;color:#9CA3AF;margin-top:8px}.tit{font-size:13px;font-weight:600;color:#F5F7FA}.hidden{display:none}</style></head><body>
 <h1>be:Safe v99 — IDENTYCZNY wygląd jak APK</h1>
-<p style="color:#9CA3AF">44 ekrany · realne dane meneswczesny@gmail.com · Inter font · oryginalne dock SVG paths · Google avatar embedded</p>
-<p style="color:#9CA3AF">Import do Figma: File → Import → besafe_v99_all.svg → 44 grupy z nazwami → Cmd/Ctrl+Alt+G</p>
-<div class="grid">
+<p style="color:#9CA3AF">44 ekrany · realne dane meneswczesny@gmail.com · Inter font · oryginalne dock SVG paths · Google avatar embedded · LIGHT + DARK</p>
+<p style="color:#9CA3AF">Import do Figma: File → Import → besafe_v99_all.svg (light) lub besafe_v99_dark.svg → 44 grupy</p>
+<div class="tabs">
+<div class="tab active" onclick="show('light')">Light mode (44)</div>
+<div class="tab" onclick="show('dark')">Dark mode (44)</div>
+</div>
+<div id="light" class="grid">
 <div class="card"><object data="individual/01_onboarding.svg" type="image/svg+xml"></object><div class="tit">Onboarding</div><div class="lbl">01_onboarding</div></div>
 <div class="card"><object data="individual/02_mode_picker.svg" type="image/svg+xml"></object><div class="tit">Wybierz tryb</div><div class="lbl">02_mode_picker</div></div>
 <div class="card"><object data="individual/03_login.svg" type="image/svg+xml"></object><div class="tit">Logowanie</div><div class="lbl">03_login</div></div>
@@ -48,4 +52,52 @@
 <div class="card"><object data="individual/a2_fake_call_incoming.svg" type="image/svg+xml"></object><div class="tit">Połączenie</div><div class="lbl">a2_fake_call_incoming</div></div>
 <div class="card"><object data="individual/a3_pets.svg" type="image/svg+xml"></object><div class="tit">Zwierzęta</div><div class="lbl">a3_pets</div></div>
 <div class="card"><object data="individual/b0_legal.svg" type="image/svg+xml"></object><div class="tit">Regulamin</div><div class="lbl">b0_legal</div></div>
-</div></body></html>
+</div>
+<div id="dark" class="grid hidden">
+<div class="card"><object data="individual_dark/01_onboarding.svg" type="image/svg+xml"></object><div class="tit">Onboarding</div><div class="lbl">01_onboarding</div></div>
+<div class="card"><object data="individual_dark/02_mode_picker.svg" type="image/svg+xml"></object><div class="tit">Wybierz tryb</div><div class="lbl">02_mode_picker</div></div>
+<div class="card"><object data="individual_dark/03_login.svg" type="image/svg+xml"></object><div class="tit">Logowanie</div><div class="lbl">03_login</div></div>
+<div class="card"><object data="individual_dark/04_forgot_password.svg" type="image/svg+xml"></object><div class="tit">Nowe hasło</div><div class="lbl">04_forgot_password</div></div>
+<div class="card"><object data="individual_dark/10_home_normal.svg" type="image/svg+xml"></object><div class="tit">Home — Standard</div><div class="lbl">10_home_normal</div></div>
+<div class="card"><object data="individual_dark/11_home_kids.svg" type="image/svg+xml"></object><div class="tit">Home — Dzieci</div><div class="lbl">11_home_kids</div></div>
+<div class="card"><object data="individual_dark/12_home_senior.svg" type="image/svg+xml"></object><div class="tit">Home — Senior</div><div class="lbl">12_home_senior</div></div>
+<div class="card"><object data="individual_dark/20_map.svg" type="image/svg+xml"></object><div class="tit">Mapa</div><div class="lbl">20_map</div></div>
+<div class="card"><object data="individual_dark/21_alert_detail.svg" type="image/svg+xml"></object><div class="tit">Szczegóły alertu</div><div class="lbl">21_alert_detail</div></div>
+<div class="card"><object data="individual_dark/22_alert_create.svg" type="image/svg+xml"></object><div class="tit">Zgłoś alert</div><div class="lbl">22_alert_create</div></div>
+<div class="card"><object data="individual_dark/23_alerts_my.svg" type="image/svg+xml"></object><div class="tit">Moje alerty</div><div class="lbl">23_alerts_my</div></div>
+<div class="card"><object data="individual_dark/24_alerts_stats.svg" type="image/svg+xml"></object><div class="tit">Statystyki</div><div class="lbl">24_alerts_stats</div></div>
+<div class="card"><object data="individual_dark/30_family.svg" type="image/svg+xml"></object><div class="tit">Rodzina</div><div class="lbl">30_family</div></div>
+<div class="card"><object data="individual_dark/31_family_group.svg" type="image/svg+xml"></object><div class="tit">Grupa1</div><div class="lbl">31_family_group</div></div>
+<div class="card"><object data="individual_dark/32_family_chat.svg" type="image/svg+xml"></object><div class="tit">Czat</div><div class="lbl">32_family_chat</div></div>
+<div class="card"><object data="individual_dark/33_family_planner.svg" type="image/svg+xml"></object><div class="tit">Planner</div><div class="lbl">33_family_planner</div></div>
+<div class="card"><object data="individual_dark/34_family_sos.svg" type="image/svg+xml"></object><div class="tit">SOS rodziny</div><div class="lbl">34_family_sos</div></div>
+<div class="card"><object data="individual_dark/35_member_profile.svg" type="image/svg+xml"></object><div class="tit">Marcin</div><div class="lbl">35_member_profile</div></div>
+<div class="card"><object data="individual_dark/36_child_profile.svg" type="image/svg+xml"></object><div class="tit">Heluss</div><div class="lbl">36_child_profile</div></div>
+<div class="card"><object data="individual_dark/37_safe_routes.svg" type="image/svg+xml"></object><div class="tit">Bezpieczne trasy</div><div class="lbl">37_safe_routes</div></div>
+<div class="card"><object data="individual_dark/38_draw_safe_route.svg" type="image/svg+xml"></object><div class="tit">Rysuj trasę</div><div class="lbl">38_draw_safe_route</div></div>
+<div class="card"><object data="individual_dark/39_add_geofence.svg" type="image/svg+xml"></object><div class="tit">Dodaj strefę</div><div class="lbl">39_add_geofence</div></div>
+<div class="card"><object data="individual_dark/40_location_history.svg" type="image/svg+xml"></object><div class="tit">Historia</div><div class="lbl">40_location_history</div></div>
+<div class="card"><object data="individual_dark/41_ping_response.svg" type="image/svg+xml"></object><div class="tit">Pingnięcie</div><div class="lbl">41_ping_response</div></div>
+<div class="card"><object data="individual_dark/50_sos_normal.svg" type="image/svg+xml"></object><div class="tit">SOS</div><div class="lbl">50_sos_normal</div></div>
+<div class="card"><object data="individual_dark/51_sos_kids.svg" type="image/svg+xml"></object><div class="tit">SOS — Dzieci</div><div class="lbl">51_sos_kids</div></div>
+<div class="card"><object data="individual_dark/52_sos_senior.svg" type="image/svg+xml"></object><div class="tit">SOS — Senior</div><div class="lbl">52_sos_senior</div></div>
+<div class="card"><object data="individual_dark/60_profile.svg" type="image/svg+xml"></object><div class="tit">Profil</div><div class="lbl">60_profile</div></div>
+<div class="card"><object data="individual_dark/61_badges.svg" type="image/svg+xml"></object><div class="tit">Odznaki</div><div class="lbl">61_badges</div></div>
+<div class="card"><object data="individual_dark/62_ranking.svg" type="image/svg+xml"></object><div class="tit">Ranking</div><div class="lbl">62_ranking</div></div>
+<div class="card"><object data="individual_dark/63_referral.svg" type="image/svg+xml"></object><div class="tit">Polecaj</div><div class="lbl">63_referral</div></div>
+<div class="card"><object data="individual_dark/70_settings.svg" type="image/svg+xml"></object><div class="tit">Ustawienia</div><div class="lbl">70_settings</div></div>
+<div class="card"><object data="individual_dark/71_permissions.svg" type="image/svg+xml"></object><div class="tit">Uprawnienia</div><div class="lbl">71_permissions</div></div>
+<div class="card"><object data="individual_dark/72_parental_controls.svg" type="image/svg+xml"></object><div class="tit">Kontrola rodzicielska</div><div class="lbl">72_parental_controls</div></div>
+<div class="card"><object data="individual_dark/80_safety_guide.svg" type="image/svg+xml"></object><div class="tit">Poradnik</div><div class="lbl">80_safety_guide</div></div>
+<div class="card"><object data="individual_dark/81_emergency_numbers.svg" type="image/svg+xml"></object><div class="tit">Telefony alarmowe</div><div class="lbl">81_emergency_numbers</div></div>
+<div class="card"><object data="individual_dark/82_cyber_safety.svg" type="image/svg+xml"></object><div class="tit">Cyberbezpieczeństwo</div><div class="lbl">82_cyber_safety</div></div>
+<div class="card"><object data="individual_dark/83_mental_health_sos.svg" type="image/svg+xml"></object><div class="tit">Wsparcie psychiczne</div><div class="lbl">83_mental_health_sos</div></div>
+<div class="card"><object data="individual_dark/90_news.svg" type="image/svg+xml"></object><div class="tit">Aktualności</div><div class="lbl">90_news</div></div>
+<div class="card"><object data="individual_dark/a0_escort.svg" type="image/svg+xml"></object><div class="tit">Eskorta</div><div class="lbl">a0_escort</div></div>
+<div class="card"><object data="individual_dark/a1_fake_call_setup.svg" type="image/svg+xml"></object><div class="tit">Fałszywy telefon</div><div class="lbl">a1_fake_call_setup</div></div>
+<div class="card"><object data="individual_dark/a2_fake_call_incoming.svg" type="image/svg+xml"></object><div class="tit">Połączenie</div><div class="lbl">a2_fake_call_incoming</div></div>
+<div class="card"><object data="individual_dark/a3_pets.svg" type="image/svg+xml"></object><div class="tit">Zwierzęta</div><div class="lbl">a3_pets</div></div>
+<div class="card"><object data="individual_dark/b0_legal.svg" type="image/svg+xml"></object><div class="tit">Regulamin</div><div class="lbl">b0_legal</div></div>
+</div>
+<script>function show(m){document.getElementById("light").classList.toggle("hidden",m!=="light");document.getElementById("dark").classList.toggle("hidden",m!=="dark");document.querySelectorAll(".tab").forEach((t,i)=>t.classList.toggle("active",(i===0&&m==="light")||(i===1&&m==="dark")));}</script>
+</body></html>

@@ -863,34 +863,156 @@ def build_individual(name, kind, label):
     return '\n'.join(out)
 
 
+# ============================================================================
+# DARK MODE — color remapping (post-process)
+# ============================================================================
+
+# Light → Dark color map (Voltgear-style charcoal + voltMint accent)
+DARK_MAP = {
+    '#F2F2F7': '#0A0E14',  # grouped background → near-black charcoal
+    '#FAFBFC': '#0A0E14',  # master bg
+    '#FFFFFF': '#131820',  # surface (white cards) → dark gray cards
+    '#FAFAFD': '#131820',  # surfaceLowest
+    '#1A2027': '#F5F7FA',  # navy text → off-white
+    '#0D1015': '#F5F7FA',  # navy ink text
+    '#C6C6C8': '#2A323D',  # separator
+    '#E5E5EA': '#2A323D',  # outline
+    '#8E8E93': '#9CA3AF',  # label2 secondary
+    # navy backgrounds in dock + sub-pill: invert to voltMint
+    '"#1A2027"': '"#0A0E14"',  # dock bg stays charcoal (already dark)
+    '"#9DF4CB"': '"#C7F73E"',  # mint accent → voltMint (more energetic)
+}
+
+def to_dark(svg_text):
+    """Post-process light SVG to dark variant. Replace light tokens with dark."""
+    out = svg_text
+    # Replace exact color hex values (case-sensitive)
+    replacements = [
+        # Backgrounds — first to avoid being touched by text replacements
+        ('"#F2F2F7"', '"#0A0E14"'),  # grouped bg
+        ('"#FAFBFC"', '"#0A0E14"'),  # master bg
+        ('"#FFFFFF"', '"#131820"'),  # surface white
+        ('"#FAFAFD"', '"#131820"'),
+        # Text colors
+        ('"#1A2027"', '"#F5F7FA"'),  # navy text → off-white
+        ('"#0D1015"', '"#F5F7FA"'),
+        # Separators / outlines
+        ('"#C6C6C8"', '"#2A323D"'),
+        ('"#E5E5EA"', '"#2A323D"'),
+        # Label colors (lighter for dark mode)
+        ('"#8E8E93"', '"#9CA3AF"'),
+        # navy fill="..." patterns
+        ('fill="#1A2027"', 'fill="#F5F7FA"'),
+        ('fill="#0D1015"', 'fill="#F5F7FA"'),
+        ('fill="#F2F2F7"', 'fill="#0A0E14"'),
+        ('fill="#FFFFFF"', 'fill="#131820"'),
+        ('fill="#FAFAFD"', 'fill="#131820"'),
+        ('fill="#8E8E93"', 'fill="#9CA3AF"'),
+        ('fill="#C6C6C8"', 'fill="#2A323D"'),
+        ('fill="#E5E5EA"', 'fill="#2A323D"'),
+        # stroke colors
+        ('stroke="#C6C6C8"', 'stroke="#2A323D"'),
+        ('stroke="#E5E5EA"', 'stroke="#2A323D"'),
+        ('stroke="#1A2027"', 'stroke="#F5F7FA"'),
+        # white text on surface stays white in dark too — no change
+    ]
+    for old, new in replacements:
+        out = out.replace(old, new)
+    # Sub-pill navy background → voltMint pill (dark mode highlight)
+    # Match: <rect ... fill="#F5F7FA" ... y="..." height="32" rx="16"
+    # (we just inverted #1A2027 → #F5F7FA so sub-pill rect is now off-white)
+    # → instead change pill bg to voltMint, text to voltMintInk:
+    # but this would require parsing. Simpler: in dark, leave sub-pill as it became (off-white). Voltgear preference.
+    # Dock bg was navy #1A2027 in source → now #F5F7FA (white) which is WRONG.
+    # Fix: dock rect inside <g transform> needs to stay navy.
+    # Easier: search for `<rect x="0" y="0" width="374" height="56" rx="22" ry="22" fill="#F5F7FA"/>`
+    # and replace back to navy charcoal:
+    out = out.replace(
+        '<rect x="0" y="0" width="374" height="56" rx="22" ry="22" fill="#F5F7FA"/>',
+        '<rect x="0" y="0" width="374" height="56" rx="22" ry="22" fill="#0A0E14"/>'
+    )
+    # Same for SOS fullscreen overlay (navy) in fake_incoming:
+    out = out.replace(
+        '<rect x="0" y="0" width="390" height="844" fill="#F5F7FA"/>',
+        '<rect x="0" y="0" width="390" height="844" fill="#0A0E14"/>'
+    )
+    # Sub-pill in Home was navy → became off-white. Convert to voltMint pill:
+    out = out.replace(
+        'fill="#F5F7FA"/>\n  <text x="195" y="595" fill="white"',
+        'fill="#C7F73E"/>\n  <text x="195" y="595" fill="#1A2206"'
+    )
+    # CTA buttons (navy bg with white text) — in dark they should be voltMint+navyInk:
+    # Pattern: <rect ... width="326" height="56" rx="28" fill="#F5F7FA"/> ... <text ... fill="white"
+    # Replace navy CTA pills with voltMint:
+    import re
+    out = re.sub(
+        r'<rect (x="\d+") (y="\d+") width="326" height="56" rx="28" fill="#F5F7FA"/>',
+        r'<rect \1 \2 width="326" height="56" rx="28" fill="#C7F73E"/>',
+        out,
+    )
+    # White text on now-voltMint CTAs → voltMintInk
+    out = out.replace(
+        'rx="28" fill="#C7F73E"/>\n  <text',
+        'rx="28" fill="#C7F73E"/>\n  <text'
+    )
+    return out
+
+
 def main():
     out_dir = os.path.dirname(os.path.abspath(__file__))
     individual_dir = os.path.join(out_dir, 'individual')
+    dark_dir = os.path.join(out_dir, 'individual_dark')
     os.makedirs(individual_dir, exist_ok=True)
+    os.makedirs(dark_dir, exist_ok=True)
 
+    # ---- LIGHT ----
     # master
     master_path = os.path.join(out_dir, 'besafe_v99_all.svg')
+    master_light = build_master()
     with open(master_path, 'w') as f:
-        f.write(build_master())
-    print(f'Master: {master_path} ({os.path.getsize(master_path)//1024} KB)')
+        f.write(master_light)
+    print(f'Master light: {master_path} ({os.path.getsize(master_path)//1024} KB)')
 
-    # individual
+    # individual light
     for name, kind, label in SCREENS:
         p = os.path.join(individual_dir, f'{name}.svg')
         with open(p, 'w') as f:
             f.write(build_individual(name, kind, label))
-    print(f'Individual: {individual_dir}/ ({len(SCREENS)} files)')
+    print(f'Individual light: {individual_dir}/ ({len(SCREENS)} files)')
 
-    # index.html preview
+    # ---- DARK ----
+    master_dark_path = os.path.join(out_dir, 'besafe_v99_dark.svg')
+    with open(master_dark_path, 'w') as f:
+        f.write(to_dark(master_light))
+    print(f'Master dark: {master_dark_path} ({os.path.getsize(master_dark_path)//1024} KB)')
+
+    for name, kind, label in SCREENS:
+        light_svg = build_individual(name, kind, label)
+        p = os.path.join(dark_dir, f'{name}.svg')
+        with open(p, 'w') as f:
+            f.write(to_dark(light_svg))
+    print(f'Individual dark: {dark_dir}/ ({len(SCREENS)} files)')
+
+    # ---- index.html with tabs Light/Dark ----
     idx_html = ['<!doctype html><html><head><meta charset="utf-8"><title>be:Safe v99 — Figma Export</title>',
-        '<style>body{font-family:Inter,sans-serif;background:#0A0E14;color:#F5F7FA;margin:0;padding:32px}h1{font-weight:700;letter-spacing:-0.5px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;margin-top:24px}.card{background:#131820;border-radius:18px;padding:12px;border:1px solid #1F2730}.card img,.card object{width:100%;height:auto;border-radius:12px;background:#F2F2F7}.lbl{font-size:11px;color:#9CA3AF;margin-top:8px}.tit{font-size:13px;font-weight:600;color:#F5F7FA}</style></head><body>',
+        '<style>body{font-family:Inter,sans-serif;background:#0A0E14;color:#F5F7FA;margin:0;padding:32px}h1{font-weight:700;letter-spacing:-0.5px}.tabs{display:flex;gap:12px;margin:24px 0}.tab{padding:10px 24px;border-radius:14px;background:#131820;border:1px solid #2A323D;cursor:pointer;color:#9CA3AF;font-weight:600;font-size:14px}.tab.active{background:#C7F73E;color:#1A2206;border-color:#C7F73E}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;margin-top:24px}.card{background:#131820;border-radius:18px;padding:12px;border:1px solid #1F2730}.card object{width:100%;height:auto;border-radius:12px}.lbl{font-size:11px;color:#9CA3AF;margin-top:8px}.tit{font-size:13px;font-weight:600;color:#F5F7FA}.hidden{display:none}</style></head><body>',
         '<h1>be:Safe v99 — IDENTYCZNY wygląd jak APK</h1>',
-        '<p style="color:#9CA3AF">44 ekrany · realne dane meneswczesny@gmail.com · Inter font · oryginalne dock SVG paths · Google avatar embedded</p>',
-        '<p style="color:#9CA3AF">Import do Figma: File → Import → besafe_v99_all.svg → 44 grupy z nazwami → Cmd/Ctrl+Alt+G</p>',
-        '<div class="grid">']
+        '<p style="color:#9CA3AF">44 ekrany · realne dane meneswczesny@gmail.com · Inter font · oryginalne dock SVG paths · Google avatar embedded · LIGHT + DARK</p>',
+        '<p style="color:#9CA3AF">Import do Figma: File → Import → besafe_v99_all.svg (light) lub besafe_v99_dark.svg → 44 grupy</p>',
+        '<div class="tabs">',
+        '<div class="tab active" onclick="show(\'light\')">Light mode (44)</div>',
+        '<div class="tab" onclick="show(\'dark\')">Dark mode (44)</div>',
+        '</div>',
+        '<div id="light" class="grid">']
     for name, kind, label in SCREENS:
         idx_html.append(f'<div class="card"><object data="individual/{name}.svg" type="image/svg+xml"></object><div class="tit">{label}</div><div class="lbl">{name}</div></div>')
-    idx_html.append('</div></body></html>')
+    idx_html.append('</div>')
+    idx_html.append('<div id="dark" class="grid hidden">')
+    for name, kind, label in SCREENS:
+        idx_html.append(f'<div class="card"><object data="individual_dark/{name}.svg" type="image/svg+xml"></object><div class="tit">{label}</div><div class="lbl">{name}</div></div>')
+    idx_html.append('</div>')
+    idx_html.append('<script>function show(m){document.getElementById("light").classList.toggle("hidden",m!=="light");document.getElementById("dark").classList.toggle("hidden",m!=="dark");document.querySelectorAll(".tab").forEach((t,i)=>t.classList.toggle("active",(i===0&&m==="light")||(i===1&&m==="dark")));}</script>')
+    idx_html.append('</body></html>')
     with open(os.path.join(out_dir, 'index.html'), 'w') as f:
         f.write('\n'.join(idx_html))
     print(f'Preview: {out_dir}/index.html')

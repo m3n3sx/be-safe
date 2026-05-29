@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 904" width="390" height="904">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&amp;display=swap');
+  text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+  .mono { font-family: 'SF Mono', Menlo, monospace; }
+</style>
+
+<g transform="translate(0,0)">
+<defs><clipPath id="clip_02_mode_picker"><rect width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_02_mode_picker)">
+<rect width="390" height="844" fill="#0A0E14"/>
+<g>
+  <text x="32" y="32" fill="#F5F7FA" font-size="16" font-weight="600">9:41</text>
+  <g transform="translate(316,18)">
+    <rect x="0" y="0" width="32" height="14" rx="4" fill="none" stroke="#F5F7FA" stroke-width="1.2" opacity="0.85"/>
+    <rect x="33" y="4" width="2" height="6" rx="1" fill="#F5F7FA" opacity="0.85"/>
+    <rect x="2" y="2" width="26" height="10" rx="2" fill="#F5F7FA"/>
+  </g>
+  <g transform="translate(296,22)">
+    <path d="M0,6 L2,4 L4,6 L4,8 L0,8 Z" fill="#F5F7FA" opacity="0.85"/>
+  </g>
+</g>
+<text x="20" y="160" fill="#F5F7FA" font-size="32" font-weight="700" letter-spacing="-0.8">Wybierz tryb</text>
+<text x="20" y="188" fill="#9CA3AF" font-size="15">Możesz to zmienić w ustawieniach</text>
+<rect x="20" y="220" width="350" height="120" rx="22" fill="#131820" stroke="#2A323D"/>
+<circle cx="60" cy="280" r="28" fill="#9DF4CB" opacity="0.35"/>
+<text x="60" y="288" font-size="22" text-anchor="middle">👶</text>
+<text x="106" y="272" fill="#F5F7FA" font-size="18" font-weight="700">Dla dziecka</text>
+<text x="106" y="296" fill="#9CA3AF" font-size="12" letter-spacing="0.6">KIDS</text>
+<rect x="20" y="358" width="350" height="120" rx="22" fill="#131820" stroke="#2A323D"/>
+<circle cx="60" cy="418" r="28" fill="#9EEBEC" opacity="0.35"/>
+<text x="60" y="426" font-size="22" text-anchor="middle">🌿</text>
+<text x="106" y="410" fill="#F5F7FA" font-size="18" font-weight="700">Dla seniora</text>
+<text x="106" y="434" fill="#9CA3AF" font-size="12" letter-spacing="0.6">SENIOR</text>
+<rect x="20" y="496" width="350" height="120" rx="22" fill="#131820" stroke="#2A323D"/>
+<circle cx="60" cy="556" r="28" fill="#C7F73E" opacity="0.35"/>
+<text x="60" y="564" font-size="22" text-anchor="middle">🛡️</text>
+<text x="106" y="548" fill="#F5F7FA" font-size="18" font-weight="700">Standardowy</text>
+<text x="106" y="572" fill="#9CA3AF" font-size="12" letter-spacing="0.6">NORMAL</text>
+</g>
+<text x="0" y="874" fill="#9CA3AF" font-size="12" font-weight="600">02_mode_picker</text>
+<text x="0" y="894" fill="#F5F7FA" font-size="13" font-weight="500">Wybierz tryb</text>
+</g>
+</svg>
