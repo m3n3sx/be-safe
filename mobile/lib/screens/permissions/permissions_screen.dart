@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
+import '../../theme/ios_surfaces.dart';
 
 class _Capability {
   final String key;
@@ -194,10 +195,10 @@ class _PermissionsScreenState extends State<PermissionsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.groupedBackground,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
         title: const Text('Uprawnienia'),
-        backgroundColor: SerenityColors.groupedBackground,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
@@ -292,9 +293,9 @@ class _CapabilityCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(SerenitySpacing.md),
       decoration: BoxDecoration(
-        color: SerenityColors.groupedSurface,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(SerenityShapes.iosInline),
-        boxShadow: SerenityElevation.ios(),
+        boxShadow: context.iosShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

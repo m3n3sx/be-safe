@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="904" viewBox="0 0 390 904">
+  <title>24_alerts_stats — Statystyki</title>
+  <g id="24_alerts_stats" data-section="Alerty" data-kind="stats" data-dart="alerts/stats_screen.dart" >
+    <title>24_alerts_stats</title>
+    <desc>Statystyki — Alerty — alerts/stats_screen.dart</desc>
+    <rect x="-1" y="-1" width="392" height="846" rx="20" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+    <clipPath id="clip_24_alerts_stats"><rect x="0" y="0" width="390" height="844" rx="20"/></clipPath>
+    <g clip-path="url(#clip_24_alerts_stats)">
+      <rect x="0" y="0" width="390" height="844" fill="#F2F2F7" />
+      <rect x="0" y="0" width="390" height="44" fill="#F2F2F7" />
+      <text x="24" y="28" font-family="SF Pro, Inter, sans-serif" font-size="14" font-weight="600" fill="#1A2027">9:41</text>
+      <g transform="translate(310,14)"><circle cx="6" cy="6" r="2" fill="#1A2027"/><rect x="14" y="2" width="22" height="10" rx="3" fill="none" stroke="#1A2027" stroke-width="1.2"/><rect x="16" y="4" width="14" height="6" rx="1" fill="#1A2027"/></g>
+      <rect x="0" y="44" width="390" height="56" fill="#F2F2F7" />
+      <text x="20" y="78" font-family="SF Pro" font-size="22" fill="#1A2027">‹</text>
+      <text x="195" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="17" font-weight="600" fill="#1A2027">Statystyki</text>
+      <rect x="32" y="330" width="40" height="40" rx="6" fill="#9DF4CB"/>
+      <rect x="92" y="290" width="40" height="80" rx="6" fill="#9DF4CB"/>
+      <rect x="152" y="314" width="40" height="56" rx="6" fill="#9DF4CB"/>
+      <rect x="212" y="270" width="40" height="100" rx="6" fill="#9DF4CB"/>
+      <rect x="272" y="298" width="40" height="72" rx="6" fill="#9DF4CB"/>
+      <text x="32" y="420" font-family="Inter" font-size="13" font-weight="600" fill="#8E8E93">OSTATNI TYDZIEŃ — m3n3s</text>
+      <text x="32" y="470" font-family="Inter" font-size="15" fill="#1A2027">Zgłoszonych alertów</text>
+      <text x="358" y="470" text-anchor="end" font-family="Inter" font-size="17" font-weight="600" fill="#1A2027">8</text>
+      <text x="32" y="514" font-family="Inter" font-size="15" fill="#1A2027">Potwierdzeń społeczności</text>
+      <text x="358" y="514" text-anchor="end" font-family="Inter" font-size="17" font-weight="600" fill="#1A2027">34</text>
+      <text x="32" y="558" font-family="Inter" font-size="15" fill="#1A2027">Punkty reputacji</text>
+      <text x="358" y="558" text-anchor="end" font-family="Inter" font-size="17" font-weight="600" fill="#1A2027">+104</text>
+      <rect x="8" y="774" width="374" height="56" rx="22" fill="#1A2027"/>
+      <text x="45" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">⌂</text>
+      <text x="45" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Mapa</text>
+      <text x="119" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">♡</text>
+      <text x="119" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Home</text>
+      <text x="193" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">👥</text>
+      <text x="193" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Rodzina</text>
+      <text x="267" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">⚠</text>
+      <text x="267" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">SOS</text>
+      <text x="341" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">👤</text>
+      <text x="341" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Profil</text>
+    </g>
+    <text x="0" y="872" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A2027">24_alerts_stats</text>
+    <text x="0" y="892" font-family="Inter" font-size="11" fill="#8E8E93">Statystyki</text>
+  </g>
+</svg>

@@ -16,6 +16,7 @@ import '../../services/biometric_service.dart';
 import '../../services/sos_audio_service.dart';
 import '../../services/i18n.dart';
 import '../../theme/design_tokens.dart';
+import '../../theme/ios_surfaces.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -55,7 +56,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final user = context.watch<AuthProvider>().user;
 
     return Scaffold(
-      backgroundColor: SerenityColors.groupedBackground,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -65,14 +66,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back_ios_new, size: 22),
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
                   const SizedBox(width: 4),
                   Text(
                     'Ustawienia',
-                    style: SerenityText.largeTitle.copyWith(fontSize: 28),
+                    style: SerenityText.largeTitle.copyWith(
+                      fontSize: 28,
+                      color: context.iosLabel,
+                    ),
                   ),
                 ],
               ),
@@ -80,10 +84,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Expanded(
               child: ListTileTheme(
                 data: ListTileThemeData(
-                  tileColor: SerenityColors.groupedSurface,
-                  selectedTileColor: SerenityColors.groupedSurface,
+                  tileColor: context.iosCardSurface,
+                  selectedTileColor: context.iosCardSurface,
                   iconColor: SerenityColors.primaryContainer,
-                  textColor: SerenityColors.primary,
+                  textColor: context.iosLabel,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                   minVerticalPadding: 12,
                 ),

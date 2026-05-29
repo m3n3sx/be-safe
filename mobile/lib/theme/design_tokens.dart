@@ -122,6 +122,29 @@ class SerenityColors {
 
   /// Deeper voltgear shade — used as dark text on voltMint pill CTA.
   static const voltMintInk  = Color(0xFF1A2206);
+
+  // ============================================================================
+  // DARK MODE — Voltgear-inspired charcoal palette (v98+)
+  // Use through `context.iosBackground` / `context.iosCardSurface` etc.
+  // ============================================================================
+
+  /// Dark equivalent of groupedBackground — deep charcoal page bg.
+  static const groupedBackgroundDark = Color(0xFF0A0E14);
+
+  /// Dark equivalent of groupedSurface — slightly lighter card bg.
+  static const groupedSurfaceDark = Color(0xFF131820);
+
+  /// Dark equivalent of surfaceContainerHigh — elevated card / chip bg.
+  static const groupedSurfaceHighDark = Color(0xFF1F2730);
+
+  /// Dark separator — hairline on dark cards.
+  static const separatorDark = Color(0xFF2A323D);
+
+  /// Dark secondaryLabel — gray subtitle on dark.
+  static const secondaryLabelDark = Color(0xFF9CA3AF);
+
+  /// Dark onSurface — primary text on dark.
+  static const onSurfaceDark = Color(0xFFF5F7FA);
 }
 
 // ============================================================================

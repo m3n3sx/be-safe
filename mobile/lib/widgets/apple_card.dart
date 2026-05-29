@@ -7,6 +7,7 @@ library;
 
 import 'package:flutter/material.dart';
 import '../theme/design_tokens.dart';
+import '../theme/ios_surfaces.dart';
 import 'pressable_scale.dart';
 
 class AppleCard extends StatelessWidget {
@@ -27,7 +28,7 @@ class AppleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = backgroundColor ?? SerenityColors.groupedSurface;
+    final bg = backgroundColor ?? context.iosCardSurface;
     final child0 = Padding(padding: padding, child: child);
 
     final card = ClipRRect(
@@ -36,7 +37,7 @@ class AppleCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           borderRadius: SerenityShapes.iosInlineCard(),
-          boxShadow: SerenityElevation.ios(),
+          boxShadow: context.iosShadow,
         ),
         child: onTap == null
             ? child0
@@ -44,10 +45,8 @@ class AppleCard extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: onTap,
-                  splashColor:
-                      SerenityColors.separator.withValues(alpha: 0.4),
-                  highlightColor:
-                      SerenityColors.separator.withValues(alpha: 0.2),
+                  splashColor: context.iosSeparator.withValues(alpha: 0.4),
+                  highlightColor: context.iosSeparator.withValues(alpha: 0.2),
                   child: child0,
                 ),
               ),

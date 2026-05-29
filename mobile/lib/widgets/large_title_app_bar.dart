@@ -13,6 +13,7 @@ library;
 
 import 'package:flutter/material.dart';
 import '../theme/design_tokens.dart';
+import '../theme/ios_surfaces.dart';
 
 class LargeTitleSliverAppBar extends StatelessWidget {
   final String title;
@@ -36,11 +37,11 @@ class LargeTitleSliverAppBar extends StatelessWidget {
       automaticallyImplyLeading: automaticallyImplyLeading,
       leading: leading,
       actions: actions,
-      backgroundColor: SerenityColors.groupedBackground,
+      backgroundColor: context.iosBackground,
       surfaceTintColor: Colors.transparent,
       scrolledUnderElevation: 0,
       elevation: 0,
-      foregroundColor: SerenityColors.primary,
+      foregroundColor: context.iosLabel,
       expandedHeight: 96,
       titleSpacing: 16,
       flexibleSpace: LayoutBuilder(
@@ -56,11 +57,11 @@ class LargeTitleSliverAppBar extends StatelessWidget {
               opacity: progress < 0.3 ? 1.0 : 0,
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                 ),
               ),
             ),
@@ -71,7 +72,12 @@ class LargeTitleSliverAppBar extends StatelessWidget {
                   alignment: Alignment.bottomLeft,
                   child: Opacity(
                     opacity: progress > 0.3 ? 1.0 : 0,
-                    child: Text(title, style: SerenityText.largeTitle),
+                    child: Text(
+                      title,
+                      style: SerenityText.largeTitle.copyWith(
+                        color: context.iosLabel,
+                      ),
+                    ),
                   ),
                 ),
               ),

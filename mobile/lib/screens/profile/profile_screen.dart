@@ -13,6 +13,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
+import '../../theme/ios_surfaces.dart';
 import '../../widgets/serenity_card.dart';
 import '../../widgets/inset_grouped_section.dart';
 import '../../widgets/apple_card.dart';
@@ -111,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final user = context.watch<AuthProvider>().user;
     return Scaffold(
-      backgroundColor: SerenityColors.groupedBackground,
+      backgroundColor: context.iosBackground,
       extendBody: true,
       // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
       body: SafeArea(

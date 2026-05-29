@@ -18,6 +18,7 @@ library;
 
 import 'package:flutter/material.dart';
 import '../theme/design_tokens.dart';
+import '../theme/ios_surfaces.dart';
 import 'pressable_scale.dart';
 
 /// A grouped, inset section like iOS Settings.
@@ -47,7 +48,9 @@ class InsetGroupedSection extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16, bottom: 8, top: 16),
               child: Text(
                 header!.toUpperCase(),
-                style: SerenityText.iosSectionHeader,
+                style: SerenityText.iosSectionHeader.copyWith(
+                  color: context.iosSecondaryLabel,
+                ),
               ),
             ),
           ],
@@ -55,7 +58,7 @@ class InsetGroupedSection extends StatelessWidget {
             borderRadius: SerenityShapes.iosGroupedCard(),
             child: Container(
               decoration: BoxDecoration(
-                color: SerenityColors.groupedSurface,
+                color: context.iosCardSurface,
                 borderRadius: SerenityShapes.iosGroupedCard(),
               ),
               child: Column(
@@ -66,7 +69,12 @@ class InsetGroupedSection extends StatelessWidget {
           if (footer != null) ...[
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: Text(footer!, style: SerenityText.iosFootnote),
+              child: Text(
+                footer!,
+                style: SerenityText.iosFootnote.copyWith(
+                  color: context.iosSecondaryLabel,
+                ),
+              ),
             ),
           ],
         ],
@@ -92,12 +100,12 @@ class _InsetSeparator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 56),
+    return Padding(
+      padding: const EdgeInsets.only(left: 56),
       child: Divider(
         height: 0.5,
         thickness: 0.5,
-        color: SerenityColors.separator,
+        color: context.iosSeparator,
       ),
     );
   }
@@ -131,7 +139,7 @@ class InsetGroupedRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titleColor =
-        destructive ? SerenityColors.glowAlertCoral : SerenityColors.primary;
+        destructive ? SerenityColors.glowAlertCoral : context.iosLabel;
     final iconBgColor =
         iconColor ?? (destructive ? SerenityColors.glowAlertCoral : SerenityColors.primaryContainer);
 
@@ -139,8 +147,8 @@ class InsetGroupedRow extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        splashColor: SerenityColors.separator.withValues(alpha: 0.5),
-        highlightColor: SerenityColors.separator.withValues(alpha: 0.2),
+        splashColor: context.iosSeparator.withValues(alpha: 0.5),
+        highlightColor: context.iosSeparator.withValues(alpha: 0.2),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 11, 16, 11),
           child: Row(
@@ -171,7 +179,12 @@ class InsetGroupedRow extends StatelessWidget {
                     if (subtitle != null)
                       Padding(
                         padding: const EdgeInsets.only(top: 2),
-                        child: Text(subtitle!, style: SerenityText.iosSubhead),
+                        child: Text(
+                          subtitle!,
+                          style: SerenityText.iosSubhead.copyWith(
+                            color: context.iosSecondaryLabel,
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -181,16 +194,18 @@ class InsetGroupedRow extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 8, right: 4),
                   child: Text(
                     value!,
-                    style: SerenityText.iosSubhead,
+                    style: SerenityText.iosSubhead.copyWith(
+                      color: context.iosSecondaryLabel,
+                    ),
                   ),
                 ),
               if (trailing != null)
                 trailing!
               else if (onTap != null)
-                const Icon(
+                Icon(
                   Icons.chevron_right,
                   size: 22,
-                  color: SerenityColors.secondaryLabel,
+                  color: context.iosSecondaryLabel,
                 ),
             ],
           ),

@@ -14,6 +14,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../theme/design_tokens.dart';
+import '../theme/ios_surfaces.dart';
 
 class SafetyHeroXL extends StatefulWidget {
   /// 0..10 safety score (10 = best).
@@ -92,6 +93,7 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
                 fontSize: 36,
                 height: 44 / 36,
                 fontWeight: FontWeight.w200,
+                color: context.iosLabel,
               ),
               textAlign: TextAlign.center,
             ),
@@ -101,7 +103,9 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
               widget.subtitle,
-              style: SerenityText.bodyMain,
+              style: SerenityText.bodyMain.copyWith(
+                color: context.iosSecondaryLabel,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -137,6 +141,7 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
                               style: SerenityText.iosSectionHeader.copyWith(
                                 fontSize: 11,
                                 letterSpacing: 1.4,
+                                color: context.iosSecondaryLabel,
                               ),
                             ),
                             const SizedBox(height: 12),
@@ -151,13 +156,14 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
                                       height: 1.0,
                                       fontWeight: FontWeight.w100,
                                       letterSpacing: -4,
+                                      color: context.iosLabel,
                                     ),
                                   ),
                                   TextSpan(
                                     text: ' / 10',
                                     style: SerenityText.bodyMain.copyWith(
                                       fontSize: 22,
-                                      color: SerenityColors.secondaryLabel,
+                                      color: context.iosSecondaryLabel,
                                       fontWeight: FontWeight.w300,
                                     ),
                                   ),
@@ -183,17 +189,22 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
           GestureDetector(
             onTap: widget.onMapTap,
             behavior: HitTestBehavior.opaque,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Zobacz mapę', style: SerenityText.labelButton),
-                  SizedBox(width: 4),
+                  Text(
+                    'Zobacz mapę',
+                    style: SerenityText.labelButton.copyWith(
+                      color: context.iosLabel,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
                   Icon(
                     Icons.arrow_forward,
                     size: 16,
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                   ),
                 ],
               ),
@@ -211,19 +222,24 @@ class _SubPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg = isDark
+        ? SerenityColors.voltMint
+        : SerenityColors.primaryContainer;
+    final fg = isDark ? SerenityColors.voltMintInk : Colors.white;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: SerenityColors.primaryContainer,
+        color: bg,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Inter',
           fontSize: 12,
           fontWeight: FontWeight.w500,
-          color: Colors.white,
+          color: fg,
           letterSpacing: 0.2,
         ),
       ),

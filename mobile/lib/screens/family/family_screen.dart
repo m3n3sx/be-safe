@@ -14,6 +14,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
+import '../../theme/ios_surfaces.dart';
 import '../../widgets/glow_orb.dart';
 import '../../widgets/serenity_card.dart';
 import 'child_profile_screen.dart';
@@ -598,7 +599,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.groupedBackground,
+      backgroundColor: context.iosBackground,
       extendBody: true,
       // bottomNavigationBar usunięty — globalny dock przez MaterialApp.builder
       body: SafeArea(

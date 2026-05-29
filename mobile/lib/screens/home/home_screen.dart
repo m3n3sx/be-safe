@@ -15,6 +15,7 @@ import '../../providers/alert_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
+import '../../theme/ios_surfaces.dart';
 import '../../widgets/glow_orb.dart'; // ignore: unused_import (kept for hero fallback)
 import '../../widgets/safety_hero_xl.dart';
 import '../../widgets/stagger_list.dart';
@@ -251,7 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final userName = auth.user?.username.split(' ').first ?? '';
 
     return Scaffold(
-      backgroundColor: SerenityColors.groupedBackground,
+      backgroundColor: context.iosBackground,
       extendBody: true,
       body: SafeArea(
         bottom: false,
@@ -614,9 +615,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
         decoration: BoxDecoration(
-          color: SerenityColors.groupedSurface,
+          color: context.iosCardSurface,
           borderRadius: BorderRadius.circular(SerenityShapes.iosInline),
-          boxShadow: SerenityElevation.ios(),
+          boxShadow: context.iosShadow,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="904" viewBox="0 0 390 904">
+  <title>11_home_kids — Home — Kids</title>
+  <g id="11_home_kids" data-section="Home" data-kind="home" data-dart="home/home_kids_screen.dart" >
+    <title>11_home_kids</title>
+    <desc>Home — Kids — Home — home/home_kids_screen.dart</desc>
+    <rect x="-1" y="-1" width="392" height="846" rx="20" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+    <clipPath id="clip_11_home_kids"><rect x="0" y="0" width="390" height="844" rx="20"/></clipPath>
+    <g clip-path="url(#clip_11_home_kids)">
+      <rect x="0" y="0" width="390" height="844" fill="#F2F2F7" />
+      <rect x="0" y="0" width="390" height="44" fill="#F2F2F7" />
+      <text x="24" y="28" font-family="SF Pro, Inter, sans-serif" font-size="14" font-weight="600" fill="#1A2027">9:41</text>
+      <g transform="translate(310,14)"><circle cx="6" cy="6" r="2" fill="#1A2027"/><rect x="14" y="2" width="22" height="10" rx="3" fill="none" stroke="#1A2027" stroke-width="1.2"/><rect x="16" y="4" width="14" height="6" rx="1" fill="#1A2027"/></g>
+      <rect x="0" y="44" width="390" height="56" fill="#F2F2F7" />
+      <text x="195" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="17" font-weight="600" fill="#1A2027">Home — Kids</text>
+      <text x="20" y="140" font-family="Inter" font-size="34" font-weight="700" fill="#1A2027">Cześć, Piotr</text>
+      <rect x="16" y="170" width="358" height="180" rx="20" fill="#FFFFFF" />
+      <circle cx="320" cy="230" r="80" fill="#9DF4CB" opacity="0.35"/>
+      <text x="32" y="208" font-family="Inter" font-size="13" font-weight="600" fill="#8E8E93">STATUS OKOLICY</text>
+      <text x="32" y="246" font-family="Inter" font-size="22" font-weight="700" fill="#1A2027">Wszystko w porządku</text>
+      <text x="32" y="272" font-family="Inter" font-size="15" font-weight="400" fill="#8E8E93">Wszystko w porządku w Twojej okolicy</text>
+      <rect x="16" y="370" width="171" height="100" rx="20" fill="#FFFFFF"/>
+      <text x="32" y="404" font-family="Inter" font-size="34" font-weight="700" fill="#1A2027">104</text>
+      <text x="32" y="432" font-family="Inter" font-size="13" font-weight="600" fill="#8E8E93">REPUTACJA</text>
+      <rect x="203" y="370" width="171" height="100" rx="20" fill="#FFFFFF"/>
+      <text x="219" y="404" font-family="Inter" font-size="34" font-weight="700" fill="#1A2027">6</text>
+      <text x="219" y="432" font-family="Inter" font-size="13" font-weight="600" fill="#8E8E93">RODZINA</text>
+      <rect x="260" y="688" width="110" height="46" rx="23" fill="#1A2027"/>
+      <text x="315" y="718" text-anchor="middle" font-family="Inter" font-size="15" font-weight="600" fill="#FFFFFF">+ Zgłoś</text>
+      <rect x="8" y="774" width="374" height="56" rx="22" fill="#1A2027"/>
+      <text x="45" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">⌂</text>
+      <text x="45" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Mapa</text>
+      <text x="119" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">♡</text>
+      <text x="119" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Home</text>
+      <text x="193" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">👥</text>
+      <text x="193" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Rodzina</text>
+      <text x="267" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">⚠</text>
+      <text x="267" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">SOS</text>
+      <text x="341" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">👤</text>
+      <text x="341" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Profil</text>
+    </g>
+    <text x="0" y="872" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A2027">11_home_kids</text>
+    <text x="0" y="892" font-family="Inter" font-size="11" fill="#8E8E93">Home — Kids</text>
+  </g>
+</svg>

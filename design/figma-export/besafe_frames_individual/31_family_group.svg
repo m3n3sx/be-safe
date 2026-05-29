@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="904" viewBox="0 0 390 904">
+  <title>31_family_group — Grupa1 — członkowie</title>
+  <g id="31_family_group" data-section="Rodzina" data-kind="list" data-dart="family/family_group_screen.dart" >
+    <title>31_family_group</title>
+    <desc>Grupa1 — członkowie — Rodzina — family/family_group_screen.dart</desc>
+    <rect x="-1" y="-1" width="392" height="846" rx="20" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+    <clipPath id="clip_31_family_group"><rect x="0" y="0" width="390" height="844" rx="20"/></clipPath>
+    <g clip-path="url(#clip_31_family_group)">
+      <rect x="0" y="0" width="390" height="844" fill="#F2F2F7" />
+      <rect x="0" y="0" width="390" height="44" fill="#F2F2F7" />
+      <text x="24" y="28" font-family="SF Pro, Inter, sans-serif" font-size="14" font-weight="600" fill="#1A2027">9:41</text>
+      <g transform="translate(310,14)"><circle cx="6" cy="6" r="2" fill="#1A2027"/><rect x="14" y="2" width="22" height="10" rx="3" fill="none" stroke="#1A2027" stroke-width="1.2"/><rect x="16" y="4" width="14" height="6" rx="1" fill="#1A2027"/></g>
+      <rect x="0" y="44" width="390" height="56" fill="#F2F2F7" />
+      <text x="20" y="78" font-family="SF Pro" font-size="22" fill="#1A2027">‹</text>
+      <text x="195" y="78" text-anchor="middle" font-family="Inter, sans-serif" font-size="17" font-weight="600" fill="#1A2027">Grupa1 — członkowie</text>
+      <text x="32" y="140" font-family="Inter" font-size="13" font-weight="600" letter-spacing="0.5" fill="#8E8E93">GRUPA1 — CZŁONKOWIE</text>
+      <rect x="16" y="160" width="358" height="392" rx="10" fill="#FFFFFF"/>
+      <rect x="32" y="174" width="28" height="28" rx="7" fill="#9DF4CB" opacity="0.6"/>
+      <text x="72" y="190" font-family="Inter" font-size="15" font-weight="500" fill="#1A2027">piotr</text>
+      <text x="72" y="207" font-family="Inter" font-size="12" fill="#8E8E93">parent · 🔋 100% · Online</text>
+      <text x="346" y="195" text-anchor="end" font-family="Inter" font-size="17" fill="#8E8E93">›</text>
+      <line x1="72" y1="216" x2="374" y2="216" stroke="#C6C6C8" stroke-width="0.5"/>
+      <rect x="32" y="230" width="28" height="28" rx="7" fill="#9DF4CB" opacity="0.6"/>
+      <text x="72" y="246" font-family="Inter" font-size="15" font-weight="500" fill="#1A2027">Marcin</text>
+      <text x="72" y="263" font-family="Inter" font-size="12" fill="#8E8E93">parent · 🔋 100% · Online</text>
+      <text x="346" y="251" text-anchor="end" font-family="Inter" font-size="17" fill="#8E8E93">›</text>
+      <line x1="72" y1="272" x2="374" y2="272" stroke="#C6C6C8" stroke-width="0.5"/>
+      <rect x="32" y="286" width="28" height="28" rx="7" fill="#FF7A7A" opacity="0.6"/>
+      <text x="72" y="302" font-family="Inter" font-size="15" font-weight="500" fill="#1A2027">m3n3s</text>
+      <text x="72" y="319" font-family="Inter" font-size="12" fill="#8E8E93">parent · 🔋 73% · Online</text>
+      <text x="346" y="307" text-anchor="end" font-family="Inter" font-size="17" fill="#8E8E93">›</text>
+      <line x1="72" y1="328" x2="374" y2="328" stroke="#C6C6C8" stroke-width="0.5"/>
+      <rect x="32" y="342" width="28" height="28" rx="7" fill="#9DF4CB" opacity="0.6"/>
+      <text x="72" y="358" font-family="Inter" font-size="15" font-weight="500" fill="#1A2027">Michael Skweres (Hiki)</text>
+      <text x="72" y="375" font-family="Inter" font-size="12" fill="#8E8E93">parent · 🔋 46% · Offline</text>
+      <text x="346" y="363" text-anchor="end" font-family="Inter" font-size="17" fill="#8E8E93">›</text>
+      <line x1="72" y1="384" x2="374" y2="384" stroke="#C6C6C8" stroke-width="0.5"/>
+      <rect x="32" y="398" width="28" height="28" rx="7" fill="#9DF4CB" opacity="0.6"/>
+      <text x="72" y="414" font-family="Inter" font-size="15" font-weight="500" fill="#1A2027">Marek Kołodziejczyk</text>
+      <text x="72" y="431" font-family="Inter" font-size="12" fill="#8E8E93">parent · 🔋 85% · Online</text>
+      <text x="346" y="419" text-anchor="end" font-family="Inter" font-size="17" fill="#8E8E93">›</text>
+      <line x1="72" y1="440" x2="374" y2="440" stroke="#C6C6C8" stroke-width="0.5"/>
+      <rect x="32" y="454" width="28" height="28" rx="7" fill="#FF7A7A" opacity="0.6"/>
+      <text x="72" y="470" font-family="Inter" font-size="15" font-weight="500" fill="#1A2027">Justyna Rewers</text>
+      <text x="72" y="487" font-family="Inter" font-size="12" fill="#8E8E93">child · 🔋 32% · Offline</text>
+      <text x="346" y="475" text-anchor="end" font-family="Inter" font-size="17" fill="#8E8E93">›</text>
+      <line x1="72" y1="496" x2="374" y2="496" stroke="#C6C6C8" stroke-width="0.5"/>
+      <rect x="32" y="510" width="28" height="28" rx="7" fill="#FF7A7A" opacity="0.6"/>
+      <text x="72" y="526" font-family="Inter" font-size="15" font-weight="500" fill="#1A2027">Heluss Menelek</text>
+      <text x="72" y="543" font-family="Inter" font-size="12" fill="#8E8E93">child · 🔋 98% · Online</text>
+      <text x="346" y="531" text-anchor="end" font-family="Inter" font-size="17" fill="#8E8E93">›</text>
+      <rect x="8" y="774" width="374" height="56" rx="22" fill="#1A2027"/>
+      <text x="45" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">⌂</text>
+      <text x="45" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Mapa</text>
+      <text x="119" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">♡</text>
+      <text x="119" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Home</text>
+      <text x="193" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">👥</text>
+      <text x="193" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Rodzina</text>
+      <text x="267" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">⚠</text>
+      <text x="267" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">SOS</text>
+      <text x="341" y="804" text-anchor="middle" font-family="Inter" font-size="16" fill="#FFFFFF" opacity="0.55">👤</text>
+      <text x="341" y="822" text-anchor="middle" font-family="Inter" font-size="9" font-weight="500" fill="#FFFFFF" opacity="0.55">Profil</text>
+    </g>
+    <text x="0" y="872" font-family="Inter, sans-serif" font-size="14" font-weight="700" fill="#1A2027">31_family_group</text>
+    <text x="0" y="892" font-family="Inter" font-size="11" fill="#8E8E93">Grupa1 — członkowie</text>
+  </g>
+</svg>
