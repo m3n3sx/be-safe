@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 904" width="390" height="904">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&amp;display=swap');
+  text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+  .mono { font-family: 'SF Mono', Menlo, monospace; }
+</style>
+
+<g transform="translate(0,0)">
+<defs><clipPath id="clip_11_home_kids"><rect width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_11_home_kids)">
+<rect width="390" height="844" fill="#F2F2F7"/>
+<g>
+  <text x="32" y="32" fill="#1A2027" font-size="16" font-weight="600">9:41</text>
+  <g transform="translate(316,18)">
+    <rect x="0" y="0" width="32" height="14" rx="4" fill="none" stroke="#1A2027" stroke-width="1.2" opacity="0.85"/>
+    <rect x="33" y="4" width="2" height="6" rx="1" fill="#1A2027" opacity="0.85"/>
+    <rect x="2" y="2" width="26" height="10" rx="2" fill="#1A2027"/>
+  </g>
+  <g transform="translate(296,22)">
+    <path d="M0,6 L2,4 L4,6 L4,8 L0,8 Z" fill="#1A2027" opacity="0.85"/>
+  </g>
+</g>
+<g>
+  <defs><clipPath id="avc40116"><circle cx="40" cy="116" r="22"/></clipPath></defs>
+  <image x="18" y="94" width="44" height="44" clip-path="url(#avc40116)" href="data:image/jpeg;base64,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"/>
+  <circle cx="40" cy="116" r="22" fill="none" stroke="#9DF4CB" stroke-width="2"/>
+</g>
+<text x="76" y="112" fill="#8E8E93" font-size="13">Cześć,</text>
+<text x="76" y="132" fill="#1A2027" font-size="22" font-weight="700">Piotr Menes</text>
+<g transform="translate(330,108)">
+      <path d="M12 22a3 3 0 003-3H9a3 3 0 003 3zm9-6V11a7 7 0 00-5-6.7V4a2 2 0 10-4 0v.3A7 7 0 007 11v5l-2 2v1h18v-1l-2-2z" fill="#1A2027" opacity="0.6"/>
+    </g>
+<defs><radialGradient id="haloG" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#C7F73E" stop-opacity="0.32"/><stop offset="65%" stop-color="#9DF4CB" stop-opacity="0.18"/><stop offset="100%" stop-color="#9DF4CB" stop-opacity="0"/></radialGradient></defs>
+<circle cx="195" cy="360" r="170" fill="url(#haloG)"/>
+<defs>
+      <linearGradient id="progG" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#9DF4CB"/>
+        <stop offset="55%" stop-color="#9EEBEC"/>
+        <stop offset="100%" stop-color="#C7F73E"/>
+      </linearGradient>
+    </defs>
+<circle cx="195" cy="360" r="130" fill="none" stroke="#9DF4CB" stroke-width="2" opacity="0.18"/>
+<circle cx="195" cy="360" r="130" fill="none" stroke="url(#progG)" stroke-width="6" stroke-linecap="round" stroke-dasharray="816 0" transform="rotate(-90 195 360)"/>
+<circle cx="195" cy="360" r="118" fill="#FFFFFF" opacity="0.5"/>
+<text x="195" y="368" fill="#1A2027" font-size="96" font-weight="100" letter-spacing="-4" text-anchor="middle">10</text>
+<text x="195" y="398" fill="#8E8E93" font-size="18" font-weight="300" text-anchor="middle">/ 10</text>
+<text x="195" y="268" fill="#8E8E93" font-size="11" font-weight="600" letter-spacing="2" text-anchor="middle">POZIOM BEZPIECZEŃSTWA</text>
+<rect x="105" y="502" width="180" height="32" rx="16" fill="#1A2027"/>
+<text x="195" y="523" fill="white" font-size="12" font-weight="500" text-anchor="middle">Brak alertów · sprawdź mapę</text>
+<text x="195" y="562" fill="#1A2027" font-size="14" font-weight="600" text-anchor="middle" opacity="0.7">Zobacz mapę →</text>
+<rect x="20" y="580" width="350" height="64" rx="16" fill="#FFFFFF" stroke="#E5E5EA" stroke-width="0.6"/>
+<circle cx="56" cy="612" r="22" fill="#9DF4CB" opacity="0.25"/>
+<text x="56" y="618" fill="#1A2027" font-size="16" font-weight="700" text-anchor="middle">12</text>
+<text x="92" y="608" fill="#8E8E93" font-size="11" font-weight="600" letter-spacing="0.5">JAKOŚĆ POWIETRZA</text>
+<text x="92" y="626" fill="#1A2027" font-size="15" font-weight="600">Bardzo dobra</text>
+<g transform="translate(16,772)">
+<rect x="0" y="0" width="374" height="56" rx="22" ry="22" fill="#1A2027"/>
+<path d="M46.37,21.46l-6.93-6.93c-1.79-1.78-4.67-1.78-6.46,0l-6.93,6.93c-.52.51-.81,1.21-.8,1.94v8.97c0,1.51,1.23,2.74,2.74,2.74h16.44c1.51,0,2.74-1.23,2.74-2.74v-8.97c0-.73-.29-1.42-.8-1.94ZM38.95,33.28h-5.48v-3.59c0-1.51,1.23-2.74,2.74-2.74s2.74,1.23,2.74,2.74v3.59ZM45.35,32.36c0,.5-.41.91-.91.91h-3.65v-3.59c0-2.52-2.04-4.57-4.57-4.57s-4.57,2.04-4.57,4.57v3.59h-3.65c-.5,0-.91-.41-.91-.91v-8.97c0-.24.1-.47.27-.65l6.93-6.93c1.07-1.07,2.8-1.07,3.88,0l6.93,6.93c.17.17.27.4.27.64v8.97Z" fill="white"/>
+<path d="M104.63,14.25h-.02s-2.48-.83-2.48-.83c-.86-.28-1.78-.31-2.65-.07l-5.09,1.48c-.62.17-1.29.11-1.87-.16l-.46-.21c-2.33-.97-5,.13-5.97,2.46-.23.55-.35,1.15-.35,1.75v11.03c0,2.03,1.34,3.81,3.29,4.39l2.62.82c.44.14.9.21,1.37.21.41,0,.82-.05,1.22-.17l5.3-1.46c.48-.13,1-.13,1.48.01l2.14.62c1.96.47,3.94-.73,4.41-2.69.07-.28.1-.57.1-.86v-12.01c0-1.93-1.22-3.65-3.03-4.3ZM89.55,32.33c-1.17-.34-1.98-1.41-1.99-2.63v-11.03c0-.92.45-1.78,1.22-2.28.45-.3.98-.46,1.52-.46.35,0,.69.07,1.02.2,0,0,.68.29.81.34v16.67l-2.58-.81ZM93.96,33.13v-16.4c.31-.02.62-.06.92-.14l4.56-1.33v16.38l-5.48,1.49ZM105.83,30.56c0,1.01-.82,1.83-1.83,1.83-.13,0-.27-.01-.4-.04l-2.34-.66V15.08l2.76.89c1.09.39,1.81,1.42,1.81,2.58v12.01Z" fill="white"/>
+<text x="146.22" y="34.09" fill="white" font-size="27.87" font-family="Inter" font-weight="800" letter-spacing="-1">SOS</text>
+<g>
+  <circle cx="224.54" cy="24.15" r="12.26" fill="#FF1D25" stroke="white" stroke-width="2"/>
+  <rect x="218.66" y="22.93" width="11.78" height="2.44" rx="1.22" fill="white"/>
+  <rect x="218.66" y="22.93" width="11.78" height="2.44" rx="1.22" fill="white" transform="translate(248.69 -200.39) rotate(90)"/>
+</g>
+<path d="M282.19,25.06c-2.27,0-4.1-1.84-4.1-4.1s1.84-4.1,4.1-4.1,4.1,1.84,4.1,4.1c0,2.26-1.84,4.1-4.1,4.1ZM282.19,18.68c-1.26,0-2.28,1.02-2.28,2.28s1.02,2.28,2.28,2.28,2.28-1.02,2.28-2.28-1.02-2.28-2.28-2.28ZM289.03,31.44c0-2.52-2.04-4.55-4.56-4.56h-4.56c-2.52,0-4.55,2.04-4.56,4.56v3.65h1.82v-3.65c0-1.51,1.22-2.73,2.73-2.73h4.56c1.51,0,2.73,1.22,2.73,2.73v3.65h1.82v-3.65ZM291.31,21.42c-2.27,0-4.1-1.84-4.1-4.1s1.84-4.1,4.1-4.1,4.1,1.84,4.1,4.1c0,2.26-1.84,4.1-4.1,4.1ZM291.31,15.04c-1.26,0-2.28,1.02-2.28,2.28s1.02,2.28,2.28,2.28,2.28-1.02,2.28-2.28-1.02-2.28-2.28-2.28ZM297.23,27.8c0-2.52-2.04-4.55-4.56-4.56h-3.65v1.82h3.65c1.51,0,2.73,1.22,2.73,2.73v3.65h1.82v-3.65Z" fill="white"/>
+<g>
+  <path d="M352.23,35.11h-1.83v-4.6c0-1.49-1.21-2.7-2.7-2.7h-7.38c-1.49,0-2.7,1.21-2.7,2.7v4.6h-1.83v-4.6c0-2.5,2.03-4.52,4.53-4.53h7.38c2.5,0,4.52,2.03,4.53,4.53v4.6Z" fill="white"/>
+  <path d="M344.01,24.15c-3.03,0-5.48-2.45-5.48-5.48s2.45-5.48,5.48-5.48,5.48,2.45,5.48,5.48c0,3.02-2.45,5.47-5.48,5.48ZM344.01,15.02c-2.02,0-3.65,1.63-3.65,3.65s1.63,3.65,3.65,3.65,3.65-1.63,3.65-3.65-1.63-3.65-3.65-3.65Z" fill="white"/>
+</g>
+<text x="25.24" y="46.5" fill="white" font-size="9" opacity="1.0">Home</text>
+<text x="85.73" y="46.5" fill="white" font-size="9" opacity="0.55">Mapa</text>
+<text x="150.63" y="46.5" fill="white" font-size="9" opacity="0.55">SOS</text>
+<text x="214.71" y="46.5" fill="white" font-size="9" opacity="0.55">Zgłoś</text>
+<text x="269.61" y="46.5" fill="white" font-size="9" opacity="0.55">Rodzina</text>
+<text x="334.15" y="46.5" fill="white" font-size="9" opacity="0.55">Profil</text>
+</g>
+</g>
+<text x="0" y="874" fill="#8E8E93" font-size="12" font-weight="600">11_home_kids</text>
+<text x="0" y="894" fill="#1A2027" font-size="13" font-weight="500">Home — Dzieci</text>
+</g>
+</svg>
