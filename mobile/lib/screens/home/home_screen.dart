@@ -15,7 +15,9 @@ import '../../providers/alert_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
-import '../../widgets/glow_orb.dart';
+import '../../widgets/glow_orb.dart'; // ignore: unused_import (kept for hero fallback)
+import '../../widgets/safety_hero_xl.dart';
+import '../../widgets/stagger_list.dart';
 import '../../widgets/serenity_card.dart';
 import '../../widgets/aqi_widget.dart';
 import '../alerts/my_alerts_screen.dart';
@@ -260,17 +262,40 @@ class _HomeScreenState extends State<HomeScreen> {
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
-              SliverToBoxAdapter(child: _buildTopBar(userName)),
-              SliverToBoxAdapter(child: _buildHero()),
-              if (_children.isNotEmpty)
-                SliverToBoxAdapter(child: _buildChildrenCard()),
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
-                  child: AqiWidget(),
+              SliverToBoxAdapter(
+                child: StaggerSliverItem(
+                  delay: const Duration(milliseconds: 0),
+                  child: _buildTopBar(userName),
                 ),
               ),
-              SliverToBoxAdapter(child: _buildActivitySection()),
+              SliverToBoxAdapter(
+                child: StaggerSliverItem(
+                  delay: const Duration(milliseconds: 60),
+                  child: _buildHero(),
+                ),
+              ),
+              if (_children.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: StaggerSliverItem(
+                    delay: const Duration(milliseconds: 140),
+                    child: _buildChildrenCard(),
+                  ),
+                ),
+              SliverToBoxAdapter(
+                child: StaggerSliverItem(
+                  delay: const Duration(milliseconds: 200),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 4, 20, 8),
+                    child: AqiWidget(),
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: StaggerSliverItem(
+                  delay: const Duration(milliseconds: 260),
+                  child: _buildActivitySection(),
+                ),
+              ),
               // Mały odstęp pod ostatnim widgetem.
               // MediaQuery.padding.bottom już zawiera reserved space dla docka (~100pt z GlobalDockOverlay).
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -449,71 +474,15 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Hero (glow orb) ─────────────────────────────────────────────────────
 
   Widget _buildHero() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 32),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: SerenitySpacing.xl),
-            child: Text(
-              _safetyMessage,
-              style: SerenityText.displayMd.copyWith(
-                fontSize: 40,
-                height: 48 / 40,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: SerenitySpacing.xl),
-            child: Text(
-              _safetySubtitle,
-              style: SerenityText.bodyMain,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 48),
-            child: GlowOrb(
-              size: 280,
-              color: _orbColor,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'POZIOM BEZPIECZEŃSTWA',
-                    style: SerenityText.labelCaps,
-                  ),
-                  const SizedBox(height: 8),
-                  Text('$_safetyLevel/10', style: SerenityText.displayLg),
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const MapScreen()),
-            ),
-            behavior: HitTestBehavior.opaque,
-            child: const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Zobacz mapę', style: SerenityText.labelButton),
-                  SizedBox(width: 4),
-                  Icon(
-                    Icons.arrow_forward,
-                    size: 16,
-                    color: SerenityColors.primary,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+    return SafetyHeroXL(
+      level: _safetyLevel,
+      headline: _safetyMessage,
+      subtitle: _safetySubtitle,
+      ringColor: _orbColor,
+      alertsNearby: _alertsNearby,
+      onMapTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const MapScreen()),
       ),
     );
   }

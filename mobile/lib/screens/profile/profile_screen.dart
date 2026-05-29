@@ -16,6 +16,7 @@ import '../../theme/design_tokens.dart';
 import '../../widgets/serenity_card.dart';
 import '../../widgets/inset_grouped_section.dart';
 import '../../widgets/apple_card.dart';
+import '../../widgets/stagger_list.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -117,9 +118,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         bottom: false,
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(child: _buildTopBar()),
-            SliverToBoxAdapter(child: _buildHero(user)),
-            SliverToBoxAdapter(child: _buildStatsRow(user)),
+            SliverToBoxAdapter(
+              child: StaggerSliverItem(
+                delay: const Duration(milliseconds: 0),
+                child: _buildTopBar(),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: StaggerSliverItem(
+                delay: const Duration(milliseconds: 60),
+                child: _buildHero(user),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: StaggerSliverItem(
+                delay: const Duration(milliseconds: 120),
+                child: _buildStatsRow(user),
+              ),
+            ),
             SliverPadding(
               padding: const EdgeInsets.only(top: 8),
               sliver: SliverList(

@@ -108,6 +108,20 @@ class SerenityColors {
 
   /// iOS secondaryLabel — subtle grey for subtitles and chevrons.
   static const secondaryLabel = Color(0xFF8E8E93);
+
+  // ============================================================================
+  // VOLTGEAR NEON ACCENT (v97+) — for urgent CTA, SOS halo, progress rings
+  // ============================================================================
+
+  /// Voltgear electric lime — high-energy accent for hero rings / urgent CTA.
+  /// Pairs with Serenity mint (#9DF4CB) which stays the calm baseline.
+  static const voltMint     = Color(0xFFC7F73E);
+
+  /// Glow halo color (semi-transparent voltMint at 35%) for blurred rings.
+  static const voltMintGlow = Color(0x59C7F73E); // 0x59 = 0.35 alpha
+
+  /// Deeper voltgear shade — used as dark text on voltMint pill CTA.
+  static const voltMintInk  = Color(0xFF1A2206);
 }
 
 // ============================================================================
