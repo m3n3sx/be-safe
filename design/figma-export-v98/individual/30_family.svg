@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="30_family" data-section="family" data-kind="list_groups" data-dart="screens/family/family_screen.dart">
+<defs><clipPath id="clip_30_family"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_30_family)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<text x="20" y="106" font-family="Inter" font-size="34" font-weight="700" letter-spacing="-0.5" fill="#03080E">Rodzina</text>
+<text x="20" y="162" font-family="Inter" font-size="13" font-weight="600" letter-spacing="0.5" fill="#8E8E93">TWOJE GRUPY</text>
+<rect x="16" y="182" width="358" height="337" rx="10" fill="#FFFFFF"/>
+<rect x="32" y="194" width="28" height="28" rx="7" fill="#1A2027"/>
+<text x="46" y="213" text-anchor="middle" font-family="Inter" font-size="14" fill="#FFFFFF">👨</text>
+<text x="72" y="210" font-family="Inter" font-size="17" fill="#03080E">Kasty przychlasty</text>
+<text x="72" y="228" font-family="Inter" font-size="13" fill="#8E8E93">2 osób · kod 64410260</text>
+<text x="358" y="216" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="72" y1="237" x2="374" y2="237" stroke="#C6C6C8" stroke-width="0.5"/>
+<rect x="32" y="250" width="28" height="28" rx="7" fill="#1A2027"/>
+<text x="46" y="269" text-anchor="middle" font-family="Inter" font-size="14" fill="#FFFFFF">👨</text>
+<text x="72" y="266" font-family="Inter" font-size="17" fill="#03080E">Grupa1</text>
+<text x="72" y="284" font-family="Inter" font-size="13" fill="#8E8E93">7 osób · kod BB400AB5</text>
+<text x="358" y="272" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="72" y1="293" x2="374" y2="293" stroke="#C6C6C8" stroke-width="0.5"/>
+<rect x="32" y="306" width="28" height="28" rx="7" fill="#1A2027"/>
+<text x="46" y="325" text-anchor="middle" font-family="Inter" font-size="14" fill="#FFFFFF">👨</text>
+<text x="72" y="322" font-family="Inter" font-size="17" fill="#03080E">Grupa</text>
+<text x="72" y="340" font-family="Inter" font-size="13" fill="#8E8E93">2 osób · kod 5E202124</text>
+<text x="358" y="328" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="72" y1="349" x2="374" y2="349" stroke="#C6C6C8" stroke-width="0.5"/>
+<rect x="32" y="362" width="28" height="28" rx="7" fill="#1A2027"/>
+<text x="46" y="381" text-anchor="middle" font-family="Inter" font-size="14" fill="#FFFFFF">👨</text>
+<text x="72" y="378" font-family="Inter" font-size="17" fill="#03080E">grupa</text>
+<text x="72" y="396" font-family="Inter" font-size="13" fill="#8E8E93">2 osób · kod 796D3499</text>
+<text x="358" y="384" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="72" y1="405" x2="374" y2="405" stroke="#C6C6C8" stroke-width="0.5"/>
+<rect x="32" y="418" width="28" height="28" rx="7" fill="#1A2027"/>
+<text x="46" y="437" text-anchor="middle" font-family="Inter" font-size="14" fill="#FFFFFF">👨</text>
+<text x="72" y="434" font-family="Inter" font-size="17" fill="#03080E">Rodzina Testowa E2E</text>
+<text x="72" y="452" font-family="Inter" font-size="13" fill="#8E8E93">4 osób · kod E2ETEST</text>
+<text x="358" y="440" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="72" y1="461" x2="374" y2="461" stroke="#C6C6C8" stroke-width="0.5"/>
+<rect x="32" y="474" width="28" height="28" rx="7" fill="#1A2027"/>
+<text x="46" y="493" text-anchor="middle" font-family="Inter" font-size="14" fill="#FFFFFF">👨</text>
+<text x="72" y="490" font-family="Inter" font-size="17" fill="#03080E">Babcia Solo</text>
+<text x="72" y="508" font-family="Inter" font-size="13" fill="#8E8E93">2 osób · kod BABCIA1</text>
+<text x="358" y="496" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<rect x="20" y="604" width="350" height="56" rx="28" fill="#1A2027"/>
+<text x="195.0" y="640" text-anchor="middle" font-family="Inter" font-size="16" font-weight="600" fill="#FFFFFF">+ Stwórz nową grupę</text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">30_family</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">Rodzina</text>
+</g>
+</svg>

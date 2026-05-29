@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="32_family_chat" data-section="family" data-kind="chat" data-dart="screens/family/family_chat_screen.dart">
+<defs><clipPath id="clip_32_family_chat"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_32_family_chat)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<text x="20" y="74" font-family="Inter" font-size="20" font-weight="600" fill="#03080E">Grupa1</text>
+<text x="20" y="94" font-family="Inter" font-size="12" fill="#8E8E93">7 osób · Heluss pisze...</text>
+<rect x="16" y="124" width="200" height="56" rx="16" fill="#FFFFFF"/>
+<text x="32" y="142" font-family="Inter" font-size="11" font-weight="600" fill="#8E8E93">Marcin</text>
+<text x="32" y="162" font-family="Inter" font-size="14" fill="#03080E">Heluss już idzie ze szkoły?</text>
+<text x="32" y="176" font-family="Inter" font-size="10" fill="#8E8E93">14:32</text>
+<rect x="16" y="192" width="200" height="56" rx="16" fill="#FFFFFF"/>
+<text x="32" y="210" font-family="Inter" font-size="11" font-weight="600" fill="#8E8E93">Heluss</text>
+<text x="32" y="230" font-family="Inter" font-size="14" fill="#03080E">Idę ze szkoły</text>
+<text x="32" y="244" font-family="Inter" font-size="10" fill="#8E8E93">14:35</text>
+<rect x="170" y="260" width="200" height="56" rx="16" fill="#9DF4CB"/>
+<text x="186" y="282" font-family="Inter" font-size="14" fill="#03080E">OK, daj znać jak będziesz w domu 💙</text>
+<text x="186" y="312" font-family="Inter" font-size="10" fill="#8E8E93">14:36</text>
+<rect x="16" y="328" width="200" height="56" rx="16" fill="#FFFFFF"/>
+<text x="32" y="346" font-family="Inter" font-size="11" font-weight="600" fill="#8E8E93">Justyna</text>
+<text x="32" y="366" font-family="Inter" font-size="14" fill="#03080E">Trening do 17 dzisiaj</text>
+<text x="32" y="380" font-family="Inter" font-size="10" fill="#8E8E93">15:02</text>
+<rect x="170" y="396" width="200" height="56" rx="16" fill="#9DF4CB"/>
+<text x="186" y="418" font-family="Inter" font-size="14" fill="#03080E">Wezmę Heluss z drogi</text>
+<text x="186" y="448" font-family="Inter" font-size="10" fill="#8E8E93">15:03</text>
+<rect x="16" y="678" width="280" height="48" rx="24" fill="#FFFFFF"/>
+<text x="32" y="708" font-family="Inter" font-size="14" fill="#8E8E93">Wiadomość...</text>
+<circle cx="340" cy="702" r="22" fill="#1A2027"/>
+<text x="340" y="708" text-anchor="middle" font-family="Inter" font-size="14" fill="#FFFFFF">▲</text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">32_family_chat</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">Czat rodzinny</text>
+</g>
+</svg>

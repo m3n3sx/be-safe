@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="02_mode_picker" data-section="auth" data-kind="picker" data-dart="screens/mode/mode_picker_screen.dart">
+<defs><clipPath id="clip_02_mode_picker"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_02_mode_picker)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<text x="20" y="134" font-family="Inter" font-size="32" font-weight="200" fill="#03080E">Wybierz tryb</text>
+<text x="20" y="162" font-family="Inter" font-size="14" fill="#8E8E93">Dla kogo używasz be:Safe?</text>
+<rect x="20" y="204" width="350" height="140" rx="22" fill="#FFFFFF"/>
+<circle cx="330" cy="242" r="40" fill="#9EEBEC" fill-opacity="0.35"/>
+<text x="330" y="254" text-anchor="middle" font-size="32">🧒</text>
+<text x="32" y="254" font-family="Inter" font-size="20" font-weight="600" fill="#03080E">Dla dziecka</text>
+<text x="32" y="280" font-family="Inter" font-size="14" fill="#8E8E93">Tryb kids 7-12 lat</text>
+<text x="32" y="318" font-family="Inter" font-size="14" font-weight="600" fill="#03080E">Wybierz →</text>
+<rect x="20" y="364" width="350" height="140" rx="22" fill="#FFFFFF"/>
+<circle cx="330" cy="402" r="40" fill="#9DF4CB" fill-opacity="0.35"/>
+<text x="330" y="414" text-anchor="middle" font-size="32">👵</text>
+<text x="32" y="414" font-family="Inter" font-size="20" font-weight="600" fill="#03080E">Dla seniora</text>
+<text x="32" y="440" font-family="Inter" font-size="14" fill="#8E8E93">Duże ikony, prosty układ</text>
+<text x="32" y="478" font-family="Inter" font-size="14" font-weight="600" fill="#03080E">Wybierz →</text>
+<rect x="20" y="524" width="350" height="140" rx="22" fill="#FFFFFF"/>
+<circle cx="330" cy="562" r="40" fill="#C7F73E" fill-opacity="0.35"/>
+<text x="330" y="574" text-anchor="middle" font-size="32">👤</text>
+<text x="32" y="574" font-family="Inter" font-size="20" font-weight="600" fill="#03080E">Standardowy</text>
+<text x="32" y="600" font-family="Inter" font-size="14" fill="#8E8E93">Pełne funkcje (13-59 lat)</text>
+<text x="32" y="638" font-family="Inter" font-size="14" font-weight="600" fill="#03080E">Wybierz →</text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">02_mode_picker</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">Wybór trybu</text>
+</g>
+</svg>

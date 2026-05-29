@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="20_map" data-section="map" data-kind="map" data-dart="screens/map/map_screen.dart">
+<defs><clipPath id="clip_20_map"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_20_map)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<rect x="0" y="44" width="390" height="714" fill="#E8EAED"/>
+<path d="M0,244 Q195.0,294 390,224" stroke="#FFFFFF" stroke-width="8" fill="none"/>
+<path d="M195.0,44 L225.0,758" stroke="#FFFFFF" stroke-width="6" fill="none"/>
+<path d="M0,444 L390,494" stroke="#FFFFFF" stroke-width="5" fill="none"/>
+<rect x="260" y="94" width="100" height="80" rx="8" fill="#C8E6C9"/>
+<circle cx="195.0" cy="344" r="22" fill="#9EEBEC" fill-opacity="0.5"/>
+<circle cx="195.0" cy="344" r="11" fill="#1A2027" stroke="#FFFFFF" stroke-width="3"/>
+<path d="M80,218 Q62,232 68,242 L80,252 L92,242 Q98,232 80,218 Z" fill="#FF7A7A"/>
+<circle cx="80" cy="230" r="9" fill="#FFFFFF"/>
+<text x="80" y="234" text-anchor="middle" font-size="10" font-weight="700" fill="#FF7A7A">!</text>
+<path d="M290,168 Q272,182 278,192 L290,202 L302,192 Q308,182 290,168 Z" fill="#FF7A7A"/>
+<circle cx="290" cy="180" r="9" fill="#FFFFFF"/>
+<text x="290" y="184" text-anchor="middle" font-size="10" font-weight="700" fill="#FF7A7A">!</text>
+<path d="M260,468 Q242,482 248,492 L260,502 L272,492 Q278,482 260,468 Z" fill="#1A2027"/>
+<circle cx="260" cy="480" r="9" fill="#FFFFFF"/>
+<text x="260" y="484" text-anchor="middle" font-size="10" font-weight="700" fill="#1A2027">!</text>
+<rect x="16" y="56" width="358" height="48" rx="24" fill="#FFFFFF"/>
+<text x="32" y="86" font-family="Inter" font-size="14" fill="#8E8E93">🔍 Szukaj w okolicy...</text>
+<circle cx="354" cy="684" r="28" fill="#FF1D25"/>
+<text x="354" y="691" text-anchor="middle" font-family="Inter" font-size="32" font-weight="300" fill="#FFFFFF">+</text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">20_map</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">Mapa</text>
+</g>
+</svg>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="51_sos_kids" data-section="sos" data-kind="sos" data-dart="screens/sos/sos_kids_screen.dart">
+<defs><clipPath id="clip_51_sos_kids"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_51_sos_kids)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<text x="195.0" y="94" text-anchor="middle" font-family="Inter" font-size="22" font-weight="300" fill="#03080E">Potrzebujesz pomocy?</text>
+<text x="195.0" y="120" text-anchor="middle" font-family="Inter" font-size="14" fill="#8E8E93">Trzymaj przycisk przez 2 sekundy</text>
+<circle cx="195.0" cy="324" r="160" fill="#FF7A7A" fill-opacity="0.18"/>
+<circle cx="195.0" cy="324" r="120" fill="#FF7A7A" fill-opacity="0.35"/>
+<circle cx="195.0" cy="324" r="90" fill="#FF7A7A"/>
+<text x="195.0" y="339" text-anchor="middle" font-family="Inter" font-size="42" font-weight="700" fill="#FFFFFF">SOS</text>
+<rect x="20" y="524" width="170.0" height="80" rx="16" fill="#FFFFFF"/>
+<text x="36" y="552" font-family="Inter" font-size="14" font-weight="600" fill="#03080E">📞 Fałszywy</text>
+<text x="36" y="572" font-family="Inter" font-size="14" font-weight="600" fill="#03080E">telefon</text>
+<text x="36" y="592" font-family="Inter" font-size="11" fill="#8E8E93">Awaryjna wymówka</text>
+<rect x="200.0" y="524" width="170.0" height="80" rx="16" fill="#FFFFFF"/>
+<text x="216.0" y="552" font-family="Inter" font-size="14" font-weight="600" fill="#03080E">👀 Eskorta</text>
+<text x="216.0" y="572" font-family="Inter" font-size="14" font-weight="600" fill="#03080E">Follow Me</text>
+<text x="216.0" y="592" font-family="Inter" font-size="11" fill="#8E8E93">Bliscy śledzą</text>
+<text x="195.0" y="664" text-anchor="middle" font-family="Inter" font-size="14" font-weight="500" fill="#8E8E93">Anuluj</text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">51_sos_kids</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">SOS (Kids)</text>
+</g>
+</svg>

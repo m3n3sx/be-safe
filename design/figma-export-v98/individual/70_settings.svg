@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="70_settings" data-section="settings" data-kind="list_settings" data-dart="screens/settings/settings_screen.dart">
+<defs><clipPath id="clip_70_settings"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_70_settings)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<text x="20" y="106" font-family="Inter" font-size="34" font-weight="700" letter-spacing="-0.5" fill="#03080E">Ustawienia</text>
+<text x="20" y="160" font-family="Inter" font-size="13" font-weight="600" letter-spacing="0.5" fill="#8E8E93">KONTO</text>
+<rect x="16" y="174" width="358" height="169" rx="10" fill="#FFFFFF"/>
+<text x="32" y="208" font-family="Inter" font-size="16">👤</text>
+<text x="64" y="208" font-family="Inter" font-size="17" fill="#03080E">Nazwa użytkownika</text>
+<text x="344" y="208" text-anchor="end" font-family="Inter" font-size="15" fill="#8E8E93">m3n3s</text>
+<text x="358" y="208" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="64" y1="229" x2="374" y2="229" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="264" font-family="Inter" font-size="16">📧</text>
+<text x="64" y="264" font-family="Inter" font-size="17" fill="#03080E">Email</text>
+<text x="344" y="264" text-anchor="end" font-family="Inter" font-size="15" fill="#8E8E93">meneswczesny@gmail...</text>
+<text x="358" y="264" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="64" y1="285" x2="374" y2="285" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="320" font-family="Inter" font-size="16">📱</text>
+<text x="64" y="320" font-family="Inter" font-size="17" fill="#03080E">Telefon</text>
+<text x="344" y="320" text-anchor="end" font-family="Inter" font-size="15" fill="#8E8E93">Dodaj</text>
+<text x="358" y="320" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<text x="20" y="383" font-family="Inter" font-size="13" font-weight="600" letter-spacing="0.5" fill="#8E8E93">WYGLĄD</text>
+<rect x="16" y="397" width="358" height="169" rx="10" fill="#FFFFFF"/>
+<text x="32" y="431" font-family="Inter" font-size="16">🎨</text>
+<text x="64" y="431" font-family="Inter" font-size="17" fill="#03080E">Tryb ciemny</text>
+<text x="344" y="431" text-anchor="end" font-family="Inter" font-size="15" fill="#8E8E93">Jasny</text>
+<text x="358" y="431" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="64" y1="452" x2="374" y2="452" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="487" font-family="Inter" font-size="16">🌍</text>
+<text x="64" y="487" font-family="Inter" font-size="17" fill="#03080E">Język</text>
+<text x="344" y="487" text-anchor="end" font-family="Inter" font-size="15" fill="#8E8E93">Polski</text>
+<text x="358" y="487" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="64" y1="508" x2="374" y2="508" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="543" font-family="Inter" font-size="16">👤</text>
+<text x="64" y="543" font-family="Inter" font-size="17" fill="#03080E">Tryb aplikacji</text>
+<text x="344" y="543" text-anchor="end" font-family="Inter" font-size="15" fill="#8E8E93">Standardowy</text>
+<text x="358" y="543" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<text x="20" y="606" font-family="Inter" font-size="13" font-weight="600" letter-spacing="0.5" fill="#8E8E93">PRYWATNOŚĆ</text>
+<rect x="16" y="620" width="358" height="169" rx="10" fill="#FFFFFF"/>
+<text x="32" y="654" font-family="Inter" font-size="16">🔔</text>
+<text x="64" y="654" font-family="Inter" font-size="17" fill="#03080E">Powiadomienia</text>
+<text x="344" y="654" text-anchor="end" font-family="Inter" font-size="15" fill="#8E8E93">Włączone</text>
+<text x="358" y="654" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="64" y1="675" x2="374" y2="675" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="710" font-family="Inter" font-size="16">🛡</text>
+<text x="64" y="710" font-family="Inter" font-size="17" fill="#03080E">Uprawnienia</text>
+<text x="358" y="710" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="64" y1="731" x2="374" y2="731" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="766" font-family="Inter" font-size="16">👁</text>
+<text x="64" y="766" font-family="Inter" font-size="17" fill="#03080E">Prywatność</text>
+<text x="358" y="766" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">70_settings</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">Ustawienia</text>
+</g>
+</svg>

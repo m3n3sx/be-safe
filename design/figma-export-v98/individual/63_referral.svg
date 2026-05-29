@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="63_referral" data-section="profile" data-kind="referral" data-dart="screens/referral/referral_screen.dart">
+<defs><clipPath id="clip_63_referral"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_63_referral)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<text x="20" y="106" font-family="Inter" font-size="34" font-weight="700" letter-spacing="-0.5" fill="#03080E">Poleć znajomym</text>
+<text x="20" y="136" font-family="Inter" font-size="14" fill="#8E8E93">Zaproś bliskich i dostań 50 pkt</text>
+<rect x="16" y="184" width="358" height="180" rx="20" fill="#9DF4CB" fill-opacity="0.85"/>
+<text x="195.0" y="228" text-anchor="middle" font-family="Inter" font-size="12" font-weight="600" letter-spacing="2" fill="#03080E">TWÓJ KOD</text>
+<text x="195.0" y="290" text-anchor="middle" font-family="Inter" font-size="48" font-weight="700" letter-spacing="6" fill="#03080E">M3N3S</text>
+<text x="195.0" y="324" text-anchor="middle" font-family="Inter" font-size="12" fill="#03080E" fill-opacity="0.7">besafe.org.pl/?ref=M3N3S</text>
+<rect x="135.0" y="334" width="120" height="20" rx="10" fill="#03080E"/>
+<text x="195.0" y="348" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#FFFFFF">Kopiuj link</text>
+<rect x="20" y="404" width="350" height="56" rx="28" fill="#1A2027"/>
+<text x="195.0" y="440" text-anchor="middle" font-family="Inter" font-size="16" font-weight="600" fill="#FFFFFF">📤 Udostępnij kod</text>
+<text x="195.0" y="484" text-anchor="middle" font-family="Inter" font-size="13" fill="#8E8E93">Zaprosiłeś już <tspan font-weight="700" fill="#03080E">0 osób</tspan></text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">63_referral</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">Poleć znajomym</text>
+</g>
+</svg>

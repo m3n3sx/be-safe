@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="23_alerts_my" data-section="alerts" data-kind="list_alerts" data-dart="screens/alerts/my_alerts_screen.dart">
+<defs><clipPath id="clip_23_alerts_my"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_23_alerts_my)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<text x="20" y="106" font-family="Inter" font-size="34" font-weight="700" letter-spacing="-0.5" fill="#03080E">Moje zgłoszenia</text>
+<text x="20" y="132" font-family="Inter" font-size="13" fill="#8E8E93">6 alertów</text>
+<rect x="16" y="164" width="358" height="80" rx="16" fill="#FFFFFF"/>
+<circle cx="48" cy="204" r="20" fill="#FF7A7A" fill-opacity="0.2"/>
+<text x="48" y="211" text-anchor="middle" font-size="18">⚠️</text>
+<text x="80" y="194" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">Agresywna grupa pod ratuszem</text>
+<text x="80" y="214" font-family="Inter" font-size="12" fill="#8E8E93">aggression · wczoraj</text>
+<text x="80" y="232" font-family="Inter" font-size="12" font-weight="600" fill="#1B873A">✓ Aktywny</text>
+<text x="358" y="208" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<rect x="16" y="256" width="358" height="80" rx="16" fill="#FFFFFF"/>
+<circle cx="48" cy="296" r="20" fill="#1A2027" fill-opacity="0.2"/>
+<text x="48" y="303" text-anchor="middle" font-size="18">🚓</text>
+<text x="80" y="286" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">Zatrzymanie przy ratuszu</text>
+<text x="80" y="306" font-family="Inter" font-size="12" fill="#8E8E93">police · wczoraj</text>
+<text x="80" y="324" font-family="Inter" font-size="12" font-weight="600" fill="#1B873A">✓ Aktywny</text>
+<text x="358" y="300" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<rect x="16" y="348" width="358" height="80" rx="16" fill="#FFFFFF"/>
+<circle cx="48" cy="388" r="20" fill="#1A2027" fill-opacity="0.2"/>
+<text x="48" y="395" text-anchor="middle" font-size="18">🚓</text>
+<text x="80" y="378" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">Patrol policji na rynku</text>
+<text x="80" y="398" font-family="Inter" font-size="12" fill="#8E8E93">police · wczoraj</text>
+<text x="80" y="416" font-family="Inter" font-size="12" font-weight="600" fill="#1B873A">✓ Aktywny</text>
+<text x="358" y="392" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<rect x="16" y="440" width="358" height="80" rx="16" fill="#FFFFFF"/>
+<circle cx="48" cy="480" r="20" fill="#FF7A7A" fill-opacity="0.2"/>
+<text x="48" y="487" text-anchor="middle" font-size="18">⚠️</text>
+<text x="80" y="470" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">Bójka przed dworcem</text>
+<text x="80" y="490" font-family="Inter" font-size="12" fill="#8E8E93">aggression · wczoraj</text>
+<text x="80" y="508" font-family="Inter" font-size="12" font-weight="600" fill="#1B873A">✓ Aktywny</text>
+<text x="358" y="484" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<rect x="16" y="532" width="358" height="80" rx="16" fill="#FFFFFF"/>
+<circle cx="48" cy="572" r="20" fill="#8E8E93" fill-opacity="0.2"/>
+<text x="48" y="579" text-anchor="middle" font-size="18">📍</text>
+<text x="80" y="562" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">Padający słup energetyczny</text>
+<text x="80" y="582" font-family="Inter" font-size="12" fill="#8E8E93">other · wczoraj</text>
+<text x="80" y="600" font-family="Inter" font-size="12" font-weight="600" fill="#1B873A">✓ Aktywny</text>
+<text x="358" y="576" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<rect x="16" y="624" width="358" height="80" rx="16" fill="#FFFFFF"/>
+<circle cx="48" cy="664" r="20" fill="#9EEBEC" fill-opacity="0.2"/>
+<text x="48" y="671" text-anchor="middle" font-size="18">🐕</text>
+<text x="80" y="654" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">Bezpański pies w parku</text>
+<text x="80" y="674" font-family="Inter" font-size="12" fill="#8E8E93">animal · wczoraj</text>
+<text x="80" y="692" font-family="Inter" font-size="12" font-weight="600" fill="#1B873A">✓ Aktywny</text>
+<text x="358" y="668" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">23_alerts_my</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">Moje zgłoszenia</text>
+</g>
+</svg>

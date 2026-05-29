@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844">
+<g class="frame" data-name="82_cyber_safety" data-section="safety" data-kind="list_simple" data-dart="screens/cyber_safety/cyber_safety_screen.dart">
+<defs><clipPath id="clip_82_cyber_safety"><rect x="0" y="0" width="390" height="844" rx="40"/></clipPath></defs>
+<g clip-path="url(#clip_82_cyber_safety)">
+<rect x="0" y="0" width="390" height="844" rx="40" fill="#F2F2F7"/>
+
+<g class="status-bar">
+  <rect x="0" y="0" width="390" height="44" fill="#F2F2F7"/>
+  <text x="20" y="28" font-family="Inter" font-size="15" font-weight="600" fill="#03080E">9:41</text>
+  <g transform="translate(335,18)">
+    <rect x="0" y="0" width="24" height="11" rx="2.5" fill="none" stroke="#03080E" stroke-width="1"/>
+    <rect x="2" y="2" width="18" height="7" fill="#03080E"/>
+    <rect x="25" y="3" width="1.5" height="5" fill="#03080E"/>
+  </g>
+</g>
+<text x="20" y="106" font-family="Inter" font-size="34" font-weight="700" letter-spacing="-0.5" fill="#03080E">Cyberbezpieczeństwo</text>
+<rect x="16" y="154" width="358" height="257" rx="10" fill="#FFFFFF"/>
+<text x="32" y="192" font-family="Inter" font-size="20">🆔</text>
+<text x="72" y="184" font-family="Inter" font-size="16" font-weight="500" fill="#03080E">mObywatel — zastrzeż PESEL</text>
+<text x="72" y="204" font-family="Inter" font-size="12" fill="#8E8E93">obywatel.gov.pl</text>
+<text x="358" y="194" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="72" y1="217" x2="374" y2="217" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="256" font-family="Inter" font-size="20">🔐</text>
+<text x="72" y="248" font-family="Inter" font-size="16" font-weight="500" fill="#03080E">Have I Been Pwned</text>
+<text x="72" y="268" font-family="Inter" font-size="12" fill="#8E8E93">haveibeenpwned.com</text>
+<text x="358" y="258" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="72" y1="281" x2="374" y2="281" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="320" font-family="Inter" font-size="20">⚠️</text>
+<text x="72" y="312" font-family="Inter" font-size="16" font-weight="500" fill="#03080E">CERT.pl</text>
+<text x="72" y="332" font-family="Inter" font-size="12" fill="#8E8E93">Zgłoś incydent</text>
+<text x="358" y="322" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<line x1="72" y1="345" x2="374" y2="345" stroke="#C6C6C8" stroke-width="0.5"/>
+<text x="32" y="384" font-family="Inter" font-size="20">📱</text>
+<text x="72" y="376" font-family="Inter" font-size="16" font-weight="500" fill="#03080E">Zgłoś SMS spam</text>
+<text x="72" y="396" font-family="Inter" font-size="12" fill="#8E8E93">wyślij na 8080</text>
+<text x="358" y="386" text-anchor="end" font-family="Inter" font-size="20" fill="#8E8E93">›</text>
+<g class='dock'><rect x="8" y="758" width="374" height="64" rx="22" fill="#1A2027"/>
+<text x="39.16666666666667" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#FFFFFF">▣</text>
+<text x="39.16666666666667" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Home</text>
+<text x="101.50000000000001" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">🗺</text>
+<text x="101.50000000000001" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Mapa</text>
+<text x="163.83333333333334" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">⛑</text>
+<text x="163.83333333333334" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">SOS</text>
+<circle cx="226.16666666666666" cy="782" r="12" fill="#FF1D25" stroke="#FFFFFF" stroke-width="2"/>
+<text x="226.16666666666666" y="787" text-anchor="middle" font-family="Inter" font-size="16" font-weight="700" fill="#FFFFFF">+</text>
+<text x="226.16666666666666" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#FFFFFF">Zgłoś</text>
+<text x="288.50000000000006" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👨‍👩‍👧</text>
+<text x="288.50000000000006" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Rodzina</text>
+<text x="350.83333333333337" y="786" text-anchor="middle" font-family="Inter" font-size="18" fill="#ffffff8c">👤</text>
+<text x="350.83333333333337" y="812" text-anchor="middle" font-family="Inter" font-size="11" font-weight="500" fill="#ffffff8c">Profil</text></g>
+</g>
+<rect x="0" y="0" width="390" height="844" rx="40" fill="none" stroke="#E5E5EA" stroke-width="1"/>
+<text x="0" y="868" font-family="Inter" font-size="11" font-weight="600" fill="#03080E">82_cyber_safety</text>
+<text x="0" y="884" font-family="Inter" font-size="10" fill="#8E8E93">Cyberbezpieczeństwo</text>
+</g>
+</svg>
