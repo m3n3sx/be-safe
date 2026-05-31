@@ -2,18 +2,10 @@ const router = require('express').Router();
 const db = require('../config/db');
 const auth = require('../middleware/auth');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-
-// Cloud Run note: /tmp only. Use UPLOAD_DIR=/tmp/uploads in env.
-const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, '..', '..', 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+const { uploadBuffer, makeFilename } = require('../services/storage');
 
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (_, __, cb) => cb(null, uploadDir),
-    filename: (_, file, cb) => cb(null, `${Date.now()}-${Math.random().toString(36).slice(2)}${path.extname(file.originalname)}`),
-  }),
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (_, file, cb) => cb(null, /^image\/(jpeg|png|webp)$/.test(file.mimetype)),
 });
@@ -144,7 +136,11 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
   // F17: anonimowe zgłoszenia - flaga zapisywana w DB, author_id zostaje dla moderacji
   const anonymous = is_anonymous === true || is_anonymous === 'true' || is_anonymous === 1 || is_anonymous === '1';
   const expires = new Date(Date.now() + duration_hours * 3600000).toISOString();
-  const photo_url = req.file ? `/uploads/${req.file.filename}` : null;
+  let photo_url = null;
+  if (req.file) {
+    const filename = makeFilename(req.file, '');
+    photo_url = await uploadBuffer(req.file.buffer, `alerts/${filename}`, req.file.mimetype);
+  }
 
   // F05: Text moderation (skip dla SOS - aggression z 🆘)
   const isSosBypass = category === 'aggression' && typeof title === 'string' && title.includes('🆘');
@@ -390,7 +386,8 @@ router.post('/:id/vote', async (req, res) => {
 
 router.post('/:id/photo', upload.single('photo'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Photo required' });
-  const photo_url = `/uploads/${req.file.filename}`;
+  const filename = makeFilename(req.file, '');
+  const photo_url = await uploadBuffer(req.file.buffer, `alerts/${filename}`, req.file.mimetype);
   const { rows } = await db.query(
     `UPDATE alerts SET photo_url = $1 WHERE id = $2 AND author_id = $3 RETURNING id, photo_url`,
     [photo_url, req.params.id, req.user.id]

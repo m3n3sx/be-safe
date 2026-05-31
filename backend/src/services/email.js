@@ -10,20 +10,25 @@ const FROM_NAME = process.env.EMAIL_FROM_NAME || 'be:Safe';
 const APP_URL = process.env.APP_URL || 'https://besafe.org.pl';
 const DISABLED = process.env.EMAIL_DISABLED === '1' || process.env.EMAIL_DISABLED === 'true';
 
-// Postfix on the same host — no auth, no TLS (localhost is trusted).
-// Postfix relays everything through SES with SASL + TLS.
+// Two modes:
+//  1) Local Postfix (AWS EC2): host=localhost port=25 no auth, ignoreTLS.
+//  2) Direct SES SMTP (Cloud Run): host=email-smtp.eu-central-1.amazonaws.com
+//     port=587 SMTP_USER+SMTP_PASS, STARTTLS required.
 let transporter = null;
 function getTransporter() {
   if (transporter) return transporter;
+  const host = process.env.SMTP_HOST || 'localhost';
+  const port = parseInt(process.env.SMTP_PORT || '25', 10);
+  const useAuth = !!process.env.SMTP_USER;
+
+  // If we're using auth (SES SMTP), enforce STARTTLS. Otherwise localhost trust.
   transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'localhost',
-    port: parseInt(process.env.SMTP_PORT || '25', 10),
-    secure: false,
-    ignoreTLS: true,
-    // If we ever want to bypass Postfix and go straight to SES SMTP,
-    // set SMTP_HOST=email-smtp.eu-central-1.amazonaws.com, SMTP_PORT=587,
-    // SMTP_USER + SMTP_PASS (SES SMTP credentials), and remove ignoreTLS.
-    auth: process.env.SMTP_USER ? {
+    host,
+    port,
+    secure: port === 465,           // SES SSL port; 587 uses STARTTLS via requireTLS
+    requireTLS: useAuth,
+    ignoreTLS: !useAuth,
+    auth: useAuth ? {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     } : undefined,

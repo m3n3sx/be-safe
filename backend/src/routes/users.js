@@ -3,18 +3,11 @@ const db = require('../config/db');
 const auth = require('../middleware/auth');
 const { notifyUser } = require('../services/fcm');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { uploadBuffer, makeFilename } = require('../services/storage');
 
-// Cloud Run note: writable area is /tmp only. Use UPLOAD_DIR=/tmp/uploads in env.
-// TODO(migration): swap to GCS bucket besafe-uploads for persistence.
-const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, '..', '..', 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+// Use memory storage; we ship the buffer to GCS bucket (or local fallback).
 const upload = multer({
-  storage: multer.diskStorage({
-    destination: (_, __, cb) => cb(null, uploadDir),
-    filename: (_, file, cb) => cb(null, `avatar-${Date.now()}${path.extname(file.originalname)}`),
-  }),
+  storage: multer.memoryStorage(),
   limits: { fileSize: 2 * 1024 * 1024 },
 });
 
@@ -23,7 +16,9 @@ router.use(auth);
 // Upload avatar for any user (parent can set child avatar)
 router.post('/:id/avatar', upload.single('avatar'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'File required' });
-  const avatar_url = `/uploads/${req.file.filename}`;
+  const filename = makeFilename(req.file, 'avatar-');
+  const key = `avatars/${filename}`;
+  const avatar_url = await uploadBuffer(req.file.buffer, key, req.file.mimetype || 'image/jpeg');
   await db.query(`UPDATE users SET avatar_url = $1 WHERE id = $2`, [avatar_url, req.params.id]);
   res.json({ avatar_url });
 });
