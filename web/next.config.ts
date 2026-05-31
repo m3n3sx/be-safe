@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Cloud Run deployment: emit standalone server bundle to /app/.next/standalone/server.js
+  output: "standalone",
 };
 
 export default nextConfig;
