@@ -9,7 +9,12 @@ class AuthProvider extends ChangeNotifier {
   bool _loading = false;
   bool _autoLoginInProgress = false;
   bool _autoLoginAttempted = false;
-  final _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+  // Web OAuth client ID z google-services.json (type=3) — wymagany na Androidzie
+  // żeby Google Sign-In zwracał idToken zamiast rzucać ApiException:10.
+  final _googleSignIn = GoogleSignIn(
+    scopes: const ['email', 'profile'],
+    serverClientId: '1098119585965-1dmn79cgjbhsr84f1iu3dibvpilc906p.apps.googleusercontent.com',
+  );
 
   AuthProvider(this._api);
 
@@ -71,27 +76,35 @@ class AuthProvider extends ChangeNotifier {
     finally { _loading = false; notifyListeners(); }
   }
 
-  Future<bool> loginWithGoogle({String? referralCode}) async {    _loading = true; notifyListeners();
+  Future<bool> loginWithGoogle({String? referralCode}) async {
+    _loading = true;
+    notifyListeners();
     try {
-      try { await _googleSignIn.disconnect(); } catch (_) {}
+      await _googleSignIn.signOut();
       final account = await _googleSignIn.signIn();
-      if (account == null) { _loading = false; notifyListeners(); return false; }
+      if (account == null) {
+        return false;
+      }
       final body = <String, dynamic>{
         'email': account.email,
         'display_name': account.displayName ?? account.email.split('@')[0],
         'avatar_url': account.photoUrl,
       };
-      if (referralCode != null && referralCode.trim().isNotEmpty) body['referral_code'] = referralCode.trim().toUpperCase();
+      if (referralCode != null && referralCode.trim().isNotEmpty) {
+        body['referral_code'] = referralCode.trim().toUpperCase();
+      }
       final res = await _api.post('/auth/google', body);
       if (res['token'] != null) {
         await _api.setToken(res['token']);
         _user = User.fromJson(res['user']);
-        _loading = false;
-        notifyListeners();
         return true;
       }
-    } catch (_) {}
-    _loading = false; notifyListeners();
+    } catch (e) {
+      debugPrint('Google Sign-In error: $e');
+    } finally {
+      _loading = false;
+      notifyListeners();
+    }
     return false;
   }
 
