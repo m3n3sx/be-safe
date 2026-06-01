@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -62,6 +63,14 @@ const String _sentryDsn = String.fromEnvironment(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Edge-to-edge: app draws behind status bar + nav bar (system icons visible on app bg).
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.dark,
+  ));
   await S.load();
   await initDockState();
 

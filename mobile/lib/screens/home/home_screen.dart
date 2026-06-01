@@ -16,6 +16,7 @@ import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import '../../theme/ios_surfaces.dart';
+import '../../widgets/collapsible_dock.dart' show dockAccentColor;
 import '../../widgets/glow_orb.dart'; // ignore: unused_import (kept for hero fallback)
 import '../../widgets/safety_hero_xl.dart';
 import '../../widgets/stagger_list.dart';
@@ -247,6 +248,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // v106: sync dock active-pill color z poziomem zagrozenia (zielony/pomarancz/czerwony).
+    final orbColor = _orbColor;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (dockAccentColor.value != orbColor) {
+        dockAccentColor.value = orbColor;
+      }
+    });
     final auth = context.watch<AuthProvider>();
     final userName = auth.user?.username.split(' ').first ?? '';
 

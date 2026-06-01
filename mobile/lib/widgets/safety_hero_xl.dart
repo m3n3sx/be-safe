@@ -100,25 +100,25 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
         alignment: Alignment.topCenter,
         children: [
           // 1. Animated blob halo (Aceternity-style meta balls).
-          //    v105: ClipRect + soft fade — halo zatrzymuje się przed
-          //    "Sprawdź na mapie" i NIE nachodzi na kartę Moja rodzina.
+          //    v106: edge-to-edge — halo wycieka POD status bar (top -180),
+          //    twardszy fade na dole zeby NIE dotykac karty 'Moja rodzina'.
           Positioned(
-            top: -60,
+            top: -180,
             left: -40,
             right: -40,
             child: SizedBox(
-              height: 520,
+              height: 600,
               child: ClipRect(
                 child: ShaderMask(
                   blendMode: BlendMode.dstIn,
                   shaderCallback: (rect) => const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    stops: [0.0, 0.45, 0.85, 1.0],
+                    stops: [0.0, 0.55, 0.78, 0.92],
                     colors: [
                       Colors.white,
                       Colors.white,
-                      Color(0x33FFFFFF), // 20% opacity
+                      Color(0x22FFFFFF), // ~13% opacity
                       Colors.transparent,
                     ],
                   ).createShader(rect),

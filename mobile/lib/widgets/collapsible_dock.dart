@@ -38,6 +38,12 @@ final ValueNotifier<int> dockActiveIndex = ValueNotifier<int>(NavTabs.home);
 /// Globalny notifier widoczności docka.
 final ValueNotifier<bool> dockVisible = ValueNotifier<bool>(false);
 
+/// Globalny notifier koloru aktywnej zakladki w docku (v106+).
+/// Synchronizowany z _orbColor w home_screen.dart per safety level
+/// (zielony #44FE00 / pomarancz #EB6A00 / czerwony #CE2200).
+final ValueNotifier<Color> dockAccentColor =
+    ValueNotifier<Color>(const Color(0xFFA0FF3B));
+
 /// No-op (kept for backwards compat z main.dart `await initDockState()`).
 Future<void> initDockState() async {}
 
@@ -234,9 +240,6 @@ const List<_DockItem> _kItems = [
   ),
 ];
 
-/// Active mint pill color (Figma node 2050:50, fill #A0FF3B).
-const Color _kActivePillColor = Color(0xFFA0FF3B);
-
 /// Active pill dimensions inside the 64h dock.
 const double _kPillW = 68;
 const double _kPillH = 52;
@@ -268,15 +271,18 @@ class _DockSlot extends StatelessWidget {
           child: SizedBox.expand(
             child: Center(
               child: selected
-                  ? Container(
-                      width: _kPillW,
-                      height: _kPillH,
-                      decoration: BoxDecoration(
-                        color: _kActivePillColor,
-                        borderRadius: BorderRadius.circular(_kPillRadius),
+                  ? ValueListenableBuilder<Color>(
+                      valueListenable: dockAccentColor,
+                      builder: (context, accent, _) => Container(
+                        width: _kPillW,
+                        height: _kPillH,
+                        decoration: BoxDecoration(
+                          color: accent,
+                          borderRadius: BorderRadius.circular(_kPillRadius),
+                        ),
+                        alignment: Alignment.center,
+                        child: _slotGlyph(iconColor),
                       ),
-                      alignment: Alignment.center,
-                      child: _slotGlyph(iconColor),
                     )
                   : _slotGlyph(iconColor),
             ),
