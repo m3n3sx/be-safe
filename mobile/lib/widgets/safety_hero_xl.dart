@@ -14,6 +14,8 @@
 
 library;
 
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/material.dart';
 
 import '../theme/ios_surfaces.dart';
@@ -202,8 +204,11 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
   }
 }
 
-/// Big blurred ellipse acting as the safety state halo.
-/// ~335pt diameter with 50px blur (approximation of Figma 111.6 / 2 scale).
+/// Soft "cloud" halo — multi-ellipse stack pushed through a heavy gaussian
+/// blur, exactly as in Figma (V7gYh6uA0axopciUTSn4Ib): not a solid ring,
+/// not a hard circle, just diffuse coloured fog hovering behind the score.
+/// Three offset ellipses with `BlendMode.plus` overlap into a chunky, organic
+/// shape; `ImageFilter.blur(60)` melts the edges into the page background.
 class _BlurredHalo extends StatelessWidget {
   final List<Color> colors;
   final AlignmentGeometry begin;
@@ -216,29 +221,56 @@ class _BlurredHalo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 320,
-      height: 320,
-      margin: const EdgeInsets.only(top: 80),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          begin: begin,
-          end: end,
-          colors: colors,
+    final c1 = colors.first.withValues(alpha: 0.65);
+    final c2 = colors.last.withValues(alpha: 0.75);
+    return ImageFiltered(
+      imageFilter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
+      child: SizedBox(
+        width: 360,
+        height: 360,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Główna chmura — szeroka elipsa, obrócona o ~20°, BlendMode.plus
+            Transform.rotate(
+              angle: 0.35,
+              child: Container(
+                width: 280,
+                height: 210,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(140),
+                  color: c1,
+                ),
+              ),
+            ),
+            // Druga warstwa — kolor docelowy gradientu, w prawo-dół, mniejsza
+            Positioned(
+              right: 40,
+              bottom: 60,
+              child: Container(
+                width: 220,
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(120),
+                  color: c2,
+                ),
+              ),
+            ),
+            // Akcent — mała plamka w lewy-górny, kolor pośredni
+            Positioned(
+              left: 50,
+              top: 70,
+              child: Container(
+                width: 160,
+                height: 150,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(90),
+                  color: Color.lerp(c1, c2, 0.5)!,
+                ),
+              ),
+            ),
+          ],
         ),
-        boxShadow: [
-          BoxShadow(
-            color: colors.last.withValues(alpha: 0.40),
-            blurRadius: 80,
-            spreadRadius: 4,
-          ),
-          BoxShadow(
-            color: colors.first.withValues(alpha: 0.30),
-            blurRadius: 60,
-            spreadRadius: -8,
-          ),
-        ],
       ),
     );
   }
