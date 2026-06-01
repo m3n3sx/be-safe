@@ -154,20 +154,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       InsetGroupedRow(
                         icon: Icons.manage_accounts_outlined,
-                        iconColor: SerenityColors.primaryContainer,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Dane konta',
                         onTap: () => Navigator.pushNamed(context, '/settings'),
                       ),
                       InsetGroupedRow(
                         icon: Icons.tune,
-                        iconColor: SerenityColors.secondary,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Promień powiadomień',
                         value: '${user?.alertRadiusM ?? 500}m',
                         onTap: () => _showRadiusSheet(user?.alertRadiusM ?? 500),
                       ),
                       InsetGroupedRow(
                         icon: Icons.share_location_outlined,
-                        iconColor: SerenityColors.secondary,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Udostępnij lokalizację',
                         subtitle: 'Tymczasowy link na 1 godzinę',
                         onTap: _shareLocation,
@@ -179,33 +179,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       InsetGroupedRow(
                         icon: Icons.workspace_premium_outlined,
-                        iconColor: SerenityColors.secondary,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Odznaki',
                         subtitle: 'Twoje osiągnięcia',
                         onTap: () => Navigator.pushNamed(context, '/badges'),
                       ),
                       InsetGroupedRow(
                         icon: Icons.leaderboard_outlined,
-                        iconColor: SerenityColors.secondary,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Ranking',
                         onTap: () => Navigator.pushNamed(context, '/ranking'),
                       ),
                       InsetGroupedRow(
                         icon: Icons.history,
-                        iconColor: SerenityColors.primaryContainer,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Moje zgłoszenia',
                         onTap: () => Navigator.pushNamed(context, '/my-alerts'),
                       ),
                       InsetGroupedRow(
                         icon: Icons.card_giftcard_outlined,
-                        iconColor: SerenityColors.glowAlertCoral,
+                        iconColor: const Color(0xFFFF4848),
                         title: 'Polecaj znajomym',
                         subtitle: 'Twój kod polecający',
                         onTap: () => Navigator.pushNamed(context, '/referral'),
                       ),
                       InsetGroupedRow(
                         icon: Icons.article_outlined,
-                        iconColor: SerenityColors.primaryContainer,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Aktualności',
                         onTap: () => Navigator.pushNamed(context, '/news'),
                       ),
@@ -216,13 +216,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       InsetGroupedRow(
                         icon: Icons.notifications_outlined,
-                        iconColor: SerenityColors.primaryContainer,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Powiadomienia',
                         onTap: () => Navigator.pushNamed(context, '/settings'),
                       ),
                       InsetGroupedRow(
                         icon: Icons.verified_user_outlined,
-                        iconColor: SerenityColors.secondary,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Uprawnienia',
                         subtitle: 'Lokalizacja, kamera, mikrofon',
                         onTap: () =>
@@ -230,19 +230,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       InsetGroupedRow(
                         icon: Icons.lock_outline,
-                        iconColor: SerenityColors.primaryContainer,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Prywatność',
                         onTap: () => Navigator.pushNamed(context, '/privacy'),
                       ),
                       InsetGroupedRow(
                         icon: Icons.description_outlined,
-                        iconColor: SerenityColors.primaryContainer,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Regulamin',
                         onTap: () => Navigator.pushNamed(context, '/terms'),
                       ),
                       InsetGroupedRow(
                         icon: Icons.help_outline,
-                        iconColor: SerenityColors.primaryContainer,
+                        iconColor: const Color(0xFFA0FF3B),
                         title: 'Pomoc i wsparcie',
                         onTap: () => Navigator.pushNamed(context, '/emergency'),
                       ),
@@ -253,6 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       InsetGroupedRow(
                         icon: Icons.logout,
+                        iconColor: const Color(0xFFFF4848),
                         title: 'Wyloguj się',
                         destructive: true,
                         onTap: _doLogout,

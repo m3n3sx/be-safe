@@ -1,0 +1,71 @@
+Return-Path: <noreply-dmarc-support@google.com>
+Delivered-To: info@besafe.org.pl
+Received: from mail.besafe.org.pl
+	by ip-172-31-3-158.eu-north-1.compute.internal with LMTP
+	id ebcQN30sA2rW+gAAemXeFg
+	(envelope-from <noreply-dmarc-support@google.com>)
+	for <info@besafe.org.pl>; Tue, 12 May 2026 13:34:53 +0000
+Authentication-Results: mail.besafe.org.pl;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20251104 header.b=phRnZnN+;
+	dkim-atps=neutral
+Received: from mail-vk1-f202.google.com (mail-vk1-f202.google.com [209.85.221.202])
+	by mail.besafe.org.pl (Postfix) with ESMTPS id AB9921084AB
+	for <postmaster@besafe.org.pl>; Tue, 12 May 2026 13:34:53 +0000 (UTC)
+Received: by mail-vk1-f202.google.com with SMTP id 71dfb90a1353d-575456ad2b2so4773373e0c.0
+        for <postmaster@besafe.org.pl>; Tue, 12 May 2026 06:34:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1778592892; x=1779197692; darn=besafe.org.pl;
+        h=content-transfer-encoding:content-disposition:to:from:subject
+         :message-id:date:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=erulYuYk6oPqdoKBXXjIfnUy5OgbqsfBGAE6lX9zqWA=;
+        b=phRnZnN+1U0fXWgZYFNznf7WyHvzyausf6eNyqbwxx0v0ig9VIkTCZcejEYoqV6ljT
+         Wi444VoRwBnOlMxd8cTHDhpI9eSX/DoNDuXpRFreZ2JPUrGNbvHvrIYONCBBAGoxKn1n
+         777Jg21fEQI22mw1cnfhWDLulEtqejvOCz/jf2LWNaUejRIUkQY6747hYUicWkyiOvHE
+         ublw6FdZqlC+jDnBi3VHnZcLlesFOHe86enUl+doL62mIChelpooGCkUXi5sQm2U6jO7
+         I8CvvyRA55dK5Jkk9TyP82Bv1xFw2zd0eqldRQ5877SX/sZ5GZ4VxL8KlTdLuS88DqDV
+         tGnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1778592892; x=1779197692;
+        h=content-transfer-encoding:content-disposition:to:from:subject
+         :message-id:date:mime-version:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=erulYuYk6oPqdoKBXXjIfnUy5OgbqsfBGAE6lX9zqWA=;
+        b=KtFzaLOrSGT25fzcHFk3/f66CM8aBO57LUmFbFH3t0MJGRz+TXIJGXiJ7vVUvWe7l/
+         9K71VEJiWK5VPW6nCCA4obBOzwvkCeLUjmrLohXSYGvsSlLsx0gOFstsqnUrFQDkcuHw
+         NAnV5Q+W7KXU5dbcqWlIlDa8MlGcDTEGF8HPx9kb7rtYNFuxV3CoMpHCk3n4P15ayvAn
+         ZVNwLNkoBBxK2YjBZyeFSWzGbqUZ0zaEnmshxVXyGu1QR58v7Kw25WJZxdLQaB3yX/A+
+         JCp9Q36+IxcwxKJFyAhVmPyeM265F9qOQIPpX66gooXDdnr7llmGi6+sKq1xKAjFi7GE
+         mTYA==
+X-Gm-Message-State: AOJu0YzfZxQcq/RnkdZNl1BqTFcLyKzzFcG6s3GQohdVJ3k/FWNiQNXq
+	YJsCykFYyIVs8cRU81Nq7IQzSfbYt2EJGgAYISPmHs9U9ULJYwqY/+fheu633kfEezFhOgE=
+MIME-Version: 1.0
+X-Received: by 2002:a05:6122:3209:b0:56f:7300:37c9 with SMTP id
+ 71dfb90a1353d-575596aac1fmr14423353e0c.10.1778592892568; Tue, 12 May 2026
+ 06:34:52 -0700 (PDT)
+Date: Mon, 11 May 2026 16:59:59 -0700
+Message-ID: <4644789501044804834@google.com>
+Subject: Report domain: besafe.org.pl Submitter: google.com Report-ID: 4644789501044804834
+From: noreply-dmarc-support@google.com
+To: postmaster@besafe.org.pl
+Content-Type: application/zip; 
+	name="google.com!besafe.org.pl!1778457600!1778543999.zip"
+Content-Disposition: attachment; 
+	filename="google.com!besafe.org.pl!1778457600!1778543999.zip"
+Content-Transfer-Encoding: base64
+
+UEsDBAoAAAAIAMFZrFxgPwIVcgIAAFYMAAAyAAAAZ29vZ2xlLmNvbSFiZXNhZmUub3JnLnBsITE3
+Nzg0NTc2MDAhMTc3ODU0Mzk5OS54bWztV01z2jAQvedXeLhj2SAMdBSlp/6C9uyR5bVRsCUhyeTj
+13ccyR+lyaRNp4d2OCG9fbt++9jFA7l7bJvoDMYKJW8XaZwsIpBclULWt4tvX78sd4vojt6QCqAs
+GD/SmygigU/TOCFouPQBA1oZl7fgWMkc67EoIsrUuWQt0FqpuoGYq5agEfQcaJloqFQGdPO0LFtm
++NJ2ui/3eZ7meSHn0RmWcyUd4y4XslL04Jy2nxAKqfGUihhi0j6AQSucZZtdQtAr+b5waEOUFGcY
+b3f7TZImGO8SvFtjgqawp5fMQW6YrEMzUUQKqIWk6Xa7w5ttliQEeWSIgyxfohu83u/3BPV3Xwz9
+WG182txTolUj+FOuu6IR9gCjENUyIWkBllUQK1PHuiEooJ7CyqNoqSHIHwJodfWC9Z8e0lQqCQTp
+cLcDYAdEc0fTvrP+4CE5kOQLiaDXdBIDXJlBslEPoylWdYZDLjTN9nGa7ePVCscpJmgKDFSuOulo
+SpA/DHB4HpxZ0zE3+OK9EVYrK1w/ql7kHJnxels0s5agyaFgQUUrJpreg2DTrMeLZxI0dkZECdKJ
+SoCxY9oBWAkmr4xqL7+veSjU+qkCYZ075AZs17ip6IXg98chTHtfJfQcLrOuoQHulKG2q575uc2e
+eIFP6yNuy64QG7cpK7x+tqeKoJE6ejMX9IY61rJnJS1Yv98fVqeORc3Y6VDVZXa6P7jVQ1uye911
+TGrRnj+o7he982Pxtrr+R+tdBbOpmgRAt+QgnWHNMo3/wKvZ0BJ0OTw9edjJ313P9XU9r+v599fz
+31yO3dvLsbq+u67vLvh/loOg6S/Cd1BLAQIKAAoAAAAIAMFZrFxgPwIVcgIAAFYMAAAyAAAAAAAA
+AAAAAAAAAAAAAABnb29nbGUuY29tIWJlc2FmZS5vcmcucGwhMTc3ODQ1NzYwMCExNzc4NTQzOTk5
+LnhtbFBLBQYAAAAAAQABAGAAAADCAgAAAAA=

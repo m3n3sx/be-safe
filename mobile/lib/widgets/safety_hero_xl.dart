@@ -100,16 +100,30 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
         alignment: Alignment.topCenter,
         children: [
           // 1. Animated blob halo (Aceternity-style meta balls).
-          //    v103: chmurka obniżona — top -60 (było -180) per user m2517.
+          //    v104: clipped to hero area only — nie nachodzi na "Moja rodzina".
+          //    Height ograniczone do ~380, ShaderMask robi soft fade na dole.
           Positioned(
             top: -60,
             left: -40,
             right: -40,
             child: SizedBox(
-              height: 560,
-              child: _AnimatedBlobs(
-                drift: _drift,
-                colors: _gradientColors,
+              height: 420,
+              child: ShaderMask(
+                blendMode: BlendMode.dstIn,
+                shaderCallback: (rect) => const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.0, 0.7, 1.0],
+                  colors: [
+                    Colors.white,
+                    Colors.white,
+                    Colors.transparent,
+                  ],
+                ).createShader(rect),
+                child: _AnimatedBlobs(
+                  drift: _drift,
+                  colors: _gradientColors,
+                ),
               ),
             ),
           ),

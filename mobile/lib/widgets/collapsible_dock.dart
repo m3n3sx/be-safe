@@ -287,18 +287,21 @@ class _DockSlot extends StatelessWidget {
   }
 
   Widget _slotGlyph(Color color) {
+    // v104: SOS slightly larger than other icons (user m2540).
+    final isSos = item.label == 'SOS';
+    final size = isSos ? 30.0 : 24.0;
     if (item.svg != null) {
       return SvgPicture.asset(
         item.svg!,
-        width: 24,
-        height: 24,
+        width: size,
+        height: size,
         colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
       );
     }
     return Icon(
       selected ? item.activeIcon : item.icon,
       color: color,
-      size: 24,
+      size: size,
     );
   }
 }
