@@ -1,18 +1,22 @@
-/// be:Safe — Global Dock (v96: 6 buttons, SVG icons from /design/dock.svg,
-/// transparent Zgłoś with red circle)
+/// be:Safe v100 — Global Dock + global "Zgłoś" FAB (Figma redesign)
 ///
-/// Pasek nawigacji renderowany przez MaterialApp.builder, widoczny na każdym
-/// ekranie po zalogowaniu (poza auth/onboarding/biometric/session-check).
+/// Source: Figma file V7gYh6uA0axopciUTSn4Ib node 2050:51 (user m2445).
 ///
-/// Layout (od lewej): Home | Mapa | SOS | Zgłoś (czerwony) | Rodzina | Profil.
-/// "Zgłoś" to równy przycisk w docku z czerwonym tłem — nie tab, otwiera
-/// CreateAlertScreen.
+/// Dock = black pill (368×64, radius 62) holding 5 items:
+///   Mapa | Home | Rodzina | SOS | Profil
 ///
-/// Aktywny tab kontrolowany przez globalny `dockActiveIndex` (ValueNotifier),
-/// który aktualizuje `navigateToTab()` w nav_routes.dart.
+/// Active item rendered as a mint pill (#A0FF3B, 68×52 radius 27pt) with
+/// the icon in pure black; inactive items are white outline icons.
+/// SOS is a text glyph ("SOS", Medula One 32pt → falls back to system bold
+/// condensed when the font is missing) instead of a Material icon.
+///
+/// "Zgłoś" no longer lives inside the dock (user m2445: "przycisk zgłoś
+/// jedna jako osobny a nie w docku"). It is rendered as a circular red FAB
+/// just above the dock, on every logged-in screen.
 ///
 /// Visibility kontrolowane przez `dockVisible` (`ValueNotifier<bool>`),
-/// ustawiane przez _AuthGate w main.dart.
+/// active tab przez `dockActiveIndex` (updated by `navigateToTab` in
+/// nav_routes.dart).
 library;
 
 import 'package:flutter/material.dart';
@@ -41,11 +45,19 @@ Future<void> initDockState() async {}
 const double _kBarHeight = 64;
 
 /// Promień zaokrąglenia wszystkich 4 narożników docka.
-const double _kRadius = 22;
+const double _kRadius = 62;
 
 /// Delikatne odstępy docka od krawędzi ekranu.
-const double _kSideMargin = 8;
+const double _kSideMargin = 11;
 const double _kBottomMargin = 6;
+
+/// FAB "Zgłoś" — rozmiary + pozycja względem docka.
+const double _kFabSize = 56;
+const double _kFabGap = 12; // odstęp FAB od górnej krawędzi docka
+
+/// Łączna wysokość zarezerwowanego dolnego paska (dock + FAB lift).
+double _reservedBottom(MediaQueryData mq) =>
+    _kBarHeight + _kFabSize / 2 + _kFabGap + mq.padding.bottom + _kBottomMargin;
 
 /// Wrapper do owinięcia child z MaterialApp.builder.
 class GlobalDockOverlay extends StatelessWidget {
@@ -58,8 +70,7 @@ class GlobalDockOverlay extends StatelessWidget {
       valueListenable: dockVisible,
       builder: (_, visible, __) {
         final mq = MediaQuery.of(context);
-        final reserved =
-            visible ? _kBarHeight + mq.padding.bottom + _kBottomMargin : 0.0;
+        final reserved = visible ? _reservedBottom(mq) : 0.0;
         return Stack(
           children: [
             MediaQuery(
@@ -69,16 +80,27 @@ class GlobalDockOverlay extends StatelessWidget {
               ),
               child: child,
             ),
-            if (visible)
+            if (visible) ...[
               const Positioned(
                 left: 0,
                 right: 0,
                 bottom: 0,
                 child: Material(
                   type: MaterialType.transparency,
-                  child: _EdgeDock(),
+                  child: _DockBar(),
                 ),
               ),
+              // FAB unosi się nad dockiem, prawy róg.
+              Positioned(
+                right: 16,
+                bottom: _kBarHeight + _kBottomMargin + _kFabGap +
+                    mq.padding.bottom,
+                child: const Material(
+                  type: MaterialType.transparency,
+                  child: _ReportFab(),
+                ),
+              ),
+            ],
           ],
         );
       },
@@ -86,8 +108,8 @@ class GlobalDockOverlay extends StatelessWidget {
   }
 }
 
-class _EdgeDock extends StatelessWidget {
-  const _EdgeDock();
+class _DockBar extends StatelessWidget {
+  const _DockBar();
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +124,7 @@ class _EdgeDock extends StatelessWidget {
       child: Container(
         height: _kBarHeight,
         decoration: BoxDecoration(
-          color: SerenityColors.primaryContainer,
+          color: const Color(0xFF000000), // czarny pill
           borderRadius: BorderRadius.circular(_kRadius),
           boxShadow: SerenityElevation.nav(),
         ),
@@ -111,28 +133,27 @@ class _EdgeDock extends StatelessWidget {
           valueListenable: dockActiveIndex,
           builder: (_, idx, __) => Row(
             children: [
-              _DockButton(
-                item: _kItems[0], // Home
-                selected: idx == NavTabs.home,
-                onTap: () => _onTabTap(context, NavTabs.home, idx),
-              ),
-              _DockButton(
-                item: _kItems[1], // Mapa
+              _DockSlot(
+                item: _kItems[0], // Mapa
                 selected: idx == NavTabs.map,
                 onTap: () => _onTabTap(context, NavTabs.map, idx),
               ),
-              _DockButton(
-                item: _kItems[2], // SOS
-                selected: idx == NavTabs.sos,
-                onTap: () => _onTabTap(context, NavTabs.sos, idx),
+              _DockSlot(
+                item: _kItems[1], // Home
+                selected: idx == NavTabs.home,
+                onTap: () => _onTabTap(context, NavTabs.home, idx),
               ),
-              _ReportButton(onTap: () => _openCreateAlert(context)),
-              _DockButton(
-                item: _kItems[3], // Rodzina
+              _DockSlot(
+                item: _kItems[2], // Rodzina
                 selected: idx == NavTabs.family,
                 onTap: () => _onTabTap(context, NavTabs.family, idx),
               ),
-              _DockButton(
+              _DockSlot(
+                item: _kItems[3], // SOS (text glyph)
+                selected: idx == NavTabs.sos,
+                onTap: () => _onTabTap(context, NavTabs.sos, idx),
+              ),
+              _DockSlot(
                 item: _kItems[4], // Profil
                 selected: idx == NavTabs.profile,
                 onTap: () => _onTabTap(context, NavTabs.profile, idx),
@@ -150,6 +171,177 @@ class _EdgeDock extends StatelessWidget {
       return;
     }
     navigateToTab(context, targetIndex: target, currentIndex: current);
+  }
+}
+
+class _DockItem {
+  /// SVG asset path; null → render text glyph (used by SOS).
+  final String? svg;
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+  final String? textGlyph;
+  const _DockItem({
+    this.svg,
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+    this.textGlyph,
+  });
+}
+
+/// Kolejność dock per Figma (V7gYh6uA0axopciUTSn4Ib node 2050:51):
+/// Mapa | Home | Rodzina | SOS | Profil.
+/// SOS render text "SOS" (Medula One), pozostałe — SVG outline ikony.
+const List<_DockItem> _kItems = [
+  _DockItem(
+    svg: 'assets/icons/dock/map.svg',
+    icon: Icons.map_outlined,
+    activeIcon: Icons.map,
+    label: 'Mapa',
+  ),
+  _DockItem(
+    svg: 'assets/icons/dock/home.svg',
+    icon: Icons.home_outlined,
+    activeIcon: Icons.home,
+    label: 'Home',
+  ),
+  _DockItem(
+    svg: 'assets/icons/dock/family.svg',
+    icon: Icons.family_restroom_outlined,
+    activeIcon: Icons.family_restroom,
+    label: 'Rodzina',
+  ),
+  _DockItem(
+    icon: Icons.sos_outlined,
+    activeIcon: Icons.sos,
+    label: 'SOS',
+    textGlyph: 'SOS',
+  ),
+  _DockItem(
+    svg: 'assets/icons/dock/profile.svg',
+    icon: Icons.person_outline,
+    activeIcon: Icons.person,
+    label: 'Profil',
+  ),
+];
+
+/// Active mint pill color (Figma node 2050:50, fill #A0FF3B).
+const Color _kActivePillColor = Color(0xFFA0FF3B);
+
+/// Active pill dimensions inside the 64h dock.
+const double _kPillW = 68;
+const double _kPillH = 52;
+const double _kPillRadius = 27;
+
+class _DockSlot extends StatelessWidget {
+  final _DockItem item;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _DockSlot({
+    required this.item,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final iconColor = selected ? Colors.black : Colors.white;
+    return Expanded(
+      child: Semantics(
+        button: true,
+        selected: selected,
+        label: item.label,
+        child: InkWell(
+          onTap: onTap,
+          splashColor: Colors.white.withValues(alpha: 0.08),
+          highlightColor: Colors.white.withValues(alpha: 0.04),
+          child: SizedBox.expand(
+            child: Center(
+              child: selected
+                  ? Container(
+                      width: _kPillW,
+                      height: _kPillH,
+                      decoration: BoxDecoration(
+                        color: _kActivePillColor,
+                        borderRadius: BorderRadius.circular(_kPillRadius),
+                      ),
+                      alignment: Alignment.center,
+                      child: _slotGlyph(iconColor),
+                    )
+                  : _slotGlyph(iconColor),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _slotGlyph(Color color) {
+    if (item.textGlyph != null) {
+      // SOS rendered as text. Medula One falls back to system bold.
+      return Text(
+        item.textGlyph!,
+        style: TextStyle(
+          fontFamily: 'Medula One',
+          fontSize: 32,
+          height: 1.0,
+          fontWeight: FontWeight.w400,
+          color: color,
+          letterSpacing: 0,
+        ),
+      );
+    }
+    if (item.svg != null) {
+      return SvgPicture.asset(
+        item.svg!,
+        width: 24,
+        height: 24,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+      );
+    }
+    return Icon(
+      selected ? item.activeIcon : item.icon,
+      color: color,
+      size: 24,
+    );
+  }
+}
+
+/// "Zgłoś" — globalny okrągły czerwony FAB, NIE w docku.
+/// User m2445: "przycisk zgłoś jedna jako osobny a nie w docku".
+class _ReportFab extends StatelessWidget {
+  const _ReportFab();
+
+  @override
+  Widget build(BuildContext context) {
+    const red = Color(0xFFFF4848); // Figma node 2050:33 fill #FF4848
+    return Semantics(
+      button: true,
+      label: 'Zgłoś alert',
+      child: Material(
+        color: red,
+        shape: const CircleBorder(),
+        elevation: 6,
+        shadowColor: red.withValues(alpha: 0.5),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () => _openCreateAlert(context),
+          splashColor: Colors.white.withValues(alpha: 0.18),
+          highlightColor: Colors.white.withValues(alpha: 0.08),
+          child: const SizedBox(
+            width: _kFabSize,
+            height: _kFabSize,
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 28,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _openCreateAlert(BuildContext context) async {
@@ -183,181 +375,6 @@ class _EdgeDock extends StatelessWidget {
     await navState.push(
       MaterialPageRoute(
         builder: (_) => CreateAlertScreen(position: pos!),
-      ),
-    );
-  }
-}
-
-class _DockItem {
-  /// SVG asset path; null oznacza fallback do `icon` (Material) — używamy
-  /// dla SOS, który zachowuje obecny wygląd.
-  final String? svg;
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  const _DockItem({
-    this.svg,
-    required this.icon,
-    required this.activeIcon,
-    required this.label,
-  });
-}
-
-/// Kolejność tabów (5): Home, Mapa, SOS, Rodzina, Profil.
-/// "Zgłoś" jako 6-ty przycisk renderowany osobno (czerwony, nie tab).
-/// Ikony Home/Mapa/Rodzina/Profil z /design/dock.svg (user feedback v96).
-const List<_DockItem> _kItems = [
-  _DockItem(
-    svg: 'assets/icons/dock/home.svg',
-    icon: Icons.home_outlined,
-    activeIcon: Icons.home,
-    label: 'Home',
-  ),
-  _DockItem(
-    svg: 'assets/icons/dock/map.svg',
-    icon: Icons.map_outlined,
-    activeIcon: Icons.map,
-    label: 'Mapa',
-  ),
-  _DockItem(
-    icon: Icons.sos_outlined,
-    activeIcon: Icons.sos,
-    label: 'SOS',
-  ),
-  _DockItem(
-    svg: 'assets/icons/dock/family.svg',
-    icon: Icons.family_restroom_outlined,
-    activeIcon: Icons.family_restroom,
-    label: 'Rodzina',
-  ),
-  _DockItem(
-    svg: 'assets/icons/dock/profile.svg',
-    icon: Icons.person_outline,
-    activeIcon: Icons.person,
-    label: 'Profil',
-  ),
-];
-
-class _DockButton extends StatelessWidget {
-  final _DockItem item;
-  final bool selected;
-  final VoidCallback onTap;
-
-  const _DockButton({
-    required this.item,
-    required this.selected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color = selected
-        ? SerenityColors.onPrimary
-        : SerenityColors.onPrimary.withValues(alpha: 0.55);
-
-    final Widget iconWidget = item.svg != null
-        ? SvgPicture.asset(
-            item.svg!,
-            width: 24,
-            height: 24,
-            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-          )
-        : Icon(
-            selected ? item.activeIcon : item.icon,
-            color: color,
-            size: 24,
-          );
-
-    return Expanded(
-      child: Semantics(
-        button: true,
-        selected: selected,
-        label: item.label,
-        child: InkWell(
-          onTap: onTap,
-          splashColor: SerenityColors.onPrimary.withValues(alpha: 0.08),
-          highlightColor: SerenityColors.onPrimary.withValues(alpha: 0.04),
-          child: SizedBox.expand(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                SizedBox(height: 24, width: 24, child: iconWidget),
-                const SizedBox(height: 4),
-                Text(
-                  item.label,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 11,
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                    letterSpacing: 0.2,
-                    height: 1.1,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.visible,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// "Zgłoś" — przezroczyste tło (jak inne taby), CZERWONE kółko 24px
-/// (#FF1D25) z białym obramowaniem 2px i białym plusem w środku.
-/// Etykieta "Zgłoś" biała jak inne. Otwiera CreateAlertScreen.
-class _ReportButton extends StatelessWidget {
-  final VoidCallback onTap;
-  const _ReportButton({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    const red = Color(0xFFFF1D25);
-    return Expanded(
-      child: Semantics(
-        button: true,
-        label: 'Zgłoś alert',
-        child: InkWell(
-          onTap: onTap,
-          splashColor: SerenityColors.onPrimary.withValues(alpha: 0.08),
-          highlightColor: SerenityColors.onPrimary.withValues(alpha: 0.04),
-          child: SizedBox.expand(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    color: red,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Zgłoś',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.2,
-                    height: 1.1,
-                  ),
-                  maxLines: 1,
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

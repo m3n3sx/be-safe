@@ -26,10 +26,7 @@ import '../family/family_screen.dart';
 import '../family/child_profile_screen.dart';
 import '../family/member_profile_screen.dart';
 import '../map/map_screen.dart';
-import '../profile/profile_screen.dart';
 import '../settings/settings_screen.dart';
-import '../emergency/emergency_numbers_screen.dart';
-import '../fake_call/fake_call_setup_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -240,10 +237,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return '$_alertsNearby alertów w pobliżu — sprawdź mapę';
   }
 
+  /// v100: 3 progi (zielony / żółty / czerwony) zgodnie z Figmą.
+  /// User m2445: "zielony bezpiecznie, żółty średnio bezpiecznie, czerwony niebezpiecznie".
   Color get _orbColor {
-    if (_safetyLevel >= 7) return SerenityColors.glowSafeMint;
-    if (_safetyLevel >= 4) return SerenityColors.glowCalmAqua;
-    return SerenityColors.glowAlertCoral;
+    if (_safetyLevel >= 7) return const Color(0xFF44FE00); // zielony bezpiecznie
+    if (_safetyLevel >= 4) return const Color(0xFFEB6A00); // żółty/pomarańcz średnio
+    return const Color(0xFFCE2200); // czerwony niebezpiecznie
   }
 
   @override
@@ -309,167 +308,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ── TopAppBar ───────────────────────────────────────────────────────────
+  // ── TopAppBar (v100: bell left, "Cześć Imię" center, more-vert right) ──
+  // User m2445: "na górze wywal logo i nazwe apki i zamiast tego ma być:
+  // Cześć Piotr (imie użytkownika), dzwoneczek na lewo a menu na prawo."
 
   Widget _buildTopBar(String userName) {
+    final greeting = userName.isEmpty ? 'Cześć' : 'Cześć $userName';
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: SerenitySpacing.xl,
-        vertical: SerenitySpacing.md,
-      ),
+      padding: const EdgeInsets.fromLTRB(8, 14, 8, 8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Avatar -> profile
-          Tooltip(
-            message: 'Mój profil',
-            child: GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ProfileScreen()),
-              ),
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: SerenityColors.surfaceContainerLowest,
-                  boxShadow: SerenityElevation.card(),
-                ),
-                child: Center(
-                  child: Text(
-                    userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-                    style: SerenityText.labelButton.copyWith(
-                      fontSize: 16,
-                      color: SerenityColors.primary,
-                    ),
-                  ),
-                ),
+          // Bell (left) → /news
+          IconButton(
+            icon: const Icon(Icons.notifications_outlined, size: 24),
+            color: context.iosLabel,
+            onPressed: () => Navigator.pushNamed(context, '/news'),
+            tooltip: 'Powiadomienia',
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+          ),
+          // Greeting (center, expanded)
+          Expanded(
+            child: Text(
+              greeting,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+                fontSize: 20,
+                height: 1.17,
+                color: context.iosLabel,
               ),
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.shield, color: SerenityColors.primary, size: 28),
-              SizedBox(width: SerenitySpacing.xs),
-              Text('be:Safe', style: SerenityText.headlineHeroMobile),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_outlined, size: 28),
-                color: SerenityColors.primary,
-                onPressed: () => Navigator.pushNamed(context, '/my-alerts'),
-                tooltip: 'Powiadomienia',
-              ),
-              IconButton(
-                icon: const Icon(Icons.more_horiz, size: 28),
-                color: SerenityColors.primary,
-                onPressed: _openMenu,
-                tooltip: 'Więcej',
-              ),
-            ],
+          // More menu (right) → /settings
+          IconButton(
+            icon: const Icon(Icons.more_vert, size: 24),
+            color: context.iosLabel,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
+            tooltip: 'Ustawienia',
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
           ),
         ],
       ),
     );
-  }
-
-  void _openMenu() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 12),
-            Container(
-              width: 48,
-              height: 4,
-              decoration: BoxDecoration(
-                color: SerenityColors.outlineVariant,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 20),
-            _MenuTile(
-              icon: Icons.leaderboard_outlined,
-              label: 'Statystyki',
-              onTap: () => _popAndPush(ctx, '/stats'),
-            ),
-            _MenuTile(
-              icon: Icons.emoji_events_outlined,
-              label: 'Ranking',
-              onTap: () => _popAndPush(ctx, '/ranking'),
-            ),
-            _MenuTile(
-              icon: Icons.workspace_premium_outlined,
-              label: 'Odznaki',
-              onTap: () => _popAndPush(ctx, '/badges'),
-            ),
-            _MenuTile(
-              icon: Icons.article_outlined,
-              label: 'Aktualności',
-              onTap: () => _popAndPush(ctx, '/news'),
-            ),
-            _MenuTile(
-              icon: Icons.phone_in_talk_outlined,
-              label: 'Numery alarmowe',
-              onTap: () {
-                Navigator.pop(ctx);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => const EmergencyNumbersScreen()),
-                );
-              },
-            ),
-            _MenuTile(
-              icon: Icons.phone_in_talk,
-              label: 'Fałszywy telefon',
-              onTap: () {
-                Navigator.pop(ctx);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => const FakeCallSetupScreen()),
-                );
-              },
-            ),
-            _MenuTile(
-              icon: Icons.card_giftcard_outlined,
-              label: 'Polecaj znajomym',
-              onTap: () => _popAndPush(ctx, '/referral'),
-            ),
-            _MenuTile(
-              icon: Icons.settings_outlined,
-              label: 'Ustawienia',
-              onTap: () {
-                Navigator.pop(ctx);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const SettingsScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 12),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _popAndPush(BuildContext ctx, String route) {
-    Navigator.pop(ctx);
-    Navigator.pushNamed(context, route);
   }
 
   // ── Hero (glow orb) ─────────────────────────────────────────────────────
@@ -929,28 +817,4 @@ class _CardsSkeleton extends StatelessWidget {
   }
 }
 
-class _MenuTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _MenuTile({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: SerenityColors.primary),
-      title: Text(
-        label,
-        style: SerenityText.labelButton.copyWith(fontSize: 16),
-      ),
-      onTap: onTap,
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: SerenitySpacing.xl),
-    );
-  }
-}
+// v100: _MenuTile removed — top bar uses /settings directly (user m2445).
