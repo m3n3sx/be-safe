@@ -14,6 +14,7 @@
 
 library;
 
+import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
@@ -56,22 +57,22 @@ class SafetyHeroXL extends StatefulWidget {
 
 class _SafetyHeroXLState extends State<SafetyHeroXL>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _breath;
+  late final AnimationController _drift;
 
   @override
   void initState() {
     super.initState();
-    // 4-second breathing loop matches SerenityAnim.orbBreath. Subtle
-    // pulse on opacity (0.85 → 1.0) keeps the static gradient ellipse alive.
-    _breath = AnimationController(
+    // Long, slow loop driving the blob drift. Each blob picks its own phase
+    // & orbit radius from this single ticker — Aceternity-style meta balls.
+    _drift = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 4000),
-    )..repeat(reverse: true);
+      duration: const Duration(seconds: 16),
+    )..repeat();
   }
 
   @override
   void dispose() {
-    _breath.dispose();
+    _drift.dispose();
     super.dispose();
   }
 
@@ -90,13 +91,6 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
     return const [Color(0xC2FF7C62), Color(0xFFCE2200)];
   }
 
-  AlignmentGeometry get _gradientBegin {
-    // ≈73° → top-left to bottom-right
-    return Alignment.topLeft;
-  }
-
-  AlignmentGeometry get _gradientEnd => Alignment.bottomRight;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -105,23 +99,17 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
         clipBehavior: Clip.none,
         alignment: Alignment.topCenter,
         children: [
-          // 1. Blurred halo ellipse (behind everything)
-          Positioned.fill(
-            child: Center(
-              child: AnimatedBuilder(
-                animation: _breath,
-                builder: (_, __) {
-                  final t = Curves.easeInOut.transform(_breath.value);
-                  final scale = 0.97 + 0.03 * t;
-                  return Transform.scale(
-                    scale: scale,
-                    child: _BlurredHalo(
-                      colors: _gradientColors,
-                      begin: _gradientBegin,
-                      end: _gradientEnd,
-                    ),
-                  );
-                },
+          // 1. Animated blob halo (Aceternity-style meta balls).
+          //    OverflowBox lets the halo "wycieka" ponad widget — aż do top bar.
+          Positioned(
+            top: -180,
+            left: -40,
+            right: -40,
+            child: SizedBox(
+              height: 600,
+              child: _AnimatedBlobs(
+                drift: _drift,
+                colors: _gradientColors,
               ),
             ),
           ),
@@ -204,76 +192,91 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
   }
 }
 
-/// Soft "cloud" halo — multi-ellipse stack pushed through a heavy gaussian
-/// blur, exactly as in Figma (V7gYh6uA0axopciUTSn4Ib): not a solid ring,
-/// not a hard circle, just diffuse coloured fog hovering behind the score.
-/// Three offset ellipses with `BlendMode.plus` overlap into a chunky, organic
-/// shape; `ImageFilter.blur(60)` melts the edges into the page background.
-class _BlurredHalo extends StatelessWidget {
+/// Aceternity-style background gradient animation — meta-ball drift.
+///
+/// Six soft "blobs" orbit around the hero centre with independent phases,
+/// frequencies and radii, then the whole stack passes through a heavy
+/// `ImageFilter.blur(80)` so adjacent blobs melt together. The effect is a
+/// slow, organic fog that breathes through the safety-level area and reaches
+/// up behind the greeting line.
+///
+/// Inspired by https://ui.aceternity.com/components/background-gradient-animation
+class _AnimatedBlobs extends StatelessWidget {
+  final Animation<double> drift;
   final List<Color> colors;
-  final AlignmentGeometry begin;
-  final AlignmentGeometry end;
-  const _BlurredHalo({
-    required this.colors,
-    required this.begin,
-    required this.end,
-  });
+  const _AnimatedBlobs({required this.drift, required this.colors});
 
   @override
   Widget build(BuildContext context) {
-    final c1 = colors.first.withValues(alpha: 0.65);
-    final c2 = colors.last.withValues(alpha: 0.75);
+    final c1 = colors.first.withValues(alpha: 0.55);
+    final c2 = colors.last.withValues(alpha: 0.70);
+    final c3 = Color.lerp(c1, c2, 0.5)!.withValues(alpha: 0.60);
+    // Phase, amplitudeX, amplitudeY, baseX (0..1), baseY (0..1), size, color
+    final blobs = <_BlobSpec>[
+      _BlobSpec(phase: 0.00, ampX: 70, ampY: 50, baseX: .50, baseY: .55, size: 280, color: c1),
+      _BlobSpec(phase: 0.25, ampX: 60, ampY: 80, baseX: .35, baseY: .35, size: 220, color: c2),
+      _BlobSpec(phase: 0.50, ampX: 90, ampY: 40, baseX: .65, baseY: .40, size: 260, color: c3),
+      _BlobSpec(phase: 0.10, ampX: 50, ampY: 70, baseX: .40, baseY: .65, size: 200, color: c2),
+      _BlobSpec(phase: 0.65, ampX: 80, ampY: 30, baseX: .60, baseY: .60, size: 240, color: c1),
+      _BlobSpec(phase: 0.85, ampX: 40, ampY: 60, baseX: .50, baseY: .25, size: 180, color: c3),
+    ];
     return ImageFiltered(
-      imageFilter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
-      child: SizedBox(
-        width: 360,
-        height: 360,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            // Główna chmura — szeroka elipsa, obrócona o ~20°, BlendMode.plus
-            Transform.rotate(
-              angle: 0.35,
-              child: Container(
-                width: 280,
-                height: 210,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(140),
-                  color: c1,
-                ),
-              ),
-            ),
-            // Druga warstwa — kolor docelowy gradientu, w prawo-dół, mniejsza
-            Positioned(
-              right: 40,
-              bottom: 60,
-              child: Container(
-                width: 220,
-                height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(120),
-                  color: c2,
-                ),
-              ),
-            ),
-            // Akcent — mała plamka w lewy-górny, kolor pośredni
-            Positioned(
-              left: 50,
-              top: 70,
-              child: Container(
-                width: 160,
-                height: 150,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(90),
-                  color: Color.lerp(c1, c2, 0.5)!,
-                ),
-              ),
-            ),
-          ],
+      imageFilter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
+      child: AnimatedBuilder(
+        animation: drift,
+        builder: (ctx, _) {
+          return LayoutBuilder(
+            builder: (_, c) {
+              return Stack(
+                children: [
+                  for (final b in blobs) _positionedBlob(b, c, drift.value),
+                ],
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _positionedBlob(_BlobSpec b, BoxConstraints c, double t) {
+    final cx = c.maxWidth * b.baseX - b.size / 2;
+    final cy = c.maxHeight * b.baseY - b.size / 2;
+    final angle = (t + b.phase) * 2 * math.pi;
+    final dx = math.cos(angle) * b.ampX;
+    final dy = math.sin(angle * 1.3) * b.ampY;
+    return Positioned(
+      left: cx + dx,
+      top: cy + dy,
+      child: Container(
+        width: b.size,
+        height: b.size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: b.color,
         ),
       ),
     );
   }
+}
+
+class _BlobSpec {
+  final double phase;
+  final double ampX;
+  final double ampY;
+  final double baseX;
+  final double baseY;
+  final double size;
+  final Color color;
+  const _BlobSpec({
+    required this.phase,
+    required this.ampX,
+    required this.ampY,
+    required this.baseX,
+    required this.baseY,
+    required this.size,
+    required this.color,
+  });
 }
 
 class _MapPill extends StatelessWidget {
