@@ -103,11 +103,11 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
           //    v106: edge-to-edge — halo wycieka POD status bar (top -180),
           //    twardszy fade na dole zeby NIE dotykac karty 'Moja rodzina'.
           Positioned(
-            top: -180,
+            top: -220,
             left: -40,
             right: -40,
             child: SizedBox(
-              height: 600,
+              height: 640,
               child: ClipRect(
                 child: ShaderMask(
                   blendMode: BlendMode.dstIn,
