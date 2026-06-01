@@ -100,13 +100,13 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
         alignment: Alignment.topCenter,
         children: [
           // 1. Animated blob halo (Aceternity-style meta balls).
-          //    OverflowBox lets the halo "wycieka" ponad widget — aż do top bar.
+          //    v103: chmurka obniżona — top -60 (było -180) per user m2517.
           Positioned(
-            top: -180,
+            top: -60,
             left: -40,
             right: -40,
             child: SizedBox(
-              height: 600,
+              height: 560,
               child: _AnimatedBlobs(
                 drift: _drift,
                 colors: _gradientColors,

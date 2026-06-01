@@ -59,6 +59,15 @@ const double _kFabGap = 12; // odstęp FAB od górnej krawędzi docka
 double _reservedBottom(MediaQueryData mq) =>
     _kBarHeight + _kFabSize / 2 + _kFabGap + mq.padding.bottom + _kBottomMargin;
 
+/// Public: ile pikseli zarezerwowane jest na dolny dock (bar + FAB unoszenie
+/// + bezpieczna strefa systemowa). Bottom sheets/dialogi/scrollery muszą to
+/// dodać do swojego paddingu, inaczej dock zasłoni przyciski w stopce
+/// (np. "Zapisz" w sheetach Profilu).
+double kDockReservedHeight(BuildContext context) {
+  if (!dockVisible.value) return 0;
+  return _reservedBottom(MediaQuery.of(context));
+}
+
 /// Wrapper do owinięcia child z MaterialApp.builder.
 class GlobalDockOverlay extends StatelessWidget {
   final Widget child;
@@ -175,18 +184,16 @@ class _DockBar extends StatelessWidget {
 }
 
 class _DockItem {
-  /// SVG asset path; null → render text glyph (used by SOS).
+  /// SVG asset path; null → fall back to material `icon`/`activeIcon`.
   final String? svg;
   final IconData icon;
   final IconData activeIcon;
   final String label;
-  final String? textGlyph;
   const _DockItem({
     this.svg,
     required this.icon,
     required this.activeIcon,
     required this.label,
-    this.textGlyph,
   });
 }
 
@@ -212,11 +219,12 @@ const List<_DockItem> _kItems = [
     activeIcon: Icons.family_restroom,
     label: 'Rodzina',
   ),
+  // v103: back to Icons.sos (v95 style). User m2517: "w docku przycisk sos
+  // zmień czcionkę na taką jaka była w v95".
   _DockItem(
     icon: Icons.sos_outlined,
     activeIcon: Icons.sos,
     label: 'SOS',
-    textGlyph: 'SOS',
   ),
   _DockItem(
     svg: 'assets/icons/dock/profile.svg',
@@ -279,20 +287,6 @@ class _DockSlot extends StatelessWidget {
   }
 
   Widget _slotGlyph(Color color) {
-    if (item.textGlyph != null) {
-      // SOS rendered as text. Medula One falls back to system bold.
-      return Text(
-        item.textGlyph!,
-        style: TextStyle(
-          fontFamily: 'Medula One',
-          fontSize: 32,
-          height: 1.0,
-          fontWeight: FontWeight.w400,
-          color: color,
-          letterSpacing: 0,
-        ),
-      );
-    }
     if (item.svg != null) {
       return SvgPicture.asset(
         item.svg!,

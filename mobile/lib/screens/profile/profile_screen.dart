@@ -18,6 +18,7 @@ import '../../widgets/serenity_card.dart';
 import '../../widgets/inset_grouped_section.dart';
 import '../../widgets/apple_card.dart';
 import '../../widgets/stagger_list.dart';
+import '../../widgets/collapsible_dock.dart' show kDockReservedHeight;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -485,7 +486,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             left: SerenitySpacing.xl,
             right: SerenitySpacing.xl,
             top: SerenitySpacing.lg,
-            bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
+            // v103: dock zasłaniał "Zapisz". Dodajemy kDockReservedHeight żeby
+            // CTA było zawsze widoczne nad dockiem.
+            bottom: MediaQuery.of(ctx).viewInsets.bottom +
+                kDockReservedHeight(ctx) +
+                24,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
