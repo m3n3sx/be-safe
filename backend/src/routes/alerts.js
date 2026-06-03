@@ -12,6 +12,7 @@ const upload = multer({
 
 const { notifyNearbyUsers, notifyUser } = require('../services/fcm');
 const { moderate } = require('../services/moderation');
+const { moderateText: aiModerate } = require('../services/ai_moderation');
 const rateLimit = require('express-rate-limit');
 const createAlertLimiter = rateLimit({ windowMs: 3600000, max: 10 });
 
@@ -142,7 +143,7 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
     photo_url = await uploadBuffer(req.file.buffer, `alerts/${filename}`, req.file.mimetype);
   }
 
-  // F05: Text moderation (skip dla SOS - aggression z 🆘)
+  // F05: Heurystyka (skip dla SOS - aggression z 🆘)
   const isSosBypass = category === 'aggression' && typeof title === 'string' && title.includes('🆘');
   const moderation = isSosBypass ? { action: 'allow', score: 0, reasons: [] } : moderate({ title, description });
   if (moderation.action === 'block') {
@@ -152,7 +153,25 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
       moderation_score: moderation.score,
     });
   }
-  const initialStatus = moderation.action === 'flag' ? 'hidden' : 'active';
+
+  // F06: AI moderation (Vertex AI Gemini) — druga warstwa.
+  // Skip dla SOS i gdy heurystyka już oznaczyła jako flag (już idzie do admin).
+  let aiResult = { action: 'allow', confidence: 0, reason: 'skipped' };
+  if (!isSosBypass && moderation.action !== 'flag') {
+    aiResult = await aiModerate({ title, description, category });
+    if (aiResult.action === 'block' && aiResult.confidence >= 0.85) {
+      console.log(`[ai_moderation] BLOCK by ${req.user.id}: conf=${aiResult.confidence} reason="${aiResult.reason}"`);
+      return res.status(422).json({
+        error: 'Treść została odrzucona przez moderację AI. Jeśli uważasz, że to błąd, skontaktuj się z administratorem.',
+        ai_confidence: aiResult.confidence,
+        ai_reason: aiResult.reason,
+      });
+    }
+  }
+
+  // initialStatus: 'hidden' gdy heurystyka flag LUB AI review/block z confidence>=0.6
+  const aiNeedsReview = (aiResult.action === 'review' || aiResult.action === 'block') && aiResult.confidence >= 0.6;
+  const initialStatus = (moderation.action === 'flag' || aiNeedsReview) ? 'hidden' : 'active';
 
   const { rows } = await db.query(
     `INSERT INTO alerts (author_id, category, title, description, photo_url, location, radius_m, expires_at, status, is_anonymous)
@@ -163,11 +182,32 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
     [req.user.id, category, title, description, photo_url, lat, lng, radius_m, expires, initialStatus, anonymous]
   );
 
-  if (moderation.action === 'flag') {
-    console.log(`[moderation] FLAG (hidden) by ${req.user.id}: score=${moderation.score} reasons=${moderation.reasons.join(',')}`);
+  if (initialStatus === 'hidden') {
+    // Insert do alert_reports żeby admin widział w /admin/reports
+    const reason = moderation.action === 'flag' ? 'auto_moderation' : 'ai_moderation';
+    const details = moderation.action === 'flag'
+      ? `Heurystyka: score=${moderation.score} reasons=${moderation.reasons.join(',')}`
+      : `AI: action=${aiResult.action} conf=${aiResult.confidence.toFixed(2)} reason="${aiResult.reason}"`;
+    try {
+      await db.query(
+        `INSERT INTO alert_reports (alert_id, reporter_id, reason, details, status)
+         VALUES ($1, $2, $3, $4, 'pending')
+         ON CONFLICT (alert_id, reporter_id) DO NOTHING`,
+        [rows[0].id, req.user.id, reason, details]
+      );
+    } catch (e) {
+      console.error('[moderation] insert alert_report failed:', e.message);
+    }
+    console.log(`[moderation] HIDDEN by ${req.user.id}: ${reason} | ${details}`);
     return res.status(201).json({
       ...rows[0],
-      moderation: { action: 'flag', score: moderation.score, note: 'Twój alert wymaga przeglądu moderacji. Zostanie opublikowany po akceptacji.' },
+      moderation: {
+        action: moderation.action === 'flag' ? 'flag' : 'ai_review',
+        score: moderation.score,
+        ai_confidence: aiResult.confidence,
+        ai_reason: aiResult.reason,
+        note: 'Twój alert wymaga przeglądu moderacji. Zostanie opublikowany po akceptacji administratora.',
+      },
     });
   }
   // Emit only to users within their alert radius
