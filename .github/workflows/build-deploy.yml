@@ -1,11 +1,12 @@
-name: Build & Deploy APK
+# ⚠️ LEGACY — ten workflow deployuje na NIEISTNIEJĄCY już VPS (scp + pm2).
+# Produkcja działa na GCP Cloud Run — deploy ręcznie przez `gcloud run deploy`
+# (zob. AGENTS.md § Komendy). Trigger zmieniony na manualny (workflow_dispatch),
+# żeby push na main NIE odpalał padającego deploya. Do przepisania na Cloud Run
+# albo usunięcia.
+name: Build & Deploy APK (LEGACY — VPS)
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'mobile/**'
-      - 'backend/**'
+  workflow_dispatch:
 
 jobs:
   build-apk:
