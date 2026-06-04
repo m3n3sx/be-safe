@@ -17,6 +17,7 @@ import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import '../../theme/ios_surfaces.dart';
 import '../../widgets/collapsible_dock.dart' show dockAccentColor, kDockReservedHeight;
+import '../../widgets/notification_bell.dart';
 import '../../widgets/glow_orb.dart'; // ignore: unused_import (kept for hero fallback)
 import '../../widgets/safety_hero_xl.dart';
 import '../../widgets/stagger_list.dart';
@@ -331,15 +332,8 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: EdgeInsets.fromLTRB(8, topInset + 14, 8, 8),
       child: Row(
         children: [
-          // Bell (left) → /news
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, size: 24),
-            color: context.iosLabel,
-            onPressed: () => Navigator.pushNamed(context, '/news'),
-            tooltip: 'Powiadomienia',
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-          ),
+          // Bell (left) → centrum powiadomień (z badge nieprzeczytanych)
+          NotificationBell(color: context.iosLabel),
           // Greeting (center, expanded)
           Expanded(
             child: Text(

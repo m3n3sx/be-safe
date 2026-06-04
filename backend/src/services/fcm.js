@@ -57,6 +57,22 @@ async function isSilentSchoolHours(userId) {
   } catch (_) { return false; }
 }
 
+// Centrum powiadomień: zapis powiadomienia do inboxu użytkownika (best-effort).
+// Wołane z notifyUser i notifyNearbyUsers — łapie WSZYSTKIE typy powiadomień.
+// NIGDY nie rzuca: błąd zapisu nie może zablokować wysyłki pusha.
+async function recordNotification(userId, title, body, data = {}) {
+  try {
+    const type = (data && data.type) ? String(data.type) : 'generic';
+    await db.query(
+      `INSERT INTO notifications (user_id, type, title, body, data)
+       VALUES ($1, $2, $3, $4, $5::jsonb)`,
+      [userId, type, title || '', body || null, JSON.stringify(data || {})]
+    );
+  } catch (e) {
+    console.error('[notifications] record failed:', e.message);
+  }
+}
+
 async function sendPush(fcmToken, title, body, data = {}, options = {}) {
   const m = tryInit();
   if (!m || !fcmToken) return null;
@@ -107,18 +123,21 @@ async function notifyNearbyUsers(alert) {
   let sent = 0;
   for (const user of rows) {
     const silent = await isSilentSchoolHours(user.id);
-    const result = await sendPush(
-      user.fcm_token,
-      `⚠️ ${alert.title}`,
-      alert.description || 'Nowe zagrożenie w Twojej okolicy',
-      {
+    const pushData = {
         alert_id: alert.id,
         type: 'new_alert',
         category: alert.category || '',
         lat: alert.lat != null ? String(alert.lat) : '',
         lng: alert.lng != null ? String(alert.lng) : '',
         title: alert.title || '',
-      },
+      };
+    await recordNotification(user.id, `⚠️ ${alert.title}`,
+      alert.description || 'Nowe zagrożenie w Twojej okolicy', pushData);
+    const result = await sendPush(
+      user.fcm_token,
+      `⚠️ ${alert.title}`,
+      alert.description || 'Nowe zagrożenie w Twojej okolicy',
+      pushData,
       { silent }
     );
     if (result) sent++;
@@ -129,10 +148,11 @@ async function notifyNearbyUsers(alert) {
 }
 
 async function notifyUser(userId, title, body, data = {}) {
+  await recordNotification(userId, title, body, data);
   const { rows } = await db.query(`SELECT fcm_token FROM users WHERE id = $1`, [userId]);
   if (!rows[0]?.fcm_token) return null;
   const silent = await isSilentSchoolHours(userId);
   return sendPush(rows[0].fcm_token, title, body, data, { silent });
 }
 
-module.exports = { sendPush, notifyNearbyUsers, notifyUser, isSilentSchoolHours };
+module.exports = { sendPush, notifyNearbyUsers, notifyUser, isSilentSchoolHours, recordNotification };

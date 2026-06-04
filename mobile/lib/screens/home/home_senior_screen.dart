@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../providers/auth_provider.dart';
+import '../community/notifications_screen.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import '../safety/safety_guide_screen.dart';
@@ -169,7 +170,10 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
 
   void _openNotifications() {
     HapticFeedback.selectionClick();
-    Navigator.of(context).pushNamed('/my-alerts');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+    );
   }
 
   @override

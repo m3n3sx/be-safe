@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
+import '../community/notifications_screen.dart';
 import '../../services/api_service.dart';
 import '../sos/sos_kids_screen.dart';
 import '../../theme/design_tokens.dart';
@@ -189,7 +190,10 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
 
   void _openNotifications() {
     HapticFeedback.selectionClick();
-    Navigator.of(context).pushNamed('/my-alerts');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+    );
   }
 
   @override
