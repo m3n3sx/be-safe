@@ -808,7 +808,6 @@ class _FamilyScreenState extends State<FamilyScreen> {
         vertical: SerenitySpacing.md,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
@@ -816,16 +815,26 @@ class _FamilyScreenState extends State<FamilyScreen> {
             tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.shield, color: SerenityColors.primary, size: 24),
-              SizedBox(width: 8),
-              Text(
-                'be:Safe',
-                style: SerenityText.headlineHeroMobile,
+          // v115: tytuł w Expanded + FittedBox — przy dużym density/foncie
+          // "be:Safe" + ikony akcji nie uciekały poza ekran (zob. testy density 540).
+          Expanded(
+            child: Center(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.shield, color: SerenityColors.primary, size: 24),
+                    SizedBox(width: 8),
+                    Text(
+                      'be:Safe',
+                      style: SerenityText.headlineHeroMobile,
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
           Row(mainAxisSize: MainAxisSize.min, children: actions),
         ],
@@ -891,10 +900,14 @@ class _FamilyScreenState extends State<FamilyScreen> {
   }
 
   Widget _buildGroupChips() {
+    // v115: wysokość rzędu chipów skaluje z fontem — przy dużej czcionce
+    // sztywne 40px przycinało tekst (zob. testy wizualne font 1.5).
+    final scale = MediaQuery.textScalerOf(context).scale(1.0);
+    final chipHeight = (40.0 * scale).clamp(40.0, 72.0);
     return Padding(
       padding: const EdgeInsets.only(top: 16),
       child: SizedBox(
-        height: 40,
+        height: chipHeight,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: SerenitySpacing.xl),

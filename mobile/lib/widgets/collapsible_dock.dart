@@ -122,14 +122,24 @@ class GlobalDockOverlay extends StatelessWidget {
                 ),
               ),
               // FAB unosi się nad dockiem, prawy róg.
-              Positioned(
-                right: 16,
-                bottom: _kBarHeight + _kBottomMargin + _kFabGap +
-                    mq.padding.bottom,
-                child: const Material(
-                  type: MaterialType.transparency,
-                  child: _ReportFab(),
-                ),
+              // v115: globalny FAB "Zgłoś" TYLKO na Home (dockActiveIndex==home).
+              // Mapa ma własny przycisk "Zgłoś" (pill), a na SOS/Family/Profil/
+              // Settings zgłaszanie nie ma kontekstu — globalny FAB tam kolidował
+              // z treścią/CTA (zob. testy wizualne: narrow 720, density 540, font 1.5).
+              ValueListenableBuilder<int>(
+                valueListenable: dockActiveIndex,
+                builder: (_, idx, __) {
+                  if (idx != NavTabs.home) return const SizedBox.shrink();
+                  return Positioned(
+                    right: 16,
+                    bottom: _kBarHeight + _kBottomMargin + _kFabGap +
+                        mq.padding.bottom,
+                    child: const Material(
+                      type: MaterialType.transparency,
+                      child: _ReportFab(),
+                    ),
+                  );
+                },
               ),
             ],
           ],
