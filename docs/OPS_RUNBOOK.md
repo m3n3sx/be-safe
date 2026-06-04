@@ -1,7 +1,58 @@
 # be:Safe — Operations Runbook
 
-> **Cel:** step-by-step instrukcje dla typowych operacji. Jeśli pierwsza rzecz
-> którą chcesz zrobić po otwarciu projektu jest w tej liście — masz gotowe komendy.
+> ⚠️ **WIĘKSZOŚĆ TEGO PLIKU JEST NIEAKTUALNA (stan AWS EC2/PM2/SSH).** Produkcja działa na
+> **GCP Cloud Run** (`europe-central2`) + **Cloud SQL** (`besafe-pg`) + GCS + Mailgun + Vertex.
+> Aktualne komendy deploy: `AGENTS.md` § Komendy (`gcloud run deploy --source`).
+> Poniżej dodana **aktualna** sekcja "Migracje DB na Cloud SQL" — reszta (EC2 SSH, PM2, Postfix)
+> jest historyczna, do przepisania.
+
+---
+
+## 🗄️ Migracje DB na Cloud SQL (AKTUALNE — GCP)
+
+Baza: Cloud SQL `besafe-pg` (POSTGRES_16), db/user `alertmap`, hasło w Secret Manager
+(`besafe-db-password`). Instancja nie jest publiczna — łączymy się przez **cloud-sql-proxy**
+(ADC, konto `besafeorgpl@gmail.com`).
+
+```bash
+# 1. Pobierz proxy (jednorazowo)
+curl -sLo /tmp/cloud-sql-proxy \
+  "https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.14.1/cloud-sql-proxy.linux.amd64"
+chmod +x /tmp/cloud-sql-proxy
+
+# 2. Uruchom proxy w tle (lokalny port 5433 → Cloud SQL przez socket)
+/tmp/cloud-sql-proxy project-1674d55f-90e0-4e1a-884:europe-central2:besafe-pg --port 5433 &
+
+# 3. Połącz psql (hasło z Secret Manager, NIE echo)
+export PGPASSWORD="$(gcloud secrets versions access latest --secret=besafe-db-password)"
+export PGHOST=127.0.0.1 PGPORT=5433 PGUSER=alertmap PGDATABASE=alertmap
+psql -v ON_ERROR_STOP=1 -f db/migrations/<plik>.sql
+
+# 4. Po wszystkim zabij proxy
+pkill -f cloud-sql-proxy
+```
+
+### ⚠️ DŁUG: migracje owner-only (GRANT/REVOKE postgres)
+
+Tabela `users` ORAZ typ `alert_category` należą do roli **`postgres`**, nie `alertmap`
+(niespójność z pierwotnego ładowania schematu). Dlatego DDL typu `ALTER TABLE users ...`
+albo `ALTER TYPE alert_category ADD VALUE ...` **padnie** z `must be owner` na koncie `alertmap`,
+mimo że jest ono w `cloudsqlsuperuser`.
+
+Obejście (rola `alertmap` może nadać sobie członkostwo w `postgres`):
+
+```bash
+psql -c "GRANT postgres TO alertmap;"                 # nadaj
+psql -c "SET ROLE postgres; ALTER TABLE users ADD COLUMN IF NOT EXISTS ...;"
+psql -c "REVOKE postgres FROM alertmap;"              # cofnij (ZAWSZE po migracji)
+# weryfikacja: psql -tAc "SELECT pg_has_role('alertmap','postgres','MEMBER');"  → musi być 'f'
+```
+
+- **`CREATE TABLE`** nowych tabel (np. `neighborhood_messages`) działa jako `alertmap` bez tego —
+  nowe obiekty należą do `alertmap`.
+- Tylko DDL na obiektach należących do `postgres` (`users`, `alerts`, enumy) wymaga GRANT/REVOKE.
+- **TODO (czysta naprawa):** `ALTER TABLE users OWNER TO alertmap;` + `ALTER TYPE alert_category OWNER TO alertmap;`
+  jednorazowo, żeby pozbyć się tego długu na stałe (wymaga roli postgres).
 
 ---
 
