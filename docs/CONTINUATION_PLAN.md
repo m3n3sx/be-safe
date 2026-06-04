@@ -1,5 +1,8 @@
 # be:Safe — Plan kontynuacji dla przyszłych sesji AI
 
+> ⚠️ **CZĘŚCIOWO NIEAKTUALNE (stan ~v23, AWS EC2).** Produkcja to teraz **v110 na GCP Cloud Run**.
+> Aktualny kontekst: `AGENTS.md` + `SESSION_BRIEF.md`. Poniższy roadmap/infra traktuj historycznie.
+
 > **Ostatnia aktualizacja:** 2026-05-12 (po migracji Google stack na besafeorgpl)
 > **Produkcja:** https://besafe.org.pl
 > **Repo:** https://github.com/m3n3sx/be-safe.git

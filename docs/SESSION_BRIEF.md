@@ -1,15 +1,26 @@
 # be:Safe — Brief dla nowej sesji AI
 
 > Czytaj W KOLEJNOŚCI: ten plik → `RELEASE_v61.md` → `AGENTS.md` (root)
-> Aktualizacja: v61 LIVE na produkcji + Realme RMX3151 SSEUK7GACYIFHU4T (USB)
+> Aktualizacja: **v110 LIVE** na produkcji (GCP Cloud Run). Telefon Realme RMX3151 SSEUK7GACYIFHU4T (USB)
 
 ## TL;DR — w 30 sekund
 
-**be:Safe** to polski community safety app (alerty bezpieczeństwa lokalne, tryb rodzinny). Stack: Flutter 3.29 + Node.js Express + PostgreSQL 16 PostGIS + Socket.io + FCM. Domena https://besafe.org.pl. Hosting AWS EC2 t3.xlarge.
+**be:Safe** to polski community safety app (alerty bezpieczeństwa lokalne, tryb rodzinny). Stack: Flutter 3.29 + Node.js 22 Express + PostgreSQL 16 PostGIS + Socket.io + FCM. Domena https://besafe.org.pl. **Hosting: Google Cloud Platform — Cloud Run (`europe-central2`), GCS (uploads + APK), Vertex AI (moderacja), Mailgun (email).** (Migracja z AWS EC2 zakończona — commit `c8b53f8`.)
 
-W ciągu ostatnich kilkudziesięciu sesji (z (b1)-(b90) compressed blocks) zrobiono pełną Fazę A + B + C + sesje końcowe — **17 funkcji + F33 tryby + 4 fix krytyczne = 21 zmian produkcyjnych**. Aktualnie v61 LIVE.
+W ciągu ostatnich kilkudziesięciu sesji zrobiono pełną Fazę A + B + C + sesje końcowe (17 funkcji + F33 tryby), a następnie **migrację na GCP + redesign UI v100–v110**. Aktualnie **v110 LIVE**.
 
-## Co aktualnie LIVE w v61
+## Co aktualnie LIVE w v110
+
+### v62–v110: migracja GCP + redesign UI (najnowsze)
+- **AWS EC2 → Google Cloud Platform** (`c8b53f8`): backend `besafe-backend` + web `besafe-web` na Cloud Run (`europe-central2`), Node 22 Alpine, port 8080, non-root. Brak pm2/SSH — deploy `gcloud run deploy --source`.
+- **GCS uploads** (`97f0910`): avatary + zdjęcia alertów → bucket `besafe-uploads`, `storage.js` (ADC compute SA). APK serwowane z GCS przez prod LB (`/download`). Lokalny fallback gdy `GCS_BUCKET` unset.
+- **Mailgun** (`1d1f9ea`): produkcyjny email `email.js` (`MAILGUN_API_KEY`/`MAILGUN_DOMAIN`/`MAILGUN_REGION`), nodemailer SMTP jako legacy fallback. FROM `info@besafe.org.pl`.
+- **F06 AI text moderation** (`41e690a`): Vertex Gemini 2.5 Flash (`services/ai_moderation.js`), 2. warstwa nad heurystyką `moderation.js`. `europe-west1`, fail-open, timeout 5s. (Image moderation NADAL niezrobione.)
+- **Redesign UI v100–v110**: Figma v100 (top bar greeting + dock pill + global "Zgłoś" FAB), animowany halo meta-ball, edge-to-edge (rysowanie pod status/nav barem), floating dock nad gesture barem Samsunga, fix Google Sign-In `serverClientId` (ApiException:10).
+
+> ⚠️ `.github/workflows/build-deploy.yml` jest **LEGACY** (scp/pm2 na nieistniejący VPS). Deploy ręcznie przez `gcloud` — zob. AGENTS.md § Komendy.
+
+## Funkcje z faz A–C (LIVE od v61)
 
 ### F33 Tryby aplikacji (KIDS/SENIOR/NORMAL)
 3 odrębne layouty, `ModePickerScreen` po onboardingu, kolumna `users.app_mode`.
@@ -128,7 +139,7 @@ gcloud, nextjs, medusa-js, system-admin, debug, code-review, refactor, security-
 
 ```
 Czytaj AGENTS.md w root oraz docs/SESSION_BRIEF.md + docs/RELEASE_v61.md.
-Aktualny stan: v61 LIVE. Telefon Realme RMX3151 SSEUK7GACYIFHU4T podłączony USB (lub nie).
+Aktualny stan: v110 LIVE (GCP Cloud Run). Telefon Realme RMX3151 SSEUK7GACYIFHU4T podłączony USB (lub nie).
 
 Co dalej w kolejce: <wybierz z listy w SESSION_BRIEF "Kolejka rzeczy do zrobienia"
 albo powiedz "lecisz dalej" = realizuj kolejkę po kolei>.

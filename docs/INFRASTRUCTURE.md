@@ -1,5 +1,10 @@
 # be:Safe — Infrastructure Map
 
+> ⚠️ **NIEAKTUALNE (stan AWS EC2, 2026-05-12).** Produkcja działa teraz na **Google Cloud Platform**
+> (Cloud Run `europe-central2`, GCS, Vertex AI, Mailgun) — zob. `AGENTS.md` § Paths/Komendy oraz
+> `SESSION_BRIEF.md` § "Co aktualnie LIVE w v110". Poniższe adresy EC2 (`16.192.31.100`), SES relay
+> i Postfix są historyczne. Sekrety w tym pliku traktuj jako potencjalnie wygasłe/do rotacji.
+
 > **Ostatnia aktualizacja:** 2026-05-12
 > **Cel dokumentu:** pełna mapa "gdzie co jest" — konta, klucze, serwisy, domeny,
 > żeby każda kolejna sesja AI lub developer wiedziała gdzie szukać.

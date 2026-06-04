@@ -93,7 +93,9 @@ cd mobile && flutter analyze
 
 ## CI
 
-Push na `main` z zmianami w `mobile/**` lub `backend/**` uruchamia [build i deploy APK](.github/workflows/build-deploy.yml). Warstwa `web/` nie jest objęta pipeline CI.
+Produkcja działa na **Google Cloud Platform** (Cloud Run `europe-central2`, GCS, Vertex AI, Mailgun). Deploy wykonywany ręcznie przez `gcloud run deploy --source` (zob. [`AGENTS.md`](AGENTS.md) § Komendy).
+
+> ⚠️ Workflow [`.github/workflows/build-deploy.yml`](.github/workflows/build-deploy.yml) jest **legacy** — wciąż używa scp/pm2 na nieistniejący już VPS. Nie odzwierciedla Cloud Run.
 
 ## Licencja
 
