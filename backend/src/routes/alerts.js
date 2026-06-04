@@ -13,6 +13,7 @@ const upload = multer({
 const { notifyNearbyUsers, notifyUser } = require('../services/fcm');
 const { moderate } = require('../services/moderation');
 const { moderateText: aiModerate } = require('../services/ai_moderation');
+const { moderateImage } = require('../services/image_moderation');
 const rateLimit = require('express-rate-limit');
 const createAlertLimiter = rateLimit({ windowMs: 3600000, max: 10 });
 
@@ -138,7 +139,24 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
   const anonymous = is_anonymous === true || is_anonymous === 'true' || is_anonymous === 1 || is_anonymous === '1';
   const expires = new Date(Date.now() + duration_hours * 3600000).toISOString();
   let photo_url = null;
+  let imageReview = false; // F06: zdjęcie wymaga przeglądu (review) → status hidden
   if (req.file) {
+    // F06: Vision SafeSearch PRZED uploadem — block odrzuca zdjęcie zanim trafi do GCS.
+    const isSosImg = category === 'aggression' && typeof title === 'string' && title.includes('🆘');
+    if (!isSosImg) {
+      const img = await moderateImage(req.file.buffer);
+      if (img.action === 'block') {
+        console.log(`[image_moderation] BLOCK by ${req.user.id}: ${img.reason}`);
+        return res.status(422).json({
+          error: 'Zdjęcie zostało odrzucone przez moderację (treści nieodpowiednie).',
+          image_reason: img.reason,
+        });
+      }
+      if (img.action === 'review') {
+        imageReview = true;
+        console.log(`[image_moderation] REVIEW by ${req.user.id}: ${img.reason}`);
+      }
+    }
     const filename = makeFilename(req.file, '');
     photo_url = await uploadBuffer(req.file.buffer, `alerts/${filename}`, req.file.mimetype);
   }
@@ -169,9 +187,9 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
     }
   }
 
-  // initialStatus: 'hidden' gdy heurystyka flag LUB AI review/block z confidence>=0.6
+  // initialStatus: 'hidden' gdy heurystyka flag LUB AI review/block z confidence>=0.6 LUB zdjęcie review (F06)
   const aiNeedsReview = (aiResult.action === 'review' || aiResult.action === 'block') && aiResult.confidence >= 0.6;
-  const initialStatus = (moderation.action === 'flag' || aiNeedsReview) ? 'hidden' : 'active';
+  const initialStatus = (moderation.action === 'flag' || aiNeedsReview || imageReview) ? 'hidden' : 'active';
 
   const { rows } = await db.query(
     `INSERT INTO alerts (author_id, category, title, description, photo_url, location, radius_m, expires_at, status, is_anonymous)
@@ -184,10 +202,17 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
 
   if (initialStatus === 'hidden') {
     // Insert do alert_reports żeby admin widział w /admin/reports
-    const reason = moderation.action === 'flag' ? 'auto_moderation' : 'ai_moderation';
-    const details = moderation.action === 'flag'
-      ? `Heurystyka: score=${moderation.score} reasons=${moderation.reasons.join(',')}`
-      : `AI: action=${aiResult.action} conf=${aiResult.confidence.toFixed(2)} reason="${aiResult.reason}"`;
+    let reason, details;
+    if (moderation.action === 'flag') {
+      reason = 'auto_moderation';
+      details = `Heurystyka: score=${moderation.score} reasons=${moderation.reasons.join(',')}`;
+    } else if (aiNeedsReview) {
+      reason = 'ai_moderation';
+      details = `AI: action=${aiResult.action} conf=${aiResult.confidence.toFixed(2)} reason="${aiResult.reason}"`;
+    } else {
+      reason = 'image_moderation';
+      details = 'Vision SafeSearch oznaczył zdjęcie do przeglądu';
+    }
     try {
       await db.query(
         `INSERT INTO alert_reports (alert_id, reporter_id, reason, details, status)
