@@ -105,7 +105,7 @@ update();setInterval(update,10000);
 </script></body></html>`);
 });
 
-app.get('/version', (_, res) => res.json({ version: 113, url: 'https://besafe.org.pl/download' }));
+app.get('/version', (_, res) => res.json({ version: 114, url: 'https://besafe.org.pl/download' }));
 
 app.get('/download', (_, res) => {
   const path = require('path');
@@ -535,6 +535,11 @@ setInterval(() => syncAqiStations().catch(() => {}), 24 * 60 * 60 * 1000);
 const { syncWarnings } = require('./services/imgw');
 syncWarnings(io); // Initial sync on startup
 setInterval(() => syncWarnings(io), 15 * 60 * 1000);
+
+// F16: IMGW ostrzeżenia hydrologiczne (powodziowe) — rządowa warstwa zagrożeń
+const { syncHydroWarnings } = require('./services/imgw_hydro');
+setTimeout(() => syncHydroWarnings(io).catch(() => {}), 30 * 1000); // startup (lekkie opóźnienie)
+setInterval(() => syncHydroWarnings(io).catch(() => {}), 30 * 60 * 1000);
 
 // GDDKiA road incidents sync every 30 min
 const { syncGddkia } = require('./services/gddkia');
