@@ -223,10 +223,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             (!_ageConfirmed || !_acceptedTerms)) {
                           return _show('Zaakceptuj wiek 13+ i regulamin');
                         }
-                        await context.read<AuthProvider>().loginWithGoogle(
-                              referralCode:
-                                  _isRegister ? _referral.text : null,
-                            );
+                        final ok =
+                            await context.read<AuthProvider>().loginWithGoogle(
+                                  referralCode:
+                                      _isRegister ? _referral.text : null,
+                                );
+                        if (!ok && mounted) {
+                          _show('Logowanie Google nie powiodło się');
+                        }
                       },
               ),
               const SizedBox(height: 16),

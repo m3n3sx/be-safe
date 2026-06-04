@@ -55,15 +55,27 @@ const double _kRadius = 62;
 
 /// Delikatne odstępy docka od krawędzi ekranu.
 const double _kSideMargin = 11;
-const double _kBottomMargin = 6;
+/// v110: lift docka nad gesture bar Samsunga (poprzednio 6pt zlewało się
+/// z czarnym system nav). User m2815/m2817: dock floating jak w Figma,
+/// widać tło ekranu między dockiem a gesture barem.
+const double _kBottomMargin = 14;
+
+/// v110: extra padding pod dockiem dla scrollerów — user m2816 chce
+/// "więcej miejsca na dole pustego" pod ostatnim itemem listy.
+const double _kBottomPaddingExtra = 24;
 
 /// FAB "Zgłoś" — rozmiary + pozycja względem docka.
 const double _kFabSize = 56;
 const double _kFabGap = 12; // odstęp FAB od górnej krawędzi docka
 
-/// Łączna wysokość zarezerwowanego dolnego paska (dock + FAB lift).
+/// Łączna wysokość zarezerwowanego dolnego paska (dock + FAB lift + extra).
 double _reservedBottom(MediaQueryData mq) =>
-    _kBarHeight + _kFabSize / 2 + _kFabGap + mq.padding.bottom + _kBottomMargin;
+    _kBarHeight +
+    _kFabSize / 2 +
+    _kFabGap +
+    mq.padding.bottom +
+    _kBottomMargin +
+    _kBottomPaddingExtra;
 
 /// Public: ile pikseli zarezerwowane jest na dolny dock (bar + FAB unoszenie
 /// + bezpieczna strefa systemowa). Bottom sheets/dialogi/scrollery muszą to
@@ -86,6 +98,10 @@ class GlobalDockOverlay extends StatelessWidget {
       builder: (_, visible, __) {
         final mq = MediaQuery.of(context);
         final reserved = visible ? _reservedBottom(mq) : 0.0;
+        // v109: child rozszerzony na pełną wysokość ekranu (BEZ Padding),
+        // ale viewPadding.bottom = reserved — Scaffold/SafeArea respektują
+        // ten viewPadding (jeśli ekran ma SafeArea bottom:true default),
+        // a halo/tła wyciekają pod dock (transparent).
         return Stack(
           children: [
             MediaQuery(

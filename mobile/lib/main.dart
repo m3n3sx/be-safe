@@ -70,7 +70,10 @@ void main() async {
     statusBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.light,
     systemStatusBarContrastEnforced: false,
-    systemNavigationBarColor: Colors.transparent,
+    // v110: system nav bar = grouped background (#F2F2F7) zamiast transparent —
+    // na Samsung One UI 6 transparent pokazywało czarny scrim pod dockiem.
+    // Jasny szary zlewa się z tłem appki, czarny dock floating wyraźnie się odcina.
+    systemNavigationBarColor: Color(0xFFF2F2F7),
     systemNavigationBarIconBrightness: Brightness.dark,
     systemNavigationBarContrastEnforced: false,
   ));
@@ -137,7 +140,18 @@ class AlertMapApp extends StatelessWidget {
                   useMaterial3: true,
                 ),
           home: const _AuthGate(),
-          builder: (context, child) => GlobalDockOverlay(child: child ?? const SizedBox.shrink()),
+          builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+            value: const SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.light,
+              systemStatusBarContrastEnforced: false,
+              systemNavigationBarColor: Color(0xFFF2F2F7),
+              systemNavigationBarIconBrightness: Brightness.dark,
+              systemNavigationBarContrastEnforced: false,
+            ),
+            child: GlobalDockOverlay(child: child ?? const SizedBox.shrink()),
+          ),
           onGenerateRoute: (settings) {
             final uri = Uri.parse(settings.name ?? '');
             if (uri.pathSegments.length == 2 && uri.pathSegments[0] == 'family') {

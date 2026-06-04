@@ -16,7 +16,7 @@ import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import '../../theme/ios_surfaces.dart';
-import '../../widgets/collapsible_dock.dart' show dockAccentColor;
+import '../../widgets/collapsible_dock.dart' show dockAccentColor, kDockReservedHeight;
 import '../../widgets/glow_orb.dart'; // ignore: unused_import (kept for hero fallback)
 import '../../widgets/safety_hero_xl.dart';
 import '../../widgets/stagger_list.dart';
@@ -241,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
   /// v100: 3 progi (zielony / żółty / czerwony) zgodnie z Figmą.
   /// User m2445: "zielony bezpiecznie, żółty średnio bezpiecznie, czerwony niebezpiecznie".
   Color get _orbColor {
-    if (_safetyLevel >= 7) return const Color(0xFF44FE00); // zielony bezpiecznie
+    if (_safetyLevel >= 7) return const Color(0xFF6BE332); // zielony bezpiecznie
     if (_safetyLevel >= 4) return const Color(0xFFEB6A00); // żółty/pomarańcz średnio
     return const Color(0xFFCE2200); // czerwony niebezpiecznie
   }
@@ -261,7 +261,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: context.iosBackground,
       extendBody: true,
+      extendBodyBehindAppBar: true,
       body: SafeArea(
+        top: false,
         bottom: false,
         child: RefreshIndicator(
           onRefresh: _loadData,
@@ -304,9 +306,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: _buildActivitySection(),
                 ),
               ),
-              // Mały odstęp pod ostatnim widgetem.
-              // MediaQuery.padding.bottom już zawiera reserved space dla docka (~100pt z GlobalDockOverlay).
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              // Bottom padding = wysokość docka + 8px (user m2837).
+              // Daje pewność że scroll dochodzi do końca i ostatnie itemy nie chowają się pod dockiem.
+              SliverToBoxAdapter(
+                child: SizedBox(height: kDockReservedHeight(context) + 8),
+              ),
             ],
           ),
         ),
@@ -322,8 +326,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTopBar(String userName) {
     final greeting = userName.isEmpty ? 'Cześć' : 'Cześć $userName';
+    final topInset = MediaQuery.of(context).padding.top;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 14, 8, 8),
+      padding: EdgeInsets.fromLTRB(8, topInset + 14, 8, 8),
       child: Row(
         children: [
           // Bell (left) → /news

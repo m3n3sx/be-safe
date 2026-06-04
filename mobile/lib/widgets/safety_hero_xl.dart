@@ -82,8 +82,8 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
   ///   - red:    72°, rgba(255,124,98,.76) → #CE2200
   List<Color> get _gradientColors {
     final base = widget.ringColor;
-    if (base == const Color(0xFF44FE00)) {
-      return const [Color(0x8741FF4B), Color(0xFF44FE00)];
+    if (base == const Color(0xFF6BE332)) {
+      return const [Color(0x876FE83C), Color(0xFF6BE332)];
     }
     if (base == const Color(0xFFEB6A00)) {
       return const [Color(0xAAFFAA00), Color(0xFFEB6A00)];
