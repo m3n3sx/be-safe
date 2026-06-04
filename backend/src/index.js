@@ -64,6 +64,7 @@ app.use('/api/v1/escort', require('./routes/escort'));
 app.use('/api/v1/pets', require('./routes/pets'));
 app.use('/api/v1/admin', auth, requireAdmin, require('./routes/admin'));
 app.use('/api/v1/permissions', require('./routes/permissions'));
+app.use('/api/v1/neighborhood', require('./routes/neighborhood'));
 app.use('/api/v1', require('./routes/community'));
 
 app.get('/health', (_, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
@@ -104,7 +105,7 @@ update();setInterval(update,10000);
 </script></body></html>`);
 });
 
-app.get('/version', (_, res) => res.json({ version: 112, url: 'https://besafe.org.pl/download' }));
+app.get('/version', (_, res) => res.json({ version: 113, url: 'https://besafe.org.pl/download' }));
 
 app.get('/download', (_, res) => {
   const path = require('path');

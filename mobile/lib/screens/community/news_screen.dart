@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 import '../../widgets/serenity_card.dart';
+import '../neighborhood/neighborhood_chat_screen.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -130,6 +131,17 @@ class _NewsScreenState extends State<NewsScreen> {
                   Text(
                     'Aktualności',
                     style: SerenityText.headlineHeroMobile,
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    icon: const Icon(Icons.groups, size: 26),
+                    color: SerenityColors.primary,
+                    tooltip: 'Czat sąsiedzki',
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const NeighborhoodChatScreen()),
+                    ),
                   ),
                 ],
               ),

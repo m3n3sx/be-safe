@@ -304,3 +304,14 @@ CREATE TABLE IF NOT EXISTS family_visibility (
 );
 CREATE INDEX IF NOT EXISTS idx_visibility_target ON family_visibility(group_id, target_id);
 CREATE INDEX IF NOT EXISTS idx_visibility_viewer ON family_visibility(group_id, viewer_id);
+
+-- F14 Geofence chat sąsiedzki (Nextdoor-style) - czat oparty na ST_DWithin wokół lokalizacji
+CREATE TABLE IF NOT EXISTS neighborhood_messages (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  author_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  location GEOGRAPHY(POINT, 4326) NOT NULL,
+  body VARCHAR(1000) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_neighborhood_loc ON neighborhood_messages USING GIST(location);
+CREATE INDEX IF NOT EXISTS idx_neighborhood_created ON neighborhood_messages(created_at DESC);

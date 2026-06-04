@@ -44,6 +44,7 @@ import 'screens/profile/referral_screen.dart';
 import 'screens/permissions/permissions_screen.dart';
 import 'screens/profile/badges_screen.dart';
 import 'screens/community/news_screen.dart';
+import 'screens/neighborhood/neighborhood_chat_screen.dart';
 import 'screens/emergency/emergency_numbers_screen.dart';
 import 'screens/sos/sos_screen.dart';
 import 'screens/home/home_kids_screen.dart';
@@ -192,6 +193,7 @@ class AlertMapApp extends StatelessWidget {
               '/permissions' => const PermissionsScreen(),
               '/badges' => const BadgesScreen(),
               '/news' => const NewsScreen(),
+              '/neighborhood' => const NeighborhoodChatScreen(),
               '/emergency' => const EmergencyNumbersScreen(),
               '/sos' => const SosScreen(),
               '/mode-picker' => const ModePickerScreen(allowSkip: true),

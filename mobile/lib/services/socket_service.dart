@@ -13,6 +13,12 @@ class SocketService {
       StreamController<Map<String, dynamic>>.broadcast();
   Stream<Map<String, dynamic>> get onFamilyMessage => _familyMessageCtrl.stream;
 
+  // F14: broadcast stream for neighborhood (geofence) chat messages
+  final StreamController<Map<String, dynamic>> _neighborhoodMessageCtrl =
+      StreamController<Map<String, dynamic>>.broadcast();
+  Stream<Map<String, dynamic>> get onNeighborhoodMessage =>
+      _neighborhoodMessageCtrl.stream;
+
   // Per-alert listener callbacks. Keyed by alert id so we can register/unregister
   // independently of the main `connect()` subscription.
   final Map<String, List<CommentHandler>> _commentHandlers = {};
@@ -39,6 +45,9 @@ class SocketService {
     _socket!.on('family:geofence_exit', (data) => onGeofenceExit?.call(Map<String, dynamic>.from(data)));
     _socket!.on('family:message', (data) {
       _familyMessageCtrl.add(Map<String, dynamic>.from(data));
+    });
+    _socket!.on('neighborhood:message', (data) {
+      _neighborhoodMessageCtrl.add(Map<String, dynamic>.from(data));
     });
 
     _socket!.on('comment:new', (data) {
