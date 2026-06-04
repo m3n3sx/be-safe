@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -247,9 +248,9 @@ class _PetsScreenState extends State<PetsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surface,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -262,7 +263,7 @@ class _PetsScreenState extends State<PetsScreen> {
           children: [
             Text(widget.groupName,
                 style: SerenityText.labelCaps.copyWith(
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                   letterSpacing: 1.2,
                 )),
             const Text('Zwierzaki',
@@ -333,11 +334,11 @@ class _PetsScreenState extends State<PetsScreen> {
                   style: SerenityText.headlineHeroMobile
                       .copyWith(fontSize: 22, fontWeight: FontWeight.w600)),
               const SizedBox(height: SerenitySpacing.xs),
-              const Text(
+              Text(
                 'Dodaj psa, kota lub innego zwierzaka,\naby wszcząć alarm gdy zaginie.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: SerenityColors.onSurfaceVariant, fontSize: 14),
+                    color: context.iosSecondaryLabel, fontSize: 14),
               ),
             ],
           ),
@@ -382,7 +383,7 @@ class _PetsScreenState extends State<PetsScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
         border: isLost
             ? Border.all(color: SerenityColors.glowAlertCoral, width: 2)
@@ -430,8 +431,8 @@ class _PetsScreenState extends State<PetsScreen> {
                 ),
                 if (isOwner)
                   IconButton(
-                    icon: const Icon(Icons.delete_outline,
-                        color: SerenityColors.onSurfaceVariant),
+                    icon: Icon(Icons.delete_outline,
+                        color: context.iosSecondaryLabel),
                     tooltip: 'Usuń',
                     onPressed: () => _deletePet(pet),
                   ),
@@ -531,7 +532,7 @@ class _PetsScreenState extends State<PetsScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 13, color: SerenityColors.onSurfaceVariant),
+          Icon(icon, size: 13, color: context.iosSecondaryLabel),
           const SizedBox(width: 4),
           Text(text,
               style: const TextStyle(
@@ -641,8 +642,8 @@ class _AddPetSheetState extends State<_AddPetSheet> {
     final padding = MediaQuery.of(context).viewInsets.bottom;
     return Container(
       padding: EdgeInsets.only(bottom: padding),
-      decoration: const BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+      decoration: BoxDecoration(
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: SafeArea(
@@ -658,7 +659,7 @@ class _AddPetSheetState extends State<_AddPetSheet> {
                   width: 42,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: SerenityColors.outlineVariant,
+                    color: context.iosSeparator,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -679,7 +680,7 @@ class _AddPetSheetState extends State<_AddPetSheet> {
               const SizedBox(height: SerenitySpacing.md),
               Text('Gatunek',
                   style: SerenityText.labelCaps
-                      .copyWith(color: SerenityColors.onSurfaceVariant)),
+                      .copyWith(color: context.iosSecondaryLabel)),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,

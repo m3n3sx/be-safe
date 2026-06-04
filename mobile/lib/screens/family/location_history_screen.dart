@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
@@ -59,12 +60,12 @@ class _LocationHistoryScreenState extends State<LocationHistoryScreen> {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(color: SerenityColors.primary),
+        iconTheme: IconThemeData(color: context.iosLabel),
         title: Text(
           'Trasa: ${widget.userName}',
           style: SerenityText.headlineHeroMobile,
@@ -72,7 +73,7 @@ class _LocationHistoryScreenState extends State<LocationHistoryScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_today),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Wybierz datę',
             onPressed: () async {
               final picked = await showDatePicker(

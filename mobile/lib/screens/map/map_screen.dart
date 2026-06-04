@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as gcm;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -494,21 +495,21 @@ class _MapScreenState extends State<MapScreen> {
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
               decoration: BoxDecoration(
-                color: SerenityColors.surfaceContainerLowest,
+                color: context.iosCardSurface,
                 borderRadius: SerenityShapes.pill(),
                 boxShadow: SerenityElevation.card(),
               ),
               child: TextField(
-                style: SerenityText.bodyMain.copyWith(color: SerenityColors.primary),
+                style: SerenityText.bodyMain.copyWith(color: context.iosLabel),
                 decoration: InputDecoration(
                   hintText: 'Szukaj adresu lub miejsca',
-                  hintStyle: SerenityText.bodyMain.copyWith(color: SerenityColors.onSurfaceVariant),
-                  prefixIcon: const Icon(Icons.search, color: SerenityColors.primary, size: 22),
+                  hintStyle: SerenityText.bodyMain.copyWith(color: context.iosSecondaryLabel),
+                  prefixIcon: Icon(Icons.search, color: context.iosLabel, size: 22),
                   suffixIcon: Semantics(
                     label: 'Wycentruj mapę na moją lokalizację',
                     button: true,
                     child: IconButton(
-                      icon: const Icon(Icons.my_location, color: SerenityColors.primary, size: 22),
+                      icon: Icon(Icons.my_location, color: context.iosLabel, size: 22),
                       tooltip: 'Moja lokalizacja',
                       onPressed: () {
                         HapticFeedback.selectionClick();
@@ -540,7 +541,7 @@ class _MapScreenState extends State<MapScreen> {
         if (_showAlertList && !showSidePane) Positioned(bottom: 130, left: 16, right: 16,
           child: Container(
             constraints: const BoxConstraints(maxHeight: 380),
-            decoration: BoxDecoration(color: SerenityColors.surfaceContainerLowest, borderRadius: BorderRadius.circular(20),
+            decoration: BoxDecoration(color: context.iosCardSurface, borderRadius: BorderRadius.circular(20),
               boxShadow: [BoxShadow(blurRadius: 16, color: Colors.black.withValues(alpha: 0.15))]),
             child: ClipRRect(borderRadius: BorderRadius.circular(20),
               child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -569,7 +570,7 @@ class _MapScreenState extends State<MapScreen> {
                     itemCount: alerts.length,
                     separatorBuilder: (_, __) => Divider(
                       height: 1,
-                      color: SerenityColors.outlineVariant.withValues(alpha: 0.3),
+                      color: context.iosSeparator.withValues(alpha: 0.3),
                     ),
                     itemBuilder: (_, i) {
                       final a = alerts[i];
@@ -602,7 +603,7 @@ class _MapScreenState extends State<MapScreen> {
             // F11: AED toggle pill
             Container(
               decoration: BoxDecoration(
-                color: _aedsVisible ? const Color(0xFF9DF4CB) : SerenityColors.surfaceContainerLowest,
+                color: _aedsVisible ? const Color(0xFF9DF4CB) : context.iosCardSurface,
                 borderRadius: SerenityShapes.pill(),
                 boxShadow: SerenityElevation.floating(),
               ),
@@ -679,7 +680,7 @@ class _MapScreenState extends State<MapScreen> {
               child: Container(
                 width: 64, height: 64,
                 decoration: BoxDecoration(
-                  color: SerenityColors.surfaceContainerLowest,
+                  color: context.iosCardSurface,
                   shape: BoxShape.circle,
                   boxShadow: SerenityElevation.card(),
                 ),
@@ -692,7 +693,7 @@ class _MapScreenState extends State<MapScreen> {
                       decoration: BoxDecoration(
                         color: SerenityColors.glowAlertCoral,
                         borderRadius: BorderRadius.circular(11),
-                        border: Border.all(color: SerenityColors.surfaceContainerLowest, width: 2),
+                        border: Border.all(color: context.iosCardSurface, width: 2),
                       ),
                       child: Center(child: Text(
                         alerts.length > 99 ? '99+' : '${alerts.length}',
@@ -713,7 +714,7 @@ class _MapScreenState extends State<MapScreen> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: SerenityColors.surfaceContainerLowest.withValues(alpha: 0.92),
+                color: context.iosCardSurface.withValues(alpha: 0.92),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: SerenityElevation.card(),
               ),
@@ -728,7 +729,7 @@ class _MapScreenState extends State<MapScreen> {
                     const SizedBox(height: 2),
                     Text(
                       'Tapnij «Zgłoś» w prawym dolnym rogu aby ostrzec sąsiadów.',
-                      style: SerenityText.bodyMain.copyWith(fontSize: 13, color: SerenityColors.onSurfaceVariant),
+                      style: SerenityText.bodyMain.copyWith(fontSize: 13, color: context.iosSecondaryLabel),
                     ),
                   ],
                 )),
@@ -849,7 +850,7 @@ class _MapScreenState extends State<MapScreen> {
                     color: SerenityColors.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(11),
                   ),
-                  child: const Center(child: Icon(Icons.expand_more, size: 16, color: SerenityColors.onSurfaceVariant)),
+                  child: Center(child: Icon(Icons.expand_more, size: 16, color: context.iosSecondaryLabel)),
                 ),
               ),
             ),
@@ -978,13 +979,13 @@ class _MapScreenState extends State<MapScreen> {
           child: Column(children: [
             const SizedBox(height: 10),
             Container(width: 44, height: 4, decoration: BoxDecoration(
-              color: SerenityColors.outlineVariant, borderRadius: BorderRadius.circular(2),
+              color: context.iosSeparator, borderRadius: BorderRadius.circular(2),
             )),
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(children: [
-                const Icon(Icons.family_restroom, color: SerenityColors.primary),
+                Icon(Icons.family_restroom, color: context.iosLabel),
                 const SizedBox(width: 8),
                 Expanded(child: Text('Rodzina na mapie (${_familyMembers.length})',
                   style: SerenityText.headlineHeroMobile.copyWith(fontSize: 18),
@@ -1024,7 +1025,7 @@ class _MapScreenState extends State<MapScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                       decoration: BoxDecoration(
-                        color: SerenityColors.surfaceContainerLowest,
+                        color: context.iosCardSurface,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Row(children: [
@@ -1036,14 +1037,14 @@ class _MapScreenState extends State<MapScreen> {
                           Row(children: [
                             Container(width: 7, height: 7, decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: hasLocation ? SerenityColors.secondary : SerenityColors.outlineVariant,
+                              color: hasLocation ? SerenityColors.secondary : context.iosSeparator,
                             )),
                             const SizedBox(width: 6),
                             Text(
                               hasLocation
                                 ? (lastSeenStr != null ? 'Aktywny' : 'Lokalizacja')
                                 : 'Brak lokalizacji',
-                              style: const TextStyle(fontSize: 12, color: SerenityColors.onSurfaceVariant),
+                              style: TextStyle(fontSize: 12, color: context.iosSecondaryLabel),
                             ),
                             const SizedBox(width: 8),
                             Container(
@@ -1176,7 +1177,7 @@ class _MapScreenState extends State<MapScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      backgroundColor: context.iosCardSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -1198,7 +1199,7 @@ class _MapScreenState extends State<MapScreen> {
                     width: 48,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: SerenityColors.outlineVariant,
+                      color: context.iosSeparator,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1394,7 +1395,7 @@ class _AlertSidePane extends StatelessWidget {
                   itemCount: alerts.length,
                   separatorBuilder: (_, __) => Divider(
                     height: 1,
-                    color: SerenityColors.outlineVariant.withValues(alpha: 0.3),
+                    color: context.iosSeparator.withValues(alpha: 0.3),
                   ),
                   itemBuilder: (_, i) {
                     final a = alerts[i];
@@ -1424,7 +1425,7 @@ class _FilterPillButton extends StatelessWidget {
     return Material(
       color: hasFilters
           ? SerenityColors.primaryContainer
-          : SerenityColors.surfaceContainerLowest,
+          : context.iosCardSurface,
       borderRadius: SerenityShapes.pill(),
       child: InkWell(
         borderRadius: SerenityShapes.pill(),
@@ -1466,7 +1467,7 @@ class _FilterPillButton extends StatelessWidget {
                 Icon(
                   Icons.expand_more,
                   size: 18,
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                 ),
               ],
             ],
@@ -1494,7 +1495,7 @@ class _CategoryRow extends StatelessWidget {
     return Material(
       color: selected
           ? SerenityColors.primary.withValues(alpha: 0.06)
-          : SerenityColors.surfaceContainerLowest,
+          : context.iosCardSurface,
       borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
       child: InkWell(
         borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
@@ -1508,7 +1509,7 @@ class _CategoryRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
             border: selected
                 ? Border.all(
-                    color: SerenityColors.primary.withValues(alpha: 0.4),
+                    color: context.iosLabel.withValues(alpha: 0.4),
                   )
                 : null,
             boxShadow: selected ? null : SerenityElevation.card(),
@@ -1525,7 +1526,7 @@ class _CategoryRow extends StatelessWidget {
                   category.label,
                   style: SerenityText.labelButton.copyWith(
                     fontSize: 15,
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                   ),
                 ),
               ),
@@ -1540,7 +1541,7 @@ class _CategoryRow extends StatelessWidget {
                   border: Border.all(
                     color: selected
                         ? SerenityColors.primaryContainer
-                        : SerenityColors.outlineVariant,
+                        : context.iosSeparator,
                     width: 1.5,
                   ),
                 ),
@@ -1630,7 +1631,7 @@ class _AlertListItem extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: isActive
                     ? alert.category.color.withValues(alpha: 0.15)
-                    : SerenityColors.outlineVariant.withValues(alpha: 0.25),
+                    : context.iosSeparator.withValues(alpha: 0.25),
               ),
               child: Icon(
                 alert.category.iconData,
@@ -1668,7 +1669,7 @@ class _AlertListItem extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: SerenityColors.outlineVariant
+                            color: context.iosSeparator
                                 .withValues(alpha: 0.4),
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -1677,7 +1678,7 @@ class _AlertListItem extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.w600,
-                              color: SerenityColors.onSurfaceVariant,
+                              color: context.iosSecondaryLabel,
                             ),
                           ),
                         )
@@ -1803,7 +1804,7 @@ class _AlertListItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 12,
-                        color: SerenityColors.onSurfaceVariant,
+                        color: context.iosSecondaryLabel,
                         height: 1.3,
                       ),
                     ),
@@ -1857,7 +1858,7 @@ class _AlertListItem extends StatelessWidget {
             const SizedBox(width: 4),
             IconButton(
               icon: const Icon(Icons.chevron_right, size: 22),
-              color: SerenityColors.onSurfaceVariant,
+              color: context.iosSecondaryLabel,
               tooltip: 'Szczegóły alertu',
               onPressed: onDetails,
               constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
@@ -1872,14 +1873,14 @@ class _AlertListItem extends StatelessWidget {
   Widget _metaChip({required IconData icon, required String text}) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: SerenityColors.onSurfaceVariant),
+          Icon(icon, size: 12, color: SerenityColors.secondaryLabel),
           const SizedBox(width: 3),
           Text(
             text,
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: SerenityColors.onSurfaceVariant,
+              color: SerenityColors.secondaryLabel,
             ),
           ),
         ],

@@ -7,6 +7,7 @@ library;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import '../../theme/design_tokens.dart';
 import 'fake_call_incoming_screen.dart';
@@ -87,7 +88,7 @@ class _FakeCallSetupScreenState extends State<FakeCallSetupScreen> {
   Widget build(BuildContext context) {
     final running = _countdown > 0;
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -127,12 +128,12 @@ class _FakeCallSetupScreenState extends State<FakeCallSetupScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text('Kto dzwoni?',
+            Text('Kto dzwoni?',
                 style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.2,
-                    color: SerenityColors.onSurfaceVariant)),
+                    color: context.iosSecondaryLabel)),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
@@ -174,12 +175,12 @@ class _FakeCallSetupScreenState extends State<FakeCallSetupScreen> {
                   setState(() => _callerName = v.trim().isEmpty ? 'Mama' : v),
             ),
             const SizedBox(height: 24),
-            const Text('Kiedy zadzwonić?',
+            Text('Kiedy zadzwonić?',
                 style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.2,
-                    color: SerenityColors.onSurfaceVariant)),
+                    color: context.iosSecondaryLabel)),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,
@@ -248,9 +249,9 @@ class _FakeCallSetupScreenState extends State<FakeCallSetupScreen> {
                             fontSize: 18, fontWeight: FontWeight.w700)),
                     const SizedBox(height: 4),
                     Text('"$_callerName" — $_callerNumber',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 14,
-                            color: SerenityColors.onSurfaceVariant)),
+                            color: context.iosSecondaryLabel)),
                   ],
                 ),
               ),
@@ -275,11 +276,11 @@ class _FakeCallSetupScreenState extends State<FakeCallSetupScreen> {
               ),
             ],
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Po odebraniu połączenia zobaczysz ekran z odtwarzanym dźwiękiem rozmowy. Możesz "rozmawiać" lub po prostu wyjść z sytuacji.',
               style: TextStyle(
                   fontSize: 13,
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                   height: 1.4),
               textAlign: TextAlign.center,
             ),

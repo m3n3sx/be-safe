@@ -13,6 +13,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
@@ -236,7 +237,7 @@ class _SosSeniorScreenState extends State<SosSeniorScreen> {
                           'Naciśnij jeden z dużych przycisków.\nTwoja rodzina otrzyma sygnał\nz Twoją lokalizacją.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: SerenityColors.onSurfaceVariant,
+                            color: context.iosSecondaryLabel,
                             fontSize: 18,
                             height: 1.5,
                           ),
@@ -470,7 +471,7 @@ class _SeniorSosButton extends StatelessWidget {
           Text(
             subtitle!,
             style: TextStyle(
-              color: SerenityColors.onSurfaceVariant,
+              color: context.iosSecondaryLabel,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),

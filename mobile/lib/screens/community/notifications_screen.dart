@@ -2,6 +2,7 @@
 // Lista wszystkich powiadomień z backendu (/notifications), swipe-to-delete,
 // "Wyczyść wszystko", pull-refresh, ikona per typ, tap → routing wg data.type.
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 import '../../services/fcm_service.dart' show appNavigatorKey;
@@ -157,9 +158,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceContainerLowest,
+        backgroundColor: context.iosCardSurface,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -168,7 +169,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
         title: Text('Powiadomienia',
             style: SerenityText.bodyMain.copyWith(
-              fontWeight: FontWeight.w600, color: SerenityColors.primary)),
+              fontWeight: FontWeight.w600, color: context.iosLabel)),
         actions: [
           if (_items.isNotEmpty)
             TextButton(
@@ -183,12 +184,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ? _buildEmpty()
               : RefreshIndicator(
                   onRefresh: _load,
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: _items.length,
                     separatorBuilder: (_, __) =>
-                        Divider(height: 1, color: SerenityColors.outlineVariant.withValues(alpha: 0.5)),
+                        Divider(height: 1, color: context.iosSeparator.withValues(alpha: 0.5)),
                     itemBuilder: (_, i) => _buildTile(_items[i]),
                   ),
                 ),
@@ -200,18 +201,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         children: [
           SizedBox(height: MediaQuery.of(context).size.height * 0.28),
           Icon(Icons.notifications_none,
-              size: 64, color: SerenityColors.onSurfaceVariant.withValues(alpha: 0.4)),
+              size: 64, color: context.iosSecondaryLabel.withValues(alpha: 0.4)),
           const SizedBox(height: 16),
           Center(
             child: Text('Brak powiadomień',
                 style: SerenityText.headlineHeroMobile.copyWith(
-                    color: SerenityColors.onSurfaceVariant)),
+                    color: context.iosSecondaryLabel)),
           ),
           const SizedBox(height: 8),
           Center(
             child: Text('Tu pojawią się alerty, sygnały rodziny i przypomnienia.',
                 textAlign: TextAlign.center,
-                style: SerenityText.bodyMain.copyWith(color: SerenityColors.onSurfaceVariant)),
+                style: SerenityText.bodyMain.copyWith(color: context.iosSecondaryLabel)),
           ),
         ],
       );
@@ -242,7 +243,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontWeight: isRead ? FontWeight.w500 : FontWeight.w700,
-            color: SerenityColors.primary,
+            color: context.iosLabel,
           ),
         ),
         subtitle: n['body'] != null && (n['body'] as String).isNotEmpty
@@ -251,7 +252,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         trailing: Text(
           _relativeTime(n['created_at']?.toString()),
           style: SerenityText.labelCaps.copyWith(
-              color: SerenityColors.onSurfaceVariant, fontSize: 11),
+              color: context.iosSecondaryLabel, fontSize: 11),
         ),
       ),
     );

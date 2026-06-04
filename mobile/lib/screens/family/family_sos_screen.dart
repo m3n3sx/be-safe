@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -113,7 +114,7 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
         title: Text('🆘 SOS od ${widget.childUsername}'),
         backgroundColor: SerenityColors.glowAlertCoral,

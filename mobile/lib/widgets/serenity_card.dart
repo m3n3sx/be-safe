@@ -14,6 +14,7 @@
 library;
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../theme/ios_surfaces.dart';
 import '../theme/design_tokens.dart';
 
 class SerenityCard extends StatelessWidget {
@@ -65,13 +66,13 @@ class SerenityCard extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
         color: isGlass
-            ? SerenityColors.surfaceContainerLowest.withValues(alpha: 0.8)
-            : (color ?? SerenityColors.surfaceContainerLowest),
+            ? context.iosCardSurface.withValues(alpha: 0.8)
+            : (color ?? context.iosCardSurface),
         borderRadius: radius,
         boxShadow: showShadow ? SerenityElevation.card() : null,
         border: bordered
             ? Border.all(
-                color: SerenityColors.outlineVariant.withValues(alpha: 0.5),
+                color: context.iosSeparator.withValues(alpha: 0.5),
                 width: 1,
               )
             : null,

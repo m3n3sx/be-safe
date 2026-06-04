@@ -163,7 +163,6 @@ class SerenityText {
     height: 96 / 80,
     fontWeight: FontWeight.w100,
     letterSpacing: -0.04 * 80,
-    color: SerenityColors.primary,
   );
 
   /// 64 / 200w / -0.02em — hero messages
@@ -173,7 +172,6 @@ class SerenityText {
     height: 72 / 64,
     fontWeight: FontWeight.w200,
     letterSpacing: -0.02 * 64,
-    color: SerenityColors.primary,
   );
 
   /// 32 / 300w / -0.01em — screen titles (desktop/tablet)
@@ -183,7 +181,6 @@ class SerenityText {
     height: 40 / 32,
     fontWeight: FontWeight.w300,
     letterSpacing: -0.01 * 32,
-    color: SerenityColors.primary,
   );
 
   /// 28 / 300w — screen titles (mobile)
@@ -192,7 +189,6 @@ class SerenityText {
     fontSize: 28,
     height: 36 / 28,
     fontWeight: FontWeight.w300,
-    color: SerenityColors.primary,
   );
 
   /// 16 / 400w — default reading text
@@ -201,7 +197,6 @@ class SerenityText {
     fontSize: 16,
     height: 24 / 16,
     fontWeight: FontWeight.w400,
-    color: SerenityColors.onSurfaceVariant,
   );
 
   /// 14 / 500w — buttons, nav labels
@@ -210,7 +205,6 @@ class SerenityText {
     fontSize: 14,
     height: 20 / 14,
     fontWeight: FontWeight.w500,
-    color: SerenityColors.primary,
   );
 
   /// 12 / 500w / +0.05em — uppercase tiny labels ("POZIOM BEZPIECZEŃSTWA")
@@ -220,7 +214,7 @@ class SerenityText {
     height: 16 / 12,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.05 * 12,
-    color: SerenityColors.onSurfaceVariant,
+    color: SerenityColors.secondaryLabel,
   );
 
   // ============================================================================
@@ -234,7 +228,6 @@ class SerenityText {
     height: 41 / 34,
     fontWeight: FontWeight.w700,
     letterSpacing: -0.026 * 34,
-    color: SerenityColors.primary,
   );
 
   /// iOS Title2 — 22px / 700w — section heroes inline.
@@ -244,7 +237,6 @@ class SerenityText {
     height: 28 / 22,
     fontWeight: FontWeight.w700,
     letterSpacing: -0.022 * 22,
-    color: SerenityColors.primary,
   );
 
   /// iOS Body — 17px / 400w — main row text in InsetGroupedSection.
@@ -253,7 +245,6 @@ class SerenityText {
     fontSize: 17,
     height: 22 / 17,
     fontWeight: FontWeight.w400,
-    color: SerenityColors.primary,
   );
 
   /// iOS Footnote — 13px / 400w — section footer hints (below grouped list).

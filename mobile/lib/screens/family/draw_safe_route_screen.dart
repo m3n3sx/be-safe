@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -163,9 +164,9 @@ class _DrawSafeRouteScreenState extends State<DrawSafeRouteScreen> {
         if (ok && mounted) Navigator.pop(context);
       },
       child: Scaffold(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         appBar: AppBar(
-          backgroundColor: SerenityColors.surfaceBright,
+          backgroundColor: context.iosBackground,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.close),
@@ -270,7 +271,7 @@ class _DrawSafeRouteScreenState extends State<DrawSafeRouteScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: SerenityColors.surfaceContainerLowest
+                color: context.iosCardSurface
                     .withValues(alpha: 0.94),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
@@ -341,7 +342,7 @@ class _DrawSafeRouteScreenState extends State<DrawSafeRouteScreen> {
         12 + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         boxShadow: [
           BoxShadow(
             color: SerenityColors.primaryContainer.withValues(alpha: 0.05),
@@ -418,7 +419,7 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
       padding: EdgeInsets.only(bottom: bottom),
       child: Container(
         decoration: BoxDecoration(
-          color: SerenityColors.surfaceBright,
+          color: context.iosBackground,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
@@ -472,7 +473,7 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
               decoration: InputDecoration(
                 hintText: 'np. Do szkoły, Na trening',
                 filled: true,
-                fillColor: SerenityColors.surfaceContainerLowest,
+                fillColor: context.iosCardSurface,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide.none,

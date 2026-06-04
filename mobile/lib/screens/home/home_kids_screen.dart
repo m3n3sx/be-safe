@@ -9,6 +9,7 @@ library;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -202,15 +203,15 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
     final firstName = _firstName(auth.user?.username);
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              SerenityColors.surfaceBright,
-              Color(0xFFE8F8F2),
+              context.iosBackground,
+              const Color(0xFFE8F8F2),
             ],
           ),
         ),
@@ -235,7 +236,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
                         child: Text(
                           'Co chcesz zrobić?',
                           style: SerenityText.bodyMain.copyWith(
-                            color: SerenityColors.onSurfaceVariant,
+                            color: context.iosSecondaryLabel,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -272,7 +273,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
             height: 56,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: SerenityColors.surfaceContainerLowest,
+              color: context.iosCardSurface,
               border: Border.all(
                 color: SerenityColors.secondaryContainer,
                 width: 3,
@@ -298,7 +299,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: SerenityColors.surfaceContainerLowest,
+                  color: context.iosCardSurface,
                   borderRadius: BorderRadius.circular(
                       SerenityShapes.radiusMd.toDouble()),
                   boxShadow: [
@@ -328,7 +329,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
                           color: SerenityColors.secondaryContainer,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: SerenityColors.surfaceContainerLowest,
+                            color: context.iosCardSurface,
                             width: 2,
                           ),
                         ),
@@ -359,7 +360,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
@@ -479,7 +480,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
           label: 'JESTEM OK',
           subtitle: 'Wyślij wiadomość',
           icon: Icons.check_circle,
-          background: SerenityColors.surfaceContainerLowest,
+          background: context.iosCardSurface,
           foreground: SerenityColors.primaryContainer,
           subtitleColor: SerenityColors.onSurfaceVariant,
           iconColor: SerenityColors.onSecondaryContainer,
@@ -501,7 +502,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
         color: SerenityColors.surfaceContainerHigh.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: SerenityColors.outlineVariant.withValues(alpha: 0.5),
+          color: context.iosSeparator.withValues(alpha: 0.5),
         ),
       ),
       child: Row(
@@ -509,8 +510,8 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
           Container(
             width: 48,
             height: 48,
-            decoration: const BoxDecoration(
-              color: SerenityColors.surfaceContainerLowest,
+            decoration: BoxDecoration(
+              color: context.iosCardSurface,
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -538,7 +539,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
                 Text(
                   'Mama i tata widzą, gdzie jesteś',
                   style: SerenityText.labelCaps.copyWith(
-                    color: SerenityColors.onSurfaceVariant,
+                    color: context.iosSecondaryLabel,
                     letterSpacing: 0,
                     fontWeight: FontWeight.w400,
                     fontSize: 12,
@@ -713,8 +714,8 @@ class _KidsBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 84,
-      decoration: const BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+      decoration: BoxDecoration(
+        color: context.iosCardSurface,
         border: Border(
           top: BorderSide(color: Color(0xFFE0E0E0), width: 1),
         ),

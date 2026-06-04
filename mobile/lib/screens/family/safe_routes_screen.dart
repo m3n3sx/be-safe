@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
@@ -166,9 +167,9 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -310,7 +311,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
     final points = _extractPoints(r);
     return Container(
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: isActive
@@ -486,7 +487,7 @@ class _RoutePreviewSheetState extends State<_RoutePreviewSheet> {
         return Container(
           padding: EdgeInsets.only(bottom: bottom),
           decoration: BoxDecoration(
-            color: SerenityColors.surfaceBright,
+            color: context.iosBackground,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(

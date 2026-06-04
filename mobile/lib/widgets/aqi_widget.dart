@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 
 import '../services/api_service.dart';
@@ -113,10 +114,10 @@ class _AqiWidgetState extends State<AqiWidget> {
                 ),
                 const SizedBox(height: 2),
                 Text(label,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: SerenityColors.primary)),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: context.iosLabel)),
                 if (!widget.compact)
                   Text('$city · $distStr',
-                      style: const TextStyle(fontSize: 11, color: SerenityColors.onSurfaceVariant)),
+                      style: TextStyle(fontSize: 11, color: context.iosSecondaryLabel)),
               ],
             ),
           ),

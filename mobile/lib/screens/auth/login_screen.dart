@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
@@ -83,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
@@ -119,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 suffix: IconButton(
                   icon: Icon(
                     _obscurePass ? Icons.visibility_off : Icons.visibility,
-                    color: SerenityColors.onSurfaceVariant,
+                    color: context.iosSecondaryLabel,
                     size: 20,
                   ),
                   tooltip: _obscurePass ? 'Pokaż hasło' : 'Ukryj hasło',
@@ -163,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   label: TextSpan(
                     style: SerenityText.bodyMain.copyWith(
                       fontSize: 13,
-                      color: SerenityColors.primary,
+                      color: context.iosLabel,
                     ),
                     children: [
                       const TextSpan(text: 'Akceptuję '),
@@ -240,10 +241,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     : () async {
                         await context.read<AuthProvider>().demoLogin();
                       },
-                icon: const Icon(
+                icon: Icon(
                   Icons.explore_outlined,
                   size: 18,
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                 ),
                 label: Text(
                   'Tryb demo — bez rejestracji',
@@ -274,10 +275,10 @@ class _LoginScreenState extends State<LoginScreen> {
               stops: const [0, 1],
             ),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.shield,
             size: 44,
-            color: SerenityColors.primary,
+            color: context.iosLabel,
           ),
         ),
         const SizedBox(height: 16),
@@ -311,13 +312,13 @@ class _LoginScreenState extends State<LoginScreen> {
       obscureText: obscure,
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
-      style: SerenityText.bodyMain.copyWith(color: SerenityColors.primary),
+      style: SerenityText.bodyMain.copyWith(color: context.iosLabel),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: SerenityText.labelButton.copyWith(
-          color: SerenityColors.onSurfaceVariant,
+          color: context.iosSecondaryLabel,
         ),
-        prefixIcon: Icon(icon, color: SerenityColors.onSurfaceVariant, size: 20),
+        prefixIcon: Icon(icon, color: context.iosSecondaryLabel, size: 20),
         suffixIcon: suffix,
         filled: true,
         fillColor: SerenityColors.surfaceContainerLow,
@@ -331,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: SerenityShapes.input(),
-          borderSide: BorderSide(color: SerenityColors.primary, width: 1.5),
+          borderSide: BorderSide(color: context.iosLabel, width: 1.5),
         ),
       ),
     );
@@ -367,7 +368,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: TextSpan(
                     style: SerenityText.bodyMain.copyWith(
                       fontSize: 14,
-                      color: SerenityColors.primary,
+                      color: context.iosLabel,
                     ),
                     children: [label],
                   ),
@@ -439,19 +440,19 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: BoxDecoration(
             borderRadius: SerenityShapes.pill(),
             border: Border.all(
-              color: SerenityColors.primary.withValues(alpha: 0.2),
+              color: context.iosLabel.withValues(alpha: 0.2),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: SerenityColors.primary, size: 20),
+              Icon(icon, color: context.iosLabel, size: 20),
               const SizedBox(width: 8),
               Text(
                 label,
                 style: SerenityText.labelButton.copyWith(
                   fontSize: 15,
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                 ),
               ),
             ],
@@ -466,7 +467,7 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Expanded(
           child: Divider(
-            color: SerenityColors.outlineVariant.withValues(alpha: 0.6),
+            color: context.iosSeparator.withValues(alpha: 0.6),
           ),
         ),
         Padding(
@@ -474,13 +475,13 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Text(
             text,
             style: SerenityText.labelCaps.copyWith(
-              color: SerenityColors.onSurfaceVariant,
+              color: context.iosSecondaryLabel,
             ),
           ),
         ),
         Expanded(
           child: Divider(
-            color: SerenityColors.outlineVariant.withValues(alpha: 0.6),
+            color: context.iosSeparator.withValues(alpha: 0.6),
           ),
         ),
       ],

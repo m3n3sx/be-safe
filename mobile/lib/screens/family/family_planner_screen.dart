@@ -3,6 +3,7 @@
 // Cron przypomnień wyzwala FCM type='family_event_reminder' (X min przed startem).
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
@@ -105,9 +106,9 @@ class _FamilyPlannerScreenState extends State<FamilyPlannerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -153,7 +154,7 @@ class _FamilyPlannerScreenState extends State<FamilyPlannerScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.event_outlined, size: 64, color: SerenityColors.outlineVariant),
+                            Icon(Icons.event_outlined, size: 64, color: context.iosSeparator),
                             const SizedBox(height: 12),
                             const Text(
                               'Brak nadchodzących wydarzeń',
@@ -191,7 +192,7 @@ class _FamilyPlannerScreenState extends State<FamilyPlannerScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: SerenityColors.primaryContainer.withValues(alpha: 0.06),
@@ -279,13 +280,13 @@ class _FamilyPlannerScreenState extends State<FamilyPlannerScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 13, color: SerenityColors.onSurfaceVariant),
+          Icon(icon, size: 13, color: context.iosSecondaryLabel),
           const SizedBox(width: 4),
           Text(text,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: SerenityColors.onSurfaceVariant)),
+                  color: context.iosSecondaryLabel)),
         ],
       ),
     );
@@ -369,8 +370,8 @@ class _AddEventSheetState extends State<_AddEventSheet> {
     return Padding(
       padding: EdgeInsets.only(bottom: bottom),
       child: Container(
-        decoration: const BoxDecoration(
-          color: SerenityColors.surfaceBright,
+        decoration: BoxDecoration(
+          color: context.iosBackground,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),

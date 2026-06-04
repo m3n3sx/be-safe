@@ -273,7 +273,7 @@ class _CapabilityCard extends StatelessWidget {
 
   ({String label, Color color}) _systemBadge() {
     if (cap.permission == Permission.unknown) {
-      return (label: 'systemowe niepotrzebne', color: SerenityColors.onSurfaceVariant);
+      return (label: 'systemowe niepotrzebne', color: SerenityColors.secondaryLabel);
     }
     if (systemStatus.isGranted) {
       return (label: 'system: zezwolono', color: SerenityColors.tertiary);
@@ -284,7 +284,7 @@ class _CapabilityCard extends StatelessWidget {
     if (systemStatus.isDenied) {
       return (label: 'system: brak zgody', color: SerenityColors.tertiaryFixedDim);
     }
-    return (label: 'system: ${systemStatus.name}', color: SerenityColors.onSurfaceVariant);
+    return (label: 'system: ${systemStatus.name}', color: SerenityColors.secondaryLabel);
   }
 
   @override
@@ -309,7 +309,7 @@ class _CapabilityCard extends StatelessWidget {
                   color: SerenityColors.primaryContainer.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(SerenityShapes.radiusLg),
                 ),
-                child: Icon(cap.icon, color: SerenityColors.primary, size: 24),
+                child: Icon(cap.icon, color: context.iosLabel, size: 24),
               ),
               const SizedBox(width: SerenitySpacing.md),
               Expanded(
@@ -318,11 +318,11 @@ class _CapabilityCard extends StatelessWidget {
                   children: [
                     Text(
                       cap.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
-                        color: SerenityColors.primary,
+                        color: context.iosLabel,
                       ),
                     ),
                     const SizedBox(height: 2),

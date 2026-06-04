@@ -9,6 +9,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -255,7 +256,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      backgroundColor: context.iosCardSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -275,7 +276,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: SerenityColors.outlineVariant,
+                      color: context.iosSeparator,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -286,10 +287,10 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                         Expanded(
                           child: Text(
                             title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: SerenityColors.primary,
+                              color: context.iosLabel,
                             ),
                           ),
                         ),
@@ -300,25 +301,25 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                       ],
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       'Wyłącz przełącznik aby ukryć dane przed danym członkiem.',
                       style: TextStyle(
                           fontSize: 12,
-                          color: SerenityColors.onSurfaceVariant),
+                          color: context.iosSecondaryLabel),
                     ),
                   ),
                   const SizedBox(height: 8),
                   Expanded(
                     child: matrix.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: Padding(
                               padding: EdgeInsets.all(24),
                               child: Text(
                                 'Brak innych członków w grupie.',
                                 style: TextStyle(
-                                    color: SerenityColors.onSurfaceVariant),
+                                    color: context.iosSecondaryLabel),
                               ),
                             ),
                           )
@@ -522,12 +523,12 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     final online = _onlineStatus();
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(color: SerenityColors.primary),
+        iconTheme: IconThemeData(color: context.iosLabel),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Wróć',
@@ -595,7 +596,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: SerenityElevation.card(),
       ),
@@ -628,7 +629,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                         shape: BoxShape.circle,
                         color: online.color,
                         border: Border.all(
-                          color: SerenityColors.surfaceContainerLowest,
+                          color: context.iosCardSurface,
                           width: 3,
                         ),
                       ),
@@ -706,7 +707,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
               Container(
                   width: 1,
                   height: 36,
-                  color: SerenityColors.outlineVariant
+                  color: context.iosSeparator
                       .withValues(alpha: 0.5)),
               Expanded(
                 child: _miniStat(
@@ -719,7 +720,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
               Container(
                   width: 1,
                   height: 36,
-                  color: SerenityColors.outlineVariant
+                  color: context.iosSeparator
                       .withValues(alpha: 0.5)),
               Expanded(
                 child: _miniStat(
@@ -751,9 +752,9 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
           Text(label,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 10,
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                   letterSpacing: 0.4)),
         ],
       );
@@ -765,21 +766,21 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
       return Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: SerenityColors.surfaceContainerLowest,
+          color: context.iosCardSurface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: SerenityColors.outlineVariant.withValues(alpha: 0.4)),
+              color: context.iosSeparator.withValues(alpha: 0.4)),
         ),
         child: Row(
           children: [
-            const Icon(Icons.location_off,
-                size: 32, color: SerenityColors.onSurfaceVariant),
+            Icon(Icons.location_off,
+                size: 32, color: context.iosSecondaryLabel),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 'Brak danych o lokalizacji. ${widget.userName} może mieć wyłączone udostępnianie lokalizacji.',
                 style: SerenityText.bodyMain.copyWith(
-                    fontSize: 13, color: SerenityColors.onSurfaceVariant),
+                    fontSize: 13, color: context.iosSecondaryLabel),
               ),
             ),
           ],
@@ -835,7 +836,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: SerenityColors.surfaceContainerLowest
+                  color: context.iosCardSurface
                       .withValues(alpha: 0.92),
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -861,7 +862,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
     final hasPhone = _phone != null && _phone!.isNotEmpty;
     return Container(
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: SerenityElevation.card(),
       ),
@@ -907,8 +908,8 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.swap_horiz,
-                      color: SerenityColors.onSurfaceVariant),
+                  : Icon(Icons.swap_horiz,
+                      color: context.iosSecondaryLabel),
             ),
           ],
           if (_isSelf) ...[
@@ -963,7 +964,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
   Widget _divider() => Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
         height: 1,
-        color: SerenityColors.outlineVariant.withValues(alpha: 0.3),
+        color: context.iosSeparator.withValues(alpha: 0.3),
       );
 
   Widget _actionTile({
@@ -1004,15 +1005,15 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                                 : SerenityColors.primary)),
                     const SizedBox(height: 2),
                     Text(subtitle,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 12,
-                            color: SerenityColors.onSurfaceVariant)),
+                            color: context.iosSecondaryLabel)),
                   ],
                 ),
               ),
               trailing ??
                   Icon(Icons.chevron_right,
-                      color: SerenityColors.onSurfaceVariant
+                      color: context.iosSecondaryLabel
                           .withValues(alpha: 0.5)),
             ],
           ),
@@ -1024,12 +1025,12 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.groups_outlined,
-                size: 14, color: SerenityColors.onSurfaceVariant),
+            Icon(Icons.groups_outlined,
+                size: 14, color: context.iosSecondaryLabel),
             const SizedBox(width: 6),
             Text('Grupa: $_groupName',
-                style: const TextStyle(
-                    fontSize: 11, color: SerenityColors.onSurfaceVariant)),
+                style: TextStyle(
+                    fontSize: 11, color: context.iosSecondaryLabel)),
           ],
         ),
       );
@@ -1071,10 +1072,10 @@ class _PrivacyRowCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: SerenityColors.outlineVariant.withValues(alpha: 0.4),
+          color: context.iosSeparator.withValues(alpha: 0.4),
         ),
       ),
       child: Column(
@@ -1084,7 +1085,7 @@ class _PrivacyRowCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 22,
-                backgroundColor: SerenityColors.outlineVariant
+                backgroundColor: context.iosSeparator
                     .withValues(alpha: 0.4),
                 backgroundImage: (avatar != null && avatar.isNotEmpty)
                     ? NetworkImage(avatar)
@@ -1094,9 +1095,9 @@ class _PrivacyRowCard extends StatelessWidget {
                         viewerName.isNotEmpty
                             ? viewerName[0].toUpperCase()
                             : '?',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            color: SerenityColors.primary),
+                            color: context.iosLabel),
                       )
                     : null,
               ),
@@ -1106,15 +1107,15 @@ class _PrivacyRowCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(viewerName,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
-                            color: SerenityColors.primary)),
+                            color: context.iosLabel)),
                     if (role != null)
                       Text(role,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 11,
-                              color: SerenityColors.onSurfaceVariant)),
+                              color: context.iosSecondaryLabel)),
                   ],
                 ),
               ),

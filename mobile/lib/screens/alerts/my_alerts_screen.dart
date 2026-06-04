@@ -7,6 +7,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 import '../../models/alert.dart';
 import '../../services/api_service.dart';
@@ -71,7 +72,7 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
     final result = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: SerenityColors.surfaceContainerLowest,
+        backgroundColor: context.iosCardSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
         ),
@@ -100,7 +101,7 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: SerenityColors.surfaceContainerLowest,
+        backgroundColor: context.iosCardSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
         ),
@@ -127,7 +128,7 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -155,7 +156,7 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
@@ -178,7 +179,7 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
           Icon(
             Icons.inbox_outlined,
             size: 72,
-            color: SerenityColors.outlineVariant,
+            color: context.iosSeparator,
           ),
           const SizedBox(height: 16),
           Text(
@@ -231,8 +232,8 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
   Widget _buildList() {
     return RefreshIndicator(
       onRefresh: _load,
-      color: SerenityColors.primary,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      color: context.iosLabel,
+      backgroundColor: context.iosCardSurface,
       child: ListView.separated(
         padding: const EdgeInsets.fromLTRB(
           SerenitySpacing.xl,
@@ -301,14 +302,14 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
                   ),
                 ),
                 PopupMenuButton<String>(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.more_vert,
-                    color: SerenityColors.onSurfaceVariant,
+                    color: context.iosSecondaryLabel,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  color: SerenityColors.surfaceContainerLowest,
+                  color: context.iosCardSurface,
                   onSelected: (v) {
                     if (v == 'view') {
                       Navigator.push(

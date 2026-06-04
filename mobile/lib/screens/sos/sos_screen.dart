@@ -8,6 +8,7 @@ library;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
@@ -180,7 +181,7 @@ class _SosScreenState extends State<SosScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -352,7 +353,7 @@ class _SosScreenState extends State<SosScreen>
       padding: const EdgeInsets.fromLTRB(
           SerenitySpacing.xl, SerenitySpacing.xs, SerenitySpacing.xl, 0),
       child: Material(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
         child: InkWell(
           onTap: _sending
@@ -394,7 +395,7 @@ class _SosScreenState extends State<SosScreen>
                         'Fałszywy telefon',
                         style: SerenityText.labelButton.copyWith(
                           fontSize: 15,
-                          color: SerenityColors.primary,
+                          color: context.iosLabel,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -406,8 +407,8 @@ class _SosScreenState extends State<SosScreen>
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right,
-                    color: SerenityColors.onSurfaceVariant),
+                Icon(Icons.chevron_right,
+                    color: context.iosSecondaryLabel),
               ],
             ),
           ),
@@ -421,7 +422,7 @@ class _SosScreenState extends State<SosScreen>
       padding: const EdgeInsets.fromLTRB(
           SerenitySpacing.xl, SerenitySpacing.xs, SerenitySpacing.xl, 0),
       child: Material(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
         child: InkWell(
           onTap: _sending
@@ -460,7 +461,7 @@ class _SosScreenState extends State<SosScreen>
                         'Eskorta — Follow Me',
                         style: SerenityText.labelButton.copyWith(
                           fontSize: 15,
-                          color: SerenityColors.primary,
+                          color: context.iosLabel,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -471,8 +472,8 @@ class _SosScreenState extends State<SosScreen>
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right,
-                    color: SerenityColors.onSurfaceVariant),
+                Icon(Icons.chevron_right,
+                    color: context.iosSecondaryLabel),
               ],
             ),
           ),
@@ -551,7 +552,7 @@ class _SosScreenState extends State<SosScreen>
             onChanged: onChanged,
             activeColor: SerenityColors.primary,
             activeTrackColor: SerenityColors.secondaryContainer,
-            inactiveThumbColor: SerenityColors.surfaceContainerLowest,
+            inactiveThumbColor: context.iosCardSurface,
             inactiveTrackColor: SerenityColors.surfaceContainerHigh,
           ),
         ],

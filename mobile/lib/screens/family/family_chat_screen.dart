@@ -5,6 +5,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
@@ -111,9 +112,9 @@ class _FamilyChatScreenState extends State<FamilyChatScreen> {
   Widget build(BuildContext context) {
     final myId = context.watch<AuthProvider>().user?.id;
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceContainerLowest,
+        backgroundColor: context.iosCardSurface,
         elevation: 0,
         leading: IconButton(
           tooltip: 'Wróć',
@@ -126,11 +127,11 @@ class _FamilyChatScreenState extends State<FamilyChatScreen> {
             Text(widget.groupName,
                 style: SerenityText.bodyMain.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                 )),
             Text('Czat rodzinny',
                 style: SerenityText.labelCaps.copyWith(
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                 )),
           ],
         ),
@@ -171,16 +172,16 @@ class _FamilyChatScreenState extends State<FamilyChatScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.chat_bubble_outline,
-                size: 64, color: SerenityColors.onSurfaceVariant.withValues(alpha: 0.4)),
+                size: 64, color: context.iosSecondaryLabel.withValues(alpha: 0.4)),
             const SizedBox(height: 16),
             Text('Brak wiadomości',
                 style: SerenityText.headlineHeroMobile.copyWith(
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                 )),
             const SizedBox(height: 8),
             Text('Napisz pierwszą wiadomość do rodziny',
                 style: SerenityText.bodyMain.copyWith(
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                 )),
           ],
         ),
@@ -220,7 +221,7 @@ class _FamilyChatScreenState extends State<FamilyChatScreen> {
               decoration: BoxDecoration(
                 color: mine
                     ? SerenityColors.primaryContainer
-                    : SerenityColors.surfaceContainerLowest,
+                    : context.iosCardSurface,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(18),
                   topRight: const Radius.circular(18),
@@ -271,8 +272,8 @@ class _FamilyChatScreenState extends State<FamilyChatScreen> {
     return Container(
       padding: EdgeInsets.fromLTRB(12, 8, 12, 8 + bottom),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
-        border: Border(top: BorderSide(color: SerenityColors.outlineVariant)),
+        color: context.iosCardSurface,
+        border: Border(top: BorderSide(color: context.iosSeparator)),
       ),
       child: SafeArea(
         top: false,

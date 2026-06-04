@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -52,7 +53,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
         'Dołącz do be:Safe — aplikacji bezpieczeństwa społeczności! Użyj mojego kodu polecającego: $code\n\n$shareUrl';
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -65,7 +66,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 28),
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -92,7 +93,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                             child: Icon(
                               Icons.card_giftcard,
                               size: 56,
-                              color: SerenityColors.primary,
+                              color: context.iosLabel,
                             ),
                           ),
                           const SizedBox(height: SerenitySpacing.xl),
@@ -158,7 +159,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: SerenityColors.surfaceContainerLowest,
+                              color: context.iosCardSurface,
                               borderRadius: BorderRadius.circular(
                                 SerenityShapes.radiusXl,
                               ),

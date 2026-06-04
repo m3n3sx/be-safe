@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -81,9 +82,9 @@ class CyberSafetyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surface,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -146,7 +147,7 @@ class CyberSafetyScreen extends StatelessWidget {
           Text(
             'NARZĘDZIA',
             style: SerenityText.labelCaps.copyWith(
-              color: SerenityColors.onSurfaceVariant,
+              color: context.iosSecondaryLabel,
               letterSpacing: 1.2,
             ),
           ),
@@ -166,14 +167,14 @@ class CyberSafetyScreen extends StatelessWidget {
           Text(
             'ZASADY HIGIENY CYFROWEJ',
             style: SerenityText.labelCaps.copyWith(
-              color: SerenityColors.onSurfaceVariant,
+              color: context.iosSecondaryLabel,
               letterSpacing: 1.2,
             ),
           ),
           const SizedBox(height: SerenitySpacing.sm),
           Container(
             decoration: BoxDecoration(
-              color: SerenityColors.surfaceContainerLowest,
+              color: context.iosCardSurface,
               borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
             ),
             child: Column(
@@ -246,7 +247,7 @@ class _ToolTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: SerenityColors.surfaceContainerLowest,
+      color: context.iosCardSurface,
       borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
       child: InkWell(
         onTap: onTap,
@@ -280,13 +281,13 @@ class _ToolTile extends StatelessWidget {
                     Text(description,
                         style: TextStyle(
                             fontSize: 12,
-                            color: SerenityColors.onSurfaceVariant,
+                            color: context.iosSecondaryLabel,
                             height: 1.3)),
                   ],
                 ),
               ),
-              const Icon(Icons.open_in_new,
-                  size: 18, color: SerenityColors.onSurfaceVariant),
+              Icon(Icons.open_in_new,
+                  size: 18, color: context.iosSecondaryLabel),
             ],
           ),
         ),

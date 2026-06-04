@@ -102,7 +102,7 @@ Future<String?> pickRole(
   return showModalBottomSheet<String>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: SerenityColors.surfaceContainerLowest,
+    backgroundColor: context.iosCardSurface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(SerenityShapes.radiusXl),
@@ -119,7 +119,7 @@ Future<String?> pickRole(
               height: 4,
               margin: const EdgeInsets.only(bottom: SerenitySpacing.sm),
               decoration: BoxDecoration(
-                color: SerenityColors.outlineVariant,
+                color: context.iosSeparator,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -137,7 +137,7 @@ Future<String?> pickRole(
               ListTile(
                 leading: Icon(
                   r['icon'] as IconData,
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                 ),
                 title: Text(
                   r['label'] as String,
@@ -147,7 +147,7 @@ Future<String?> pickRole(
                   r['desc'] as String,
                   style: SerenityText.bodyMain.copyWith(
                     fontSize: 12,
-                    color: SerenityColors.onSurfaceVariant,
+                    color: context.iosSecondaryLabel,
                   ),
                 ),
                 trailing: current == r['value']
@@ -191,11 +191,11 @@ class _QuickActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
         boxShadow: [
           BoxShadow(
-            color: SerenityColors.primary.withValues(alpha: 0.06),
+            color: context.iosLabel.withValues(alpha: 0.06),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -248,7 +248,7 @@ class _QuickActionCard extends StatelessWidget {
                       child: Icon(
                         data.icon,
                         size: 22,
-                        color: SerenityColors.primary,
+                        color: context.iosLabel,
                       ),
                     ),
                     Column(
@@ -574,7 +574,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: SerenityColors.surfaceContainerLowest,
+        backgroundColor: context.iosCardSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
         ),
@@ -671,7 +671,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
           _buildTopBar(actions: [
             IconButton(
               icon: const Icon(Icons.add_circle_outline, size: 28),
-              color: SerenityColors.primary,
+              color: context.iosLabel,
               onPressed: _createGroup,
               tooltip: 'Utwórz grupę',
             ),
@@ -684,10 +684,10 @@ class _FamilyScreenState extends State<FamilyScreen> {
               size: 220,
               color: SerenityColors.glowCalmAqua,
               coreOpacity: 0.5,
-              child: const Icon(
+              child: Icon(
                 Icons.family_restroom,
                 size: 64,
-                color: SerenityColors.primary,
+                color: context.iosLabel,
               ),
             ),
           ),
@@ -723,8 +723,8 @@ class _FamilyScreenState extends State<FamilyScreen> {
     final active = _groups[_activeGroup];
     return RefreshIndicator(
       onRefresh: _loadGroups,
-      color: SerenityColors.primary,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      color: context.iosLabel,
+      backgroundColor: context.iosCardSurface,
       child: CustomScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
@@ -746,14 +746,14 @@ class _FamilyScreenState extends State<FamilyScreen> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.qr_code_2, size: 26),
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                   tooltip: 'Pokaż kod zaproszenia',
                   onPressed: () =>
                       _showQr(active['name'], active['invite_code']),
                 ),
                 IconButton(
                   icon: const Icon(Icons.more_horiz, size: 28),
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                   tooltip: 'Więcej opcji grupy',
                   onPressed: () => _openGroupMenu(active),
                 ),
@@ -811,7 +811,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
@@ -823,8 +823,8 @@ class _FamilyScreenState extends State<FamilyScreen> {
                 fit: BoxFit.scaleDown,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.shield, color: SerenityColors.primary, size: 24),
+                  children: [
+                    Icon(Icons.shield, color: context.iosLabel, size: 24),
                     SizedBox(width: 8),
                     Text(
                       'be:Safe',
@@ -1114,7 +1114,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
   void _openGroupMenu(Map group) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      backgroundColor: context.iosCardSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -1127,15 +1127,15 @@ class _FamilyScreenState extends State<FamilyScreen> {
               width: 48,
               height: 4,
               decoration: BoxDecoration(
-                color: SerenityColors.outlineVariant,
+                color: context.iosSeparator,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             const SizedBox(height: 16),
             ListTile(
-              leading: const Icon(
+              leading: Icon(
                 Icons.add_circle_outline,
-                color: SerenityColors.primary,
+                color: context.iosLabel,
               ),
               title: Text(
                 'Utwórz nową grupę',
@@ -1147,9 +1147,9 @@ class _FamilyScreenState extends State<FamilyScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(
+              leading: Icon(
                 Icons.link,
-                color: SerenityColors.primary,
+                color: context.iosLabel,
               ),
               title: Text(
                 'Dołącz do innej grupy',
@@ -1231,7 +1231,7 @@ class _MemberCard extends StatelessWidget {
     final role = member['role'] as String?;
     final ringColor = online
         ? SerenityColors.glowSafeMint
-        : SerenityColors.outlineVariant;
+        : context.iosSeparator;
 
     return SerenityCard(
       padding: const EdgeInsets.all(SerenitySpacing.md),
@@ -1262,7 +1262,7 @@ class _MemberCard extends StatelessWidget {
             name,
             style: SerenityText.labelButton.copyWith(
               fontSize: 15,
-              color: SerenityColors.primary,
+              color: context.iosLabel,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -1305,15 +1305,15 @@ class _MemberCard extends StatelessWidget {
                 Icon(
                   roleIcon(role),
                   size: 11,
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   roleLabel(role),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                   ),
                 ),
               ],
@@ -1362,7 +1362,7 @@ class _GroupChip extends StatelessWidget {
     return Material(
       color: active
           ? SerenityColors.secondaryContainer
-          : SerenityColors.surfaceContainerLowest,
+          : context.iosCardSurface,
       borderRadius: SerenityShapes.pill(),
       child: InkWell(
         borderRadius: SerenityShapes.pill(),
@@ -1374,7 +1374,7 @@ class _GroupChip extends StatelessWidget {
             border: active
                 ? null
                 : Border.all(
-                    color: SerenityColors.outlineVariant.withValues(alpha: 0.5),
+                    color: context.iosSeparator.withValues(alpha: 0.5),
                   ),
           ),
           child: Text(
@@ -1474,7 +1474,7 @@ class _OutlinePillButton extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: SerenityShapes.pill(),
               border: Border.all(
-                color: SerenityColors.primary.withValues(alpha: 0.2),
+                color: context.iosLabel.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -1482,14 +1482,14 @@ class _OutlinePillButton extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (icon != null) ...[
-                  Icon(icon, color: SerenityColors.primary, size: 20),
+                  Icon(icon, color: context.iosLabel, size: 20),
                   const SizedBox(width: 8),
                 ],
                 Text(
                   label,
                   style: SerenityText.labelButton.copyWith(
                     fontSize: 16,
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 // F27: Poradnik bezpieczeństwa - 12 sekcji rozwijanych
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/design_tokens.dart';
@@ -179,13 +180,13 @@ class SafetyGuideScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surface,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, size: 28),
-          color: SerenityColors.primary,
+          color: context.iosLabel,
           onPressed: () => Navigator.maybePop(context),
           tooltip: 'Wróć',
         ),
@@ -240,7 +241,7 @@ class _GuideCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isContact = section.title == 'Kontakt z be:Safe';
     return Material(
-      color: SerenityColors.surfaceContainerLowest,
+      color: context.iosCardSurface,
       borderRadius: BorderRadius.circular(20),
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
@@ -257,7 +258,7 @@ class _GuideCard extends StatelessWidget {
             child: Icon(section.icon, color: SerenityColors.onSecondaryContainer, size: 22),
           ),
           title: Text(section.title, style: SerenityText.bodyMain.copyWith(
-            fontWeight: FontWeight.w600, color: SerenityColors.primary, height: 1.2,
+            fontWeight: FontWeight.w600, color: context.iosLabel, height: 1.2,
           )),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 2),

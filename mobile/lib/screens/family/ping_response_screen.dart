@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
@@ -152,7 +153,7 @@ class _PingResponseScreenState extends State<PingResponseScreen> {
           children: [
             Text(
               'Co się dzieje? (możesz zostawić puste)',
-              style: TextStyle(color: SerenityColors.onSurfaceVariant, fontSize: 13),
+              style: TextStyle(color: context.iosSecondaryLabel, fontSize: 13),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -205,9 +206,9 @@ class _PingResponseScreenState extends State<PingResponseScreen> {
     final age = _formatAge(_sentAt);
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.close),
@@ -268,7 +269,7 @@ class _PingResponseScreenState extends State<PingResponseScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -301,7 +302,7 @@ class _PingResponseScreenState extends State<PingResponseScreen> {
           Text(
             'prosi o znak życia',
             style: TextStyle(
-                fontSize: 15, color: SerenityColors.onSurfaceVariant),
+                fontSize: 15, color: context.iosSecondaryLabel),
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -328,12 +329,12 @@ class _PingResponseScreenState extends State<PingResponseScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: SerenityColors.onSurfaceVariant),
+          Icon(icon, size: 12, color: context.iosSecondaryLabel),
           const SizedBox(width: 4),
           Text(label,
               style: TextStyle(
                   fontSize: 11,
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                   fontWeight: FontWeight.w500)),
         ],
       ),

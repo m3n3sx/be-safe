@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -155,12 +156,12 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
     }
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(color: SerenityColors.primary),
+        iconTheme: IconThemeData(color: context.iosLabel),
         title: Text(widget.groupName, style: SerenityText.headlineHeroMobile), actions: [
         IconButton(
           icon: const Icon(Icons.chat_bubble_outline),

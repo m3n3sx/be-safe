@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 import '../../models/alert.dart';
 import '../../services/api_service.dart';
@@ -56,7 +57,7 @@ class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -66,8 +67,8 @@ class _StatsScreenState extends State<StatsScreen> {
                   ? const Center(child: CircularProgressIndicator())
                   : RefreshIndicator(
                       onRefresh: _load,
-                      color: SerenityColors.primary,
-                      backgroundColor: SerenityColors.surfaceContainerLowest,
+                      color: context.iosLabel,
+                      backgroundColor: context.iosCardSurface,
                       child: ListView(
                         padding: const EdgeInsets.all(SerenitySpacing.xl),
                         children: [
@@ -126,7 +127,7 @@ class _StatsScreenState extends State<StatsScreen> {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
@@ -195,7 +196,7 @@ class _StatsScreenState extends State<StatsScreen> {
               '${cat?.emoji ?? '⚠️'} ${cat?.label ?? c['category']}',
               style: SerenityText.bodyMain.copyWith(
                 fontSize: 13,
-                color: SerenityColors.primary,
+                color: context.iosLabel,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -208,7 +209,7 @@ class _StatsScreenState extends State<StatsScreen> {
                 value: (c['count'] as int) / maxCount,
                 minHeight: 12,
                 backgroundColor: SerenityColors.surfaceContainer,
-                color: SerenityColors.primary,
+                color: context.iosLabel,
               ),
             ),
           ),

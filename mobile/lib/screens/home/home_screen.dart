@@ -268,8 +268,8 @@ class _HomeScreenState extends State<HomeScreen> {
         bottom: false,
         child: RefreshIndicator(
           onRefresh: _loadData,
-          color: SerenityColors.primary,
-          backgroundColor: SerenityColors.surfaceContainerLowest,
+          color: context.iosLabel,
+          backgroundColor: context.iosCardSurface,
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             slivers: [
@@ -616,7 +616,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: online.color,
-                      border: Border.all(color: SerenityColors.surfaceContainerLowest, width: 2),
+                      border: Border.all(color: context.iosCardSurface, width: 2),
                     ),
                   ),
                 ),

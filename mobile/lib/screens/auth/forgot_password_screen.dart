@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
 
@@ -56,7 +57,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -88,7 +89,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Text(
           'Podaj adres e-mail powiązany z kontem. Wyślemy link do zresetowania hasła.',
           style: SerenityText.bodyMain.copyWith(
-            color: SerenityColors.onSurfaceVariant,
+            color: context.iosSecondaryLabel,
           ),
         ),
         const SizedBox(height: 32),
@@ -151,7 +152,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Text(
           'Jeśli adres ${_email.text.trim()} jest powiązany z kontem, wysłaliśmy na niego link do resetu hasła. Sprawdź także spam.',
           style: SerenityText.bodyMain.copyWith(
-            color: SerenityColors.onSurfaceVariant,
+            color: context.iosSecondaryLabel,
           ),
           textAlign: TextAlign.center,
         ),

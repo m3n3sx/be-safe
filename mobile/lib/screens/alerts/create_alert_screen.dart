@@ -8,6 +8,7 @@ library;
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -139,7 +140,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
         if (shouldPop && mounted) Navigator.pop(context);
       },
       child: Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -212,7 +213,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
           IconButton(
             tooltip: 'Zamknij',
             icon: const Icon(Icons.close, size: 28),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             onPressed: () async {
               final ok = await _confirmDiscard();
               if (ok && mounted) Navigator.pop(context);
@@ -339,7 +340,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
                   style: SerenityText.labelCaps.copyWith(
                     fontSize: 11,
                     letterSpacing: 1.2,
-                    color: SerenityColors.onSurfaceVariant,
+                    color: context.iosSecondaryLabel,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -361,7 +362,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
     return Material(
       color: selected
           ? SerenityColors.primaryContainer
-          : SerenityColors.surfaceContainerLowest,
+          : context.iosCardSurface,
       borderRadius: SerenityShapes.pill(),
       child: InkWell(
         borderRadius: SerenityShapes.pill(),
@@ -397,11 +398,11 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
     return TextField(
       controller: controller,
       maxLines: maxLines,
-      style: SerenityText.bodyMain.copyWith(color: SerenityColors.primary),
+      style: SerenityText.bodyMain.copyWith(color: context.iosLabel),
       decoration: InputDecoration(
         hintText: label,
         hintStyle: SerenityText.bodyMain.copyWith(
-          color: SerenityColors.onSurfaceVariant,
+          color: context.iosSecondaryLabel,
         ),
         filled: true,
         fillColor: SerenityColors.surfaceContainerLow,
@@ -420,7 +421,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
         focusedBorder: OutlineInputBorder(
           borderRadius: SerenityShapes.input(),
           borderSide: BorderSide(
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             width: 1.5,
           ),
         ),
@@ -445,7 +446,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
             top: 8,
             right: 8,
             child: Material(
-              color: SerenityColors.primary.withValues(alpha: 0.6),
+              color: context.iosLabel.withValues(alpha: 0.6),
               shape: const CircleBorder(),
               child: InkWell(
                 customBorder: const CircleBorder(),
@@ -501,13 +502,13 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
           decoration: BoxDecoration(
             borderRadius: SerenityShapes.pill(),
             border: Border.all(
-              color: SerenityColors.primary.withValues(alpha: 0.2),
+              color: context.iosLabel.withValues(alpha: 0.2),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 20, color: SerenityColors.primary),
+              Icon(icon, size: 20, color: context.iosLabel),
               const SizedBox(width: 8),
               Text(
                 label,
@@ -536,7 +537,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
                 ? SerenityColors.onPrimary
                 : SerenityColors.primary,
           ),
-          backgroundColor: SerenityColors.surfaceContainerLowest,
+          backgroundColor: context.iosCardSurface,
           selectedColor: SerenityColors.primaryContainer,
           side: BorderSide.none,
           shape: RoundedRectangleBorder(
@@ -551,12 +552,12 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
   Widget _buildAnonymousToggle() {
     return Container(
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(SerenityShapes.radiusLg),
         border: Border.all(
           color: _isAnonymous
               ? SerenityColors.primaryContainer.withValues(alpha: 0.6)
-              : SerenityColors.outlineVariant,
+              : context.iosSeparator,
           width: _isAnonymous ? 1.5 : 1.0,
         ),
       ),
@@ -589,7 +590,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
               : 'Inni zobaczą Twój nick przy alercie',
           style: TextStyle(
             fontSize: 12,
-            color: SerenityColors.onSurfaceVariant,
+            color: context.iosSecondaryLabel,
           ),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -653,7 +654,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
               hint,
               style: SerenityText.bodyMain.copyWith(
                 fontSize: 12,
-                color: SerenityColors.onSurfaceVariant,
+                color: context.iosSecondaryLabel,
               ),
               textAlign: TextAlign.center,
             ),

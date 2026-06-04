@@ -1,5 +1,6 @@
 // F26: Mental Health SOS - linie zaufania dla osób w kryzysie
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/design_tokens.dart';
@@ -44,13 +45,13 @@ class MentalHealthSosScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surface,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.close, size: 28),
-          color: SerenityColors.primary,
+          color: context.iosLabel,
           onPressed: () => Navigator.maybePop(context),
           tooltip: 'Zamknij',
         ),
@@ -133,7 +134,7 @@ class MentalHealthSosScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Material(
-                color: SerenityColors.surfaceContainerLowest,
+                color: context.iosCardSurface,
                 borderRadius: BorderRadius.circular(16),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(16),
@@ -157,14 +158,14 @@ class MentalHealthSosScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Znajdź psychologa', style: SerenityText.bodyMain.copyWith(
-                                fontWeight: FontWeight.w600, color: SerenityColors.primary)),
+                                fontWeight: FontWeight.w600, color: context.iosLabel)),
                               const SizedBox(height: 2),
                               Text('psycholodzy.pl — baza specjalistów',
                                   style: SerenityText.labelCaps),
                             ],
                           ),
                         ),
-                        Icon(Icons.open_in_new, color: SerenityColors.onSurfaceVariant, size: 20),
+                        Icon(Icons.open_in_new, color: context.iosSecondaryLabel, size: 20),
                       ],
                     ),
                   ),

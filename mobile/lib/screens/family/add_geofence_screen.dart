@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
@@ -108,12 +109,12 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
         if (shouldPop && mounted) Navigator.pop(context);
       },
       child: Scaffold(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         appBar: AppBar(
-          backgroundColor: SerenityColors.surfaceBright,
+          backgroundColor: context.iosBackground,
           surfaceTintColor: Colors.transparent,
           elevation: 0,
-          iconTheme: const IconThemeData(color: SerenityColors.primary),
+          iconTheme: IconThemeData(color: context.iosLabel),
           leading: IconButton(
             icon: const Icon(Icons.close),
             tooltip: 'Zamknij',
@@ -180,17 +181,17 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: SerenityColors.surfaceContainerLowest
+                          color: context.iosCardSurface
                               .withValues(alpha: 0.92),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: SerenityElevation.card(),
                         ),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.touch_app_outlined,
                               size: 18,
-                              color: SerenityColors.primary,
+                              color: context.iosLabel,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
@@ -198,7 +199,7 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                                 'Tapnij na mapę aby ustawić środek strefy. Pinezkę można przeciągnąć.',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: SerenityColors.onSurfaceVariant,
+                                  color: context.iosSecondaryLabel,
                                   height: 1.3,
                                 ),
                               ),
@@ -225,7 +226,7 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1.2,
-                        color: SerenityColors.onSurfaceVariant,
+                        color: context.iosSecondaryLabel,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -236,23 +237,23 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                       decoration: InputDecoration(
                         hintText: 'np. Dom, Szkoła, Babcia',
                         filled: true,
-                        fillColor: SerenityColors.surfaceContainerLowest,
+                        fillColor: context.iosCardSurface,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide(
-                            color: SerenityColors.outlineVariant,
+                            color: context.iosSeparator,
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide(
-                            color: SerenityColors.outlineVariant,
+                            color: context.iosSeparator,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide(
-                            color: SerenityColors.primary,
+                            color: context.iosLabel,
                             width: 2,
                           ),
                         ),
@@ -268,7 +269,7 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1.2,
-                            color: SerenityColors.onSurfaceVariant,
+                            color: context.iosSecondaryLabel,
                           ),
                         ),
                         Container(
@@ -286,7 +287,7 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: SerenityColors.primary,
+                              color: context.iosLabel,
                             ),
                           ),
                         ),
@@ -296,7 +297,7 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                     SliderTheme(
                       data: SliderTheme.of(context).copyWith(
                         activeTrackColor: SerenityColors.primary,
-                        inactiveTrackColor: SerenityColors.outlineVariant,
+                        inactiveTrackColor: context.iosSeparator,
                         thumbColor: SerenityColors.primary,
                         overlayColor: SerenityColors.primary.withValues(
                           alpha: 0.12,
@@ -318,14 +319,14 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                           '50 m',
                           style: TextStyle(
                             fontSize: 11,
-                            color: SerenityColors.onSurfaceVariant,
+                            color: context.iosSecondaryLabel,
                           ),
                         ),
                         Text(
                           '500 m',
                           style: TextStyle(
                             fontSize: 11,
-                            color: SerenityColors.onSurfaceVariant,
+                            color: context.iosSecondaryLabel,
                           ),
                         ),
                       ],
@@ -368,7 +369,7 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                           'Wpisz nazwę aby zapisać strefę',
                           style: TextStyle(
                             fontSize: 12,
-                            color: SerenityColors.onSurfaceVariant,
+                            color: context.iosSecondaryLabel,
                           ),
                         ),
                       ),

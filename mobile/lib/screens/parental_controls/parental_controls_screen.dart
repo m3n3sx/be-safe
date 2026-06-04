@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme/design_tokens.dart';
@@ -68,9 +69,9 @@ class ParentalControlsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surface,
+        backgroundColor: context.iosBackground,
         elevation: 0,
         leading: IconButton(icon: const Icon(Icons.arrow_back), tooltip: 'Wróć', onPressed: () => Navigator.pop(context)),
         title: const Text('Kontrola rodzicielska', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),

@@ -10,6 +10,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -311,7 +312,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      backgroundColor: context.iosCardSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -331,7 +332,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: SerenityColors.outlineVariant,
+                      color: context.iosSeparator,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -342,10 +343,10 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                         Expanded(
                           child: Text(
                             'Widoczność ${widget.userName}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: SerenityColors.primary,
+                              color: context.iosLabel,
                             ),
                           ),
                         ),
@@ -356,25 +357,25 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                       ],
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       'Kontrolujesz co inni członkowie grupy widzą o tym dziecku.',
                       style: TextStyle(
                           fontSize: 12,
-                          color: SerenityColors.onSurfaceVariant),
+                          color: context.iosSecondaryLabel),
                     ),
                   ),
                   const SizedBox(height: 8),
                   Expanded(
                     child: matrix.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: Padding(
                               padding: EdgeInsets.all(24),
                               child: Text(
                                 'Brak innych członków w grupie.',
                                 style: TextStyle(
-                                    color: SerenityColors.onSurfaceVariant),
+                                    color: context.iosSecondaryLabel),
                               ),
                             ),
                           )
@@ -521,12 +522,12 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
     final online = _onlineStatus();
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceBright,
+        backgroundColor: context.iosBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(color: SerenityColors.primary),
+        iconTheme: IconThemeData(color: context.iosLabel),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           tooltip: 'Wróć',
@@ -592,7 +593,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: SerenityElevation.card(),
       ),
@@ -625,7 +626,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                         shape: BoxShape.circle,
                         color: online.color,
                         border: Border.all(
-                          color: SerenityColors.surfaceContainerLowest,
+                          color: context.iosCardSurface,
                           width: 3,
                         ),
                       ),
@@ -684,7 +685,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
               Container(
                   width: 1,
                   height: 36,
-                  color: SerenityColors.outlineVariant
+                  color: context.iosSeparator
                       .withValues(alpha: 0.5)),
               Expanded(
                 child: _miniStat(
@@ -697,7 +698,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
               Container(
                   width: 1,
                   height: 36,
-                  color: SerenityColors.outlineVariant
+                  color: context.iosSeparator
                       .withValues(alpha: 0.5)),
               Expanded(
                 child: _miniStat(
@@ -731,7 +732,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
           Text(label,
               style: TextStyle(
                   fontSize: 10,
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                   letterSpacing: 0.4)),
         ],
       );
@@ -743,21 +744,21 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
       return Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: SerenityColors.surfaceContainerLowest,
+          color: context.iosCardSurface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color: SerenityColors.outlineVariant.withValues(alpha: 0.4)),
+              color: context.iosSeparator.withValues(alpha: 0.4)),
         ),
         child: Row(
           children: [
             Icon(Icons.location_off,
-                size: 32, color: SerenityColors.onSurfaceVariant),
+                size: 32, color: context.iosSecondaryLabel),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 'Brak danych o lokalizacji. Upewnij się, że dziecko ma włączoną aplikację i udostępnianie lokalizacji.',
                 style: SerenityText.bodyMain.copyWith(
-                    fontSize: 13, color: SerenityColors.onSurfaceVariant),
+                    fontSize: 13, color: context.iosSecondaryLabel),
               ),
             ),
           ],
@@ -809,7 +810,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: SerenityColors.surfaceContainerLowest
+                  color: context.iosCardSurface
                       .withValues(alpha: 0.92),
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -864,7 +865,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
     final hasPhone = _phone != null && _phone!.isNotEmpty;
     return Container(
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: SerenityElevation.card(),
       ),
@@ -922,7 +923,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                       height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.swap_horiz, color: SerenityColors.primary),
+                  : Icon(Icons.swap_horiz, color: context.iosLabel),
             ),
             _divider(),
             _actionTile(
@@ -931,7 +932,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
               title: 'Prywatność dziecka',
               subtitle: 'Decyduj, co inni członkowie widzą',
               onTap: _showPrivacySheet,
-              trailing: const Icon(Icons.chevron_right, color: SerenityColors.onSurfaceVariant),
+              trailing: Icon(Icons.chevron_right, color: context.iosSecondaryLabel),
             ),
             _divider(),
             _actionTile(
@@ -957,7 +958,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
   Widget _divider() => Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
         height: 1,
-        color: SerenityColors.outlineVariant.withValues(alpha: 0.3),
+        color: context.iosSeparator.withValues(alpha: 0.3),
       );
 
   Widget _actionTile({
@@ -1000,13 +1001,13 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                     Text(subtitle,
                         style: TextStyle(
                             fontSize: 12,
-                            color: SerenityColors.onSurfaceVariant)),
+                            color: context.iosSecondaryLabel)),
                   ],
                 ),
               ),
               trailing ??
                   Icon(Icons.chevron_right,
-                      color: SerenityColors.onSurfaceVariant
+                      color: context.iosSecondaryLabel
                           .withValues(alpha: 0.5)),
             ],
           ),
@@ -1019,11 +1020,11 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.groups_outlined,
-                size: 14, color: SerenityColors.onSurfaceVariant),
+                size: 14, color: context.iosSecondaryLabel),
             const SizedBox(width: 6),
             Text('Grupa: $_groupName',
                 style: TextStyle(
-                    fontSize: 11, color: SerenityColors.onSurfaceVariant)),
+                    fontSize: 11, color: context.iosSecondaryLabel)),
           ],
         ),
       );
@@ -1062,9 +1063,9 @@ class _ChildPrivacyRowCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: SerenityColors.outlineVariant.withValues(alpha: 0.4)),
+        border: Border.all(color: context.iosSeparator.withValues(alpha: 0.4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1088,7 +1089,7 @@ class _ChildPrivacyRowCard extends StatelessWidget {
                     Text(username,
                         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
                     Text(role,
-                        style: TextStyle(fontSize: 11, color: SerenityColors.onSurfaceVariant)),
+                        style: TextStyle(fontSize: 11, color: context.iosSecondaryLabel)),
                   ],
                 ),
               ),
@@ -1104,7 +1105,7 @@ class _ChildPrivacyRowCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 2),
               child: Row(
                 children: [
-                  Icon(spec.icon, size: 18, color: SerenityColors.onSurfaceVariant),
+                  Icon(spec.icon, size: 18, color: context.iosSecondaryLabel),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(

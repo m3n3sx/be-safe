@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            backgroundColor: SerenityColors.surfaceContainerLowest,
+            backgroundColor: context.iosCardSurface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
             ),
@@ -284,14 +284,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
           Text('Twój Profil', style: SerenityText.headlineHeroMobile),
           IconButton(
             icon: const Icon(Icons.settings_outlined, size: 26),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Ustawienia',
             onPressed: () => Navigator.pushNamed(context, '/settings'),
           ),
@@ -316,7 +316,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 140,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: SerenityColors.surfaceContainerLowest,
+                  color: context.iosCardSurface,
                   boxShadow: SerenityElevation.card(),
                 ),
                 child: ClipOval(
@@ -477,7 +477,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      backgroundColor: context.iosCardSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -502,7 +502,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: 48,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: SerenityColors.outlineVariant,
+                    color: context.iosSeparator,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),

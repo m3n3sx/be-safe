@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import '../../theme/design_tokens.dart';
 
 class LegalScreen extends StatelessWidget {
@@ -8,7 +9,7 @@ class LegalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -21,7 +22,7 @@ class LegalScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 28),
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -45,7 +46,7 @@ class LegalScreen extends StatelessWidget {
                   type == 'terms' ? _terms : _privacy,
                   style: SerenityText.bodyMain.copyWith(
                     fontSize: 14,
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     height: 1.6,
                   ),
                 ),

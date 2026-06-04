@@ -7,6 +7,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../theme/design_tokens.dart';
 import '../../widgets/glow_orb.dart';
@@ -66,7 +67,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final isLast = _page == _pages.length - 1;
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -108,7 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           child: Icon(
                             p.icon,
                             size: 72,
-                            color: SerenityColors.primary,
+                            color: context.iosLabel,
                           ),
                         ),
                         const SizedBox(height: SerenitySpacing.xxxl),
@@ -144,7 +145,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   decoration: BoxDecoration(
                     color: _page == i
                         ? SerenityColors.primary
-                        : SerenityColors.outlineVariant,
+                        : context.iosSeparator,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),

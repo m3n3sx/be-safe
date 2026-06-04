@@ -123,14 +123,14 @@ ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {
     // App bar — flat, transparent, light text
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
-      foregroundColor: colorScheme.primary,
+      foregroundColor: colorScheme.onSurface,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: true,
       titleTextStyle: SerenityText.headlineHeroMobile.copyWith(
-        color: colorScheme.primary,
+        color: colorScheme.onSurface,
       ),
-      iconTheme: IconThemeData(color: colorScheme.primary),
+      iconTheme: IconThemeData(color: colorScheme.onSurface),
     ),
 
     // Buttons — pill-shaped, primaryContainer fill, white text
@@ -240,7 +240,7 @@ ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {
     ),
 
     // Icons — match text weight (thin)
-    iconTheme: IconThemeData(color: colorScheme.primary, size: 24),
+    iconTheme: IconThemeData(color: colorScheme.onSurface, size: 24),
 
     // NavigationBar (Material 3) — fallback when not using custom pill nav
     navigationBarTheme: NavigationBarThemeData(
@@ -288,31 +288,31 @@ ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {
 TextTheme _textTheme(ColorScheme c) {
   // Map M3 default text roles to Serenity tokens.
   return TextTheme(
-    displayLarge: SerenityText.displayLg.copyWith(color: c.primary),
-    displayMedium: SerenityText.displayMd.copyWith(color: c.primary),
-    displaySmall: SerenityText.headlineHero.copyWith(color: c.primary),
-    headlineLarge: SerenityText.headlineHero.copyWith(color: c.primary),
-    headlineMedium: SerenityText.headlineHeroMobile.copyWith(color: c.primary),
+    displayLarge: SerenityText.displayLg.copyWith(color: c.onSurface),
+    displayMedium: SerenityText.displayMd.copyWith(color: c.onSurface),
+    displaySmall: SerenityText.headlineHero.copyWith(color: c.onSurface),
+    headlineLarge: SerenityText.headlineHero.copyWith(color: c.onSurface),
+    headlineMedium: SerenityText.headlineHeroMobile.copyWith(color: c.onSurface),
     headlineSmall: SerenityText.headlineHeroMobile.copyWith(
-      color: c.primary,
+      color: c.onSurface,
       fontSize: 24,
     ),
     titleLarge: SerenityText.labelButton.copyWith(
       fontSize: 20,
-      color: c.primary,
+      color: c.onSurface,
     ),
     titleMedium: SerenityText.labelButton.copyWith(
       fontSize: 16,
-      color: c.primary,
+      color: c.onSurface,
     ),
-    titleSmall: SerenityText.labelButton.copyWith(color: c.primary),
+    titleSmall: SerenityText.labelButton.copyWith(color: c.onSurface),
     bodyLarge: SerenityText.bodyMain.copyWith(color: c.onSurface),
     bodyMedium: SerenityText.bodyMain.copyWith(color: c.onSurfaceVariant),
     bodySmall: SerenityText.bodyMain.copyWith(
       fontSize: 14,
       color: c.onSurfaceVariant,
     ),
-    labelLarge: SerenityText.labelButton.copyWith(color: c.primary),
+    labelLarge: SerenityText.labelButton.copyWith(color: c.onSurface),
     labelMedium: SerenityText.labelCaps.copyWith(color: c.onSurfaceVariant),
     labelSmall: SerenityText.labelCaps.copyWith(
       color: c.onSurfaceVariant,

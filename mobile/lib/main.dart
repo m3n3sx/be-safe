@@ -141,18 +141,31 @@ class AlertMapApp extends StatelessWidget {
                   useMaterial3: true,
                 ),
           home: const _AuthGate(),
-          builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
-            value: const SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.dark,
-              statusBarBrightness: Brightness.light,
-              systemStatusBarContrastEnforced: false,
-              systemNavigationBarColor: Color(0xFFF2F2F7),
-              systemNavigationBarIconBrightness: Brightness.dark,
-              systemNavigationBarContrastEnforced: false,
-            ),
-            child: GlobalDockOverlay(child: child ?? const SizedBox.shrink()),
-          ),
+          builder: (context, child) {
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+            final onSurface = Theme.of(context).colorScheme.onSurface;
+            return AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+                statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+                systemStatusBarContrastEnforced: false,
+                // Dark: nav bar zlewa się z ciemnym tłem; Light: jasny grouped bg.
+                systemNavigationBarColor:
+                    isDark ? const Color(0xFF0A0E14) : const Color(0xFFF2F2F7),
+                systemNavigationBarIconBrightness:
+                    isDark ? Brightness.light : Brightness.dark,
+                systemNavigationBarContrastEnforced: false,
+              ),
+              // Domyślny kolor tekstu dla bezkolorowych styli SerenityText —
+              // dziedziczą onSurface, więc adaptują się do trybu (near-black /
+              // near-white). Styl secondary (secondaryLabel) zostaje per-styl.
+              child: DefaultTextStyle.merge(
+                style: TextStyle(color: onSurface, fontFamily: 'Inter'),
+                child: GlobalDockOverlay(child: child ?? const SizedBox.shrink()),
+              ),
+            );
+          },
           onGenerateRoute: (settings) {
             final uri = Uri.parse(settings.name ?? '');
             if (uri.pathSegments.length == 2 && uri.pathSegments[0] == 'family') {

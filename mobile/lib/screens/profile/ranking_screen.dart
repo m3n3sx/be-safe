@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
@@ -41,7 +42,7 @@ class _RankingScreenState extends State<RankingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -54,7 +55,7 @@ class _RankingScreenState extends State<RankingScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 28),
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -113,7 +114,7 @@ class _RankingScreenState extends State<RankingScreen> {
                                         style: TextStyle(
                                           fontSize: isTop ? 22 : 16,
                                           fontWeight: FontWeight.w500,
-                                          color: SerenityColors.primary,
+                                          color: context.iosLabel,
                                         ),
                                       ),
                                     ),

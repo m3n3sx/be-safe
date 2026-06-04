@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/design_tokens.dart';
@@ -44,7 +45,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -57,7 +58,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 28),
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -135,7 +136,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                               style: SerenityText.labelCaps),
                         ],
                       )),
-                      Icon(Icons.chevron_right, color: SerenityColors.onSurfaceVariant),
+                      Icon(Icons.chevron_right, color: context.iosSecondaryLabel),
                     ]),
                   )),
                   const SizedBox(height: SerenitySpacing.md),
@@ -161,7 +162,7 @@ class EmergencyNumbersScreen extends StatelessWidget {
                               ),
                               child: Icon(
                                 n.icon,
-                                color: SerenityColors.primary,
+                                color: context.iosLabel,
                                 size: 20,
                               ),
                             ),

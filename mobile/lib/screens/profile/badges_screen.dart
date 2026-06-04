@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
@@ -50,7 +51,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: SerenityColors.surfaceContainerLowest,
+        backgroundColor: context.iosCardSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
         ),
@@ -99,7 +100,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
           border: Border.all(
             color: earned
                 ? color.withValues(alpha: 0.4)
-                : SerenityColors.outlineVariant.withValues(alpha: 0.4),
+                : context.iosSeparator.withValues(alpha: 0.4),
             width: 1.5,
           ),
         ),
@@ -136,7 +137,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -149,7 +150,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 28),
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -169,7 +170,7 @@ class _BadgesScreenState extends State<BadgesScreen> {
                               Icon(
                                 Icons.workspace_premium_outlined,
                                 size: 64,
-                                color: SerenityColors.outlineVariant,
+                                color: context.iosSeparator,
                               ),
                               const SizedBox(height: 16),
                               Text(
@@ -181,9 +182,9 @@ class _BadgesScreenState extends State<BadgesScreen> {
                         )
                       : RefreshIndicator(
                           onRefresh: _load,
-                          color: SerenityColors.primary,
+                          color: context.iosLabel,
                           backgroundColor:
-                              SerenityColors.surfaceContainerLowest,
+                              context.iosCardSurface,
                           child: ListView(
                             padding: const EdgeInsets.all(SerenitySpacing.xl),
                             children: [

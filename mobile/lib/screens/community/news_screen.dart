@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
 import '../../theme/design_tokens.dart';
@@ -43,7 +44,7 @@ class _NewsScreenState extends State<NewsScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      backgroundColor: context.iosCardSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -60,7 +61,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 width: 48,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: SerenityColors.outlineVariant,
+                  color: context.iosSeparator,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -97,7 +98,7 @@ class _NewsScreenState extends State<NewsScreen> {
               p['content'] ?? '',
               style: SerenityText.bodyMain.copyWith(
                 fontSize: 15,
-                color: SerenityColors.primary,
+                color: context.iosLabel,
                 height: 1.6,
               ),
             ),
@@ -110,7 +111,7 @@ class _NewsScreenState extends State<NewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -123,7 +124,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back, size: 28),
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     tooltip: 'Wróć',
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -135,7 +136,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.groups, size: 26),
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     tooltip: 'Czat sąsiedzki',
                     onPressed: () => Navigator.push(
                       context,
@@ -157,7 +158,7 @@ class _NewsScreenState extends State<NewsScreen> {
                               Icon(
                                 Icons.article_outlined,
                                 size: 64,
-                                color: SerenityColors.outlineVariant,
+                                color: context.iosSeparator,
                               ),
                               const SizedBox(height: 16),
                               Text(
@@ -169,9 +170,9 @@ class _NewsScreenState extends State<NewsScreen> {
                         )
                       : RefreshIndicator(
                           onRefresh: _load,
-                          color: SerenityColors.primary,
+                          color: context.iosLabel,
                           backgroundColor:
-                              SerenityColors.surfaceContainerLowest,
+                              context.iosCardSurface,
                           child: ListView.separated(
                             padding: const EdgeInsets.fromLTRB(
                               SerenitySpacing.xl,
@@ -224,7 +225,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                       style: SerenityText.labelButton
                                           .copyWith(
                                         fontSize: 17,
-                                        color: SerenityColors.primary,
+                                        color: context.iosLabel,
                                       ),
                                     ),
                                     const SizedBox(height: 4),

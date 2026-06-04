@@ -1,6 +1,7 @@
 // F03: Eskorta / Follow Me — wybór watchera, monitorowanie ETA, "DOTARŁEM"
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
@@ -46,10 +47,10 @@ class _EscortScreenState extends State<EscortScreen> {
   Widget build(BuildContext context) {
     final myId = context.read<AuthProvider>().user?.id;
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
         title: const Text('Eskorta — Follow Me'),
-        backgroundColor: SerenityColors.surface,
+        backgroundColor: context.iosBackground,
         foregroundColor: SerenityColors.primary,
         elevation: 0,
         leading: IconButton(
@@ -232,7 +233,7 @@ class _EscortStartViewState extends State<_EscortStartView> {
             Container(
               padding: const EdgeInsets.all(SerenitySpacing.lg),
               decoration: BoxDecoration(
-                color: SerenityColors.surfaceContainerLowest,
+                color: context.iosCardSurface,
                 borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
               ),
               child: Text(
@@ -430,7 +431,7 @@ class _EscortRequesterViewState extends State<_EscortRequesterView> {
         ),
         Container(
           padding: const EdgeInsets.all(SerenitySpacing.xl),
-          color: SerenityColors.surfaceContainerLowest,
+          color: context.iosCardSurface,
           child: Column(
             children: [
               Text(
@@ -539,7 +540,7 @@ class _EscortWatcherView extends StatelessWidget {
         ),
         Container(
           padding: const EdgeInsets.all(SerenitySpacing.xl),
-          color: SerenityColors.surfaceContainerLowest,
+          color: context.iosCardSurface,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

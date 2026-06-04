@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -182,7 +183,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
     final firstName = _firstName(user?.username);
 
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -214,7 +215,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
                       icon: Icons.family_restroom,
                       iconBg: SerenityColors.secondaryContainer,
                       iconColor: SerenityColors.onSecondaryContainer,
-                      backgroundColor: SerenityColors.surfaceContainerLowest,
+                      backgroundColor: context.iosCardSurface,
                       foregroundColor: SerenityColors.primaryContainer,
                       onTap: _openFamily,
                       bordered: true,
@@ -226,7 +227,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
                       icon: Icons.phone_in_talk,
                       iconBg: SerenityColors.glowCalmAqua,
                       iconColor: SerenityColors.primaryContainer,
-                      backgroundColor: SerenityColors.surfaceContainerLowest,
+                      backgroundColor: context.iosCardSurface,
                       foregroundColor: SerenityColors.primaryContainer,
                       onTap: _callDoctor,
                       bordered: true,
@@ -240,7 +241,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
                         alpha: 0.20,
                       ),
                       iconColor: SerenityColors.glowAlertCoral,
-                      backgroundColor: SerenityColors.surfaceContainerLowest,
+                      backgroundColor: context.iosCardSurface,
                       foregroundColor: SerenityColors.primaryContainer,
                       onTap: _openGuide,
                       bordered: true,
@@ -274,7 +275,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
                 Text(
                   'DZIEŃ DOBRY',
                   style: SerenityText.labelCaps.copyWith(
-                    color: SerenityColors.onSurfaceVariant,
+                    color: context.iosSecondaryLabel,
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.4,
                   ),
@@ -282,10 +283,10 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
                 const SizedBox(height: 4),
                 Text(
                   firstName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w500,
-                    color: SerenityColors.primary,
+                    color: context.iosLabel,
                     letterSpacing: -0.5,
                     height: 1.1,
                   ),
@@ -296,7 +297,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
           Tooltip(
             message: 'Powiadomienia',
             child: Material(
-              color: SerenityColors.surfaceContainerLowest,
+              color: context.iosCardSurface,
               borderRadius: BorderRadius.circular(16),
               child: InkWell(
                 onTap: _openNotifications,
@@ -307,14 +308,14 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: SerenityColors.outlineVariant,
+                      color: context.iosSeparator,
                       width: 1.5,
                     ),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.notifications_outlined,
                     size: 32,
-                    color: SerenityColors.onSurfaceVariant,
+                    color: context.iosSecondaryLabel,
                   ),
                 ),
               ),
@@ -329,7 +330,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
     return Container(
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -379,7 +380,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
               fontSize: 22,
               height: 1.2,
               fontWeight: FontWeight.w600,
-              color: SerenityColors.primary,
+              color: context.iosLabel,
             ),
           ),
           const SizedBox(height: 6),
@@ -387,7 +388,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
             'Ostatnia aktualizacja: $_nowHHMM',
             style: TextStyle(
               fontSize: 16,
-              color: SerenityColors.onSurfaceVariant,
+              color: context.iosSecondaryLabel,
             ),
           ),
           const SizedBox(height: 24),
@@ -573,7 +574,7 @@ class _SeniorBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
+        color: context.iosCardSurface,
         border: Border(
           top: BorderSide(color: SerenityColors.surfaceContainerHigh, width: 1),
         ),

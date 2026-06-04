@@ -3,6 +3,7 @@
 // Socket 'neighborhood:message' + polling 15s. Wysyła lat/lng do backendu.
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
@@ -140,9 +141,9 @@ class _NeighborhoodChatScreenState extends State<NeighborhoodChatScreen> {
   Widget build(BuildContext context) {
     final myId = context.watch<AuthProvider>().user?.id;
     return Scaffold(
-      backgroundColor: SerenityColors.surface,
+      backgroundColor: context.iosBackground,
       appBar: AppBar(
-        backgroundColor: SerenityColors.surfaceContainerLowest,
+        backgroundColor: context.iosCardSurface,
         elevation: 0,
         leading: IconButton(
           tooltip: 'Wróć',
@@ -155,11 +156,11 @@ class _NeighborhoodChatScreenState extends State<NeighborhoodChatScreen> {
             Text('Sąsiedzi',
                 style: SerenityText.bodyMain.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: SerenityColors.primary,
+                  color: context.iosLabel,
                 )),
             Text('W promieniu 2 km',
                 style: SerenityText.labelCaps.copyWith(
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                 )),
           ],
         ),
@@ -204,16 +205,16 @@ class _NeighborhoodChatScreenState extends State<NeighborhoodChatScreen> {
             children: [
               Icon(Icons.location_off,
                   size: 64,
-                  color: SerenityColors.onSurfaceVariant.withValues(alpha: 0.4)),
+                  color: context.iosSecondaryLabel.withValues(alpha: 0.4)),
               const SizedBox(height: 16),
               Text('Brak lokalizacji',
                   style: SerenityText.headlineHeroMobile
-                      .copyWith(color: SerenityColors.onSurfaceVariant)),
+                      .copyWith(color: context.iosSecondaryLabel)),
               const SizedBox(height: 8),
               Text('Udostępnij lokalizację, aby zobaczyć czat sąsiedzki.',
                   textAlign: TextAlign.center,
                   style: SerenityText.bodyMain
-                      .copyWith(color: SerenityColors.onSurfaceVariant)),
+                      .copyWith(color: context.iosSecondaryLabel)),
               const SizedBox(height: 16),
               TextButton(onPressed: _init, child: const Text('Spróbuj ponownie')),
             ],
@@ -227,15 +228,15 @@ class _NeighborhoodChatScreenState extends State<NeighborhoodChatScreen> {
           children: [
             Icon(Icons.groups_outlined,
                 size: 64,
-                color: SerenityColors.onSurfaceVariant.withValues(alpha: 0.4)),
+                color: context.iosSecondaryLabel.withValues(alpha: 0.4)),
             const SizedBox(height: 16),
             Text('Cisza w okolicy',
                 style: SerenityText.headlineHeroMobile
-                    .copyWith(color: SerenityColors.onSurfaceVariant)),
+                    .copyWith(color: context.iosSecondaryLabel)),
             const SizedBox(height: 8),
             Text('Napisz pierwszą wiadomość do sąsiadów',
                 style: SerenityText.bodyMain
-                    .copyWith(color: SerenityColors.onSurfaceVariant)),
+                    .copyWith(color: context.iosSecondaryLabel)),
           ],
         ),
       );
@@ -281,7 +282,7 @@ class _NeighborhoodChatScreenState extends State<NeighborhoodChatScreen> {
               decoration: BoxDecoration(
                 color: mine
                     ? SerenityColors.primaryContainer
-                    : SerenityColors.surfaceContainerLowest,
+                    : context.iosCardSurface,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(18),
                   topRight: const Radius.circular(18),
@@ -323,8 +324,8 @@ class _NeighborhoodChatScreenState extends State<NeighborhoodChatScreen> {
     return Container(
       padding: EdgeInsets.fromLTRB(12, 8, 12, 8 + bottom),
       decoration: BoxDecoration(
-        color: SerenityColors.surfaceContainerLowest,
-        border: Border(top: BorderSide(color: SerenityColors.outlineVariant)),
+        color: context.iosCardSurface,
+        border: Border(top: BorderSide(color: context.iosSeparator)),
       ),
       child: SafeArea(
         top: false,

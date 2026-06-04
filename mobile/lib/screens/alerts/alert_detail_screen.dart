@@ -7,6 +7,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -180,7 +181,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
     HapticFeedback.lightImpact();
     final reason = await showModalBottomSheet<String>(
       context: context,
-      backgroundColor: SerenityColors.surfaceContainerLowest,
+      backgroundColor: context.iosCardSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -193,7 +194,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
               width: 48,
               height: 4,
               decoration: BoxDecoration(
-                color: SerenityColors.outlineVariant,
+                color: context.iosSeparator,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -263,7 +264,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
     final confirmPct = total > 0 ? a.confirms / total : 0.5;
 
     return Scaffold(
-      backgroundColor: SerenityColors.surfaceBright,
+      backgroundColor: context.iosBackground,
       body: SafeArea(
         child: Column(
           children: [
@@ -314,7 +315,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
                             a.description!,
                             style: SerenityText.bodyMain.copyWith(
                               fontSize: 15,
-                              color: SerenityColors.primary,
+                              color: context.iosLabel,
                               height: 1.5,
                             ),
                           ),
@@ -358,7 +359,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, size: 28),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Wróć',
             onPressed: () => Navigator.pop(context),
           ),
@@ -371,7 +372,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.share_outlined),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Udostępnij alert',
             onPressed: () => Share.share(
               '⚠️ ${a.title}\n\n${a.description ?? ""}\n\n'
@@ -381,7 +382,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.flag_outlined),
-            color: SerenityColors.primary,
+            color: context.iosLabel,
             tooltip: 'Zgłoś nadużycie',
             onPressed: _reportAlert,
           ),
@@ -456,7 +457,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: SerenityColors.onSurfaceVariant),
+          Icon(icon, size: 14, color: context.iosSecondaryLabel),
           const SizedBox(width: 6),
           Text(text, style: SerenityText.labelCaps.copyWith(fontSize: 11)),
         ],
@@ -478,7 +479,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
             : SerenityColors.surfaceContainer,
         borderRadius: BorderRadius.circular(SerenityShapes.radiusFull),
         border: a.authorVerified
-            ? Border.all(color: SerenityColors.primary, width: 1)
+            ? Border.all(color: context.iosLabel, width: 1)
             : null,
       ),
       child: Row(
@@ -635,7 +636,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
         Icon(
           Icons.chat_bubble_outline,
           size: 18,
-          color: SerenityColors.onSurfaceVariant,
+          color: context.iosSecondaryLabel,
         ),
         const SizedBox(width: 8),
         Text(
@@ -694,7 +695,7 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
                     c['content'] ?? '',
                     style: SerenityText.bodyMain.copyWith(
                       fontSize: 14,
-                      color: SerenityColors.primary,
+                      color: context.iosLabel,
                     ),
                   ),
                 ],
@@ -715,10 +716,10 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
         MediaQuery.of(context).padding.bottom + 8,
       ),
       decoration: BoxDecoration(
-        color: SerenityColors.surface,
+        color: context.iosBackground,
         border: Border(
           top: BorderSide(
-            color: SerenityColors.outlineVariant.withValues(alpha: 0.4),
+            color: context.iosSeparator.withValues(alpha: 0.4),
           ),
         ),
       ),
@@ -728,12 +729,12 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
             child: TextField(
               controller: _commentCtrl,
               style: SerenityText.bodyMain.copyWith(
-                color: SerenityColors.primary,
+                color: context.iosLabel,
               ),
               decoration: InputDecoration(
                 hintText: 'Dodaj komentarz...',
                 hintStyle: SerenityText.bodyMain.copyWith(
-                  color: SerenityColors.onSurfaceVariant,
+                  color: context.iosSecondaryLabel,
                 ),
                 filled: true,
                 fillColor: SerenityColors.surfaceContainerLow,

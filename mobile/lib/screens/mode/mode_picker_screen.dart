@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
@@ -123,7 +124,7 @@ class _ModePickerScreenState extends State<ModePickerScreen> {
                         'Możesz to zmienić w dowolnym momencie',
                         textAlign: TextAlign.center,
                         style: SerenityText.labelButton.copyWith(
-                          color: SerenityColors.onSurfaceVariant,
+                          color: context.iosSecondaryLabel,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -214,9 +215,9 @@ class _ModePickerScreenState extends State<ModePickerScreen> {
                             vertical: SerenitySpacing.xs,
                           ),
                           decoration: BoxDecoration(
-                            color: SerenityColors.surface,
+                            color: context.iosBackground,
                             border: Border.all(
-                              color: SerenityColors.outlineVariant,
+                              color: context.iosSeparator,
                             ),
                             borderRadius: SerenityShapes.pill(),
                           ),
@@ -224,7 +225,7 @@ class _ModePickerScreenState extends State<ModePickerScreen> {
                             'Wybór możesz zmienić w Ustawienia → Tryb aplikacji',
                             textAlign: TextAlign.center,
                             style: SerenityText.labelCaps.copyWith(
-                              color: SerenityColors.outlineVariant,
+                              color: context.iosSeparator,
                               fontSize: 11,
                               letterSpacing: 0,
                             ),
@@ -322,7 +323,7 @@ class _ModeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: SerenityColors.surfaceContainerLowest,
+      color: context.iosCardSurface,
       borderRadius: SerenityShapes.card(),
       child: InkWell(
         onTap: submitting ? null : onTap,
@@ -369,7 +370,7 @@ class _ModeCard extends StatelessWidget {
                     Text(
                       description,
                       style: SerenityText.labelButton.copyWith(
-                        color: SerenityColors.onSurfaceVariant,
+                        color: context.iosSecondaryLabel,
                         fontWeight: FontWeight.w400,
                         height: 1.4,
                       ),
@@ -386,12 +387,12 @@ class _ModeCard extends StatelessWidget {
                       ),
                       child: Text(
                         badge,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.6,
-                          color: SerenityColors.onSurfaceVariant,
+                          color: context.iosSecondaryLabel,
                         ),
                       ),
                     ),
@@ -404,17 +405,17 @@ class _ModeCard extends StatelessWidget {
                 height: 64,
                 child: Center(
                   child: submitting
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 18,
                           height: 18,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: SerenityColors.primary,
+                            color: context.iosLabel,
                           ),
                         )
-                      : const Icon(
+                      : Icon(
                           Icons.chevron_right,
-                          color: SerenityColors.outlineVariant,
+                          color: context.iosSeparator,
                           size: 24,
                         ),
                 ),
