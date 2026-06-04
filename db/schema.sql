@@ -23,6 +23,7 @@ CREATE TABLE users (
     last_seen_at TIMESTAMPTZ,
     last_battery_level INT,
     last_battery_at TIMESTAMPTZ,
+    ghost_until TIMESTAMPTZ,  -- F23: czasowy ghost mode — ukrywa lokalizację przed rodziną do tego czasu
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

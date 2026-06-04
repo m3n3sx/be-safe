@@ -299,6 +299,10 @@ class _FamilyScreenState extends State<FamilyScreen> {
   int _activeGroup = 0;
   List<dynamic> _members = [];
   bool _loading = true;
+  DateTime? _ghostUntil; // F23 czasowy ghost (własny)
+
+  bool get _isGhosting =>
+      _ghostUntil != null && _ghostUntil!.isAfter(DateTime.now());
 
   @override
   void initState() {
@@ -344,6 +348,52 @@ class _FamilyScreenState extends State<FamilyScreen> {
       _members = members;
     } catch (_) {
       _members = [];
+    }
+    await _loadGhost();
+  }
+
+  Future<void> _loadGhost() async {
+    try {
+      final me = await context.read<ApiService>().get('/users/me');
+      final g = me['ghost_until'];
+      _ghostUntil = g != null ? DateTime.tryParse(g.toString()) : null;
+    } catch (_) {}
+  }
+
+  Future<void> _toggleGhost() async {
+    final api = context.read<ApiService>();
+    if (_isGhosting) {
+      await api.delete('/users/me/ghost');
+      if (mounted) setState(() => _ghostUntil = null);
+      return;
+    }
+    final hours = await showModalBottomSheet<double>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('Ukryj moją lokalizację na:',
+                  style: TextStyle(fontWeight: FontWeight.w600)),
+            ),
+            for (final h in [1.0, 2.0, 4.0, 8.0])
+              ListTile(
+                leading: const Icon(Icons.visibility_off),
+                title: Text('${h.toInt()} godz.'),
+                onTap: () => Navigator.pop(ctx, h),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (hours == null) return;
+    final res = await api.put('/users/me/ghost', {'hours': hours});
+    final g = res['ghost_until'];
+    if (mounted) {
+      setState(() => _ghostUntil =
+          g != null ? DateTime.tryParse(g.toString()) : null);
     }
   }
 
@@ -682,6 +732,19 @@ class _FamilyScreenState extends State<FamilyScreen> {
             child: _buildTopBar(
               actions: [
                 IconButton(
+                  icon: Icon(
+                    _isGhosting ? Icons.visibility_off : Icons.visibility,
+                    size: 26,
+                  ),
+                  color: _isGhosting
+                      ? SerenityColors.glowAlertCoral
+                      : SerenityColors.primary,
+                  tooltip: _isGhosting
+                      ? 'Ghost mode włączony — pokaż lokalizację'
+                      : 'Ukryj moją lokalizację (Ghost)',
+                  onPressed: _toggleGhost,
+                ),
+                IconButton(
                   icon: const Icon(Icons.qr_code_2, size: 26),
                   color: SerenityColors.primary,
                   tooltip: 'Pokaż kod zaproszenia',
@@ -801,6 +864,24 @@ class _FamilyScreenState extends State<FamilyScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(_statusMessage(), style: SerenityText.bodyMain),
+                if (_isGhosting) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.visibility_off,
+                          size: 16, color: SerenityColors.glowAlertCoral),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Jesteś niewidoczny/a',
+                        style: SerenityText.bodyMain.copyWith(
+                          color: SerenityColors.glowAlertCoral,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

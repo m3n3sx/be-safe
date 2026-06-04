@@ -244,7 +244,7 @@ router.get('/groups/:id/members', memberOf, async (req, res) => {
     `SELECT m.user_id, u.username, u.avatar_url, u.phone, m.role, m.tracking_enabled,
             m.school_hours_silent, u.app_mode,
             ST_Y(u.last_location::geometry) AS lat, ST_X(u.last_location::geometry) AS lng,
-            u.last_location_at, u.last_seen_at, u.last_battery_level
+            u.last_location_at, u.last_seen_at, u.last_battery_level, u.ghost_until
      FROM family_members m JOIN users u ON m.user_id = u.id WHERE m.group_id = $1`,
     [req.params.id]
   );
@@ -257,7 +257,10 @@ router.get('/groups/:id/members', memberOf, async (req, res) => {
     }
     const vis = await getVisibility(req.params.id, req.user.id, r.user_id);
     const out = { ...r };
-    if (!vis.location) { out.lat = null; out.lng = null; out.last_location_at = null; }
+    // F23 czasowy ghost: ukrywa lokalizację przed wszystkimi do ghost_until (nadrzędne nad matrycą).
+    const ghosting = r.ghost_until && new Date(r.ghost_until) > new Date();
+    if (!vis.location || ghosting) { out.lat = null; out.lng = null; out.last_location_at = null; }
+    out.is_ghosting = !!ghosting;
     if (!vis.battery) out.last_battery_level = null;
     if (!vis.online) out.last_seen_at = null;
     if (!vis.phone) out.phone = null;

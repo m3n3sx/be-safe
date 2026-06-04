@@ -38,7 +38,7 @@ router.get('/me', async (req, res) => {
   const { rows } = await db.query(
     `SELECT u.id, u.email, u.username, u.avatar_url, u.alert_radius_m, u.reputation_score,
             u.is_child, u.phone, u.is_kpp, u.kpp_certificate, u.email_verified, u.referral_code, u.app_mode, u.created_at,
-            u.is_admin, u.is_banned, u.is_verified, u.verified_role,
+            u.is_admin, u.is_banned, u.is_verified, u.verified_role, u.ghost_until,
             (SELECT COUNT(*)::int FROM users WHERE referred_by = u.id) AS referrals_count
      FROM users u WHERE u.id = $1`,
     [req.user.id]
@@ -72,6 +72,24 @@ router.put('/me/location', async (req, res) => {
   );
   const { rows } = await db.query(`SELECT * FROM find_alerts_nearby($1, $2, (SELECT alert_radius_m FROM users WHERE id = $3))`, [lat, lng, req.user.id]);
   res.json({ nearby_alerts: rows });
+});
+
+// F23 czasowy ghost mode: ukryj swoją lokalizację przed rodziną na N godzin (0.5–24).
+router.put('/me/ghost', async (req, res) => {
+  const hours = Number(req.body.hours);
+  if (!Number.isFinite(hours) || hours <= 0 || hours > 24) {
+    return res.status(400).json({ error: 'hours must be 0–24' });
+  }
+  const { rows } = await db.query(
+    `UPDATE users SET ghost_until = NOW() + ($1 || ' hours')::interval WHERE id = $2 RETURNING ghost_until`,
+    [hours, req.user.id]
+  );
+  res.json({ ok: true, ghost_until: rows[0].ghost_until });
+});
+
+router.delete('/me/ghost', async (req, res) => {
+  await db.query(`UPDATE users SET ghost_until = NULL WHERE id = $1`, [req.user.id]);
+  res.json({ ok: true, ghost_until: null });
 });
 
 router.put('/me/fcm-token', async (req, res) => {
