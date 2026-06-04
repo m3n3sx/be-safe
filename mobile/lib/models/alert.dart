@@ -4,7 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 enum AlertCategory {
   aggression, theft, accident, fire, flood, ice, construction,
   animal, darkArea, drugs, police, weather, other,
-  strangerDanger, trafficDanger, playgroundHazard, waterHazard, schoolZone;
+  strangerDanger, trafficDanger, playgroundHazard, waterHazard, schoolZone,
+  pothole, darkPassage, brokenLights;
 
   String get label => switch (this) {
     aggression => 'Agresywne osoby',
@@ -25,6 +26,9 @@ enum AlertCategory {
     playgroundHazard => 'Uszkodzony plac zabaw',
     waterHazard => 'Zbiornik wodny',
     schoolZone => 'Strefa szkolna',
+    pothole => 'Dziura w drodze',
+    darkPassage => 'Ciemny zaułek / przejście',
+    brokenLights => 'Niesprawne oświetlenie',
   };
 
   // Mapowanie zgodne z designem Serenity Guard (refined_map_markers_be_safe).
@@ -48,6 +52,9 @@ enum AlertCategory {
     playgroundHazard => Icons.child_friendly,
     waterHazard => Icons.water,
     schoolZone => Icons.school,
+    pothole => Icons.dangerous,
+    darkPassage => Icons.nightlight,
+    brokenLights => Icons.lightbulb_outline,
   };
 
   Color get color => switch (this) {
@@ -69,6 +76,9 @@ enum AlertCategory {
     playgroundHazard => const Color(0xFFFFAB00),
     waterHazard => const Color(0xFF2979FF),
     schoolZone => const Color(0xFFFF6D00),
+    pothole => const Color(0xFFFFAB00),
+    darkPassage => const Color(0xFF78909C),
+    brokenLights => const Color(0xFFFFAB00),
   };
 
   // Zachowuję emoji dla kompatybilności (chip labels w filtrach)
@@ -78,6 +88,7 @@ enum AlertCategory {
     darkArea => '🌑', drugs => '💉', police => '🚨', weather => '⛈️',
     other => '⚠️', strangerDanger => '😈', trafficDanger => '☠️',
     playgroundHazard => '⛔', waterHazard => '🌀', schoolZone => '🚸',
+    pothole => '🕳️', darkPassage => '🌃', brokenLights => '💡',
   };
 
   String get apiValue => name.replaceAllMapped(RegExp(r'[A-Z]'), (m) => '_${m[0]!.toLowerCase()}');

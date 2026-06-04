@@ -4,7 +4,8 @@ export type AlertCategory =
   | 'aggression' | 'theft' | 'accident' | 'fire' | 'flood'
   | 'ice' | 'construction' | 'animal' | 'dark_area' | 'drugs'
   | 'police' | 'weather' | 'other' | 'stranger_danger'
-  | 'traffic_danger' | 'playground_hazard' | 'water_hazard' | 'school_zone';
+  | 'traffic_danger' | 'playground_hazard' | 'water_hazard' | 'school_zone'
+  | 'pothole' | 'dark_passage' | 'broken_lights';
 
 export type AlertStatus = 'active' | 'expired' | 'hidden' | 'removed';
 export type VoteType = 'confirm' | 'deny';
@@ -39,6 +40,9 @@ export const ALERT_CATEGORIES: AlertCategoryInfo[] = [
   { key: 'playground_hazard', label: 'Uszkodzony plac zabaw', labelEn: 'Playground hazard', emoji: '⛔', color: '#FFAB00', materialSymbol: 'child_friendly' },
   { key: 'water_hazard', label: 'Zbiornik wodny', labelEn: 'Water hazard', emoji: '🌀', color: '#2979FF', materialSymbol: 'water' },
   { key: 'school_zone', label: 'Strefa szkolna', labelEn: 'School zone', emoji: '🚸', color: '#FF6D00', materialSymbol: 'school' },
+  { key: 'pothole', label: 'Dziura w drodze', labelEn: 'Pothole', emoji: '🕳️', color: '#FFAB00', materialSymbol: 'dangerous' },
+  { key: 'dark_passage', label: 'Ciemny zaułek / przejście', labelEn: 'Dark passage', emoji: '🌃', color: '#78909C', materialSymbol: 'nightlight' },
+  { key: 'broken_lights', label: 'Niesprawne oświetlenie', labelEn: 'Broken lights', emoji: '💡', color: '#FFAB00', materialSymbol: 'lightbulb' },
 ];
 
 export function getCategoryInfo(cat: AlertCategory): AlertCategoryInfo {

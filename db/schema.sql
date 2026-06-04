@@ -39,7 +39,9 @@ CREATE TYPE alert_category AS ENUM (
     'police', 'weather', 'other',
     -- ochrona dzieci
     'stranger_danger', 'traffic_danger', 'playground_hazard',
-    'water_hazard', 'school_zone'
+    'water_hazard', 'school_zone',
+    -- infrastruktura miejska (F18)
+    'pothole', 'dark_passage', 'broken_lights'
 );
 
 CREATE TYPE alert_status AS ENUM ('active', 'expired', 'hidden', 'removed');

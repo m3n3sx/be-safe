@@ -311,6 +311,11 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
         AlertCategory.waterHazard,
         AlertCategory.schoolZone,
       ],
+      'Infrastruktura miejska': [
+        AlertCategory.pothole,
+        AlertCategory.darkPassage,
+        AlertCategory.brokenLights,
+      ],
       'Inne': [
         AlertCategory.flood,
         AlertCategory.animal,
