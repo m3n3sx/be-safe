@@ -8,6 +8,7 @@ library;
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../theme/map_style.dart';
 import '../../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -244,6 +245,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
         child: Stack(
           children: [
             GoogleMap(
+              style: Theme.of(context).brightness == Brightness.dark ? kDarkMapStyle : null,
               initialCameraPosition: CameraPosition(
                 target: _selectedPos,
                 zoom: 16,

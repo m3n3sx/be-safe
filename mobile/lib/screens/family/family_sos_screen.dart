@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../theme/map_style.dart';
 import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -131,6 +132,7 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
           Expanded(
             flex: 5,
             child: GoogleMap(
+              style: Theme.of(context).brightness == Brightness.dark ? kDarkMapStyle : null,
               initialCameraPosition: CameraPosition(
                 target: LatLng(widget.lat, widget.lng),
                 zoom: 16,

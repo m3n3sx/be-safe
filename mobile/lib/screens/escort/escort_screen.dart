@@ -1,6 +1,7 @@
 // F03: Eskorta / Follow Me — wybór watchera, monitorowanie ETA, "DOTARŁEM"
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../theme/map_style.dart';
 import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -416,6 +417,7 @@ class _EscortRequesterViewState extends State<_EscortRequesterView> {
       children: [
         Expanded(
           child: GoogleMap(
+              style: Theme.of(context).brightness == Brightness.dark ? kDarkMapStyle : null,
             initialCameraPosition: CameraPosition(target: LatLng(destLat, destLng), zoom: 14),
             markers: {
               Marker(
@@ -517,6 +519,7 @@ class _EscortWatcherView extends StatelessWidget {
       children: [
         Expanded(
           child: GoogleMap(
+              style: Theme.of(context).brightness == Brightness.dark ? kDarkMapStyle : null,
             initialCameraPosition: CameraPosition(
               target: LatLng(lastLat ?? destLat, lastLng ?? destLng),
               zoom: 14,

@@ -10,6 +10,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import '../../theme/map_style.dart';
 import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -772,6 +773,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
         child: Stack(
           children: [
             GoogleMap(
+              style: Theme.of(context).brightness == Brightness.dark ? kDarkMapStyle : null,
               initialCameraPosition:
                   CameraPosition(target: LatLng(lat, lng), zoom: 15),
               markers: {

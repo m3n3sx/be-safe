@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../../theme/map_style.dart';
 import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -214,6 +215,7 @@ class _DrawSafeRouteScreenState extends State<DrawSafeRouteScreen> {
     return Stack(
       children: [
         GoogleMap(
+              style: Theme.of(context).brightness == Brightness.dark ? kDarkMapStyle : null,
           initialCameraPosition: const CameraPosition(
             target: LatLng(52.325, 17.565),
             zoom: 14,

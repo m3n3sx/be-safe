@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import '../../theme/map_style.dart';
 import '../../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -571,6 +572,7 @@ class _RoutePreviewSheetState extends State<_RoutePreviewSheet> {
                   borderRadius: const BorderRadius.vertical(
                       bottom: Radius.circular(24)),
                   child: GoogleMap(
+              style: Theme.of(context).brightness == Brightness.dark ? kDarkMapStyle : null,
                     initialCameraPosition: CameraPosition(
                       target: widget.points.isNotEmpty
                           ? widget.points.first
