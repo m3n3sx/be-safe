@@ -1,21 +1,52 @@
 @import "tailwindcss";
 
+/* ============================================================
+   be:Safe — tokeny designu "Serenity Guard" (parytet z apką).
+   Semantyczne tokeny flipują przez klasę .dark (ThemeContext
+   ustawia ją na <html>). Marka (mint/aqua/coral/navy/volt) stała.
+   ============================================================ */
 :root {
-  --background: #fafafa;
-  --foreground: #171717;
+  /* Marka */
+  --serenity-mint: #9DF4CB;
+  --serenity-aqua: #9EEBEC;
+  --serenity-coral: #FF7A7A;
+  --serenity-navy: #1A2027;
+  --serenity-volt: #C7F73E;
+  /* Semantyczne — LIGHT */
+  --background: #F2F2F7;   /* grouped bg (jak iOS / apka) */
+  --surface: #FFFFFF;      /* karty */
+  --surface-2: #F6F3F3;    /* podniesione tło / hover */
+  --ink: #03080E;          /* główny tekst */
+  --ink-2: #8E8E93;        /* drugorzędny tekst / chevrony */
+  --border: #C6C6C8;       /* hairline */
+  --foreground: var(--ink);
+}
+
+.dark {
+  --background: #0A0E14;
+  --surface: #131820;
+  --surface-2: #1F2730;
+  --ink: #F5F7FA;
+  --ink-2: #9CA3AF;
+  --border: #2A323D;
+  --foreground: var(--ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-border: var(--border);
+  --color-mint: var(--serenity-mint);
+  --color-aqua: var(--serenity-aqua);
+  --color-coral: var(--serenity-coral);
+  --color-navy: var(--serenity-navy);
+  --color-volt: var(--serenity-volt);
   --font-sans: var(--font-inter);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --radius-card: 24px;
 }
 
 html, body, #__next {
