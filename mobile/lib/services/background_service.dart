@@ -98,12 +98,32 @@ class BackgroundService {
     SharedPreferences.getInstance().then((p) => p.setString('jwt_token', token));
 
     // Uruchom Foreground Service (przetrwa kill apki na Androidzie).
-    FlutterBackgroundService().startService().catchError((e) {
-      debugPrint('[BG] startService failed: $e');
-      return false;
+    // KRYTYCZNE (Android 14+/15): serwis ma typ 'location', więc startForeground()
+    // wymaga PRZYZNANEGO uprawnienia lokalizacji. Bez niego system nie pozwala
+    // wystartować i po timeoucie rzuca ForegroundServiceDidNotStartInTimeException
+    // = FATAL crash (natywny, NIE do złapania przez Dart catchError).
+    // Dlatego startujemy serwis i strumień GPS TYLKO gdy lokalizacja przyznana.
+    Geolocator.checkPermission().then((perm) {
+      final granted = perm == LocationPermission.always ||
+          perm == LocationPermission.whileInUse;
+      if (!granted) {
+        debugPrint('[BG] brak uprawnienia lokalizacji ($perm) — pomijam foreground service + GPS');
+        return;
+      }
+      FlutterBackgroundService().startService().catchError((e) {
+        debugPrint('[BG] startService failed: $e');
+        return false;
+      });
+      // Foreground GPS stream (gdy app otwarta, background robi własne)
+      _locationSub = Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 50),
+      ).listen((pos) {
+        _socket.updateLocation(pos.latitude, pos.longitude);
+        _api.put('/users/me/location', {'lat': pos.latitude, 'lng': pos.longitude}).catchError((_) => <String, dynamic>{});
+      }, onError: (e) => debugPrint('[BG] GPS stream error: $e'));
     });
 
-    // WebSocket — real-time gdy apka otwarta
+    // WebSocket — real-time gdy apka otwarta (nie wymaga lokalizacji)
     _socket.connect(token,
       onNewAlert: (data) async {
         final id = data['id']?.toString() ?? '';
@@ -123,14 +143,6 @@ class BackgroundService {
         );
       },
     );
-
-    // Foreground GPS stream (gdy app otwarta, background robi własne)
-    _locationSub = Geolocator.getPositionStream(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 50),
-    ).listen((pos) {
-      _socket.updateLocation(pos.latitude, pos.longitude);
-      _api.put('/users/me/location', {'lat': pos.latitude, 'lng': pos.longitude}).catchError((_) => <String, dynamic>{});
-    });
 
     _startPolling();
     _reportBattery();
@@ -250,6 +262,21 @@ class BackgroundService {
 void _onBackgroundStart(ServiceInstance service) async {
   // Loguj do Android logcat
   debugPrint('[BG isolate] started');
+
+  // Guard: serwis ma typ 'location'. Bez uprawnienia lokalizacji native
+  // startForeground rzuca SecurityException (Android 14+/15) i serwis i tak
+  // nie ma czego śledzić — więc zatrzymujemy się od razu (czysto, bez warningów
+  // ze sticky-restartu). Permission check w isolate przez geolocator.
+  try {
+    final perm = await Geolocator.checkPermission();
+    if (perm != LocationPermission.always && perm != LocationPermission.whileInUse) {
+      debugPrint('[BG isolate] brak uprawnienia lokalizacji ($perm) — stopSelf');
+      await service.stopSelf();
+      return;
+    }
+  } catch (e) {
+    debugPrint('[BG isolate] permission check error: $e');
+  }
 
   // KRYTYCZNE: na Android 14+ musimy ustawić foreground notification w <5s
   // po startForegroundService(), inaczej system rzuci
