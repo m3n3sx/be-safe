@@ -113,7 +113,26 @@ router.get('/system', requirePermission('system.read'), async (req, res) => {
   }
 });
 
-// /admin/integrations/health — status API zewnętrznych (GIOŚ/IMGW/Mailgun/Vertex/FCM/Vision).
+// /admin/analytics — szereg czasowy (14 dni): nowi użytkownicy + alerty / dzień.
+router.get('/analytics', requirePermission('system.read'), async (req, res) => {
+  const days = Math.min(parseInt(req.query.days, 10) || 14, 90);
+  try {
+    const { rows } = await db.query(
+      `WITH d AS (
+         SELECT generate_series(CURRENT_DATE - ($1::int - 1), CURRENT_DATE, '1 day')::date AS day
+       )
+       SELECT to_char(d.day,'YYYY-MM-DD') AS day,
+         (SELECT count(*)::int FROM users  u WHERE u.created_at::date = d.day) AS users,
+         (SELECT count(*)::int FROM alerts a WHERE a.created_at::date = d.day) AS alerts
+       FROM d ORDER BY d.day`,
+      [days]
+    );
+    res.json({ days, series: rows });
+  } catch (e) {
+    console.error('[admin/analytics]', e.message);
+    res.status(500).json({ error: 'Cannot load analytics' });
+  }
+});
 router.get('/integrations/health', requirePermission('system.read'), async (req, res) => {
   try {
     const data = await cached('integrations', 30000, integrationsHealth);

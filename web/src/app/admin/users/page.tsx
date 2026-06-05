@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
-import AppLayout from '@/components/ui/AppLayout';
+import AdminShell from '@/components/ui/AdminShell';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/lib/api';
 import type { User } from '@/types';
@@ -61,10 +61,10 @@ export default function AdminUsersPage() {
     patch(u.id, { is_admin: !u.is_admin });
   };
 
-  if (!user?.is_admin) return <AppLayout><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AppLayout>;
+  if (!user?.is_admin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
 
   return (
-    <AppLayout>
+    <AdminShell>
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
         <div className="flex items-center gap-3">
           <Link href="/admin" className="text-sm text-neutral-500 hover:underline">← Panel</Link>
@@ -131,6 +131,6 @@ export default function AdminUsersPage() {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </AdminShell>
   );
 }
