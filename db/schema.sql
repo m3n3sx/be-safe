@@ -108,6 +108,31 @@ CREATE TABLE IF NOT EXISTS notifications (
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at DESC);
 
 -- ============================================
+-- RBAC ADMINÓW (role + uprawnienia granularne + przypisania)
+-- superadmin = wildcard '*'. is_admin=TRUE zachowane dla kompatybilności wstecz.
+-- ============================================
+CREATE TABLE IF NOT EXISTS admin_roles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  key VARCHAR(32) UNIQUE NOT NULL,
+  name VARCHAR(64) NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE TABLE IF NOT EXISTS admin_permissions (
+  role_id UUID NOT NULL REFERENCES admin_roles(id) ON DELETE CASCADE,
+  permission VARCHAR(48) NOT NULL,
+  PRIMARY KEY (role_id, permission)
+);
+CREATE TABLE IF NOT EXISTS admin_role_assignments (
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  role_id UUID NOT NULL REFERENCES admin_roles(id) ON DELETE CASCADE,
+  granted_by UUID REFERENCES users(id),
+  granted_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (user_id, role_id)
+);
+CREATE INDEX IF NOT EXISTS idx_admin_assign_user ON admin_role_assignments(user_id);
+
+-- ============================================
 -- FAMILY GROUPS
 -- ============================================
 CREATE TABLE family_groups (

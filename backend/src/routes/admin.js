@@ -10,6 +10,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const db = require('../config/db');
+const requirePermission = require('../middleware/requirePermission');
+const { loadAccess } = require('../services/rbac');
 const router = express.Router();
 
 const BACKUP_DIR = '/home/ubuntu/backups';
@@ -32,9 +34,24 @@ async function audit(adminId, action, targetType, targetId, payload) {
 // SYSTEM
 // =========================================================================
 
-router.get('/ping', (req, res) => res.json({ ok: true, user: req.user.id }));
+router.get('/ping', requirePermission(), (req, res) => res.json({ ok: true, user: req.user.id }));
 
-router.get('/backup-status', (req, res) => {
+// /admin/me — role + uprawnienia zalogowanego admina (UI decyduje co pokazać).
+router.get('/me', requirePermission(), async (req, res) => {
+  try {
+    const access = await loadAccess(req.user.id);
+    res.json({
+      user_id: req.user.id,
+      roles: access.roles,
+      permissions: access.isSuperadmin ? ['*'] : [...access.permissions],
+      is_superadmin: access.isSuperadmin,
+    });
+  } catch (e) {
+    res.status(500).json({ error: 'Cannot load access' });
+  }
+});
+
+router.get('/backup-status', requirePermission('system.read'), (req, res) => {
   try {
     if (!fs.existsSync(LAST_BACKUP_FILE)) {
       return res.status(404).json({ error: 'No backup yet' });
@@ -49,7 +66,7 @@ router.get('/backup-status', (req, res) => {
   }
 });
 
-router.get('/stats', async (req, res) => {
+router.get('/stats', requirePermission('system.read'), async (req, res) => {
   try {
     const [users, alerts, groups, pets, reports] = await Promise.all([
       db.query("SELECT COUNT(*)::int AS n, COUNT(*) FILTER (WHERE is_banned)::int AS banned, COUNT(*) FILTER (WHERE is_admin)::int AS admins, COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '7 days')::int AS new_week FROM users"),
@@ -71,7 +88,7 @@ router.get('/stats', async (req, res) => {
   }
 });
 
-router.get('/audit-log', async (req, res) => {
+router.get('/audit-log', requirePermission('audit.read'), async (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 100, 500);
   const { rows } = await db.query(
     `SELECT a.*, u.username AS admin_username
@@ -87,7 +104,7 @@ router.get('/audit-log', async (req, res) => {
 // USERS
 // =========================================================================
 
-router.get('/users', async (req, res) => {
+router.get('/users', requirePermission('users.read'), async (req, res) => {
   const q = (req.query.q || '').toString().trim();
   const limit = Math.min(parseInt(req.query.limit) || 50, 200);
   const offset = parseInt(req.query.offset) || 0;
@@ -111,7 +128,7 @@ router.get('/users', async (req, res) => {
   res.json({ users: rows, limit, offset });
 });
 
-router.get('/users/:id', async (req, res) => {
+router.get('/users/:id', requirePermission('users.read'), async (req, res) => {
   const { rows } = await db.query(
     `SELECT id, email, username, avatar_url, reputation_score, is_child, is_admin, is_banned,
             banned_at, ban_reason, is_kpp, is_verified, verified_role, app_mode, email_verified,
@@ -123,7 +140,22 @@ router.get('/users/:id', async (req, res) => {
   res.json(rows[0]);
 });
 
-router.patch('/users/:id', async (req, res) => {
+router.patch('/users/:id', requirePermission(), async (req, res) => {
+  // Kontrola per-pole (zapobieganie eskalacji uprawnień):
+  //   is_admin → rbac.manage | is_banned/ban_reason → users.ban | reszta → users.edit
+  const { hasPermission } = require('../services/rbac');
+  const body = req.body || {};
+  const needs = new Set();
+  if ('is_admin' in body) needs.add('rbac.manage');
+  if ('is_banned' in body || 'ban_reason' in body) needs.add('users.ban');
+  for (const k of ['is_verified', 'verified_role', 'is_kpp', 'reputation_score']) {
+    if (k in body) needs.add('users.edit');
+  }
+  for (const p of needs) {
+    if (!hasPermission(req._access, p)) {
+      return res.status(403).json({ error: 'Forbidden', required: p });
+    }
+  }
   const allowed = ['is_admin', 'is_banned', 'ban_reason', 'is_verified', 'verified_role', 'is_kpp', 'reputation_score'];
   const sets = [];
   const params = [req.params.id];
@@ -154,7 +186,7 @@ router.patch('/users/:id', async (req, res) => {
 // ALERTS
 // =========================================================================
 
-router.get('/alerts', async (req, res) => {
+router.get('/alerts', requirePermission('alerts.read'), async (req, res) => {
   const status = req.query.status;
   const limit = Math.min(parseInt(req.query.limit) || 100, 500);
   const params = [];
@@ -179,14 +211,14 @@ router.get('/alerts', async (req, res) => {
   res.json({ alerts: rows });
 });
 
-router.delete('/alerts/:id', async (req, res) => {
+router.delete('/alerts/:id', requirePermission('alerts.delete'), async (req, res) => {
   const { rows } = await db.query('DELETE FROM alerts WHERE id = $1 RETURNING id, title, author_id', [req.params.id]);
   if (!rows.length) return res.status(404).json({ error: 'Not found' });
   await audit(req.user.id, 'alert.delete', 'alert', req.params.id, { title: rows[0].title, author_id: rows[0].author_id });
   res.json({ ok: true, deleted: rows[0].id });
 });
 
-router.patch('/alerts/:id', async (req, res) => {
+router.patch('/alerts/:id', requirePermission('alerts.edit'), async (req, res) => {
   const allowed = ['status', 'title', 'description', 'category', 'radius_m'];
   const sets = [];
   const params = [req.params.id];
@@ -209,7 +241,7 @@ router.patch('/alerts/:id', async (req, res) => {
 // REPORTS (zgłoszenia użytkowników na alerty)
 // =========================================================================
 
-router.get('/reports', async (req, res) => {
+router.get('/reports', requirePermission('reports.read'), async (req, res) => {
   const status = req.query.status || 'pending';
   const { rows } = await db.query(
     `SELECT r.id, r.alert_id, r.reporter_id, r.reason, r.details, r.status, r.created_at, r.resolved_at,
@@ -227,7 +259,7 @@ router.get('/reports', async (req, res) => {
   res.json({ reports: rows });
 });
 
-router.post('/reports/:id/resolve', async (req, res) => {
+router.post('/reports/:id/resolve', requirePermission('reports.resolve'), async (req, res) => {
   const action = (req.body.action || 'dismiss').toString();
   const { rows: rep } = await db.query('SELECT * FROM alert_reports WHERE id = $1', [req.params.id]);
   if (!rep.length) return res.status(404).json({ error: 'Not found' });
@@ -246,7 +278,7 @@ router.post('/reports/:id/resolve', async (req, res) => {
 // GROUPS
 // =========================================================================
 
-router.get('/groups', async (req, res) => {
+router.get('/groups', requirePermission('groups.read'), async (req, res) => {
   const { rows } = await db.query(
     `SELECT g.id, g.name, g.invite_code, g.created_at, g.owner_id,
             u.username AS owner_username,
@@ -258,7 +290,7 @@ router.get('/groups', async (req, res) => {
   res.json({ groups: rows });
 });
 
-router.delete('/groups/:id', async (req, res) => {
+router.delete('/groups/:id', requirePermission('groups.delete'), async (req, res) => {
   const { rows } = await db.query('DELETE FROM family_groups WHERE id = $1 RETURNING id, name', [req.params.id]);
   if (!rows.length) return res.status(404).json({ error: 'Not found' });
   await audit(req.user.id, 'group.delete', 'group', req.params.id, { name: rows[0].name });

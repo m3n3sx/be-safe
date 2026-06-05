@@ -25,7 +25,6 @@ const jwt = require('jsonwebtoken');
 const db = require('./config/db');
 const { notifyUser } = require('./services/fcm');
 const auth = require('./middleware/auth');
-const requireAdmin = require('./middleware/requireAdmin');
 
 // In-memory geofence state per (childId:geofenceId) → 'inside' | 'outside'
 // Resetuje się przy restart serwera (akceptowalne — pierwszy update będzie pominięty bo brak prevState).
@@ -62,7 +61,7 @@ app.use('/api/v1/aeds', require('./routes/aeds'));
 app.use('/api/v1/aqi', require('./routes/aqi'));
 app.use('/api/v1/escort', require('./routes/escort'));
 app.use('/api/v1/pets', require('./routes/pets'));
-app.use('/api/v1/admin', auth, requireAdmin, require('./routes/admin'));
+app.use('/api/v1/admin', auth, require('./routes/admin'));
 app.use('/api/v1/permissions', require('./routes/permissions'));
 app.use('/api/v1/neighborhood', require('./routes/neighborhood'));
 app.use('/api/v1/notifications', require('./routes/notifications'));
@@ -106,7 +105,7 @@ update();setInterval(update,10000);
 </script></body></html>`);
 });
 
-app.get('/version', (_, res) => res.json({ version: 119, url: 'https://besafe.org.pl/download' }));
+app.get('/version', (_, res) => res.json({ version: 120, url: 'https://besafe.org.pl/download' }));
 
 app.get('/download', (_, res) => {
   const path = require('path');
