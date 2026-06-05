@@ -259,56 +259,33 @@ class _SosScreenState extends State<SosScreen>
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Miękka poświata na zewnątrz przycisku
+                  // Czerwona, rozmyta „chmura" — miękka radialna poświata.
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
                           SerenityColors.glowAlertCoral
-                              .withValues(alpha: 0.5 * coreOpacity),
+                              .withValues(alpha: coreOpacity),
                           SerenityColors.glowAlertCoral
                               .withValues(alpha: 0),
                         ],
-                        stops: const [0.5, 1.0],
+                        stops: const [0, 0.7],
                       ),
-                    ),
-                  ),
-                  // Solidny, jednoznaczny przycisk SOS
-                  Container(
-                    width: 232,
-                    height: 232,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Color(0xFFFF8A8A), Color(0xFFE53935)],
-                      ),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.85),
-                        width: 4,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: SerenityColors.glowAlertCoral
-                              .withValues(alpha: 0.55),
-                          blurRadius: 32,
-                          spreadRadius: 2,
-                        ),
-                      ],
                     ),
                   ),
                   // Progress ring while holding
                   if (_holding)
                     SizedBox(
-                      width: 232,
-                      height: 232,
+                      width: 240,
+                      height: 240,
                       child: CircularProgressIndicator(
                         value: progress,
-                        strokeWidth: 5,
-                        valueColor: const AlwaysStoppedAnimation(Colors.white),
-                        backgroundColor: Colors.white24,
+                        strokeWidth: 3,
+                        valueColor: AlwaysStoppedAnimation(
+                          SerenityColors.glowAlertCoral,
+                        ),
+                        backgroundColor: Colors.transparent,
                       ),
                     ),
                   Column(
@@ -317,22 +294,18 @@ class _SosScreenState extends State<SosScreen>
                       Text(
                         'SOS',
                         style: SerenityText.displayLg.copyWith(
-                          fontSize: 88,
+                          fontSize: 96,
                           height: 1,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 12),
                       Text(
                         _sending
                             ? 'Wysyłam alarm...'
                             : (_holding
                                 ? 'Trzymaj...'
                                 : 'Wciśnij i przytrzymaj'),
-                        style: SerenityText.bodyMain.copyWith(
-                          color: Colors.white,
-                        ),
+                        style: SerenityText.bodyMain,
                       ),
                       if (!_sending) ...[
                         const SizedBox(height: 8),
@@ -349,7 +322,7 @@ class _SosScreenState extends State<SosScreen>
                           child: Text(
                             'PRZYTRZYMAJ 2 SEKUNDY',
                             style: SerenityText.labelCaps.copyWith(
-                              color: Colors.white,
+                              color: SerenityColors.glowAlertCoral,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 1.4,
                             ),
