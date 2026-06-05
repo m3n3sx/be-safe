@@ -12,7 +12,14 @@ const path = require('path');
 const db = require('../config/db');
 const requirePermission = require('../middleware/requirePermission');
 const { loadAccess } = require('../services/rbac');
+const { processMetrics, dbMetrics, cached } = require('../services/system_metrics');
+const { gcpMetrics } = require('../services/gcp_metrics');
+const { integrationsHealth } = require('../services/integrations_health');
+const { notifyUser } = require('../services/fcm');
 const router = express.Router();
+
+// Rate-limit broadcastów (in-memory, per proces): max N/godzinę.
+let _bcTimes = [];
 
 const BACKUP_DIR = '/home/ubuntu/backups';
 const LAST_BACKUP_FILE = path.join(BACKUP_DIR, 'last_backup.json');
@@ -28,6 +35,16 @@ async function audit(adminId, action, targetType, targetId, payload) {
   } catch (e) {
     console.error('[audit]', e.message);
   }
+}
+
+// Token z metadata server (Cloud Run) — tożsamość SA do wywołań GCP REST.
+async function metadataToken() {
+  const r = await fetch(
+    'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token',
+    { headers: { 'Metadata-Flavor': 'Google' } }
+  );
+  if (!r.ok) throw new Error(`metadata token ${r.status}`);
+  return (await r.json()).access_token;
 }
 
 // =========================================================================
@@ -51,18 +68,58 @@ router.get('/me', requirePermission(), async (req, res) => {
   }
 });
 
-router.get('/backup-status', requirePermission('system.read'), (req, res) => {
+router.get('/backup-status', requirePermission('system.read'), async (req, res) => {
+  const PROJECT = process.env.GCP_PROJECT_ID || 'project-1674d55f-90e0-4e1a-884';
+  const INSTANCE = process.env.CLOUD_SQL_INSTANCE || 'besafe-pg';
   try {
-    if (!fs.existsSync(LAST_BACKUP_FILE)) {
-      return res.status(404).json({ error: 'No backup yet' });
-    }
-    const data = JSON.parse(fs.readFileSync(LAST_BACKUP_FILE, 'utf-8'));
-    const ageHours = (Date.now() - new Date(data.timestamp).getTime()) / 3.6e6;
-    data.age_hours = Math.round(ageHours * 10) / 10;
-    data.is_stale = ageHours > 26;
+    const token = await metadataToken();
+    const r = await fetch(
+      `https://sqladmin.googleapis.com/v1/projects/${PROJECT}/instances/${INSTANCE}/backupRuns?maxResults=5`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (!r.ok) return res.status(502).json({ error: `Cloud SQL API ${r.status}` });
+    const data = await r.json();
+    const runs = (data.items || []).map((b) => ({
+      id: b.id, status: b.status, type: b.type,
+      start_time: b.startTime, end_time: b.endTime, location: b.location,
+    }));
+    const latest = runs.find((b) => b.status === 'SUCCESSFUL') || runs[0] || null;
+    const ageH = latest?.end_time ? (Date.now() - new Date(latest.end_time).getTime()) / 3.6e6 : null;
+    res.json({
+      source: 'cloud_sql_automated',
+      instance: INSTANCE,
+      latest,
+      age_hours: ageH != null ? Math.round(ageH * 10) / 10 : null,
+      is_stale: ageH != null ? ageH > 26 : null,
+      recent: runs,
+    });
+  } catch (e) {
+    console.error('[admin/backup-status]', e.message);
+    res.status(500).json({ error: 'Cannot read Cloud SQL backups', detail: e.message?.slice(0, 120) });
+  }
+});
+
+// /admin/system — zasoby: proces backendu + baza + metryki GCP (Cloud Run/GCS).
+router.get('/system', requirePermission('system.read'), async (req, res) => {
+  try {
+    const [db_, gcp] = await Promise.all([
+      cached('db', 15000, dbMetrics),
+      cached('gcp', 60000, gcpMetrics),
+    ]);
+    res.json({ process: processMetrics(), database: db_, gcp, time: new Date().toISOString() });
+  } catch (e) {
+    console.error('[admin/system]', e.message);
+    res.status(500).json({ error: 'Cannot load system metrics' });
+  }
+});
+
+// /admin/integrations/health — status API zewnętrznych (GIOŚ/IMGW/Mailgun/Vertex/FCM/Vision).
+router.get('/integrations/health', requirePermission('system.read'), async (req, res) => {
+  try {
+    const data = await cached('integrations', 30000, integrationsHealth);
     res.json(data);
   } catch (e) {
-    res.status(500).json({ error: 'Cannot read backup status' });
+    res.status(500).json({ error: 'Cannot check integrations' });
   }
 });
 
@@ -295,6 +352,113 @@ router.delete('/groups/:id', requirePermission('groups.delete'), async (req, res
   if (!rows.length) return res.status(404).json({ error: 'Not found' });
   await audit(req.user.id, 'group.delete', 'group', req.params.id, { name: rows[0].name });
   res.json({ ok: true });
+});
+
+// =========================================================================
+// CONFIG (konfiguracja runtime) + FEATURE FLAGS
+// =========================================================================
+
+router.get('/config', requirePermission('config.read'), async (req, res) => {
+  const { rows } = await db.query('SELECT key, value, description, updated_at, updated_by FROM app_config ORDER BY key');
+  res.json({ config: rows });
+});
+
+// PUT /config/:key { value }  — zapisuje + trzyma prev_value (rollback) + audyt.
+router.put('/config/:key', requirePermission('config.write'), async (req, res) => {
+  if (!('value' in (req.body || {}))) return res.status(400).json({ error: 'value required' });
+  const { rows } = await db.query(
+    `INSERT INTO app_config (key, value, description, updated_by, updated_at)
+       VALUES ($1, $2::jsonb, $3, $4, NOW())
+     ON CONFLICT (key) DO UPDATE SET
+       prev_value = app_config.value,
+       value = EXCLUDED.value,
+       updated_by = EXCLUDED.updated_by,
+       updated_at = NOW()
+     RETURNING key, value, prev_value`,
+    [req.params.key, JSON.stringify(req.body.value), req.body.description || null, req.user.id]
+  );
+  await audit(req.user.id, 'config.write', 'config', req.params.key, { value: req.body.value });
+  res.json(rows[0]);
+});
+
+// POST /config/:key/rollback — przywraca prev_value.
+router.post('/config/:key/rollback', requirePermission('config.write'), async (req, res) => {
+  const { rows } = await db.query(
+    `UPDATE app_config SET value = prev_value, prev_value = value, updated_by = $2, updated_at = NOW()
+     WHERE key = $1 AND prev_value IS NOT NULL RETURNING key, value`,
+    [req.params.key, req.user.id]
+  );
+  if (!rows.length) return res.status(404).json({ error: 'No previous value' });
+  await audit(req.user.id, 'config.rollback', 'config', req.params.key, null);
+  res.json(rows[0]);
+});
+
+router.get('/flags', requirePermission('config.read'), async (req, res) => {
+  const { rows } = await db.query('SELECT key, enabled, description, segment, updated_at FROM feature_flags ORDER BY key');
+  res.json({ flags: rows });
+});
+
+// PUT /flags/:key { enabled, segment?, description? } — flags.write.
+router.put('/flags/:key', requirePermission('flags.write'), async (req, res) => {
+  const enabled = req.body?.enabled === true;
+  const { rows } = await db.query(
+    `INSERT INTO feature_flags (key, enabled, description, segment, updated_by, updated_at)
+       VALUES ($1, $2, $3, $4, $5, NOW())
+     ON CONFLICT (key) DO UPDATE SET
+       enabled = EXCLUDED.enabled,
+       description = COALESCE(EXCLUDED.description, feature_flags.description),
+       segment = COALESCE(EXCLUDED.segment, feature_flags.segment),
+       updated_by = EXCLUDED.updated_by, updated_at = NOW()
+     RETURNING key, enabled, segment`,
+    [req.params.key, enabled, req.body.description || null, req.body.segment || null, req.user.id]
+  );
+  await audit(req.user.id, 'flag.write', 'flag', req.params.key, { enabled, segment: req.body.segment });
+  res.json(rows[0]);
+});
+
+// =========================================================================
+// BROADCAST (powiadomienie do segmentu userów) — broadcast.send
+// =========================================================================
+// body: { title, body, segment?, confirm:true }
+//   segment: 'all' | 'kids' | 'senior' | 'normal' (app_mode). Domyślnie 'all'.
+// Wymaga confirm=true (zabezpieczenie). Rate-limit + audyt. Reuse FCM notifyUser
+// (zapisuje też do inboxu /notifications każdego odbiorcy).
+router.post('/broadcast', requirePermission('broadcast.send'), async (req, res) => {
+  const { title, body, segment = 'all', confirm } = req.body || {};
+  if (!title || !body) return res.status(400).json({ error: 'title i body wymagane' });
+  if (confirm !== true) return res.status(400).json({ error: 'Wymagane confirm:true' });
+
+  // Rate-limit (z app_config jeśli ustawione, inaczej 5/h)
+  let limit = 5;
+  try {
+    const { rows } = await db.query("SELECT value FROM app_config WHERE key='broadcast_rate_limit_per_hour'");
+    if (rows[0]) limit = parseInt(rows[0].value, 10) || 5;
+  } catch (_) {}
+  const now = Date.now();
+  _bcTimes = _bcTimes.filter((t) => now - t < 3600000);
+  if (_bcTimes.length >= limit) {
+    return res.status(429).json({ error: `Limit broadcastów: ${limit}/h osiągnięty` });
+  }
+
+  // Segment → warunek na app_mode
+  const allowed = ['all', 'kids', 'senior', 'normal'];
+  if (!allowed.includes(segment)) return res.status(400).json({ error: 'Zły segment' });
+  const where = segment === 'all' ? '1=1' : 'app_mode = $1';
+  const params = segment === 'all' ? [] : [segment];
+  const { rows: users } = await db.query(
+    `SELECT id FROM users WHERE ${where} AND is_banned = FALSE`,
+    params
+  );
+
+  _bcTimes.push(now);
+  // Wyślij (fire-and-forget per user; notifyUser zapisuje do inboxu + push jeśli token).
+  let queued = 0;
+  for (const u of users) {
+    notifyUser(u.id, title, body, { type: 'broadcast', segment }).catch(() => {});
+    queued++;
+  }
+  await audit(req.user.id, 'broadcast.send', 'broadcast', null, { title, segment, recipients: queued });
+  res.json({ ok: true, segment, recipients: queued });
 });
 
 module.exports = router;

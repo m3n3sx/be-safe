@@ -132,6 +132,24 @@ CREATE TABLE IF NOT EXISTS admin_role_assignments (
 );
 CREATE INDEX IF NOT EXISTS idx_admin_assign_user ON admin_role_assignments(user_id);
 
+-- PowerAdmin: konfiguracja runtime + feature flags
+CREATE TABLE IF NOT EXISTS app_config (
+  key VARCHAR(64) PRIMARY KEY,
+  value JSONB NOT NULL,
+  prev_value JSONB,
+  description TEXT,
+  updated_by UUID REFERENCES users(id),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE TABLE IF NOT EXISTS feature_flags (
+  key VARCHAR(64) PRIMARY KEY,
+  enabled BOOLEAN NOT NULL DEFAULT FALSE,
+  description TEXT,
+  segment VARCHAR(32),
+  updated_by UUID REFERENCES users(id),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- ============================================
 -- FAMILY GROUPS
 -- ============================================
