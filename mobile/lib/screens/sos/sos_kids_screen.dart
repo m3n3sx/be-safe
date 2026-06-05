@@ -13,6 +13,7 @@ library;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
@@ -410,10 +411,10 @@ class _SosKidsScreenState extends State<SosKidsScreen>
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
+                  Text(
                     'NACIŚNIJ',
                     style: TextStyle(
-                      color: SerenityColors.primaryContainer,
+                      color: context.iosLabel,
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.0,

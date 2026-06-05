@@ -113,9 +113,9 @@ class CyberSafetyScreen extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.security, size: 40, color: SerenityColors.primaryContainer),
+                Icon(Icons.security, size: 40, color: context.iosLabel),
                 SizedBox(width: SerenitySpacing.md),
                 Expanded(
                   child: Column(
@@ -126,7 +126,7 @@ class CyberSafetyScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: SerenityColors.primaryContainer,
+                          color: context.iosLabel,
                         ),
                       ),
                       SizedBox(height: 4),

@@ -314,9 +314,9 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
                   alignment: Alignment.center,
                   clipBehavior: Clip.none,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.notifications_outlined,
-                      color: SerenityColors.primaryContainer,
+                      color: context.iosLabel,
                       size: 30,
                     ),
                     Positioned(
@@ -348,9 +348,9 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
   Widget _avatarPlaceholder() {
     return Container(
       color: SerenityColors.secondaryContainer.withValues(alpha: 0.4),
-      child: const Icon(
+      child: Icon(
         Icons.face,
-        color: SerenityColors.primaryContainer,
+        color: context.iosLabel,
         size: 32,
       ),
     );
@@ -379,8 +379,8 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
               children: [
                 Text(
                   'Cześć, $firstName!',
-                  style: const TextStyle(
-                    color: SerenityColors.primaryContainer,
+                  style: TextStyle(
+                    color: context.iosLabel,
                     fontWeight: FontWeight.w600,
                     fontSize: 24,
                     letterSpacing: -0.4,
@@ -514,9 +514,9 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
               color: context.iosCardSurface,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.directions_walk,
-              color: SerenityColors.primaryContainer,
+              color: context.iosLabel,
               size: 24,
             ),
           ),
@@ -527,8 +527,8 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
               children: [
                 Text(
                   'W drodze do "$name"',
-                  style: const TextStyle(
-                    color: SerenityColors.primaryContainer,
+                  style: TextStyle(
+                    color: context.iosLabel,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),

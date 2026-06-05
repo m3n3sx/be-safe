@@ -20,6 +20,7 @@ library;
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import '../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/alert.dart';
 import '../theme/design_tokens.dart';
@@ -621,7 +622,7 @@ class MapMarkers {
           text: TextSpan(
             text: '+$extra',
             style: TextStyle(
-              color: SerenityColors.primaryContainer,
+              color: SerenityColors.primary,
               fontSize: 9,
               fontWeight: FontWeight.w700,
               fontFamily: 'Inter',

@@ -180,7 +180,7 @@ class _DrawSafeRouteScreenState extends State<DrawSafeRouteScreen> {
           title: Text(
             'Nowa trasa: ${widget.userName}',
             style: TextStyle(
-              color: SerenityColors.primaryContainer,
+              color: context.iosLabel,
               fontWeight: FontWeight.w600,
               fontSize: 16,
             ),
@@ -302,7 +302,7 @@ class _DrawSafeRouteScreenState extends State<DrawSafeRouteScreen> {
                       style: TextStyle(
                         fontSize: 13,
                         height: 1.3,
-                        color: SerenityColors.primaryContainer,
+                        color: context.iosLabel,
                       ),
                     ),
                   ),
@@ -321,7 +321,7 @@ class _DrawSafeRouteScreenState extends State<DrawSafeRouteScreen> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
-                          color: SerenityColors.primaryContainer,
+                          color: context.iosLabel,
                         ),
                       ),
                     ),
@@ -445,7 +445,7 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: SerenityColors.primaryContainer,
+                color: context.iosLabel,
               ),
             ),
             const SizedBox(height: 4),
@@ -511,7 +511,7 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: SerenityColors.primaryContainer,
+                      color: context.iosLabel,
                     ),
                   ),
                 ),
@@ -577,7 +577,7 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
                     'Wpisz nazwę aby zapisać trasę',
                     style: TextStyle(
                       fontSize: 12,
-                      color: SerenityColors.primaryContainer
+                      color: context.iosLabel
                           .withValues(alpha: 0.55),
                     ),
                   ),

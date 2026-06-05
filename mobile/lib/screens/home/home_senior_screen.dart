@@ -226,7 +226,7 @@ class _HomeSeniorScreenState extends State<HomeSeniorScreen> {
                       subtitle: 'Szybki kontakt',
                       icon: Icons.phone_in_talk,
                       iconBg: SerenityColors.glowCalmAqua,
-                      iconColor: SerenityColors.primaryContainer,
+                      iconColor: context.iosLabel,
                       backgroundColor: context.iosCardSurface,
                       foregroundColor: SerenityColors.primaryContainer,
                       onTap: _callDoctor,

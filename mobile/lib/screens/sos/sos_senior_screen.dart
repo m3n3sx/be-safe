@@ -199,7 +199,7 @@ class _SosSeniorScreenState extends State<SosSeniorScreen> {
                         Text(
                           'POMOC',
                           style: TextStyle(
-                            color: SerenityColors.primaryContainer,
+                            color: context.iosLabel,
                             fontSize: 22,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 1.2,
@@ -225,7 +225,7 @@ class _SosSeniorScreenState extends State<SosSeniorScreen> {
                           'POTRZEBUJESZ\nPOMOCY?',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: SerenityColors.primaryContainer,
+                            color: context.iosLabel,
                             fontSize: 30,
                             fontWeight: FontWeight.w700,
                             height: 1.15,
@@ -264,7 +264,7 @@ class _SosSeniorScreenState extends State<SosSeniorScreen> {
                           subtitle: 'Anna, Tomek otrzymają wiadomość',
                           icon: Icons.family_restroom,
                           iconBg: SerenityColors.secondaryContainer,
-                          iconColor: SerenityColors.primaryContainer,
+                          iconColor: context.iosLabel,
                           backgroundColor: SerenityColors.primaryContainer,
                           foregroundColor: Colors.white,
                           loading: _sendingFamily,
@@ -292,7 +292,7 @@ class _SosSeniorScreenState extends State<SosSeniorScreen> {
                             child: Text(
                               'WRACAM',
                               style: TextStyle(
-                                color: SerenityColors.primaryContainer,
+                                color: context.iosLabel,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 1.5,

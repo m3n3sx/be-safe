@@ -548,7 +548,7 @@ class _MapScreenState extends State<MapScreen> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 12, 8),
                   child: Row(children: [
-                    Icon(Icons.notifications_active, size: 18, color: SerenityColors.primaryContainer),
+                    Icon(Icons.notifications_active, size: 18, color: context.iosLabel),
                     const SizedBox(width: 8),
                     Text('Alerty w okolicy (${alerts.length})',
                         style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
@@ -1773,21 +1773,21 @@ class _AlertListItem extends StatelessWidget {
                                 .withValues(alpha: 0.35),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Tooltip(
+                          child: Tooltip(
                             message: 'Zaufany autor (wysoka reputacja)',
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(Icons.shield,
                                     size: 10,
-                                    color: SerenityColors.primaryContainer),
+                                    color: context.iosLabel),
                                 SizedBox(width: 3),
                                 Text(
                                   'zaufany',
                                   style: TextStyle(
                                     fontSize: 9,
                                     fontWeight: FontWeight.w700,
-                                    color: SerenityColors.primaryContainer,
+                                    color: context.iosLabel,
                                   ),
                                 ),
                               ],

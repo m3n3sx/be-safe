@@ -614,8 +614,8 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                           .withValues(alpha: 0.3),
                       border: Border.all(color: online.color, width: 3),
                     ),
-                    child: const Icon(Icons.face,
-                        color: SerenityColors.primaryContainer, size: 40),
+                    child: Icon(Icons.face,
+                        color: context.iosLabel, size: 40),
                   ),
                   Positioned(
                     right: -2,
@@ -898,7 +898,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
           _divider(),
           _actionTile(
             icon: Icons.timeline,
-            iconColor: SerenityColors.primaryContainer,
+            iconColor: context.iosLabel,
             title: 'Historia lokalizacji',
             subtitle: 'Zobacz trasę z wybranego dnia',
             onTap: _openHistory,
@@ -906,7 +906,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
           _divider(),
           _actionTile(
             icon: Icons.route_outlined,
-            iconColor: SerenityColors.primaryContainer,
+            iconColor: context.iosLabel,
             title: 'Bezpieczne trasy',
             subtitle: 'Skonfiguruj trasy do szkoły, treningu, itd.',
             onTap: _openSafeRoutes,

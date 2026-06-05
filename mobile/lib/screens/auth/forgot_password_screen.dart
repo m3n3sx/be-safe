@@ -140,7 +140,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         Icon(
           Icons.mark_email_read_outlined,
           size: 64,
-          color: SerenityColors.primaryContainer,
+          color: context.iosLabel,
         ),
         const SizedBox(height: 24),
         Text(

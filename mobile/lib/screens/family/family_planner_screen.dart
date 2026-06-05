@@ -220,10 +220,10 @@ class _FamilyPlannerScreenState extends State<FamilyPlannerScreen> {
                   children: [
                     Text(
                       e['title'] ?? '',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: SerenityColors.primaryContainer,
+                        color: context.iosLabel,
                       ),
                     ),
                     Text(

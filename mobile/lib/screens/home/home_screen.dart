@@ -519,7 +519,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Row(
               children: [
-                Icon(Icons.groups_2_outlined, color: SerenityColors.primaryContainer, size: 18),
+                Icon(Icons.groups_2_outlined, color: context.iosLabel, size: 18),
                 const SizedBox(width: 6),
                 const Text(
                   'MOJA RODZINA',
@@ -530,7 +530,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   '${_children.length}',
                   style: TextStyle(
                     fontSize: 12,
-                    color: SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                    color: context.iosSecondaryLabel,
                   ),
                 ),
               ],
@@ -604,7 +604,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: SerenityColors.secondaryContainer.withValues(alpha: 0.25),
                     border: Border.all(color: color, width: 2.5),
                   ),
-                  child: Icon(isChild ? Icons.face : Icons.person, color: SerenityColors.primaryContainer, size: 22),
+                  child: Icon(isChild ? Icons.face : Icons.person, color: context.iosLabel, size: 22),
                 ),
                 // Online dot - bottom-right of avatar
                 Positioned(
@@ -674,7 +674,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         _formatAge(last),
                         style: TextStyle(
                           fontSize: 12,
-                          color: SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                          color: context.iosSecondaryLabel,
                         ),
                       ),
                       if (battery is num) ...[
@@ -684,7 +684,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           size: 13,
                           color: battery < 20
                               ? SerenityColors.glowAlertCoral
-                              : SerenityColors.primaryContainer.withValues(alpha: 0.5),
+                              : context.iosSecondaryLabel,
                         ),
                         const SizedBox(width: 2),
                         Text(
@@ -693,7 +693,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 11,
                             color: battery < 20
                                 ? SerenityColors.glowAlertCoral
-                                : SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                                : context.iosSecondaryLabel,
                           ),
                         ),
                       ],

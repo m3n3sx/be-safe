@@ -366,7 +366,7 @@ class _PingResponseScreenState extends State<PingResponseScreen> {
           Expanded(
             child: Text(label,
                 style: TextStyle(
-                    color: SerenityColors.primaryContainer,
+                    color: context.iosLabel,
                     fontSize: 15,
                     fontWeight: FontWeight.w600)),
           ),

@@ -446,9 +446,9 @@ class _SosScreenState extends State<SosScreen>
                     color: SerenityColors.glowCalmAqua.withValues(alpha: 0.45),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.shield_outlined,
-                    color: SerenityColors.primaryContainer,
+                    color: context.iosLabel,
                     size: 22,
                   ),
                 ),

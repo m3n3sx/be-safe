@@ -618,7 +618,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                       border: Border.all(color: online.color, width: 3),
                     ),
                     child: Icon(_isChild ? Icons.face : Icons.person,
-                        color: SerenityColors.primaryContainer, size: 40),
+                        color: context.iosLabel, size: 40),
                   ),
                   Positioned(
                     right: -2,
@@ -680,10 +680,10 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(roleText,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
-                                  color: SerenityColors.primaryContainer)),
+                                  color: context.iosLabel)),
                         ),
                       ],
                     ),

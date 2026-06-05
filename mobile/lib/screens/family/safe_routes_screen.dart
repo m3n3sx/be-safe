@@ -180,7 +180,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
         title: Text(
           'Bezpieczne trasy',
           style: TextStyle(
-            color: SerenityColors.primaryContainer,
+            color: context.iosLabel,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -275,7 +275,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: SerenityColors.primaryContainer,
+                  color: context.iosLabel,
                 ),
               ),
               const SizedBox(height: 8),
@@ -363,7 +363,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: SerenityColors.primaryContainer,
+                        color: context.iosLabel,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -515,14 +515,14 @@ class _RoutePreviewSheetState extends State<_RoutePreviewSheet> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: SerenityColors.primaryContainer,
+                              color: context.iosLabel,
                             ),
                           ),
                           Text(
                             '${widget.points.length} punktów · korytarz ${widget.thresholdM} m',
                             style: TextStyle(
                               fontSize: 12,
-                              color: SerenityColors.primaryContainer
+                              color: context.iosLabel
                                   .withValues(alpha: 0.6),
                             ),
                           ),
@@ -557,10 +557,10 @@ class _RoutePreviewSheetState extends State<_RoutePreviewSheet> {
                       Expanded(
                         child: Text(
                           'Uwaga: ${_alertsNearCount} aktywnych alertów blisko trasy',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: SerenityColors.primaryContainer,
+                            color: context.iosLabel,
                           ),
                         ),
                       ),

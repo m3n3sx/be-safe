@@ -194,7 +194,7 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
           ),
           const SizedBox(height: 24),
           Material(
-            color: SerenityColors.primaryContainer,
+            color: context.iosLabel,
             borderRadius: SerenityShapes.pill(),
             child: InkWell(
               borderRadius: SerenityShapes.pill(),

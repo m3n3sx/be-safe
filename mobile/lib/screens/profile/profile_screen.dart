@@ -544,7 +544,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: SerenitySpacing.xl),
               Material(
-                color: SerenityColors.primaryContainer,
+                color: context.iosLabel,
                 borderRadius: SerenityShapes.pill(),
                 child: InkWell(
                   borderRadius: SerenityShapes.pill(),

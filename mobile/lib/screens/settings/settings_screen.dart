@@ -86,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 data: ListTileThemeData(
                   tileColor: context.iosCardSurface,
                   selectedTileColor: context.iosCardSurface,
-                  iconColor: SerenityColors.primaryContainer,
+                  iconColor: context.iosLabel,
                   textColor: context.iosLabel,
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                   minVerticalPadding: 12,
