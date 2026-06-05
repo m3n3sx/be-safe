@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { useTheme } from '@/contexts/ThemeContext';
 import { t } from '@/lib/i18n';
 
 const navItems = [
@@ -21,22 +20,21 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const { resolvedTheme } = useTheme();
+
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isDark = resolvedTheme === 'dark';
 
   if (!user) return null;
 
   return (
     <>
       {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800">
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">
-          <svg className="w-6 h-6 text-neutral-700 dark:text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 bg-surface border-b border-border">
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 rounded-lg hover:bg-surface-2">
+          <svg className="w-6 h-6 text-ink" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} />
           </svg>
         </button>
-        <span className="text-lg font-bold text-red-500">be:Safe</span>
+        <span className="text-lg font-bold text-coral">be:Safe</span>
         <div className="w-10" />
       </div>
 
@@ -46,24 +44,24 @@ export default function Sidebar() {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 left-0 z-50 h-full w-64 transform transition-transform duration-200 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:z-auto flex flex-col ${isDark ? 'bg-neutral-900 border-neutral-800' : 'bg-white border-neutral-200'} border-r`}>
+      <aside className={`fixed top-0 left-0 z-50 h-full w-64 transform transition-transform duration-200 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:z-auto flex flex-col bg-surface border-r border-border`}>
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 h-16 border-b border-neutral-200 dark:border-neutral-800">
-          <div className="w-9 h-9 rounded-xl bg-red-500 flex items-center justify-center text-white font-bold text-sm">
+        <div className="flex items-center gap-3 px-5 h-16 border-b border-border">
+          <div className="w-9 h-9 rounded-xl bg-coral flex items-center justify-center text-white font-bold text-sm">
             b:S
           </div>
-          <span className="text-xl font-bold text-red-500">be:Safe</span>
+          <span className="text-xl font-bold text-coral">be:Safe</span>
         </div>
 
         {/* User info */}
-        <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="px-4 py-3 border-b border-border">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 font-bold text-sm">
+            <div className="w-10 h-10 rounded-full bg-coral/20 flex items-center justify-center text-coral font-bold text-sm">
               {user.username?.charAt(0).toUpperCase() || '?'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-neutral-900 dark:text-white truncate">{user.username}</p>
-              <p className="text-xs text-neutral-500 truncate">{t('reputation')}: {user.reputation_score}</p>
+              <p className="text-sm font-medium text-ink truncate">{user.username}</p>
+              <p className="text-xs text-ink-2 truncate">{t('reputation')}: {user.reputation_score}</p>
             </div>
           </div>
         </div>
@@ -79,8 +77,8 @@ export default function Sidebar() {
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-red-500/10 text-red-500'
-                    : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white'
+                    ? 'bg-coral/10 text-coral'
+                    : 'text-ink-2 hover:bg-surface-2 hover:text-ink'
                 }`}
               >
                 <item.icon active={isActive} />
@@ -94,8 +92,8 @@ export default function Sidebar() {
               onClick={() => setMobileOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 pathname.startsWith('/admin')
-                  ? 'bg-[#9DF4CB]/20 text-[#1A2027] dark:text-[#9DF4CB]'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800'
+                  ? 'bg-mint/20 text-ink'
+                  : 'text-ink-2 hover:bg-surface-2'
               }`}
             >
               <span className="w-5 h-5 flex items-center justify-center text-base">🛡️</span>
@@ -105,10 +103,10 @@ export default function Sidebar() {
         </nav>
 
         {/* Logout */}
-        <div className="px-3 py-3 border-t border-neutral-200 dark:border-neutral-800">
+        <div className="px-3 py-3 border-t border-border">
           <button
             onClick={() => { logout(); setMobileOpen(false); }}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-red-500 transition-colors"
+            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-ink-2 hover:bg-surface-2 hover:text-coral transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -119,11 +117,11 @@ export default function Sidebar() {
       </aside>
 
       {/* Bottom nav for mobile */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 flex justify-around py-2 px-1">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-surface border-t border-border flex justify-around py-2 px-1">
         {navItems.slice(0, 5).map(item => {
           const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
           return (
-            <Link key={item.href} href={item.href} className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-xs ${isActive ? 'text-red-500' : 'text-neutral-500 dark:text-neutral-400'}`}>
+            <Link key={item.href} href={item.href} className={`flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-xs ${isActive ? 'text-coral' : 'text-ink-2'}`}>
               <item.icon active={isActive} />
               <span className="text-[10px]">{t(item.label)}</span>
             </Link>
