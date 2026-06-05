@@ -185,37 +185,28 @@ class _SosScreenState extends State<SosScreen>
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // Na dużych ekranach (>700 dostępnej wysokości) zachowujemy
-            // klasyczny layout z Expanded+Center wokół orb.
-            // Na mniejszych — całość jest przewijalna żeby SOS button był
-            // zawsze widoczny, mimo globalnego docka na dole.
-            final tall = constraints.maxHeight >= 700;
-            if (tall) {
-              return Column(
-                children: [
-                  const SizedBox(height: 16),
-                  _buildHeader(),
-                  Expanded(child: Center(child: _buildOrb())),
-                  _buildFakeCallShortcut(),
-                  _buildEscortShortcut(),
-                  _buildOptions(),
-                  _buildCancel(),
-                ],
-              );
-            }
+            // SOS to ekran ratunkowy — orb MUSI być zawsze widoczny.
+            // Wcześniej orb był w Expanded i kolapsował do 0, gdy reszta treści
+            // (nagłówek + skróty + opcje) wypełniła wysokość. Teraz orb ma stały
+            // rozmiar, a całość jest przewijalna z minHeight = wysokość ekranu
+            // (ładnie wypełnia ekran, a gdy treść nie mieści się — scrolluje).
             return SingleChildScrollView(
-              padding: const EdgeInsets.only(top: 16),
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 24),
-                  Center(child: _buildOrb()),
-                  const SizedBox(height: 24),
-                  _buildFakeCallShortcut(),
-                  _buildEscortShortcut(),
-                  _buildOptions(),
-                  _buildCancel(),
-                ],
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 16),
+                    _buildHeader(),
+                    const SizedBox(height: 24),
+                    _buildOrb(),
+                    const SizedBox(height: 24),
+                    _buildFakeCallShortcut(),
+                    _buildEscortShortcut(),
+                    _buildOptions(),
+                    _buildCancel(),
+                    const SizedBox(height: 16),
+                  ],
+                ),
               ),
             );
           },
@@ -268,32 +259,56 @@ class _SosScreenState extends State<SosScreen>
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  // Miękka poświata na zewnątrz przycisku
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
                           SerenityColors.glowAlertCoral
-                              .withValues(alpha: coreOpacity),
+                              .withValues(alpha: 0.5 * coreOpacity),
                           SerenityColors.glowAlertCoral
                               .withValues(alpha: 0),
                         ],
-                        stops: const [0, 0.7],
+                        stops: const [0.5, 1.0],
                       ),
+                    ),
+                  ),
+                  // Solidny, jednoznaczny przycisk SOS
+                  Container(
+                    width: 232,
+                    height: 232,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFFFF8A8A), Color(0xFFE53935)],
+                      ),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        width: 4,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: SerenityColors.glowAlertCoral
+                              .withValues(alpha: 0.55),
+                          blurRadius: 32,
+                          spreadRadius: 2,
+                        ),
+                      ],
                     ),
                   ),
                   // Progress ring while holding
                   if (_holding)
                     SizedBox(
-                      width: 240,
-                      height: 240,
+                      width: 232,
+                      height: 232,
                       child: CircularProgressIndicator(
                         value: progress,
-                        strokeWidth: 3,
-                        valueColor: AlwaysStoppedAnimation(
-                          SerenityColors.glowAlertCoral,
-                        ),
-                        backgroundColor: Colors.transparent,
+                        strokeWidth: 5,
+                        valueColor: const AlwaysStoppedAnimation(Colors.white),
+                        backgroundColor: Colors.white24,
                       ),
                     ),
                   Column(
@@ -302,18 +317,22 @@ class _SosScreenState extends State<SosScreen>
                       Text(
                         'SOS',
                         style: SerenityText.displayLg.copyWith(
-                          fontSize: 96,
+                          fontSize: 88,
                           height: 1,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 6),
                       Text(
                         _sending
                             ? 'Wysyłam alarm...'
                             : (_holding
                                 ? 'Trzymaj...'
                                 : 'Wciśnij i przytrzymaj'),
-                        style: SerenityText.bodyMain,
+                        style: SerenityText.bodyMain.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                       if (!_sending) ...[
                         const SizedBox(height: 8),
@@ -330,7 +349,7 @@ class _SosScreenState extends State<SosScreen>
                           child: Text(
                             'PRZYTRZYMAJ 2 SEKUNDY',
                             style: SerenityText.labelCaps.copyWith(
-                              color: SerenityColors.glowAlertCoral,
+                              color: Colors.white,
                               fontWeight: FontWeight.w700,
                               letterSpacing: 1.4,
                             ),

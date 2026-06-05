@@ -54,6 +54,17 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
+        <!-- FileProvider do udostępnienia pobranego APK instalatorowi systemowemu -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <!-- flutter_background_service: override foregroundServiceType dla Android 14+ -->
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
@@ -70,6 +81,10 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- widoczność instalatora paczek (Android 11+) -->
+        <intent>
+            <action android:name="android.intent.action.INSTALL_PACKAGE"/>
         </intent>
     </queries>
 </manifest>
