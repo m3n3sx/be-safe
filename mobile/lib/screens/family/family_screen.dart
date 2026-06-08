@@ -211,26 +211,6 @@ class _QuickActionCard extends StatelessWidget {
           highlightColor: data.glow.withValues(alpha: 0.08),
           child: Stack(
             children: [
-              // Aqoir-style radial glow w prawym górnym rogu karty.
-              Positioned(
-                top: -40,
-                right: -40,
-                child: IgnorePointer(
-                  child: Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          data.glow.withValues(alpha: 0.55),
-                          data.glow.withValues(alpha: 0.0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(SerenitySpacing.md),
                 child: Column(
@@ -241,7 +221,7 @@ class _QuickActionCard extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: data.glow.withValues(alpha: 0.22),
+                        color: context.iosCardSurfaceHigh,
                         borderRadius:
                             BorderRadius.circular(SerenityShapes.radiusMd),
                       ),
@@ -859,9 +839,9 @@ class _FamilyScreenState extends State<FamilyScreen> {
           ),
           const SizedBox(height: 32),
           GlowOrb(
-            size: 240,
+            size: 300,
             color: _orbColor(),
-            coreOpacity: 0.6,
+            coreOpacity: 0.85,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -1306,15 +1286,15 @@ class _MemberCard extends StatelessWidget {
                 Icon(
                   roleIcon(role),
                   size: 11,
-                  color: context.iosLabel,
+                  color: SerenityColors.primary,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   roleLabel(role),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: context.iosLabel,
+                    color: SerenityColors.primary,
                   ),
                 ),
               ],

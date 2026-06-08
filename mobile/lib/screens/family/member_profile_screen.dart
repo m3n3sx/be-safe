@@ -551,7 +551,7 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
               : RefreshIndicator(
                   onRefresh: _load,
                   child: ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
                     children: [
                       _buildHeroCard(online),
                       const SizedBox(height: 16),
@@ -1003,8 +1003,8 @@ class _MemberProfileScreenState extends State<MemberProfileScreen> {
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: onTap == null
-                                ? SerenityColors.onSurfaceVariant
-                                : SerenityColors.primary)),
+                                ? context.iosSecondaryLabel
+                                : context.iosLabel)),
                     const SizedBox(height: 2),
                     Text(subtitle,
                         style: TextStyle(

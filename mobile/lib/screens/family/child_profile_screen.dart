@@ -550,7 +550,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
               : RefreshIndicator(
                   onRefresh: _load,
                   child: ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
                     children: [
                       _buildHeroCard(online),
                       const SizedBox(height: 16),
@@ -819,11 +819,13 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.history, size: 14),
+                    Icon(Icons.history, size: 14, color: context.iosLabel),
                     const SizedBox(width: 4),
                     Text(_formatAge(_member?['last_location_at']?.toString()),
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: context.iosLabel)),
                   ],
                 ),
               ),
@@ -997,8 +999,8 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: onTap == null
-                                ? SerenityColors.onSurfaceVariant
-                                : SerenityColors.primary)),
+                                ? context.iosSecondaryLabel
+                                : context.iosLabel)),
                     const SizedBox(height: 2),
                     Text(subtitle,
                         style: TextStyle(

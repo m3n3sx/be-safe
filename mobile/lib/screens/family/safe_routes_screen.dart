@@ -267,7 +267,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
               Icon(
                 Icons.route_outlined,
                 size: 64,
-                color: SerenityColors.primaryContainer.withValues(alpha: 0.3),
+                color: context.iosSecondaryLabel,
               ),
               const SizedBox(height: 16),
               Text(
@@ -287,7 +287,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
-                  color: SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                  color: context.iosSecondaryLabel,
                 ),
               ),
             ],
@@ -350,7 +350,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
                   size: 22,
                   color: isActive
                       ? const Color(0xFF1B873A)
-                      : SerenityColors.primaryContainer.withValues(alpha: 0.5),
+                      : context.iosSecondaryLabel,
                 ),
               ),
               const SizedBox(width: 12),
@@ -372,8 +372,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
                       '${isActive ? '' : ' · wyłączona'}',
                       style: TextStyle(
                         fontSize: 12,
-                        color:
-                            SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                        color: context.iosSecondaryLabel,
                       ),
                     ),
                   ],

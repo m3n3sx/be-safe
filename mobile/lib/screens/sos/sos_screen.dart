@@ -250,27 +250,27 @@ class _SosScreenState extends State<SosScreen>
         builder: (context, child) {
           final progress = _holdCtrl.value;
           final scale = _holding ? 1.0 + progress * 0.1 : 1.0;
-          final coreOpacity = 0.6 + progress * 0.4;
+          final coreOpacity = 0.9 + progress * 0.1;
           return Transform.scale(
             scale: scale,
             child: SizedBox(
-              width: 300,
-              height: 300,
+              width: 360,
+              height: 360,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  // Czerwona, rozmyta „chmura" — miękka radialna poświata.
+                  // Czerwona, rozmyta „chmura" — mocna czerwień w środku.
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          SerenityColors.glowAlertCoral
-                              .withValues(alpha: coreOpacity),
-                          SerenityColors.glowAlertCoral
-                              .withValues(alpha: 0),
+                          const Color(0xFFFF2D2D).withValues(alpha: coreOpacity),
+                          const Color(0xFFFF5A5A)
+                              .withValues(alpha: coreOpacity * 0.75),
+                          const Color(0xFFFF5A5A).withValues(alpha: 0),
                         ],
-                        stops: const [0, 0.7],
+                        stops: const [0.0, 0.45, 0.85],
                       ),
                     ),
                   ),
@@ -527,8 +527,8 @@ class _SosScreenState extends State<SosScreen>
                   style: SerenityText.labelButton.copyWith(
                     fontSize: 16,
                     color: onChanged == null
-                        ? SerenityColors.onSurfaceVariant
-                        : SerenityColors.primary,
+                        ? context.iosSecondaryLabel
+                        : context.iosLabel,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -542,10 +542,6 @@ class _SosScreenState extends State<SosScreen>
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: SerenityColors.primary,
-            activeTrackColor: SerenityColors.secondaryContainer,
-            inactiveThumbColor: context.iosCardSurface,
-            inactiveTrackColor: SerenityColors.surfaceContainerHigh,
           ),
         ],
       ),

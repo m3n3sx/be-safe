@@ -110,18 +110,18 @@ class _FakeCallSetupScreenState extends State<FakeCallSetupScreen> {
                 color: SerenityColors.secondaryContainer.withValues(alpha: 0.35),
                 borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Icon(Icons.shield_outlined,
-                      color: SerenityColors.onSecondaryContainer, size: 28),
-                  SizedBox(width: 12),
+                      color: context.iosLabel, size: 28),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       'Wybierz kto "zadzwoni" i kiedy. Idealne aby wyjść z niezręcznej rozmowy lub uniknąć niebezpiecznej sytuacji.',
                       style: TextStyle(
                           fontSize: 14,
                           height: 1.4,
-                          color: SerenityColors.onSecondaryContainer),
+                          color: context.iosLabel),
                     ),
                   ),
                 ],
@@ -156,7 +156,7 @@ class _FakeCallSetupScreenState extends State<FakeCallSetupScreen> {
                     fontWeight: FontWeight.w600,
                     color: sel
                         ? SerenityColors.onSecondaryContainer
-                        : SerenityColors.primary,
+                        : context.iosLabel,
                   ),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 8, vertical: 6),
@@ -200,7 +200,7 @@ class _FakeCallSetupScreenState extends State<FakeCallSetupScreen> {
                     fontWeight: FontWeight.w600,
                     color: sel
                         ? SerenityColors.onSecondaryContainer
-                        : SerenityColors.primary,
+                        : context.iosLabel,
                   ),
                   padding: const EdgeInsets.symmetric(
                       horizontal: 8, vertical: 6),

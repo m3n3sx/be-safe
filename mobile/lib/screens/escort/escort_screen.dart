@@ -439,7 +439,7 @@ class _EscortRequesterViewState extends State<_EscortRequesterView> {
               Text(
                 overdue ? 'PRZEKROCZONO ETA' : 'Pozostały czas',
                 style: SerenityText.labelCaps.copyWith(
-                    color: overdue ? SerenityColors.error : SerenityColors.onSurfaceVariant,
+                    color: overdue ? SerenityColors.glowAlertCoral : context.iosSecondaryLabel,
                     letterSpacing: 1.4),
               ),
               const SizedBox(height: 4),
@@ -449,7 +449,7 @@ class _EscortRequesterViewState extends State<_EscortRequesterView> {
                   fontSize: 48,
                   fontWeight: FontWeight.w300,
                   fontFeatures: const [FontFeature.tabularFigures()],
-                  color: overdue ? SerenityColors.error : SerenityColors.primary,
+                  color: overdue ? SerenityColors.glowAlertCoral : context.iosLabel,
                 ),
               ),
               if (destName.isNotEmpty)
