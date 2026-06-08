@@ -116,7 +116,7 @@ class _AqiWidgetState extends State<AqiWidget> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.air, size: 13, color: Color(0xFF44474B)),
+                    Icon(Icons.air, size: 13, color: context.iosSecondaryLabel),
                     const SizedBox(width: 4),
                     Text('JAKOŚĆ POWIETRZA',
                         style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 1.0, color: color.withValues(alpha: 0.9))),
@@ -136,7 +136,7 @@ class _AqiWidgetState extends State<AqiWidget> {
             tooltip: 'Odśwież',
             onPressed: _load,
             visualDensity: VisualDensity.compact,
-            color: const Color(0xFF44474B),
+            color: context.iosSecondaryLabel,
           ),
         ],
       ),

@@ -270,6 +270,7 @@ class _QuickActionCard extends StatelessWidget {
                           style: SerenityText.bodyMain.copyWith(
                             fontSize: 12,
                             height: 16 / 12,
+                            color: context.iosSecondaryLabel,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -1362,7 +1363,7 @@ class _GroupChip extends StatelessWidget {
     return Material(
       color: active
           ? SerenityColors.secondaryContainer
-          : context.iosCardSurface,
+          : context.iosCardSurfaceHigh,
       borderRadius: SerenityShapes.pill(),
       child: InkWell(
         borderRadius: SerenityShapes.pill(),
@@ -1373,16 +1374,14 @@ class _GroupChip extends StatelessWidget {
             borderRadius: SerenityShapes.pill(),
             border: active
                 ? null
-                : Border.all(
-                    color: context.iosSeparator.withValues(alpha: 0.5),
-                  ),
+                : Border.all(color: context.iosSeparator),
           ),
           child: Text(
             label,
             style: SerenityText.labelButton.copyWith(
               color: active
                   ? SerenityColors.onSecondaryContainer
-                  : SerenityColors.primary,
+                  : context.iosSecondaryLabel,
             ),
           ),
         ),

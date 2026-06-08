@@ -321,7 +321,10 @@ class _DockSlot extends StatelessWidget {
   Widget _slotGlyph(Color color) {
     // v104: SOS slightly larger than other icons (user m2540).
     final isSos = item.label == 'SOS';
-    final size = isSos ? 30.0 : 24.0;
+    // Mapa to wypełniony glif o cienkich liniach — optycznie „chudszy" od
+    // person/family. +2px wyrównuje wagę wizualną nieaktywnych ikon.
+    final isMap = item.label == 'Mapa';
+    final size = isSos ? 30.0 : (isMap ? 26.0 : 24.0);
     if (item.svg != null) {
       return SvgPicture.asset(
         item.svg!,

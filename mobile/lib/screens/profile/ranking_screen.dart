@@ -113,8 +113,12 @@ class _RankingScreenState extends State<RankingScreen> {
                                         medal,
                                         style: TextStyle(
                                           fontSize: isTop ? 22 : 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: context.iosLabel,
+                                          fontWeight: FontWeight.w600,
+                                          // Kółko jest zawsze jasne (secondary/
+                                          // surfaceContainer), więc cyfra musi być
+                                          // ciemna w OBU trybach — inaczej w dark
+                                          // biały font znika na białym kółku.
+                                          color: SerenityColors.primary,
                                         ),
                                       ),
                                     ),

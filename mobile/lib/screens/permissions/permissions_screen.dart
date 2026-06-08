@@ -271,25 +271,28 @@ class _CapabilityCard extends StatelessWidget {
     required this.onOpenSettings,
   });
 
-  ({String label, Color color}) _systemBadge() {
+  ({String label, Color color}) _systemBadge(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    // W trybie ciemnym klasyczna ciemna czerwień traci czytelność — pastel.
+    final red = dark ? SerenityColors.glowAlertCoral : SerenityColors.error;
     if (cap.permission == Permission.unknown) {
-      return (label: 'systemowe niepotrzebne', color: SerenityColors.secondaryLabel);
+      return (label: 'systemowe niepotrzebne', color: context.iosSecondaryLabel);
     }
     if (systemStatus.isGranted) {
       return (label: 'system: zezwolono', color: SerenityColors.tertiary);
     }
     if (systemStatus.isPermanentlyDenied) {
-      return (label: 'system: zablokowane', color: SerenityColors.error);
+      return (label: 'system: zablokowane', color: red);
     }
     if (systemStatus.isDenied) {
-      return (label: 'system: brak zgody', color: SerenityColors.tertiaryFixedDim);
+      return (label: 'system: brak zgody', color: red);
     }
-    return (label: 'system: ${systemStatus.name}', color: SerenityColors.secondaryLabel);
+    return (label: 'system: ${systemStatus.name}', color: context.iosSecondaryLabel);
   }
 
   @override
   Widget build(BuildContext context) {
-    final badge = _systemBadge();
+    final badge = _systemBadge(context);
     return Container(
       padding: const EdgeInsets.all(SerenitySpacing.md),
       decoration: BoxDecoration(

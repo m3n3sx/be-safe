@@ -140,8 +140,9 @@ class SerenityColors {
   /// Dark separator — hairline on dark cards.
   static const separatorDark = Color(0xFF2A323D);
 
-  /// Dark secondaryLabel — gray subtitle on dark.
-  static const secondaryLabelDark = Color(0xFF9CA3AF);
+  /// Dark secondaryLabel — gray subtitle on dark. Jaśniejszy (WCAG AA na
+  /// charcoalu) — wcześniej #9CA3AF bywał za ciemny przy małym foncie.
+  static const secondaryLabelDark = Color(0xFFAEB6C2);
 
   /// Dark onSurface — primary text on dark.
   static const onSurfaceDark = Color(0xFFF5F7FA);

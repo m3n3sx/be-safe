@@ -104,6 +104,23 @@ ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {
     brightness: brightness,
     colorScheme: colorScheme,
     fontFamily: 'Inter',
+
+    // Przełączniki: w trybie ciemnym off-state miał ciemny tor zlewający się
+    // z kafelkiem. Dajemy jaśniejszy tor + wyraźny obrys + jasny kciuk.
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith((s) {
+        if (s.contains(WidgetState.selected)) return colorScheme.onPrimary;
+        return isDark ? const Color(0xFFAEB6C2) : null;
+      }),
+      trackColor: WidgetStateProperty.resolveWith((s) {
+        if (s.contains(WidgetState.selected)) return colorScheme.primary;
+        return isDark ? const Color(0xFF2A323D) : null;
+      }),
+      trackOutlineColor: WidgetStateProperty.resolveWith((s) {
+        if (s.contains(WidgetState.selected)) return Colors.transparent;
+        return isDark ? const Color(0xFF4A5560) : null;
+      }),
+    ),
     scaffoldBackgroundColor: colorScheme.surface,
     canvasColor: colorScheme.surface,
 

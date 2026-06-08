@@ -286,9 +286,11 @@ class _MyAlertsScreenState extends State<MyAlertsScreen> {
                         a.title,
                         style: SerenityText.labelButton.copyWith(
                           fontSize: 15,
+                          // Theme-aware: aktywne tytuły białe (dark)/granat (light),
+                          // wygasłe jaśniejsza szarość — nie ciemny grafit na czerni.
                           color: isActive
-                              ? SerenityColors.primary
-                              : SerenityColors.onSurfaceVariant,
+                              ? context.iosLabel
+                              : context.iosSecondaryLabel,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
