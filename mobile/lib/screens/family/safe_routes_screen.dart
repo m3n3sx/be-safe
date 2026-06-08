@@ -205,7 +205,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
-                  color: SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                  color: context.iosSecondaryLabel,
                 ),
               ),
             ),
@@ -218,7 +218,7 @@ class _SafeRoutesScreenState extends State<SafeRoutesScreen> {
                 style: TextStyle(
                   fontSize: 13,
                   height: 1.4,
-                  color: SerenityColors.primaryContainer.withValues(alpha: 0.7),
+                  color: context.iosSecondaryLabel,
                 ),
               ),
             ),

@@ -455,7 +455,7 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
               style: TextStyle(
                 fontSize: 13,
                 height: 1.4,
-                color: SerenityColors.primaryContainer.withValues(alpha: 0.65),
+                color: context.iosSecondaryLabel,
               ),
             ),
             const SizedBox(height: 18),
@@ -465,7 +465,7 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 1.2,
-                color: SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                color: context.iosSecondaryLabel,
               ),
             ),
             const SizedBox(height: 6),
@@ -494,7 +494,7 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.2,
                     color:
-                        SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                        context.iosSecondaryLabel,
                   ),
                 ),
                 const Spacer(),
@@ -532,14 +532,14 @@ class _SaveOptionsSheetState extends State<_SaveOptionsSheet> {
                   '30 m',
                   style: TextStyle(
                     fontSize: 11,
-                    color: SerenityColors.primaryContainer.withValues(alpha: 0.5),
+                    color: context.iosSecondaryLabel,
                   ),
                 ),
                 Text(
                   '500 m',
                   style: TextStyle(
                     fontSize: 11,
-                    color: SerenityColors.primaryContainer.withValues(alpha: 0.5),
+                    color: context.iosSecondaryLabel,
                   ),
                 ),
               ],

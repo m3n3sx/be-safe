@@ -166,7 +166,7 @@ class _FamilyPlannerScreenState extends State<FamilyPlannerScreen> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: SerenityColors.primaryContainer.withValues(alpha: 0.6),
+                                color: context.iosSecondaryLabel,
                               ),
                             ),
                           ],
@@ -230,7 +230,7 @@ class _FamilyPlannerScreenState extends State<FamilyPlannerScreen> {
                       _formatDate(e['starts_at'] ?? ''),
                       style: TextStyle(
                         fontSize: 13,
-                        color: SerenityColors.primaryContainer.withValues(alpha: 0.65),
+                        color: context.iosSecondaryLabel,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -250,7 +250,7 @@ class _FamilyPlannerScreenState extends State<FamilyPlannerScreen> {
               e['description'] as String,
               style: TextStyle(
                 fontSize: 13,
-                color: SerenityColors.primaryContainer.withValues(alpha: 0.7),
+                color: context.iosSecondaryLabel,
               ),
             ),
           ],
