@@ -46,8 +46,21 @@ class _MapScreenState extends State<MapScreen> {
   // F23-pin: lista user_id przypiętych przez usera (max 3) — pokazywani
   // zawsze na pasku karuzeli. Persystencja w SharedPreferences.
   List<String> _pinnedIds = [];
-  final Map<String, BitmapDescriptor> _childIconCache = {};
-  BitmapDescriptor? _familyParentPin;
+  final Map<String, BitmapDescriptor> _memberIconCache = {};
+
+  /// Online = lokalizacja świeższa niż 15 min.
+  bool _memberOnline(Map<String, dynamic> m) {
+    final raw = m['last_location_at'];
+    if (raw == null) return false;
+    try {
+      return DateTime.now()
+              .difference(DateTime.parse(raw.toString()).toLocal())
+              .inMinutes <
+          15;
+    } catch (_) {
+      return false;
+    }
+  }
 
   // F11: AED Locator
   bool _aedsVisible = false;
@@ -336,14 +349,15 @@ class _MapScreenState extends State<MapScreen> {
         }
       }
       debugPrint('[family] total members with location: ${members.length}');
-      _familyParentPin ??= await MapMarkers.familyPin();
       for (final mem in members) {
-        if (mem['role'] == 'child') {
-          final name = (mem['username'] ?? '?').toString();
-          if (!_childIconCache.containsKey(name)) {
-            _childIconCache[name] = await MapMarkers.childPin(name);
-          }
-        }
+        final uid = mem['user_id']?.toString();
+        if (uid == null) continue;
+        final url = mem['avatar_url']?.toString();
+        final name = (mem['username'] ?? '?').toString();
+        _memberIconCache[uid] = await MapMarkers.avatarPin(
+          url, name,
+          online: _memberOnline(mem),
+        );
       }
       if (mounted) setState(() => _familyMembers = members);
     } catch (e) {
@@ -435,9 +449,8 @@ class _MapScreenState extends State<MapScreen> {
               ..._familyMembers.map((c) {
                 final role = c['role']?.toString();
                 final isChild = role == 'child';
-                final icon = isChild
-                    ? (_childIconCache[(c['username'] ?? '').toString()] ?? BitmapDescriptor.defaultMarker)
-                    : (_familyParentPin ?? BitmapDescriptor.defaultMarker);
+                final icon = _memberIconCache[c['user_id'].toString()] ??
+                    BitmapDescriptor.defaultMarker;
                 return Marker(
                   markerId: MarkerId('member_${c['user_id']}'),
                   position: LatLng(c['lat'], c['lng']),
@@ -709,7 +722,7 @@ class _MapScreenState extends State<MapScreen> {
 
         // Empty state when 0 alerts (Empty18)
         if (alerts.isEmpty && !alertProv.loading) Positioned(
-          left: 16, right: 16, bottom: 100,
+          left: 16, right: 16, bottom: 190,
           child: IgnorePointer(
             child: Container(
               padding: const EdgeInsets.all(16),
@@ -1444,7 +1457,7 @@ class _FilterPillButton extends StatelessWidget {
                 size: 18,
                 color: hasFilters
                     ? SerenityColors.onPrimary
-                    : SerenityColors.primary,
+                    : context.iosLabel,
               ),
               const SizedBox(width: 8),
               Text(
@@ -1452,7 +1465,7 @@ class _FilterPillButton extends StatelessWidget {
                 style: SerenityText.labelButton.copyWith(
                   color: hasFilters
                       ? SerenityColors.onPrimary
-                      : SerenityColors.primary,
+                      : context.iosLabel,
                 ),
               ),
               if (hasFilters) ...[

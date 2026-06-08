@@ -20,6 +20,7 @@ library;
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../theme/ios_surfaces.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/alert.dart';
@@ -75,6 +76,96 @@ class MapMarkers {
   /// Family member (adult) — gradient orb.
   static Future<BitmapDescriptor> familyPin() =>
       _memo('family', _drawFamilyPin);
+
+  // Cache dekodowanych zdjęć profilowych (klucz = url).
+  static final Map<String, ui.Image> _imgCache = {};
+
+  /// Marker członka rodziny ze ZDJĘCIEM profilowym — okrągły awatar z
+  /// kolorowym pierścieniem (online=mint / offline=szary), białym obrysem,
+  /// bez poświaty/cienia. Fallback: inicjał na granatowym kole.
+  static Future<BitmapDescriptor> avatarPin(
+    String? url,
+    String name, {
+    required bool online,
+  }) {
+    final key = 'avatar_${url ?? "none"}_${name}_$online';
+    return _memo(key, () => _drawAvatarPin(url, name, online));
+  }
+
+  static Future<ui.Image?> _loadImage(String url) async {
+    final cached = _imgCache[url];
+    if (cached != null) return cached;
+    try {
+      final resp = await http.get(Uri.parse(url));
+      if (resp.statusCode != 200) return null;
+      final codec = await ui.instantiateImageCodec(resp.bodyBytes);
+      final frame = await codec.getNextFrame();
+      _imgCache[url] = frame.image;
+      return frame.image;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<BitmapDescriptor> _drawAvatarPin(
+      String? url, String name, bool online) async {
+    const double w = 64;
+    const double r = 24;
+    final ring = online
+        ? SerenityColors.glowSafeMint
+        : const Color(0xFF9AA7B2);
+    ui.Image? img;
+    if (url != null && url.isNotEmpty) img = await _loadImage(url);
+    return _record(w, w, (canvas) {
+      final c = Offset(w / 2, w / 2);
+      // Biały backing (obrys dla kontrastu na mapie).
+      canvas.drawCircle(c, r + 3, Paint()..color = Colors.white);
+      if (img != null) {
+        canvas.save();
+        canvas.clipPath(Path()..addOval(Rect.fromCircle(center: c, radius: r)));
+        final iw = img.width.toDouble();
+        final ih = img.height.toDouble();
+        final side = math.min(iw, ih);
+        final src = Rect.fromLTWH((iw - side) / 2, (ih - side) / 2, side, side);
+        canvas.drawImageRect(
+          img,
+          src,
+          Rect.fromCircle(center: c, radius: r),
+          Paint()..filterQuality = FilterQuality.high,
+        );
+        canvas.restore();
+      } else {
+        canvas.drawCircle(
+            c, r, Paint()..color = SerenityColors.primaryContainer);
+        final initial = name.trim().isNotEmpty
+            ? name.trim().substring(0, 1).toUpperCase()
+            : '?';
+        final tp = TextPainter(
+          text: TextSpan(
+            text: initial,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+              height: 1.0,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        tp.paint(canvas, Offset(c.dx - tp.width / 2, c.dy - tp.height / 2));
+      }
+      // Kolorowy pierścień statusu.
+      canvas.drawCircle(
+        c,
+        r,
+        Paint()
+          ..color = ring
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 4,
+      );
+    });
+  }
 
   /// F11: AED defibrillator pin — mint circle with white heart glyph.
   static Future<BitmapDescriptor> aedPin() =>
