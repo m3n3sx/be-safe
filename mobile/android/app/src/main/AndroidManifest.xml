@@ -95,6 +95,34 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_status_info" />
         </receiver>
+        <receiver android:name=".FamilyWidgetProvider" android:exported="true" android:label="be:Safe — Rodzina">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_family_info" />
+        </receiver>
+        <receiver android:name=".NearestWidgetProvider" android:exported="true" android:label="be:Safe — Najbliższy alert">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_nearest_info" />
+        </receiver>
+        <receiver android:name=".QuickWidgetProvider" android:exported="true" android:label="be:Safe — Szybkie akcje">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_quick_info" />
+        </receiver>
+        <receiver android:name=".CheckinWidgetProvider" android:exported="true" android:label="be:Safe — Check-in">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_checkin_info" />
+        </receiver>
+        <receiver android:name=".AqiWidgetProvider" android:exported="true" android:label="be:Safe — Jakość powietrza">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_aqi_info" />
+        </receiver>
+        <receiver android:name=".EscortWidgetProvider" android:exported="true" android:label="be:Safe — Eskorta">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_escort_info" />
+        </receiver>
+        <receiver android:name=".ImgwWidgetProvider" android:exported="true" android:label="be:Safe — Ostrzeżenia IMGW">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_imgw_info" />
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

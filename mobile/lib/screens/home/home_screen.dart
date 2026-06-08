@@ -86,6 +86,40 @@ class _HomeScreenState extends State<HomeScreen> {
       message: _safetyMessage,
       alerts: _safetySubtitle,
     );
+
+    // Widget „Rodzina".
+    WidgetService.pushFamily(
+      online: _familyOnline,
+      total: _familyTotal,
+      sub: _familyTotal == 0
+          ? 'Brak grupy rodzinnej'
+          : '$_familyOnline z $_familyTotal online',
+    );
+
+    // Widget „Najbliższy alert".
+    final alerts = alertProv.allAlerts;
+    if (alerts.isEmpty) {
+      WidgetService.pushNearest(has: false);
+    } else {
+      final sorted = [...alerts]
+        ..sort((a, b) => (a.distanceM ?? 1e12).compareTo(b.distanceM ?? 1e12));
+      final n = sorted.first;
+      final d = n.distanceM;
+      final dist = d == null
+          ? ''
+          : (d < 1000 ? '${d.round()} m' : '${(d / 1000).toStringAsFixed(1)} km');
+      final age = _ageStr(n.createdAt);
+      final meta = [dist, age].where((s) => s.isNotEmpty).join(' • ');
+      WidgetService.pushNearest(has: true, category: n.category.label, meta: meta);
+    }
+  }
+
+  String _ageStr(DateTime t) {
+    final diff = DateTime.now().difference(t);
+    if (diff.inMinutes < 1) return 'przed chwilą';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} min temu';
+    if (diff.inHours < 24) return '${diff.inHours} h temu';
+    return '${diff.inDays} dni temu';
   }
 
   Future<void> _loadAlertsNearby(AlertProvider alertProv) async {

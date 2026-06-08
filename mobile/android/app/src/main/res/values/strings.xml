@@ -2,4 +2,11 @@
 <resources>
     <string name="widget_sos_desc">Przycisk SOS — szybkie wezwanie pomocy z ekranu głównego</string>
     <string name="widget_status_desc">Stan zagrożeń w Twojej okolicy — poziom bezpieczeństwa i alerty</string>
+    <string name="widget_family_desc">Rodzina — ile osób online i ostatnia aktywność</string>
+    <string name="widget_nearest_desc">Najbliższy alert — kategoria, odległość i czas</string>
+    <string name="widget_quick_desc">Szybkie akcje — SOS, fałszywy telefon, zgłoś alert</string>
+    <string name="widget_checkin_desc">Check-in — jednym tapnięciem zamelduj że jesteś bezpieczny</string>
+    <string name="widget_aqi_desc">Jakość powietrza — najbliższa stacja GIOŚ</string>
+    <string name="widget_escort_desc">Eskorta Follow Me — szybki start z ekranu głównego</string>
+    <string name="widget_imgw_desc">Ostrzeżenia IMGW — pogoda i hydrologia</string>
 </resources>

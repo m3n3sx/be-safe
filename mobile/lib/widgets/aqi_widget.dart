@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../services/api_service.dart';
 import '../services/location_service.dart';
+import '../services/widget_service.dart';
 import '../theme/design_tokens.dart';
 
 /// F17: AQI banner — najbliższa stacja GIOŚ + kolor wg indeksu.
@@ -43,6 +44,15 @@ class _AqiWidgetState extends State<AqiWidget> {
         _station = list.isNotEmpty ? list.first : null;
         _loading = false;
       });
+      // Zasil widget AQI.
+      if (list.isNotEmpty) {
+        final s = list.first;
+        WidgetService.pushAqi(
+          index: (s['aqi_index'] as int?) ?? -1,
+          label: s['aqi_label']?.toString() ?? 'Brak danych',
+          city: s['city']?.toString() ?? '',
+        );
+      }
     } catch (_) {
       if (mounted) setState(() { _loading = false; });
     }

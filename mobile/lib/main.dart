@@ -48,6 +48,10 @@ import 'screens/community/news_screen.dart';
 import 'screens/neighborhood/neighborhood_chat_screen.dart';
 import 'screens/emergency/emergency_numbers_screen.dart';
 import 'screens/sos/sos_screen.dart';
+import 'screens/fake_call/fake_call_setup_screen.dart';
+import 'screens/alerts/create_alert_screen.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import 'screens/home/home_kids_screen.dart';
 import 'screens/home/home_senior_screen.dart';
 
@@ -216,6 +220,9 @@ class AlertMapApp extends StatelessWidget {
               '/sos' => const SosScreen(),
               '/mode-picker' => const ModePickerScreen(allowSkip: true),
               '/escort' => const EscortScreen(),
+              '/fakecall' => const FakeCallSetupScreen(),
+              '/report' => const _ReportLoader(),
+              '/checkin' => const _CheckinScreen(),
               _ => const MapScreen(),
             });
           },
@@ -357,8 +364,8 @@ class _AuthGateState extends State<_AuthGate> {
         SosAudioService().init();
         // F24: Biometric auth (opt-in)
         BiometricService().init();
-        // Widgety ekranu głównego: render SOS (handler tapów zarejestrowany w main)
-        WidgetService.refreshSos();
+        // Widgety ekranu głównego: render statycznych (handler tapów w main)
+        WidgetService.refreshStatic();
         context.read<BackgroundService>().init().then((_) {
           if (!mounted) return;
           context.read<BackgroundService>().startTracking(token);
@@ -625,6 +632,131 @@ class _AlertDetailLoaderState extends State<_AlertDetailLoader> {
                 ),
               )
             : const CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+/// Widget „Zgłoś" → pobiera GPS i otwiera CreateAlertScreen.
+class _ReportLoader extends StatefulWidget {
+  const _ReportLoader();
+  @override
+  State<_ReportLoader> createState() => _ReportLoaderState();
+}
+
+class _ReportLoaderState extends State<_ReportLoader> {
+  LatLng? _pos;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    try {
+      final p = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 8),
+      );
+      if (mounted) setState(() => _pos = LatLng(p.latitude, p.longitude));
+    } catch (_) {
+      if (mounted) {
+        setState(() => _error = 'Nie udało się pobrać lokalizacji. Włącz GPS i spróbuj ponownie.');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_pos != null) return CreateAlertScreen(position: _pos!);
+    return Scaffold(
+      appBar: AppBar(title: const Text('Zgłoś zagrożenie')),
+      body: Center(
+        child: _error != null
+            ? Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(_error!, textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    FilledButton(
+                      onPressed: () => Navigator.maybePop(context),
+                      child: const Text('Wróć'),
+                    ),
+                  ],
+                ),
+              )
+            : const CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
+/// Widget „Jestem bezpieczny" → wysyła check-in jednym tapnięciem.
+class _CheckinScreen extends StatefulWidget {
+  const _CheckinScreen();
+  @override
+  State<_CheckinScreen> createState() => _CheckinScreenState();
+}
+
+class _CheckinScreenState extends State<_CheckinScreen> {
+  String _state = 'sending'; // sending | ok | error
+
+  @override
+  void initState() {
+    super.initState();
+    _checkin();
+  }
+
+  Future<void> _checkin() async {
+    try {
+      final api = context.read<ApiService>();
+      await api.post('/users/me/checkin', {'status': 'safe'});
+      final now = DateTime.now();
+      final hh = now.hour.toString().padLeft(2, '0');
+      final mm = now.minute.toString().padLeft(2, '0');
+      WidgetService.pushCheckin('Zameldowano dziś o $hh:$mm');
+      if (mounted) setState(() => _state = 'ok');
+    } catch (_) {
+      if (mounted) setState(() => _state = 'error');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final (icon, color, text) = switch (_state) {
+      'ok' => (Icons.check_circle, const Color(0xFF34C759), 'Zameldowano — jesteś bezpieczny/a.\nRodzina została poinformowana.'),
+      'error' => (Icons.error_outline, const Color(0xFFCE2200), 'Nie udało się zameldować.\nSprawdź połączenie i spróbuj ponownie.'),
+      _ => (Icons.hourglass_empty, const Color(0xFF9AA7B2), 'Melduję...'),
+    };
+    return Scaffold(
+      appBar: AppBar(title: const Text('Check-in')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 72),
+              const SizedBox(height: 16),
+              Text(text, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16)),
+              const SizedBox(height: 24),
+              if (_state != 'sending')
+                FilledButton(
+                  onPressed: () => Navigator.maybePop(context),
+                  child: const Text('Gotowe'),
+                ),
+              if (_state == 'error')
+                TextButton(
+                  onPressed: () => setState(() { _state = 'sending'; _checkin(); }),
+                  child: const Text('Spróbuj ponownie'),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
