@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_sos_desc">Przycisk SOS — szybkie wezwanie pomocy z ekranu głównego</string>
+    <string name="widget_status_desc">Stan zagrożeń w Twojej okolicy — poziom bezpieczeństwa i alerty</string>
+</resources>

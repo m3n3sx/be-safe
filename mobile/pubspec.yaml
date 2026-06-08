@@ -2,7 +2,7 @@ name: alertmap
 description: Community-driven safety alert system
 
 publish_to: 'none'
-version: 1.0.0+125
+version: 1.0.0+126
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -41,6 +41,7 @@ dependencies:
   path_provider: ^2.1.5
   local_auth: ^2.3.0
   flutter_svg: ^2.0.10+1
+  home_widget: ^0.9.2+1
 
 dev_dependencies:
   flutter_test:

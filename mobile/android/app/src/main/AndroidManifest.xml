@@ -71,6 +71,30 @@
             android:foregroundServiceType="location|dataSync"
             android:exported="false"
             tools:replace="android:foregroundServiceType,android:exported" />
+
+        <!-- Widgety ekranu głównego (home_widget) -->
+        <receiver
+            android:name=".SosWidgetProvider"
+            android:exported="true"
+            android:label="be:Safe SOS">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_sos_info" />
+        </receiver>
+        <receiver
+            android:name=".StatusWidgetProvider"
+            android:exported="true"
+            android:label="be:Safe — Stan zagrożeń">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_status_info" />
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

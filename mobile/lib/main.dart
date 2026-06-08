@@ -19,6 +19,7 @@ import 'services/crash_detection_service.dart';
 import 'services/shake_detection_service.dart';
 import 'services/sos_audio_service.dart';
 import 'services/biometric_service.dart';
+import 'services/widget_service.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/forgot_password_screen.dart';
 import 'screens/escort/escort_screen.dart';
@@ -80,6 +81,10 @@ void main() async {
   ));
   await S.load();
   await initDockState();
+
+  // Widgety ekranu głównego: rejestracja obsługi tapów (besafe://sos|status)
+  // niezależnie od stanu logowania — _route i tak czeka na navigator.
+  WidgetService.registerClickHandler();
 
   if (_sentryDsn.isNotEmpty) {
     await SentryFlutter.init(
@@ -352,6 +357,8 @@ class _AuthGateState extends State<_AuthGate> {
         SosAudioService().init();
         // F24: Biometric auth (opt-in)
         BiometricService().init();
+        // Widgety ekranu głównego: render SOS (handler tapów zarejestrowany w main)
+        WidgetService.refreshSos();
         context.read<BackgroundService>().init().then((_) {
           if (!mounted) return;
           context.read<BackgroundService>().startTracking(token);

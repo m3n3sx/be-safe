@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../../providers/alert_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/api_service.dart';
+import '../../services/widget_service.dart';
 import '../../theme/design_tokens.dart';
 import '../../theme/ios_surfaces.dart';
 import '../../widgets/collapsible_dock.dart' show dockAccentColor, kDockReservedHeight;
@@ -78,6 +79,13 @@ class _HomeScreenState extends State<HomeScreen> {
         .fold(0, (sum, a) => sum + a.confirms);
 
     if (mounted) setState(() => _loading = false);
+
+    // Zasil widget „Stan zagrożeń" aktualnymi danymi.
+    WidgetService.pushSafety(
+      level: _safetyLevel,
+      message: _safetyMessage,
+      alerts: _safetySubtitle,
+    );
   }
 
   Future<void> _loadAlertsNearby(AlertProvider alertProv) async {
