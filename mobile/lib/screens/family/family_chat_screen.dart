@@ -242,20 +242,20 @@ class _FamilyChatScreenState extends State<FamilyChatScreen> {
                   if (!mine)
                     Text(m['author_username'] ?? '',
                         style: SerenityText.labelCaps.copyWith(
-                          color: SerenityColors.onSecondaryContainer,
+                          color: context.iosSecondaryLabel,
                           fontSize: 10,
                         )),
                   if (!mine) const SizedBox(height: 2),
                   Text(m['body'] ?? '',
                       style: TextStyle(
-                        color: mine ? Colors.white : SerenityColors.primary,
+                        color: mine ? Colors.white : context.iosLabel,
                         fontSize: 15,
                       )),
                   const SizedBox(height: 4),
                   Text(timeLabel,
                       style: TextStyle(
-                        color: (mine ? Colors.white : SerenityColors.onSurfaceVariant)
-                            .withValues(alpha: 0.65),
+                        color: (mine ? Colors.white : context.iosSecondaryLabel)
+                            .withValues(alpha: 0.75),
                         fontSize: 10,
                       )),
                 ],

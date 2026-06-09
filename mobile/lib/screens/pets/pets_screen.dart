@@ -692,6 +692,12 @@ class _AddPetSheetState extends State<_AddPetSheet> {
                     selected: selected,
                     onSelected: (_) => setState(() => _species = opt.$1),
                     selectedColor: SerenityColors.secondaryContainer,
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: selected
+                          ? SerenityColors.onSecondaryContainer
+                          : context.iosLabel,
+                    ),
                   );
                 }).toList(),
               ),

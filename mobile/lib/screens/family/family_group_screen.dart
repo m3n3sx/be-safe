@@ -188,8 +188,8 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
         IconButton(icon: const Icon(Icons.refresh), onPressed: _load, tooltip: 'Odśwież listę'),
       ]),
       body: Column(children: [
-        Expanded(
-          flex: 3,
+        SizedBox(
+          height: 240,
           child: GoogleMap(
             initialCameraPosition: CameraPosition(target: fallback, zoom: 14),
             onMapCreated: (c) { _mapController = c; _fitBounds(); },
@@ -200,7 +200,6 @@ class _FamilyGroupScreenState extends State<FamilyGroupScreen> {
           ),
         ),
         Expanded(
-          flex: 2,
           child: ListView(children: [
             const Padding(padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
               child: Text('Członkowie', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),

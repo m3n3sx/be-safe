@@ -130,9 +130,9 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
         ),
         body: Column(
           children: [
-            // Mapa ~60% wysokości
-            Expanded(
-              flex: 6,
+            // Mapa — stała, niższa wysokość (jak preview na karcie)
+            SizedBox(
+              height: 260,
               child: Stack(
                 children: [
                   GoogleMap(
@@ -212,11 +212,10 @@ class _AddGeofenceScreenState extends State<AddGeofenceScreen> {
                 ],
               ),
             ),
-            // Sekcja formularza ~40%
+            // Sekcja formularza — reszta wysokości, przewijalna
             Expanded(
-              flex: 4,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

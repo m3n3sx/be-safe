@@ -207,7 +207,7 @@ class _EscortStartViewState extends State<_EscortStartView> {
           Container(
             padding: const EdgeInsets.all(SerenitySpacing.lg),
             decoration: BoxDecoration(
-              color: SerenityColors.secondaryContainer.withValues(alpha: 0.5),
+              color: SerenityColors.secondaryContainer,
               borderRadius: BorderRadius.circular(SerenityShapes.radiusXl),
             ),
             child: Row(
@@ -218,7 +218,10 @@ class _EscortStartViewState extends State<_EscortStartView> {
                   child: Text(
                     'Ktoś z rodziny będzie widzieć Twoją trasę w czasie rzeczywistym. '
                     'Jeśli nie potwierdzisz dotarcia, otrzyma alarm.',
-                    style: SerenityText.bodyMain.copyWith(fontSize: 13.5),
+                    style: SerenityText.bodyMain.copyWith(
+                      fontSize: 13.5,
+                      color: SerenityColors.onSecondaryContainer,
+                    ),
                   ),
                 ),
               ],
