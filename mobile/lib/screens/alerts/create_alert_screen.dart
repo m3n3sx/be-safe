@@ -384,7 +384,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
               fontSize: 13,
               color: selected
                   ? SerenityColors.onPrimary
-                  : SerenityColors.primary,
+                  : context.iosLabel,
             ),
           ),
         ),
@@ -537,7 +537,7 @@ class _CreateAlertScreenState extends State<CreateAlertScreen> {
             fontSize: 13,
             color: selected
                 ? SerenityColors.onPrimary
-                : SerenityColors.primary,
+                : context.iosLabel,
           ),
           backgroundColor: context.iosCardSurface,
           selectedColor: SerenityColors.primaryContainer,

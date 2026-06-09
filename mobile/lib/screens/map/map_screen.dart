@@ -196,7 +196,7 @@ class _MapScreenState extends State<MapScreen> {
           mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(child: Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(2)))),
+              decoration: BoxDecoration(color: context.iosSeparator, borderRadius: BorderRadius.circular(2)))),
             Row(children: [
               Container(width: 56, height: 56, decoration: BoxDecoration(
                 color: const Color(0xFF9DF4CB), shape: BoxShape.circle),
@@ -207,7 +207,7 @@ class _MapScreenState extends State<MapScreen> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                 if (distance != null) Text(
                   distance < 1000 ? '${distance}m od Ciebie' : '${(distance / 1000).toStringAsFixed(1)}km',
-                  style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                  style: TextStyle(fontSize: 13, color: context.iosSecondaryLabel)),
               ])),
             ]),
             const SizedBox(height: 16),
@@ -237,14 +237,15 @@ class _MapScreenState extends State<MapScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))))),
               const SizedBox(width: 12),
-              Expanded(child: OutlinedButton.icon(
+              Expanded(child: FilledButton.icon(
                 onPressed: () async {
                   try { await launchUrl(Uri.parse('tel:112'), mode: LaunchMode.externalApplication); } catch (_) {}
                 },
-                icon: const Icon(Icons.call, color: Color(0xFFFF7A7A)),
-                label: const Text('Zadzwoń 112', style: TextStyle(color: Color(0xFF1A2027))),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFFFF7A7A), width: 2),
+                icon: const Icon(Icons.call, color: Colors.white),
+                label: const Text('Zadzwoń 112', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFFE53935),
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14))))),
             ]),
@@ -257,7 +258,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget _aedDetailRow(IconData icon, String text) => Padding(
     padding: const EdgeInsets.only(bottom: 4),
     child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Icon(icon, size: 18, color: Colors.black54),
+      Icon(icon, size: 18, color: context.iosSecondaryLabel),
       const SizedBox(width: 8),
       Expanded(child: Text(text, style: const TextStyle(fontSize: 14, height: 1.4))),
     ]),
@@ -622,7 +623,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
               child: IconButton(
                 icon: Icon(Icons.favorite,
-                  color: _aedsVisible ? const Color(0xFF0F7252) : SerenityColors.primaryContainer),
+                  color: _aedsVisible ? const Color(0xFF0F7252) : const Color(0xFFE53935)),
                 tooltip: _aedsVisible ? 'Ukryj AED' : 'Pokaż defibrylatory (AED)',
                 onPressed: _toggleAeds,
                 padding: const EdgeInsets.all(16),
@@ -812,7 +813,7 @@ class _MapScreenState extends State<MapScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.iosCardSurface,
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(blurRadius: 12, color: Colors.black.withValues(alpha: 0.15), offset: const Offset(0, 4)),
@@ -985,9 +986,9 @@ class _MapScreenState extends State<MapScreen> {
         initialChildSize: 0.55, minChildSize: 0.35, maxChildSize: 0.9,
         expand: false,
         builder: (_, scrollController) => StatefulBuilder(builder: (ctx2, setSheetState) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          decoration: BoxDecoration(
+            color: context.iosBackground,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: Column(children: [
             const SizedBox(height: 10),
