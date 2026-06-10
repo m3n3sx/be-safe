@@ -31,12 +31,12 @@ class SerenityScrollBehavior extends MaterialScrollBehavior {
   }
 }
 
-ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {
+ThemeData buildSerenityTheme({Brightness brightness = Brightness.light, bool highContrast = false}) {
   final isDark = brightness == Brightness.dark;
 
   // Dark mode swaps primary ↔ primaryContainer for contrast,
   // surface → inverseSurface. Subtle, not full-invert.
-  final colorScheme = isDark
+  final colorSchemeBase = isDark
       ? const ColorScheme(
           brightness: Brightness.dark,
           // Voltgear-inspired dark: voltMint as accent, charcoal surfaces.
@@ -98,6 +98,20 @@ ThemeData buildSerenityTheme({Brightness brightness = Brightness.light}) {
           onInverseSurface: SerenityColors.inverseOnSurface,
           inversePrimary: SerenityColors.inversePrimary,
         );
+
+  // Wysoki kontrast (ułatwienia dostępu): czyste czarne/białe teksty +
+  // mocniejsze obrysy. Propaguje do DefaultTextStyle (onSurface), ListTile
+  // (onSurfaceVariant) i ramek (outline).
+  final colorScheme = highContrast
+      ? colorSchemeBase.copyWith(
+          onSurface: isDark ? Colors.white : Colors.black,
+          onSurfaceVariant:
+              isDark ? const Color(0xFFE2E6EC) : const Color(0xFF1A1A1A),
+          outline: isDark ? const Color(0xFF8A97A6) : const Color(0xFF3A3A3A),
+          outlineVariant:
+              isDark ? const Color(0xFF8A97A6) : const Color(0xFF3A3A3A),
+        )
+      : colorSchemeBase;
 
   return ThemeData(
     useMaterial3: true,

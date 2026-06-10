@@ -18,6 +18,7 @@
 library;
 import 'package:flutter/material.dart';
 import '../theme/design_tokens.dart';
+import '../providers/accessibility_provider.dart';
 
 class GlowOrb extends StatefulWidget {
   /// Diameter of the orb in logical pixels. Default 280.
@@ -70,30 +71,36 @@ class _GlowOrbState extends State<GlowOrb>
     _scale = Tween<double>(begin: 0.9, end: 1.1).animate(
       CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
     );
-    if (widget.pulse) {
+    _applyMotion();
+    reduceMotionNotifier.addListener(_applyMotion);
+  }
+
+  /// Uruchamia/zatrzymuje pulsowanie zależnie od reduce-motion.
+  void _applyMotion() {
+    if (!mounted) return;
+    if (widget.pulse && !reduceMotionNotifier.value) {
       _ctrl.repeat(reverse: true);
+    } else {
+      _ctrl.stop();
+      _ctrl.value = 1.0;
     }
   }
 
   @override
   void didUpdateWidget(covariant GlowOrb oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.pulse != widget.pulse) {
-      if (widget.pulse) {
-        _ctrl.repeat(reverse: true);
-      } else {
-        _ctrl.stop();
-        _ctrl.value = 1.0;
-      }
-    }
     if (oldWidget.pulseDuration != widget.pulseDuration) {
       _ctrl.duration = widget.pulseDuration;
-      if (widget.pulse) _ctrl.repeat(reverse: true);
+    }
+    if (oldWidget.pulse != widget.pulse ||
+        oldWidget.pulseDuration != widget.pulseDuration) {
+      _applyMotion();
     }
   }
 
   @override
   void dispose() {
+    reduceMotionNotifier.removeListener(_applyMotion);
     _ctrl.dispose();
     super.dispose();
   }

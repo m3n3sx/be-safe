@@ -20,6 +20,7 @@ import 'dart:ui' show ImageFilter;
 import 'package:flutter/material.dart';
 
 import '../theme/ios_surfaces.dart';
+import '../providers/accessibility_provider.dart';
 
 class SafetyHeroXL extends StatefulWidget {
   /// 0..10 safety score (10 = best).
@@ -67,11 +68,23 @@ class _SafetyHeroXLState extends State<SafetyHeroXL>
     _drift = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 16),
-    )..repeat();
+    );
+    _applyMotion();
+    reduceMotionNotifier.addListener(_applyMotion);
+  }
+
+  void _applyMotion() {
+    if (!mounted) return;
+    if (reduceMotionNotifier.value) {
+      _drift.stop();
+    } else if (!_drift.isAnimating) {
+      _drift.repeat();
+    }
   }
 
   @override
   void dispose() {
+    reduceMotionNotifier.removeListener(_applyMotion);
     _drift.dispose();
     super.dispose();
   }

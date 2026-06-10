@@ -6,6 +6,7 @@ import '../../models/user.dart' show AppModeX;
 import '../../providers/mode_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../mode/mode_picker_screen.dart';
+import 'accessibility_screen.dart';
 import '../cyber_safety/cyber_safety_screen.dart';
 import '../parental_controls/parental_controls_screen.dart';
 import '../../services/api_service.dart';
@@ -127,6 +128,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 builder: (_) => const ModePickerScreen(allowSkip: true),
               ),
             ),
+          ),
+        ),
+        // Ułatwienia dostępu (WCAG): skala tekstu, kontrast, animacje
+        ListTile(
+          leading: const Icon(Icons.accessibility_new),
+          title: const Text('Ułatwienia dostępu'),
+          subtitle: const Text('Większy tekst, wysoki kontrast, mniej animacji'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const AccessibilityScreen()),
           ),
         ),
         // F28: Cyber-bezpieczeństwo i ochrona danych osobowych

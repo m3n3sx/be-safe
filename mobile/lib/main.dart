@@ -8,6 +8,7 @@ import 'providers/auth_provider.dart';
 import 'providers/alert_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/mode_provider.dart';
+import 'providers/accessibility_provider.dart';
 import 'theme/app_theme.dart';
 import 'services/api_service.dart';
 import 'services/socket_service.dart';
@@ -124,9 +125,10 @@ class AlertMapApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AlertProvider(api, socket)),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => ModeProvider()..init()),
+        ChangeNotifierProvider(create: (_) => AccessibilityProvider()),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (_, themeProv, __) => DynamicColorBuilder(
+      child: Consumer2<ThemeProvider, AccessibilityProvider>(
+        builder: (_, themeProv, a11y, __) => DynamicColorBuilder(
           builder: (lightDynamic, darkDynamic) {
           // Use dynamic color only if user hasn't picked a custom theme
           final useSystem = themeProv.themeId == 'blue' && lightDynamic != null;
@@ -138,13 +140,13 @@ class AlertMapApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           themeMode: themeProv.mode,
           theme: useSerenity
-              ? buildSerenityTheme(brightness: Brightness.light)
+              ? buildSerenityTheme(brightness: Brightness.light, highContrast: a11y.highContrast)
               : ThemeData(
                   colorScheme: useSystem ? lightDynamic!.harmonized() : ColorScheme.fromSeed(seedColor: themeProv.seedColor, brightness: Brightness.light),
                   useMaterial3: true,
                 ),
           darkTheme: useSerenity
-              ? buildSerenityTheme(brightness: Brightness.dark)
+              ? buildSerenityTheme(brightness: Brightness.dark, highContrast: a11y.highContrast)
               : ThemeData(
                   colorScheme: useSystem && darkDynamic != null ? darkDynamic!.harmonized() : ColorScheme.fromSeed(seedColor: themeProv.seedColor, brightness: Brightness.dark),
                   useMaterial3: true,
@@ -153,7 +155,17 @@ class AlertMapApp extends StatelessWidget {
           builder: (context, child) {
             final isDark = Theme.of(context).brightness == Brightness.dark;
             final onSurface = Theme.of(context).colorScheme.onSurface;
-            return AnnotatedRegion<SystemUiOverlayStyle>(
+            final mq = MediaQuery.of(context);
+            // Ułatwienia dostępu: skala tekstu + pogrubienie + reduce-motion.
+            final sysScale = mq.textScaler.scale(1.0);
+            final eff = a11y.effectiveReduceMotion(mq.disableAnimations);
+            if (reduceMotionNotifier.value != eff) reduceMotionNotifier.value = eff;
+            return MediaQuery(
+              data: mq.copyWith(
+                textScaler: TextScaler.linear(a11y.effectiveTextScale(sysScale)),
+                boldText: a11y.effectiveBold(mq.boldText),
+              ),
+              child: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
                 statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
@@ -173,6 +185,7 @@ class AlertMapApp extends StatelessWidget {
                 style: TextStyle(color: onSurface, fontFamily: 'Inter'),
                 child: GlobalDockOverlay(child: child ?? const SizedBox.shrink()),
               ),
+            ),
             );
           },
           onGenerateRoute: (settings) {

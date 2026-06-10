@@ -240,15 +240,19 @@ class _SosScreenState extends State<SosScreen>
   }
 
   Widget _buildOrb() {
-    return GestureDetector(
-      onLongPressStart: _sending ? null : (_) => _onHoldStart(),
-      onLongPressEnd: _sending ? null : (_) => _onHoldEnd(),
-      onLongPressCancel: _sending ? null : _onHoldEnd,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedBuilder(
-        animation: _holdCtrl,
-        builder: (context, child) {
-          final progress = _holdCtrl.value;
+    return Semantics(
+      button: true,
+      label: 'Przycisk SOS',
+      hint: 'Przytrzymaj dwie sekundy, aby wezwać pomoc',
+      child: GestureDetector(
+        onLongPressStart: _sending ? null : (_) => _onHoldStart(),
+        onLongPressEnd: _sending ? null : (_) => _onHoldEnd(),
+        onLongPressCancel: _sending ? null : _onHoldEnd,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedBuilder(
+          animation: _holdCtrl,
+          builder: (context, child) {
+            final progress = _holdCtrl.value;
           final scale = _holding ? 1.0 + progress * 0.1 : 1.0;
           final coreOpacity = 0.9 + progress * 0.1;
           return Transform.scale(
@@ -336,6 +340,7 @@ class _SosScreenState extends State<SosScreen>
             ),
           );
         },
+      ),
       ),
     );
   }
