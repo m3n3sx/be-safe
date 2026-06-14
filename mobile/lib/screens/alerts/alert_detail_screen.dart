@@ -300,7 +300,9 @@ class _AlertDetailScreenState extends State<AlertDetailScreen> {
                             ),
                             _infoChip(
                               Icons.timer_outlined,
-                              'wygasa za ${_fmt(expiresIn)}',
+                              expiresIn.isNegative
+                                  ? 'wygasł'
+                                  : 'wygasa za ${_fmt(expiresIn)}',
                             ),
                             if (a.distanceM != null)
                               _infoChip(
