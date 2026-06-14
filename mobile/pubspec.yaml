@@ -2,7 +2,7 @@ name: alertmap
 description: Community-driven safety alert system
 
 publish_to: 'none'
-version: 1.0.0+134
+version: 1.0.0+135
 
 environment:
   sdk: '>=3.0.0 <4.0.0'

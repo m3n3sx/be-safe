@@ -41,6 +41,7 @@ import 'screens/alerts/stats_screen.dart';
 import 'screens/profile/ranking_screen.dart';
 import 'screens/legal/legal_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
+import 'screens/onboarding/setup_wizard_screen.dart';
 import 'screens/mode/mode_picker_screen.dart';
 import 'screens/profile/referral_screen.dart';
 import 'screens/permissions/permissions_screen.dart';
@@ -254,6 +255,7 @@ class _AuthGateState extends State<_AuthGate> {
   bool _servicesStarted = false;
   bool? _onboardingDone;
   bool? _modePicked;
+  bool? _setupDone;
   bool _biometricPassed = false; // F24: czy biometria zatwierdzona w tej sesji
   bool _biometricInProgress = false;
 
@@ -276,7 +278,14 @@ class _AuthGateState extends State<_AuthGate> {
     setState(() {
       _onboardingDone = prefs.getBool('onboarding_done') ?? false;
       _modePicked = prefs.getBool('mode_picked') ?? false;
+      _setupDone = prefs.getBool('setup_done') ?? false;
     });
+  }
+
+  Future<void> _completeSetup() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('setup_done', true);
+    if (mounted) setState(() => _setupDone = true);
   }
 
   Future<void> _completeModePicker() async {
@@ -396,7 +405,7 @@ class _AuthGateState extends State<_AuthGate> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    if (_onboardingDone == null || _modePicked == null) {
+    if (_onboardingDone == null || _modePicked == null || _setupDone == null) {
       _setDockVisible(false);
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -448,6 +457,11 @@ class _AuthGateState extends State<_AuthGate> {
       );
     }
     final loggedIn = auth.isLoggedIn;
+    // Konfigurator krok-po-kroku — raz po pierwszym zalogowaniu (skippable).
+    if (loggedIn && _setupDone == false) {
+      _setDockVisible(false);
+      return SetupWizardScreen(onDone: _completeSetup);
+    }
     if (loggedIn) {
       // Po loginie: dock widoczny, domyślnie aktywny tab = Home
       _setDockVisible(true);

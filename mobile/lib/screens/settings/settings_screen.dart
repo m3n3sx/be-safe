@@ -7,6 +7,7 @@ import '../../providers/mode_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../mode/mode_picker_screen.dart';
 import 'accessibility_screen.dart';
+import '../onboarding/setup_wizard_screen.dart';
 import '../cyber_safety/cyber_safety_screen.dart';
 import '../parental_controls/parental_controls_screen.dart';
 import '../../services/api_service.dart';
@@ -138,6 +139,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
           trailing: const Icon(Icons.chevron_right),
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(builder: (_) => const AccessibilityScreen()),
+          ),
+        ),
+        // Ponowne uruchomienie konfiguratora krok-po-kroku
+        ListTile(
+          leading: const Icon(Icons.tune),
+          title: const Text('Konfigurator'),
+          subtitle: const Text('Przejdź ponownie krok po kroku przez ustawienia'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => SetupWizardScreen(
+                onDone: () => Navigator.of(context).maybePop(),
+              ),
+            ),
           ),
         ),
         // F28: Cyber-bezpieczeństwo i ochrona danych osobowych
