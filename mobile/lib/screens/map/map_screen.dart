@@ -421,7 +421,6 @@ class _MapScreenState extends State<MapScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cs = Theme.of(context).colorScheme;
     final width = MediaQuery.of(context).size.width;
-    final isTablet = width >= 600;
     final showSidePane = width >= 900;
 
     final mapStack = Stack(children: [
@@ -764,7 +763,9 @@ class _MapScreenState extends State<MapScreen> {
 
     return Scaffold(
       body: Row(children: [
-        if (isTablet) _buildNavigationRail(cs, alerts),
+        // (Usunięto lewy NavigationRail na tablecie — dublował dolny dock
+        //  z GlobalDockOverlay. Nawigacja jest teraz spójna na wszystkich
+        //  rozmiarach ekranu — jeden floating dock.)
         Expanded(child: mapStack),
         if (showSidePane) SizedBox(
           width: 320,
@@ -1121,69 +1122,6 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  Widget _buildNavigationRail(ColorScheme cs, List<AlertModel> alerts) {
-    return NavigationRail(
-      backgroundColor: cs.primary,
-      selectedIndex: 0,
-      onDestinationSelected: (i) {
-        if (i == 0) { _dismissOverlays(); return; }
-        if (i == 1) { setState(() { _showAlertList = !_showAlertList; _showFilters = false; }); return; }
-        if (i == 2) { _sendSOS(); return; }
-        if (i == 3) Navigator.pushNamed(context, '/family');
-        if (i == 4) Navigator.pushNamed(context, '/profile');
-      },
-      labelType: NavigationRailLabelType.all,
-      unselectedLabelTextStyle: const TextStyle(color: Colors.white60, fontSize: 11),
-      selectedLabelTextStyle: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-      unselectedIconTheme: const IconThemeData(color: Colors.white60),
-      selectedIconTheme: const IconThemeData(color: Colors.white),
-      destinations: [
-        const NavigationRailDestination(icon: Icon(Icons.map), label: Text('Mapa')),
-        NavigationRailDestination(
-          icon: alerts.isEmpty ? const Icon(Icons.notifications_none) : Badge(
-            label: Text('${alerts.length}', style: const TextStyle(color: Colors.white, fontSize: 9)),
-            backgroundColor: Colors.red, child: const Icon(Icons.notifications_active)),
-          label: const Text('Alerty'),
-        ),
-        NavigationRailDestination(
-          icon: Semantics(
-            button: true,
-            label: 'Przycisk SOS — wysyła alarmowe powiadomienie',
-            child: Container(width: 52, height: 52,
-              decoration: BoxDecoration(color: Colors.red.shade700, shape: BoxShape.circle),
-              child: const Center(child: Text('SOS', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 14)))),
-          ),
-          label: const Text(''),
-        ),
-        const NavigationRailDestination(icon: Icon(Icons.family_restroom), label: Text('Rodzina')),
-        const NavigationRailDestination(icon: Icon(Icons.person), label: Text('Profil')),
-      ],
-    );
-  }
-
-  Future<void> _sendSOS() async {
-    await HapticFeedback.heavyImpact();
-    final ok = await showDialog<bool>(context: context, builder: (ctx) => AlertDialog(
-      title: const Row(children: [Icon(Icons.sos, color: Colors.red), SizedBox(width: 8), Text('SOS')]),
-      content: Text(S.get('sos_confirm')),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx), child: Text(S.get('cancel'))),
-        ElevatedButton(onPressed: () => Navigator.pop(ctx, true), style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-          child: const Text('WYŚLIJ SOS', style: TextStyle(color: Colors.white))),
-      ],
-    ));
-    if (ok != true || !mounted) return;
-    await HapticFeedback.vibrate();
-    await context.read<ApiService>().post('/alerts', {
-      'category': 'aggression', 'title': '🆘 SOS — Potrzebuję pomocy!',
-      'description': 'Automatyczny alert SOS wysłany z aplikacji be:Safe.',
-      'lat': _currentPos.latitude, 'lng': _currentPos.longitude, 'duration_hours': 1,
-    });
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('SOS wysłany!'), backgroundColor: Colors.red));
-      context.read<AlertProvider>().loadNearby(_currentPos, radiusM: 10000);
-    }
-  }
 
 
   void _openFiltersSheet(AlertProvider alertProv) {
