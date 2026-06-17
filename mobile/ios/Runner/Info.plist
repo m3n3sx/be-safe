@@ -67,6 +67,15 @@
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>be:Safe wysyła powiadomienia o zagrożeniach wokół Ciebie.</string>
 
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mikrofon jest używany tylko podczas alarmu SOS, aby nagrać dźwięk z miejsca zdarzenia (za Twoją zgodą).</string>
+
+	<key>NSFaceIDUsageDescription</key>
+	<string>be:Safe może użyć Face ID, aby zabezpieczyć dostęp do aplikacji.</string>
+
+	<key>NSMotionUsageDescription</key>
+	<string>Czujniki ruchu służą do wykrywania upadku/wypadku i gestu potrząśnięcia, który uruchamia SOS.</string>
+
 	<!-- Background modes — potrzebne dla FCM i background location -->
 	<key>UIBackgroundModes</key>
 	<array>
