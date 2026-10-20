@@ -1,0 +1,72 @@
+# VPS / local stack. Secrets via `.env` (gitignored) — see `.env.example`.
+services:
+  postgres:
+    image: postgis/postgis:15-3.3-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-besafe}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-besafe}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - besafe_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - besafe_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 8080
+      DATABASE_URL: postgres://${POSTGRES_USER:-besafe}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-besafe}
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      FIREBASE_SERVICE_ACCOUNT: /app/firebase-admin.json
+    ports:
+      - "${BACKEND_PORT:-8081}:8080"
+    volumes:
+      - besafe_uploads:/app/uploads
+      - ./backend/firebase-admin.json:/app/firebase-admin.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - besafe_network
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:-}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://besafe.org.pl/api/v1}
+        NEXT_PUBLIC_SOCKET_URL: ${NEXT_PUBLIC_SOCKET_URL:-https://besafe.org.pl}
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://besafe.org.pl/api/v1}
+    ports:
+      - "${WEB_PORT:-8080}:8080"
+    depends_on:
+      backend:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - besafe_network
+
+volumes:
+  besafe_postgres_data:
+  besafe_uploads:
+
+networks:
+  besafe_network:
+    driver: bridge
