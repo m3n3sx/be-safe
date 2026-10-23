@@ -24,8 +24,9 @@ const String runIdOverride = String.fromEnvironment(
   defaultValue: '',
 );
 
-/// Default seed password (matches seed_test_personas.sql)
-const String testPassword = 'Test123!';
+/// Hasło kont testowych (seed_test_personas.sql) — podawane przy uruchomieniu:
+/// `--dart-define=TEST_PASSWORD=...` (nie trzymamy go w repo).
+const String testPassword = String.fromEnvironment('TEST_PASSWORD', defaultValue: '');
 
 /// 4 persony zgodne z /home/ooxo/alert/docs/E2E_TEST_PLAN.md
 enum Persona {

@@ -1126,7 +1126,7 @@ web/
 
 | Stała | Wartość | Opis |
 |---|---|---|
-| `GOOGLE_MAPS_API_KEY` | `AIzaSyCRg3frfmPXG6caSjel2c_nFbkb8bMIqYU` | Klucz Google Maps Web (z ograniczeniami) |
+| `GOOGLE_MAPS_API_KEY` | `<USUNIĘTO — wartość w menedżerze haseł>` | Klucz Google Maps Web (z ograniczeniami) |
 | `SOCKET_URL` | `https://alert.u235.pl` | URL serwera WebSocket |
 | `API_BASE` | `https://alert.u235.pl/api/v1` | Base URL API |
 | `DEFAULT_CENTER` | `{lat: 52.2297, lng: 21.0122}` | Domyślne centrum mapy (Warszawa) |
@@ -1322,7 +1322,7 @@ Klasa `ApiService` (singleton via `export const api`):
 
 ### 7.10 Google Maps — konfiguracja web
 
-- **API Key:** `AIzaSyCRg3frfmPXG6caSjel2c_nFbkb8bMIqYU` (nazwa: "AlertMap Web")
+- **API Key:** `<USUNIĘTO — wartość w menedżerze haseł>` (nazwa: "AlertMap Web")
 - **Ograniczenia HTTP referrer:** `https://alert.u235.pl/*`, `http://localhost:3000/*`, `http://localhost:3005/*`
 - **Dozwolone API:** Maps JavaScript API, Maps Embed API
 - **Dark/Light styles:** Analogiczne do mobilnych (ukryte POI business, desaturacja, ciemne tło w dark mode)
@@ -1426,8 +1426,8 @@ export const metadata: Metadata = {
 | Parametr | Wartość |
 |---|---|
 | API (Android) | Maps SDK for Android — **włączone** |
-| API Key (Android) | `AIzaSyC5p8wjAa0s7dvuF_YzU3JHDQHpN4AdAMU` (nazwa: "AlertMap Android") |
-| API Key (Web) | `AIzaSyCRg3frfmPXG6caSjel2c_nFbkb8bMIqYU` (nazwa: "AlertMap Web") |
+| API Key (Android) | `<USUNIĘTO — wartość w menedżerze haseł>` (nazwa: "AlertMap Android") |
+| API Key (Web) | `<USUNIĘTO — wartość w menedżerze haseł>` (nazwa: "AlertMap Web") |
 | Web Key ograniczenia | HTTP referrer: `https://alert.u235.pl/*`, `http://localhost:3000/*`, `http://localhost:3005/*` |
 | Web Key dozwolone API | Maps JavaScript API, Maps Embed API |
 | Konfiguracja Android | `AndroidManifest.xml` → `com.google.android.geo.API_KEY` |
@@ -1762,6 +1762,6 @@ Reguły proxy (w kolejności):
 
 12. **Cron w index.js:** `setInterval` co 60s wygasza alerty — nie ma osobnego cron joba.
 
-13. **Google Maps API keys:** Mobile i web mają osobne klucze. Web klucz (`AIzaSyCRg3frfmPXG6caSjel2c_nFbkb8bMIqYU`) ma ograniczenia HTTP referrer.
+13. **Google Maps API keys:** Mobile i web mają osobne klucze. Web klucz (`<USUNIĘTO — wartość w menedżerze haseł>`) ma ograniczenia HTTP referrer.
 
 14. **Porty na VPS:** 3001 (backend), 3005 (Next.js web). Porty 3000/3002/3003/3004 są zajęte przez inne procesy.

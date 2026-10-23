@@ -58,3 +58,19 @@ design/besafe-figma-export.zip
 
 # OpenCode local
 .opencode/
+
+# Sekrety — nigdy do repo (2026-10-23)
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+mobile/ios/Flutter/Secrets.xcconfig
+mobile/android/local.properties
+mobile/android/key.properties
+*.pem
+*.p12
+*.jks
+*.keystore
+*firebase-adminsdk*.json
+service-account*.json

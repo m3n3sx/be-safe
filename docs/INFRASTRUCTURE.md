@@ -5,6 +5,10 @@
 > `SESSION_BRIEF.md` § "Co aktualnie LIVE w v110". Poniższe adresy EC2 (`16.192.31.100`), SES relay
 > i Postfix są historyczne. Sekrety w tym pliku traktuj jako potencjalnie wygasłe/do rotacji.
 
+> 🔐 **2026-10-23:** wartości haseł, kluczy i tokenów zostały usunięte z tego pliku (repozytorium jest publiczne).
+> Prawdziwe wartości trzymamy w menedżerze haseł / Secret Manager / GitHub Secrets — nigdy w repo.
+> Wszystko, co było tu wcześniej zapisane, należy traktować jako ujawnione i zrotować.
+
 > **Ostatnia aktualizacja:** 2026-05-12
 > **Cel dokumentu:** pełna mapa "gdzie co jest" — konta, klucze, serwisy, domeny,
 > żeby każda kolejna sesja AI lub developer wiedziała gdzie szukać.
@@ -17,7 +21,7 @@
 
 **Cloudflare account ID:** `67331522a994392df125e103b013b703`
 **Zone ID:** `4914d507a5a27a66b0d151cd1367a36b` (besafe.org.pl)
-**Token (wygasa 2026-05-18):** `cfut_YUTstC36PSm4mNRBCh7UpmC6V3WEoQvIIdT5qkQef359bb95`
+**Token (wygasa 2026-05-18):** `<USUNIĘTO — wartość w menedżerze haseł>`
 
 **Aktywne rekordy DNS (11):**
 
@@ -82,7 +86,7 @@
 - **SMTP endpoint:** `email-smtp.eu-central-1.amazonaws.com:587` (STARTTLS)
 - **SMTP credentials:**
   - Username: `[REDACTED_AWS_KEY_ID_ses_smtp_rotated]`
-  - Password (SigV4-converted from IAM): `BOXUnRvhVneIu0CJtjWXlEMjvMaaWWZq473bO8C5i0P1`
+  - Password (SigV4-converted from IAM): `<USUNIĘTO — wartość w menedżerze haseł>`
 - **TODO:** request production access → https://console.aws.amazon.com/ses/home?region=eu-central-1#/account
 
 ---
@@ -112,15 +116,15 @@
 
 | Cel | Klucz | Restriction |
 |---|---|---|
-| **Maps Web** | `AIzaSyCuEqShVm8H-_7rxLy6uLTq4xUbCxFg7UI` | referer: besafe.org.pl/\*, www.besafe.org.pl/\*, localhost:3000/\*, localhost:3005/\* |
-| **Maps Android** | `AIzaSyDgoUs03qbRnLT-uEALplRkmRqiBKLj8Cg` | pakiet: pl.u235.alertmap, SHA-1: 85:C3:BB:B3:93:2B:A2:0E:1F:EA:8D:D6:BA:2F:17:DC:48:65:6D:21 |
+| **Maps Web** | `<USUNIĘTO — wartość w menedżerze haseł>` | referer: besafe.org.pl/\*, www.besafe.org.pl/\*, localhost:3000/\*, localhost:3005/\* |
+| **Maps Android** | `<USUNIĘTO — wartość w menedżerze haseł>` | pakiet: pl.u235.alertmap, SHA-1: 85:C3:BB:B3:93:2B:A2:0E:1F:EA:8D:D6:BA:2F:17:DC:48:65:6D:21 |
 
 ### OAuth 2.0 Client IDs
 
 | Typ | Client ID |
 |---|---|
 | **Web** | `1098119585965-1dmn79cgjbhsr84f1iu3dibvpilc906p.apps.googleusercontent.com` |
-| **Web Secret** | `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` (tylko server-side, nie potrzebne dla GSI) |
+| **Web Secret** | `<USUNIĘTO — wartość w menedżerze haseł>` (tylko server-side, nie potrzebne dla GSI) |
 | **Android** | `1098119585965-bp2oo16n9u6tughijdrv3j7ojd94vnth.apps.googleusercontent.com` |
 
 **OAuth Consent Screen:** External, opublikowany, nazwa "be:Safe".
@@ -157,7 +161,7 @@
 - **SSH alias:** `vps` (w `~/.ssh/config`)
 - Backend: `/home/ubuntu/alertmap/src/` (Node.js, port 3001, PM2)
 - Webapp: `/home/ubuntu/alert-web/` (Next.js, port 3005, PM2)
-- DB: PostgreSQL 17.7 (local), user `alertmap` hasło `AlertMap2026!`
+- DB: PostgreSQL 17.7 (local), user `alertmap` hasło `<USUNIĘTO — wartość w menedżerze haseł>`
 - **Po migracji:** NIE używany w produkcji, ale trzymany jako rollback aż APK v23 rozpowszechni się
 
 ---
@@ -184,9 +188,9 @@
 
 ### Baza danych (PostgreSQL 16.13 + PostGIS)
 
-- DB: `alertmap`, user `alertmap`, hasło `AlertMap2026!`
+- DB: `alertmap`, user `alertmap`, hasło `<USUNIĘTO — wartość w menedżerze haseł>`
 - Tabele: users, alerts, alert_votes, alert_reports, alert_comments, alert_notifications, family_groups, family_members, geofences, location_history, badges, user_badges, user_checkins, posts, analytics_events, email_verification_tokens, password_reset_tokens
-- Access: `PGPASSWORD='AlertMap2026!' psql -h localhost -U alertmap -d alertmap`
+- Access: `PGPASSWORD='<USUNIĘTO — wartość w menedżerze haseł>' psql -h localhost -U alertmap -d alertmap`
 
 ### Mail Server (Postfix + Dovecot + OpenDKIM + Roundcube)
 
@@ -203,18 +207,18 @@
 
 | Email | Hasło |
 |---|---|
-| info@besafe.org.pl | `54WtNgnroGcNe4` |
-| wsparcie@besafe.org.pl | `ULs7tFh90fB6WQ` |
-| dev@besafe.org.pl | `ul60UJs7zNt3fz` |
-| payment@besafe.org.pl | `AYtxdc4EBhS3bo` |
-| kontakt@besafe.org.pl | `aqBtz39LyBi3RS` |
+| info@besafe.org.pl | `<USUNIĘTO — wartość w menedżerze haseł>` |
+| wsparcie@besafe.org.pl | `<USUNIĘTO — wartość w menedżerze haseł>` |
+| dev@besafe.org.pl | `<USUNIĘTO — wartość w menedżerze haseł>` |
+| payment@besafe.org.pl | `<USUNIĘTO — wartość w menedżerze haseł>` |
+| kontakt@besafe.org.pl | `<USUNIĘTO — wartość w menedżerze haseł>` |
 
 Hashe w `/etc/dovecot/virtual_passwords` (BLF-CRYPT).
 Virtual aliases (`/etc/postfix/virtual_aliases`): postmaster/abuse/root → info.
 
 ### MariaDB (tylko dla Roundcube)
 
-- DB: `roundcube`, user `roundcube`, hasło: `1vdXbY1DZIrK`
+- DB: `roundcube`, user `roundcube`, hasło: `<USUNIĘTO — wartość w menedżerze haseł>`
 - Nie używana do niczego innego
 
 ---
@@ -236,7 +240,7 @@ Virtual aliases (`/etc/postfix/virtual_aliases`): postmaster/abuse/root → info
 - `backend/.env` — NIE w repo, na EC2:
   ```
   PORT=3001
-  DATABASE_URL=postgresql://alertmap:AlertMap2026!@localhost:5432/alertmap
+  DATABASE_URL=postgresql://alertmap:<USUNIĘTO — wartość w menedżerze haseł>@localhost:5432/alertmap
   JWT_SECRET=[REDACTED_JWT_SECRET_rotated]
   JWT_EXPIRES_IN=7d
   EMAIL_FROM=info@besafe.org.pl
@@ -258,7 +262,7 @@ Virtual aliases (`/etc/postfix/virtual_aliases`): postmaster/abuse/root → info
 | Secret | Co zawiera | Status |
 |---|---|---|
 | `GOOGLE_SERVICES_JSON` | Zawartość `google-services.json` | ⚠️ **do aktualizacji po migracji Firebase** |
-| `SENTRY_DSN` | `https://cc8c13028776cf0c5546a0cd6c8eb76f@o4511353096372224...` | |
+| `SENTRY_DSN` | `<USUNIĘTO — wartość w menedżerze haseł>` | |
 | `VPS_SSH_KEY` | Klucz SSH do starego VPS | używane przez stary workflow |
 | `VPS_HOST` | `57.128.237.254` | stare |
 | `ANDROID_KEYSTORE_BASE64` | (nie ustawione) | brak — APK podpisany debug key |
@@ -323,7 +327,7 @@ ssh -i /home/ooxo/Pobrane/besafe_key.pem ubuntu@16.192.31.100 \
 AWS_ACCESS_KEY_ID=[REDACTED_AWS_KEY_ID_admin_rotated]                                (besafe-admin)
 AWS_SECRET_ACCESS_KEY=[REDACTED_AWS_SECRET_admin_rotated]
 AWS_SES_SMTP_USER=[REDACTED_AWS_KEY_ID_ses_smtp_rotated]
-AWS_SES_SMTP_PASSWORD=BOXUnRvhVneIu0CJtjWXlEMjvMaaWWZq473bO8C5i0P1
+AWS_SES_SMTP_PASSWORD=<USUNIĘTO — wartość w menedżerze haseł>
 
 # Claude Platform on AWS
 CLAUDE_API_KEY=[REDACTED_CLAUDE_API_KEY_TO_ROTATE]
@@ -333,29 +337,29 @@ CLAUDE_WORKSPACE_ID=wrkspc_01F6CibEnUj9uWWirJFz6r8k
 STITCH_API_KEY=[REDACTED_STITCH_API_KEY_TO_ROTATE]
 
 # Cloudflare (wygasa 2026-05-18)
-CLOUDFLARE_TOKEN=cfut_YUTstC36PSm4mNRBCh7UpmC6V3WEoQvIIdT5qkQef359bb95
+CLOUDFLARE_TOKEN=<USUNIĘTO — wartość w menedżerze haseł>
 
 # GitHub (w .git-credentials)
-GH_TOKEN=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
+GH_TOKEN=<USUNIĘTO — wartość w menedżerze haseł>
 
 # Google Maps (hardcoded w kodzie - nie sekretne bo restricted)
-MAPS_WEB_KEY=AIzaSyCuEqShVm8H-_7rxLy6uLTq4xUbCxFg7UI
-MAPS_ANDROID_KEY=AIzaSyDgoUs03qbRnLT-uEALplRkmRqiBKLj8Cg
+MAPS_WEB_KEY=<USUNIĘTO — wartość w menedżerze haseł>
+MAPS_ANDROID_KEY=<USUNIĘTO — wartość w menedżerze haseł>
 
 # OAuth (hardcoded w kodzie)
 OAUTH_WEB_CLIENT_ID=1098119585965-1dmn79cgjbhsr84f1iu3dibvpilc906p.apps.googleusercontent.com
-OAUTH_WEB_SECRET=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
+OAUTH_WEB_SECRET=<USUNIĘTO — wartość w menedżerze haseł>
 OAUTH_ANDROID_CLIENT_ID=1098119585965-bp2oo16n9u6tughijdrv3j7ojd94vnth.apps.googleusercontent.com
 
 # Backend .env
 JWT_SECRET=[REDACTED_JWT_SECRET_rotated]
-DB_PASSWORD=AlertMap2026!
-ROUNDCUBE_DB_PASSWORD=1vdXbY1DZIrK
+DB_PASSWORD=<USUNIĘTO — wartość w menedżerze haseł>
+ROUNDCUBE_DB_PASSWORD=<USUNIĘTO — wartość w menedżerze haseł>
 
 # Mail passwords (wszystkie @besafe.org.pl)
-info:     54WtNgnroGcNe4
-wsparcie: ULs7tFh90fB6WQ
-dev:      ul60UJs7zNt3fz
-payment:  AYtxdc4EBhS3bo
-kontakt:  aqBtz39LyBi3RS
+info:     <USUNIĘTO — wartość w menedżerze haseł>
+wsparcie: <USUNIĘTO — wartość w menedżerze haseł>
+dev:      <USUNIĘTO — wartość w menedżerze haseł>
+payment:  <USUNIĘTO — wartość w menedżerze haseł>
+kontakt:  <USUNIĘTO — wartość w menedżerze haseł>
 ```

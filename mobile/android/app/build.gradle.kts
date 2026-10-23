@@ -15,6 +15,18 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+// Klucz Google Maps NIE jest w repo. Źródła (pierwsze niepuste):
+//   1) zmienna środowiskowa MAPS_API_KEY (CI: GitHub Secret)
+//   2) android/local.properties → MAPS_API_KEY=... (lokalnie, plik w .gitignore)
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+val mapsApiKey: String = (System.getenv("MAPS_API_KEY")
+    ?: localProperties.getProperty("MAPS_API_KEY")
+    ?: "").trim()
+
 android {
     namespace = "pl.u235.alertmap"
     compileSdk = flutter.compileSdkVersion
@@ -38,6 +50,7 @@ android {
         versionName = flutter.versionName
         testInstrumentationRunner = "pl.leancode.patrol.PatrolJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     testOptions {
@@ -73,6 +86,15 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// Wydanie bez klucza Map = pusta mapa u użytkowników, więc release bez klucza przerywamy.
+// Buildy debug (np. CI) przechodzą — mapa po prostu się nie załaduje.
+gradle.taskGraph.whenReady {
+    val buildingRelease = allTasks.any { it.project == project && it.name.contains("Release") && (it.name.startsWith("assemble") || it.name.startsWith("bundle")) }
+    if (buildingRelease && mapsApiKey.isEmpty()) {
+        throw GradleException("Brak MAPS_API_KEY: dodaj MAPS_API_KEY=... do android/local.properties albo ustaw zmienną środowiskową MAPS_API_KEY.")
+    }
 }
 
 dependencies {

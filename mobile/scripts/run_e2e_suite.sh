@@ -19,6 +19,8 @@ export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk
 export PATH=/home/ooxo/flutter/bin:/home/ooxo/.pub-cache/bin:$PATH
 export ANDROID_HOME=/home/ooxo/Android/Sdk
 SECRET=$(cat /tmp/test_reset_secret.txt)
+# Hasło kont testowych — z env TEST_PASSWORD albo z pliku poza repo.
+TEST_PASSWORD="${TEST_PASSWORD:-$(cat /tmp/test_password.txt 2>/dev/null)}"
 
 cd /home/ooxo/alert/mobile
 
@@ -44,6 +46,7 @@ for entry in "${SUITES[@]}"; do
   timeout --kill-after=30s 600s patrol test \
     --target "$target" \
     --dart-define=TEST_RESET_SECRET="$SECRET" \
+    --dart-define=TEST_PASSWORD="$TEST_PASSWORD" \
     --dart-define=RUN_ID="${name}_${RUN_TS}" \
     -d "$DEVICE" \
     > "$log" 2>&1 || true
