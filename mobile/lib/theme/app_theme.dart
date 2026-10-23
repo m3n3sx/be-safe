@@ -4,6 +4,7 @@
 /// Call `buildSerenityTheme(Brightness.light)` in MaterialApp.theme.
 
 library;
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'design_tokens.dart';
 

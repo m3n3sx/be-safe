@@ -1,8 +1,7 @@
 const { Pool } = require('pg');
-require('dotenv').config();
 
 // Two ways to configure DB:
-//   1) DATABASE_URL=postgresql://user:pass@host:port/db (AWS / local dev)
+//   1) DATABASE_URL=postgresql://user:***@host:port/db (AWS / local dev)
 //   2) DB_HOST + DB_USER + DB_PASS + DB_NAME (Cloud Run + Cloud SQL Unix socket)
 //      DB_HOST may be a Unix socket path like /cloudsql/PROJECT:REGION:INSTANCE.
 let pool;

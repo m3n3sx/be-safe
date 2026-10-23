@@ -9,6 +9,8 @@ web/out/
 
 # Flutter / Dart
 mobile/build/
+mobile/android/build/
+mobile/android/.gradle/
 mobile/.dart_tool/
 mobile/.flutter-plugins
 mobile/.flutter-plugins-dependencies

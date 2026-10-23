@@ -15,10 +15,22 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+// Klucz Google Maps NIE jest w repo. Źródła (pierwsze niepuste):
+//   1) zmienna środowiskowa MAPS_API_KEY (CI: GitHub Secret)
+//   2) android/local.properties → MAPS_API_KEY=... (lokalnie, plik w .gitignore)
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+val mapsApiKey: String = (System.getenv("MAPS_API_KEY")
+    ?: localProperties.getProperty("MAPS_API_KEY")
+    ?: "").trim()
+
 android {
     namespace = "pl.u235.alertmap"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -32,12 +44,13 @@ android {
 
     defaultConfig {
         applicationId = "pl.u235.alertmap"
-        minSdk = 23
+        minSdk = maxOf(23, flutter.minSdkVersion) // record_android wymaga min. 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         testInstrumentationRunner = "pl.leancode.patrol.PatrolJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     testOptions {
@@ -64,8 +77,11 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // Minify/R8 was stripping shared_preferences Pigeon suspend methods
+            // (NoSuchMethodError SharedPreferencesApiRegistrar.getAll) → blank startup.
+            // Keep rules added; leave minify off until verified on device.
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -73,6 +89,15 @@ android {
 
 flutter {
     source = "../.."
+}
+
+// Wydanie bez klucza Map = pusta mapa u użytkowników, więc release bez klucza przerywamy.
+// Buildy debug (np. CI) przechodzą — mapa po prostu się nie załaduje.
+gradle.taskGraph.whenReady {
+    val buildingRelease = allTasks.any { it.project == project && it.name.contains("Release") && (it.name.startsWith("assemble") || it.name.startsWith("bundle")) }
+    if (buildingRelease && mapsApiKey.isEmpty()) {
+        throw GradleException("Brak MAPS_API_KEY: dodaj MAPS_API_KEY=... do android/local.properties albo ustaw zmienną środowiskową MAPS_API_KEY.")
+    }
 }
 
 dependencies {
