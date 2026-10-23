@@ -4,8 +4,18 @@
 -keep class io.flutter.util.**  { *; }
 -keep class io.flutter.view.**  { *; }
 -keep class io.flutter.**  { *; }
--keep class io.flutter.plugins.**  { *; }
+-keep class io.flutter.plugins.** { *; }
 -dontwarn io.flutter.embedding.**
+
+# shared_preferences (Pigeon + Kotlin suspend) — R8 otherwise strips
+# SharedPreferencesApiRegistrar.getAll(..., Continuation) and crashes at startup.
+-keepattributes Signature, InnerClasses, EnclosingMethod, *Annotation*
+-keep class io.flutter.plugins.sharedpreferences.** { *; }
+-keepclassmembers class io.flutter.plugins.sharedpreferences.** { *; }
+-keep class kotlin.coroutines.** { *; }
+-keepclassmembers class ** {
+    kotlin.coroutines.Continuation *(***);
+}
 
 # Firebase
 -keep class com.google.firebase.** { *; }

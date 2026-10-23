@@ -18,4 +18,5 @@ if [[ ! -d node_modules ]]; then
   npm install
 fi
 
-exec npm run dev -- --hostname 127.0.0.1 --port 3000
+# Use localhost (not 127.0.0.1): Google OAuth JS origins treat them as different.
+exec npm run dev -- --hostname localhost --port 3000
