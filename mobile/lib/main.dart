@@ -62,11 +62,11 @@ import 'widgets/collapsible_dock.dart';
 import 'widgets/nav_routes.dart' show NavTabs;
 
 // Sentry DSN — be:Safe production project (sentry.io project 4511406965194832)
-// Publiczny DSN — bezpieczny w bundle APK (Sentry rate-limit + project key tylko ingest).
-// Aby wyłączyć w dev: zostawić puste lub `flutter run --dart-define=SENTRY_DSN=`.
+// DSN podawany przy buildzie: `flutter build apk --dart-define=SENTRY_DSN=...`
+// (w CI z GitHub Secret SENTRY_DSN). Bez niego Sentry jest wyłączone.
 const String _sentryDsn = String.fromEnvironment(
   'SENTRY_DSN',
-  defaultValue: 'https://cc93b0a06c984051e9e77463aad8a546@o4511406962704384.ingest.de.sentry.io/4511406965194832',
+  defaultValue: '',
 );
 
 void main() async {

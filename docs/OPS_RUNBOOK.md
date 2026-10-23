@@ -140,14 +140,14 @@ ssh -i /home/ooxo/Pobrane/besafe_key.pem ubuntu@16.192.31.100 \
 
 ```bash
 ssh -i /home/ooxo/Pobrane/besafe_key.pem ubuntu@16.192.31.100 \
-  "PGPASSWORD='AlertMap2026!' psql -h localhost -U alertmap -d alertmap \
+  "PGPASSWORD='<USUNIĘTO — wartość w menedżerze haseł>' psql -h localhost -U alertmap -d alertmap \
    -c 'SELECT id, email, created_at FROM users ORDER BY id DESC LIMIT 10'"
 ```
 
 ### F. Dodać rekord DNS w Cloudflare (przez API)
 
 ```bash
-CF_TOKEN="cfut_YUTstC36PSm4mNRBCh7UpmC6V3WEoQvIIdT5qkQef359bb95"
+CF_TOKEN="<USUNIĘTO — wartość w menedżerze haseł>"
 ZONE="4914d507a5a27a66b0d151cd1367a36b"
 
 curl -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE/dns_records" \
@@ -217,7 +217,7 @@ EOF
 
 ```bash
 ssh -i /home/ooxo/Pobrane/besafe_key.pem ubuntu@16.192.31.100 \
-  "PGPASSWORD='AlertMap2026!' pg_dump -h localhost -U alertmap alertmap > /tmp/alertmap-$(date +%F).sql && \
+  "PGPASSWORD='<USUNIĘTO — wartość w menedżerze haseł>' pg_dump -h localhost -U alertmap alertmap > /tmp/alertmap-$(date +%F).sql && \
    ls -la /tmp/alertmap-*.sql"
 
 # Pobrać lokalnie
@@ -293,7 +293,7 @@ ssh -i /home/ooxo/Pobrane/besafe_key.pem ubuntu@16.192.31.100 \
 **Test:** sprawdź czy user ma token w DB.
 ```bash
 ssh -i /home/ooxo/Pobrane/besafe_key.pem ubuntu@16.192.31.100 \
-  "PGPASSWORD='AlertMap2026!' psql -h localhost -U alertmap -d alertmap \
+  "PGPASSWORD='<USUNIĘTO — wartość w menedżerze haseł>' psql -h localhost -U alertmap -d alertmap \
    -c \"SELECT id, email, fcm_token IS NOT NULL as has_token FROM users WHERE email='besafeorgpl@gmail.com'\""
 ```
 

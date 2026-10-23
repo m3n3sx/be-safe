@@ -93,7 +93,7 @@ bash /home/ooxo/alert/mobile/scripts/run_e2e_suite.sh <SERIAL>
 python3 /home/ooxo/alert/mobile/scripts/generate_report.py /tmp/be_safe_metrics/<latest>/
 
 # Test endpointy (admin)
-export SECRET=2441ee9f8c9682dfd47c9cc20744ddaa6a0dbadfc515db371f39bb866572316d
+export SECRET=<USUNIĘTO — wartość w menedżerze haseł>
 curl -X POST https://besafe.org.pl/api/v1/test/reset-persona \
   -H "X-Test-Secret: $SECRET" -H "Content-Type: application/json" \
   -d '{"username":"parent_tech"}'

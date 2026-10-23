@@ -1,2 +1,4 @@
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
 #include "Generated.xcconfig"
+// Klucze lokalne (np. MAPS_API_KEY) — plik poza repo, zob. Secrets.xcconfig.example
+#include? "Secrets.xcconfig"

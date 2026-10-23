@@ -11,6 +11,7 @@ workflows:
         BUNDLE_ID: "pl.u235.alertmap"
       groups:
         - sentry  # SENTRY_DSN secret z Codemagic UI (Settings → Variables → group "sentry")
+        - maps    # MAPS_API_KEY (klucz Google Maps iOS) z Codemagic UI (group "maps")
     triggering:
       events:
         - push
@@ -60,6 +61,15 @@ workflows:
         script: |
           pod repo update
           pod install --repo-update
+
+      - name: Write Secrets.xcconfig (Google Maps key spoza repo)
+        working_directory: mobile/ios/Flutter
+        script: |
+          if [ -n "${MAPS_API_KEY:-}" ]; then
+            printf 'MAPS_API_KEY=%s\n' "$MAPS_API_KEY" > Secrets.xcconfig
+          else
+            echo "UWAGA: brak MAPS_API_KEY — mapa w aplikacji iOS się nie załaduje."
+          fi
 
       - name: Build iOS (unsigned, no codesign)
         working_directory: mobile
