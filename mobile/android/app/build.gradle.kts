@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         applicationId = "pl.u235.alertmap"
-        minSdk = flutter.minSdkVersion
+        minSdk = maxOf(23, flutter.minSdkVersion) // record_android wymaga min. 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
