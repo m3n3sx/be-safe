@@ -1,0 +1,7 @@
+[Unit]
+Description=be:Safe - kopia bazy Postgres
+After=podman-restart.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/besafe-backup.sh
