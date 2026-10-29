@@ -1,6 +1,8 @@
 # Migracja be:Safe: Scaleway VPS -> serwer domowy ("serwer")
 
-Stan na 2026-10-29: nowa instancja dziala na serwerze domowym, **DNS jeszcze wskazuje na Scaleway**.
+Stan na 2026-10-29 22:03 (Europe/Warsaw): **przelaczone**. besafe.org.pl i www to proxied CNAME na tunel "serwer";
+backend na Scaleway (`be-safe-backend-1`) zatrzymany, reszta Scaleway bez zmian.
+Stare rekordy (do wycofania): `A besafe.org.pl 151.115.167.237` i `A www.besafe.org.pl 151.115.167.237`, DNS only, TTL auto.
 
 ## Co gdzie
 
@@ -28,8 +30,15 @@ Po restarcie maszyny kontenery wstaja przez `podman-restart.service` (restart: a
     curl -H "Host: besafe.org.pl" http://100.98.231.98/landing        # przez Tailscale
     curl --resolve besafe.org.pl:80:100.98.231.98 http://besafe.org.pl/api/health
 
-Do czasu przelaczenia **backend na serwerze domowym jest zatrzymany** (`podman stop besafe_backend_1`),
-zeby nie wysylal podwojnych powiadomien push (timery w `backend/src/index.js`).
+Nigdy nie uruchamiac backendu jednoczesnie na obu serwerach - podwojne powiadomienia push (timery w `backend/src/index.js`).
+
+## Kopie bazy
+
+`deploy/serwer/besafe-backup.sh` -> `/usr/local/sbin/besafe-backup.sh`, uruchamiany przez `besafe-backup.timer`
+codziennie o 03:30 (+ do 10 min). Pliki `/srv/besafe/backups/besafe-RRRR-MM-DD-GGMM.dump` (pg_dump -Fc, chmod 600),
+retencja 14 dni, kontrola `pg_restore --list`. Recznie: `systemctl start besafe-backup.service`; log: `journalctl -u besafe-backup`.
+Odtworzenie: jak w `resync-db.sh` (dropdb/createdb -T template0, `pg_restore --no-owner --exit-on-error`).
+Kopie leza na tym samym dysku - warto dorzucic kopie poza serwer.
 
 ## Przelaczenie (wymaga zgody wlasciciela)
 
