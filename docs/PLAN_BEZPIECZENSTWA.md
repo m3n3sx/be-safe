@@ -55,6 +55,13 @@ Plan uporządkowany według **P0 → P2**. Każdy punkt ma: problem, ryzyko, dzi
 
 **Kryterium akceptacji:** Request z samym `email` w body zwraca `401`; poprawny token Google zwraca JWT.
 
+**Status (2026-10-31, branch `bezpieczenstwo/weryfikacja-google`):** zrobione 1–3.
+- Backend: `backend/src/services/google_auth.js` + `POST /auth/google` przyjmuje `id_token` (także `idToken` / `credential` z GIS), weryfikuje podpis/`aud`/`iss`/`exp`, wymaga `email_verified`. Dane konta wyłącznie z payloadu.
+- `GOOGLE_CLIENT_IDS` — dozwolone `aud` (po przecinku); domyślnie web client `1098119585965-1dmn79cgjbhsr84f1iu3dibvpilc906p…`.
+- `GOOGLE_AUTH_LEGACY_EMAIL_ONLY=true` — **tymczasowo** przepuszcza stare buildy apki wysyłające sam email (loguje `[auth/google] LEGACY …`). Domyślnie `false`. Wyłączyć, gdy nowa apka będzie u użytkowników.
+- Mobile i web wysyłają `id_token`. Testy: `cd backend && npm test`.
+- Do zrobienia: krok 4 (`google_sub`).
+
 ---
 
 ### P0.3 SQL injection w check-in

@@ -27,7 +27,7 @@ export default function LoginPage() {
       try {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
         setLoading(true);
-        const err = await loginWithGoogle(payload.email, payload.name, payload.picture);
+        const err = await loginWithGoogle(response.credential, payload.email, payload.name, payload.picture);
         if (err) setError(err);
       } catch (e) {
         setError('Google Sign-In failed');
