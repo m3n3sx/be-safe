@@ -9,7 +9,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<string | null>;
   register: (email: string, password: string, username: string) => Promise<string | null>;
-  loginWithGoogle: (email: string, displayName: string, avatarUrl?: string) => Promise<string | null>;
+  loginWithGoogle: (idToken: string, email: string, displayName: string, avatarUrl?: string) => Promise<string | null>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -55,8 +55,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   };
 
-  const loginWithGoogle = async (email: string, displayName: string, avatarUrl?: string): Promise<string | null> => {
+  const loginWithGoogle = async (idToken: string, email: string, displayName: string, avatarUrl?: string): Promise<string | null> => {
+    // Backend weryfikuje id_token i bierze dane z tokena; email/display_name/avatar_url
+    // zostają tylko dla zgodności ze starszym backendem.
     const res = await api.post<{ token: string; user: User }>('/auth/google', {
+      id_token: idToken,
       email,
       display_name: displayName,
       avatar_url: avatarUrl,
