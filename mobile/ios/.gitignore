@@ -32,3 +32,6 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Sekrety builda (klucz Google Maps iOS)
+Flutter/Secrets.xcconfig

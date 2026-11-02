@@ -108,12 +108,13 @@
 - fcm.googleapis.com, firebase.googleapis.com, firebaseinstallations
 - iam, cloudresourcemanager, orgpolicy
 
-### Klucze API (w besafe-app)
+### Klucze API Google Maps (projekt besafe-maps-513511) — szczegóły: docs/GOOGLE_MAPS_KEYS.md
 
 | Cel | Klucz | Restriction |
 |---|---|---|
-| **Maps Web** | `AIzaSyCuEqShVm8H-_7rxLy6uLTq4xUbCxFg7UI` | referer: besafe.org.pl/\*, www.besafe.org.pl/\*, localhost:3000/\*, localhost:3005/\* |
-| **Maps Android** | `AIzaSyDgoUs03qbRnLT-uEALplRkmRqiBKLj8Cg` | pakiet: pl.u235.alertmap, SHA-1: 85:C3:BB:B3:93:2B:A2:0E:1F:EA:8D:D6:BA:2F:17:DC:48:65:6D:21 |
+| **Maps Web** | *(nie w repo — `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` w `/srv/besafe/.env`, projekt `besafe-maps-513511`)* | referer: besafe.org.pl/\*, www.besafe.org.pl/\*, localhost:3000/\* |
+| **Maps Android** | *(nie w repo — `GOOGLE_MAPS_ANDROID_API_KEY` / `android/local.properties`)* | pakiet: pl.u235.alertmap + SHA-1 certyfikatu podpisującego |
+| **Maps iOS** | *(nie w repo — `GOOGLE_MAPS_IOS_API_KEY`, Codemagic group `google_maps`)* | bundle: pl.u235.alertmap |
 
 ### OAuth 2.0 Client IDs
 
@@ -338,9 +339,9 @@ CLOUDFLARE_TOKEN=cfut_YUTstC36PSm4mNRBCh7UpmC6V3WEoQvIIdT5qkQef359bb95
 # GitHub (w .git-credentials)
 GH_TOKEN=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
 
-# Google Maps (hardcoded w kodzie - nie sekretne bo restricted)
-MAPS_WEB_KEY=AIzaSyCuEqShVm8H-_7rxLy6uLTq4xUbCxFg7UI
-MAPS_ANDROID_KEY=AIzaSyDgoUs03qbRnLT-uEALplRkmRqiBKLj8Cg
+# Google Maps — klucze NIE są w kodzie; patrz docs/GOOGLE_MAPS_KEYS.md
+MAPS_WEB_KEY=<w /srv/besafe/.env>
+MAPS_ANDROID_KEY=<w local.properties / env builda>
 
 # OAuth (hardcoded w kodzie)
 OAUTH_WEB_CLIENT_ID=1098119585965-1dmn79cgjbhsr84f1iu3dibvpilc906p.apps.googleusercontent.com
