@@ -34,9 +34,19 @@ Lokalnie:
 printf 'GOOGLE_MAPS_IOS_API_KEY=%s\n' "$(cat ~/secrets/maps-ios.txt)" > mobile/ios/Flutter/Secrets.xcconfig
 ```
 
-### Codemagic (workflow `ios-unsigned`)
-1. Codemagic → aplikacja be-safe → **Environment variables** → dodaj zmienną
-   `GOOGLE_MAPS_IOS_API_KEY` (zaznacz **Secure**) w grupie **`google_maps`**.
-2. `codemagic.yaml` importuje grupę `google_maps`, a krok *Google Maps iOS key → Secrets.xcconfig*
-   zapisuje ją do `ios/Flutter/Secrets.xcconfig` przed `flutter build ios`. Wartość nie jest logowana.
-3. Bez zmiennej build przechodzi, ale mapa na iOS będzie pusta (ostrzeżenie w logu).
+### Codemagic
+Aplikacja `be-safe` w Codemagic (id `6a0d7b0b13fc93afd5219716`) jest obecnie skonfigurowana przez **UI** (Workflow Editor, „Default Workflow”).
+
+* **UI / Default Workflow**: secure variable `GOOGLE_MAPS_IOS_API_KEY` jest już dodana do „Default Workflow”
+  (obok `SENTRY_DSN`). W Workflow Editor dodaj przed buildem iOS skrypt pre-build:
+  ```bash
+  [ -n "${GOOGLE_MAPS_IOS_API_KEY:-}" ] && \
+    printf 'GOOGLE_MAPS_IOS_API_KEY=%s\n' "$GOOGLE_MAPS_IOS_API_KEY" > "$CM_BUILD_DIR/mobile/ios/Flutter/Secrets.xcconfig"
+  ```
+* **codemagic.yaml (workflow `ios-unsigned`)**, po przełączeniu aplikacji na konfigurację z pliku:
+  1. Codemagic → be-safe → **Environment variables** → zmienna `GOOGLE_MAPS_IOS_API_KEY` (**Secure**) w grupie **`google_maps`**.
+  2. `codemagic.yaml` importuje grupę `google_maps`, a krok *Google Maps iOS key → Secrets.xcconfig*
+     zapisuje ją do `ios/Flutter/Secrets.xcconfig` przed `flutter build ios`. Wartość nie jest logowana.
+  3. Ten sam krok (i `groups: [google_maps]`) trzeba dodać do każdego innego workflow iOS budującego tę aplikację.
+
+Bez zmiennej build przechodzi, ale mapa na iOS będzie pusta (ostrzeżenie w logu).
