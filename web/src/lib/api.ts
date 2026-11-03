@@ -25,7 +25,7 @@ class ApiService {
     path: string,
     body?: Record<string, unknown> | FormData,
     isMultipart = false
-  ): Promise<T & { error?: string }> {
+  ): Promise<T & { error?: string; httpStatus?: number; retryAfter?: string }> {
     const headers: Record<string, string> = {};
     const token = this.getToken();
     if (token) headers['Authorization'] = `Bearer ${token}`;
@@ -35,6 +35,7 @@ class ApiService {
       const res = await fetch(`${API_BASE}${path}`, {
         method,
         headers,
+        signal: AbortSignal.timeout(30000),
         body: body
           ? isMultipart
             ? (body as FormData)
@@ -43,18 +44,20 @@ class ApiService {
       });
 
       const text = await res.text();
+      if (res.status === 401 && !path.startsWith('/auth/') && typeof window !== 'undefined') window.dispatchEvent(new Event('besafe:session-expired'));
+      if (res.status === 204) return {} as T & { error?: string };
       if (res.status >= 400 || (!text.startsWith('{') && !text.startsWith('['))) {
         try {
           const json = JSON.parse(text);
-          return { ...json, error: json.error || json.message || `HTTP ${res.status}` } as T & { error: string };
+          return { ...json, error: json.error || json.message || `HTTP ${res.status}`, httpStatus: res.status, retryAfter: res.headers.get('Retry-After') || undefined } as T & { error: string; httpStatus: number };
         } catch {
-          return { error: `HTTP ${res.status}` } as T & { error: string };
+          return { error: `HTTP ${res.status}`, httpStatus: res.status, retryAfter: res.headers.get('Retry-After') || undefined } as unknown as T & { error: string; httpStatus: number };
         }
       }
 
       return JSON.parse(text) as T & { error?: string };
     } catch (err) {
-      return { error: err instanceof Error ? err.message : 'Network error' } as T & { error: string };
+      return { error: err instanceof Error && err.name === 'TimeoutError' ? 'Serwer nie odpowiedział na czas. Wynik operacji może być niepewny.' : 'Brak połączenia z serwerem. Sprawdź internet i spróbuj ponownie.', httpStatus: 0 } as T & { error: string; httpStatus: number };
     }
   }
 

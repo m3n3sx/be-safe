@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Polityka prywatności — be:Safe',
@@ -16,7 +17,7 @@ export default function PrivacyPage() {
       <h2>§1. Administrator danych</h2>
       <p>
         Administratorem danych osobowych użytkowników aplikacji <strong>be:Safe</strong> jest
-        właściciel domeny <a href="https://alert.u235.pl">alert.u235.pl</a> (dalej „Administrator").
+        właściciel domeny <a href="https://alert.u235.pl">alert.u235.pl</a> (dalej „Administrator”).
       </p>
       <p>Kontakt: <a href="mailto:privacy@alert.u235.pl">privacy@alert.u235.pl</a></p>
 
@@ -102,7 +103,7 @@ export default function PrivacyPage() {
 
       <hr />
       <p className="text-sm text-neutral-500">
-        Powiązane: <a href="/terms">Regulamin</a> · <a href="/">Strona główna</a>
+        Powiązane: <Link href="/terms">Regulamin</Link> · <Link href="/">Strona główna</Link>
       </p>
     </div>
   );

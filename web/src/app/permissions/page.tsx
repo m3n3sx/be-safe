@@ -28,7 +28,7 @@ export default function PermissionsPage() {
     setStatus(out);
   }, []);
 
-  useEffect(() => { check(); }, [check]);
+  useEffect(() => { const timer = setTimeout(() => void check(), 0); return () => clearTimeout(timer); }, [check]);
 
   const request = async (key: string) => {
     if (key === 'geolocation') {

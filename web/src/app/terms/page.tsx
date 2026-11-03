@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Regulamin — be:Safe',
@@ -15,8 +16,8 @@ export default function TermsPage() {
 
       <h2>§1. Postanowienia ogólne</h2>
       <ol>
-        <li>Aplikacja <strong>be:Safe</strong> (dalej „Aplikacja") jest społecznościową aplikacją mobilną umożliwiającą zgłaszanie zagrożeń bezpieczeństwa oraz śledzenie lokalizacji członków rodziny.</li>
-        <li>Operatorem Aplikacji jest właściciel strony <a href="https://alert.u235.pl">alert.u235.pl</a> (dalej „Operator").</li>
+        <li>Aplikacja <strong>be:Safe</strong> (dalej „Aplikacja”) jest społecznościową aplikacją mobilną umożliwiającą zgłaszanie zagrożeń bezpieczeństwa oraz śledzenie lokalizacji członków rodziny.</li>
+        <li>Operatorem Aplikacji jest właściciel strony <a href="https://alert.u235.pl">alert.u235.pl</a> (dalej „Operator”).</li>
         <li>Korzystanie z Aplikacji oznacza akceptację niniejszego Regulaminu.</li>
       </ol>
 
@@ -73,7 +74,7 @@ export default function TermsPage() {
             <li>szkody wynikłe z użycia lub niemożności użycia Aplikacji.</li>
           </ul>
         </li>
-        <li>Aplikacja jest udostępniana w trybie „as is" bez gwarancji jej działania.</li>
+        <li>Aplikacja jest udostępniana w trybie „as is” bez gwarancji jej działania.</li>
       </ol>
 
       <h2>§8. Zmiany regulaminu</h2>
@@ -90,7 +91,7 @@ export default function TermsPage() {
 
       <hr />
       <p className="text-sm text-neutral-500">
-        Powiązane: <a href="/privacy">Polityka prywatności</a> · <a href="/">Strona główna</a>
+        Powiązane: <Link href="/privacy">Polityka prywatności</Link> · <Link href="/">Strona główna</Link>
       </p>
     </div>
   );

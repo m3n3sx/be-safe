@@ -21,14 +21,14 @@ export default function FamilyPage() {
   const [geoRadius, setGeoRadius] = useState(200);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => { loadGroups(); }, []);
-
   const loadGroups = async () => {
     setLoading(true);
     const res = await api.get<{ groups: FamilyGroup[] }>('/family/groups');
     if (!res.error && res.groups) setGroups(res.groups);
     setLoading(false);
   };
+
+  useEffect(() => { const timer = setTimeout(() => void loadGroups(), 0); return () => clearTimeout(timer); }, []);
 
   const loadMembers = async (groupId: string) => {
     const res = await api.get<{ members: FamilyMember[] }>(`/family/groups/${groupId}/members`);

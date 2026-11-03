@@ -53,6 +53,8 @@ export default function MemberProfilePage() {
   const router = useRouter();
   const { user } = useAuth();
   const [member, setMember] = useState<FamilyMember | null>(null);
+  const [now, setNow] = useState(0);
+  useEffect(() => { const update = () => setNow(Date.now()); const initial = setTimeout(update, 0); const timer = setInterval(update, 60000); return () => { clearTimeout(initial); clearInterval(timer); }; }, []);
   const [history, setHistory] = useState<LocationHistoryPoint[]>([]);
   const [group, setGroup] = useState<GroupSummary | null>(null);
   const [howOthersSeeMe, setHowOthersSeeMe] = useState<VisibilityMap | null>(null);
@@ -97,7 +99,8 @@ export default function MemberProfilePage() {
   }, [params.groupId, params.memberId]);
 
   useEffect(() => {
-    load();
+    const timer = setTimeout(() => void load(), 0);
+    return () => clearTimeout(timer);
   }, [load]);
 
   // Po ustawieniu member: pobierz dodatkowe ekrany visibility
@@ -166,7 +169,7 @@ export default function MemberProfilePage() {
 
   const formatTime = (iso: string) => {
     const d = new Date(iso);
-    const diff = Date.now() - d.getTime();
+    const diff = now - d.getTime();
     const min = Math.floor(diff / 60000);
     if (min < 1) return 'teraz';
     if (min < 60) return `${min} min temu`;
@@ -178,7 +181,7 @@ export default function MemberProfilePage() {
   if (loading) return <AppLayout><div className="text-center py-12 text-neutral-500">Ładowanie…</div></AppLayout>;
   if (!member) return <AppLayout><div className="text-center py-12 text-neutral-500">Nie znaleziono</div></AppLayout>;
 
-  const online = member.last_location_at && (Date.now() - new Date(member.last_location_at).getTime() < 300000);
+  const online = now > 0 && member.last_location_at && (now - new Date(member.last_location_at).getTime() < 300000);
 
   return (
     <AppLayout>

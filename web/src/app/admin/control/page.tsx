@@ -24,7 +24,7 @@ export default function ControlPage() {
     if (!c.error) setConfig(c.config);
     if (!f.error) setFlags(f.flags);
   }, []);
-  useEffect(() => { if (access.isAdmin) load(); }, [access.isAdmin, load]);
+  useEffect(() => { if (!access.isAdmin) return; const timer = setTimeout(() => void load(), 0); return () => clearTimeout(timer); }, [access.isAdmin, load]);
 
   const flash = (m: string) => { setMsg(m); setTimeout(() => setMsg(null), 2500); };
 

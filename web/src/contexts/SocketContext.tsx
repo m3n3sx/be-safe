@@ -5,6 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import { SOCKET_URL } from '@/lib/constants';
 import { useAuth } from './AuthContext';
 import type { Alert } from '@/types';
+import type { AlertComment } from '@/types';
 
 export interface FamilyMessage {
   id: string;
@@ -25,6 +26,7 @@ interface SocketContextType {
   onGeofenceExit: (cb: (data: { user_id: string; username: string; geofence_name: string }) => void) => () => void;
   onFamilyMessage: (cb: (msg: FamilyMessage) => void) => () => void;
   updateLocation: (lat: number, lng: number) => void;
+  watchAlert: (id: string, onComment: (comment: AlertComment) => void, onDelete: (id: string) => void) => () => void;
 }
 
 const SocketContext = createContext<SocketContextType | null>(null);
@@ -109,6 +111,15 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     socketRef.current?.emit('location:update', { lat, lng });
   }, []);
 
+  const watchAlert = useCallback((id: string, onComment: (comment: AlertComment) => void, onDelete: (id: string) => void) => {
+    const socket = socketRef.current;
+    const join = () => socket?.emit('alert:join', id);
+    const added = (comment: AlertComment) => { if (comment.alert_id === id) onComment(comment); };
+    const deleted = (data: { alert_id: string; comment_id: string }) => { if (data.alert_id === id) onDelete(data.comment_id); };
+    join(); socket?.on('connect', join); socket?.on('comment:new', added); socket?.on('comment:deleted', deleted);
+    return () => { socket?.emit('alert:leave', id); socket?.off('connect', join); socket?.off('comment:new', added); socket?.off('comment:deleted', deleted); };
+  }, []);
+
   return (
     <SocketContext.Provider
       value={{
@@ -120,6 +131,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         onGeofenceExit: createListener<{ user_id: string; username: string; geofence_name: string }>('family:geofence_exit'),
         onFamilyMessage: createListener<FamilyMessage>('family:message'),
         updateLocation,
+        watchAlert,
       }}
     >
       {children}

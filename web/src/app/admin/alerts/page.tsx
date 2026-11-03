@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import AdminShell from '@/components/ui/AdminShell';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAdminAccess } from '@/hooks/useAdminAccess';
 import api from '@/lib/api';
 import { getCategoryInfo } from '@/types';
 import type { Alert } from '@/types';
@@ -14,7 +14,7 @@ interface AdminAlert extends Alert {
 }
 
 export default function AdminAlertsPage() {
-  const { user } = useAuth();
+  const access = useAdminAccess();
   const [alerts, setAlerts] = useState<AdminAlert[]>([]);
   const [status, setStatus] = useState<string>('active');
   const [loading, setLoading] = useState(false);
@@ -28,8 +28,10 @@ export default function AdminAlertsPage() {
   }, [status]);
 
   useEffect(() => {
-    if (user?.is_admin) load();
-  }, [user, load]);
+    if (!access.isAdmin) return;
+    const timer = setTimeout(() => void load(), 0);
+    return () => clearTimeout(timer);
+  }, [access.isAdmin, load]);
 
   const removeAlert = async (id: string) => {
     if (!confirm('Usunąć alert na stałe?')) return;
@@ -41,7 +43,7 @@ export default function AdminAlertsPage() {
     }
   };
 
-  if (!user?.is_admin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
+  if (!access.isAdmin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
 
   return (
     <AdminShell>

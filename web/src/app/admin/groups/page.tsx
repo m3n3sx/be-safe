@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import AdminShell from '@/components/ui/AdminShell';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAdminAccess } from '@/hooks/useAdminAccess';
 import api from '@/lib/api';
 
 interface AdminGroup {
@@ -17,7 +17,7 @@ interface AdminGroup {
 }
 
 export default function AdminGroupsPage() {
-  const { user } = useAuth();
+  const access = useAdminAccess();
   const [groups, setGroups] = useState<AdminGroup[]>([]);
   const [loading, setLoading] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
@@ -30,8 +30,10 @@ export default function AdminGroupsPage() {
   }, []);
 
   useEffect(() => {
-    if (user?.is_admin) load();
-  }, [user, load]);
+    if (!access.isAdmin) return;
+    const timer = setTimeout(() => void load(), 0);
+    return () => clearTimeout(timer);
+  }, [access.isAdmin, load]);
 
   const remove = async (id: string, name: string) => {
     if (!confirm(`Usunąć grupę "${name}" wraz ze wszystkimi członkami?`)) return;
@@ -45,7 +47,7 @@ export default function AdminGroupsPage() {
     }
   };
 
-  if (!user?.is_admin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
+  if (!access.isAdmin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
 
   return (
     <AdminShell>

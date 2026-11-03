@@ -36,7 +36,7 @@ export default function EscortPage() {
   }, []);
 
   useEffect(() => {
-    if (!selectedGroup) { setMembers([]); return; }
+    if (!selectedGroup) { const timer = setTimeout(() => setMembers([]), 0); return () => clearTimeout(timer); }
     (async () => {
       const m = await api.get<{ members: FamilyMember[] }>(`/family/groups/${selectedGroup}/members`);
       if (!m.error && m.members) setMembers(m.members);

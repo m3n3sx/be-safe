@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import AdminShell from '@/components/ui/AdminShell';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAdminAccess } from '@/hooks/useAdminAccess';
 import api from '@/lib/api';
 
 interface AuditEntry {
@@ -29,7 +29,7 @@ const ACTION_LABELS: Record<string, string> = {
 };
 
 export default function AdminAuditPage() {
-  const { user } = useAuth();
+  const access = useAdminAccess();
   const [log, setLog] = useState<AuditEntry[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -41,10 +41,12 @@ export default function AdminAuditPage() {
   }, []);
 
   useEffect(() => {
-    if (user?.is_admin) load();
-  }, [user, load]);
+    if (!access.isAdmin) return;
+    const timer = setTimeout(() => void load(), 0);
+    return () => clearTimeout(timer);
+  }, [access.isAdmin, load]);
 
-  if (!user?.is_admin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
+  if (!access.isAdmin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
 
   return (
     <AdminShell>

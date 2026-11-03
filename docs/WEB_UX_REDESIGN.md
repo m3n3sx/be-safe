@@ -511,6 +511,8 @@ Poniższe pozycje **nie są częścią implementacji z niezmienionym kontraktem*
 | K08 | Brak idempotencji mutacji oraz operacji odwołania wysłanego SOS jako komunikatu do odbiorców | Blokada podwójnego submitu, jawny niepewny wynik i ponowny odczyt; zwykłe usunięcie własnego alertu nie jest odwołaniem alarmu | Idempotency key, stan i potwierdzenia alarmu/odwołania, jeśli produkt ich wymaga |
 | K09 | `users.js` zwraca link lokalizacji z historyczną domeną; istnieje backendowy `/track/:token` | Pokazać zwrócony URL; nowy webowy odbiorca może odczytywać istniejące API przy poprawnym routingu wdrożenia | Konfigurowalny origin linku w backendzie, jeśli linki mają zawsze kierować do nowego web |
 
+**Etap 2 — uwagi implementacyjne (3 listopada 2026):** rdzeń okolicy nie wymaga nowych endpointów. Nadal obowiązują K03 (dane mapy wymagają konta), K07 (zachowany profilowy kontrakt Google) i K08 (brak idempotencji). Po niepewnym wyniku zgłoszenia klient odczytuje `/alerts/mine` i wymaga sprawdzenia listy przed ponowieniem; nie jest to gwarancja idempotencji. Zdjęcie jest częścią multipart `POST /alerts`, więc klient nie deklaruje sukcesu osobnego, niedokończonego uploadu. Nie dodano zmian do backendu.
+
 **Ograniczenia platformowe, których sam backend nie naprawi:** niezawodna lokalizacja po zamknięciu karty, shake/crash detection w tle, natywne widgety, blokada całej aplikacji biometrią. Nie są ukrytymi obietnicami kolejnego endpointu.
 
 **Spójność produktów do rozstrzygnięcia:** deklaracja wieku w rejestracji vs opis trybu dziecięcego; zakres SOS dla seniora/opiekuna; różnice w opisach godzin infolinii między klientami. Treści pomocy powinny otrzymać wspólne źródło i datę weryfikacji w implementacji. Dokument nie stwierdza aktualności zewnętrznych numerów/godzin na podstawie samego kodu.
@@ -604,6 +606,25 @@ Poniższe pliki są **planowane**, nie tworzone w etapie badawczym. Zachować Ne
 6. **Regresja całej aplikacji:** administracja, publiczne strony, wszystkie stare URL, jasny/ciemny/systemowy, klawiatura/czytnik, mobile/desktop, utrata sieci/sesji. K01–K09 nie mogą być zamaskowane jako „gotowe”.
 
 Web Push po zamknięciu karty/PWA wymaga również zasobu service workera i konfiguracji wdrożenia; nie jest ukrytym plikiem do utworzenia w tym etapie. Bazowy zakres wykorzystuje in-app/Notifications API i istniejące transporty. Ewentualna praca poza `web/src` musi być jawnie dopisana w kolejnym etapie.
+
+### 10.6. Stan implementacji — etap 2 (fundament i rdzeń okolicy)
+
+Wdrożone w `web/`:
+
+- Tokeny jasnego/ciemnego motywu, wspólne kontrolki i stany, natywny modalny `Dialog` z obsługą fokusu/Escape, niemodalny `BottomSheet` z przyciskami trzech wysokości, toast i skip link.
+- Jedna powłoka w root providerach, dolna nawigacja mobilna, szyna 104 px i górny pasek na desktopie. SOS dostępne także przed logowaniem; w formularzu globalne „Zgłoś” ustępuje akcji wysłania. Dawne `AppLayout`/`Sidebar` nie renderują drugiej nawigacji. Huby Pomoc/Profil i rejestr tras obejmują stare adresy; trasy dynamiczne rodziny pozostają osiągalne z grup/osób, a administracja opiera wejście na `/admin/me`.
+- `/`: wspólne wyniki mapy i listy, 21 kategorii, promienie 500 m / 1 / 2 / 5 / 10 km przez `radius_m`, sortowanie, wyszukiwanie adresu, jawny GPS, szukanie po przesunięciu, lista niezależna od dostępności SDK. Stan obszaru/filtrów w URL i sessionStorage; nowości z socketu nie przestawiają samoczynnie listy. Przeglądanie nie wysyła lokalizacji rodziny.
+- `/alerts/[alertId]` oraz panel: odczyt szczegółów/zdjęcia/autora/statusu, potwierdzenie głosu z ponownym GET, obsługa 409, komentarze z pokojem Socket.IO i odczytem awaryjnym, udostępnienie z tekstowym fallbackiem, nadużycia i operacje właściciela. `/alerts` przekierowuje do `/alerts/mine`.
+- `/report`: trzy kroki, wszystkie kategorie, wybór adresu/GPS/punktu i tekstowa alternatywa współrzędnych, tytuł z kategorii, opis, czas ważności, anonimowość, walidacja i zmniejszanie zdjęcia, pojedynczy multipart, stany moderacji/limitów/niepewnego wyniku. Szkic tekstowy zapisuje się na bieżącej karcie; zdjęcie trzeba dodać ponownie po opuszczeniu strony. Nawigacja oferuje zachowanie/porzucenie szkicu, SOS pozostaje bezpośrednio dostępne.
+- `/login`, `/register` i publiczne wejście `/`, istniejący Google Sign-In, bezpieczny `returnTo`, kod polecenia, deklaracja wieku i regulamin; brak automatycznego przechwytywania przez onboarding. Reset/weryfikacja używają wspólnego klienta API i tokenów UI.
+- Dzwonek ma działającą podstawową skrzynkę `/notifications` i licznik. SOS używa jednego jawnie potwierdzanego wysłania z rzeczywistym miejscem, poprawnym payloadem i niezależnym 112. Pełny etap reakcji/powiadomień (§10.5.3) pozostaje osobnym zakresem.
+- Korekty klienta z §9.1 objęły również e-mail/hasło/usunięcie konta, link lokalizacji, aktualności, odznaki, statystyki oraz nazwy pól dat planu rodzinnego. Naprawiono zastane błędy lint bez wyłączania reguł.
+
+**Weryfikacja automatyczna:** `node --test tests/core.test.mjs` sprawdza kontrakt alertów i transportu (w tym błędy/limity i brak automatycznych powtórzeń), wewnętrzne cele logowania, kompletność rejestru stron, env-only Maps oraz kontrast podstawowych par tokenów w obu motywach. Wymagane polecenia odbioru: `npm run lint` i `npm run build` w `web/`.
+
+Wynik końcowy sesji: **7/7 testów zaliczonych**, **lint: 0 błędów, 7 ostrzeżeń**, **build: sukces**, `git diff --check`: bez błędów. Ostrzeżenia dotyczą elementów `img` oraz zastanego, nieużywanego typu Google; reguły lint pozostały włączone.
+
+**Pozostała walidacja i następne etapy:** rzeczywiste logowanie Google, mapa z kluczem wdrożeniowym i mutacje na środowisku testowym nie zostały wykonane w tej sesji. Potrzebny jest przegląd przeglądarkowy przy 320–1440 px, z klawiaturą/czytnikiem i klawiaturą ekranową. Wnętrza starszych ekranów są objęte nową powłoką, ale ich pełne przeprojektowanie, wszystkie typy deep linków powiadomień, gest SOS/audio, funkcje rodziny z etapów 3–5 i trwały cache offline nie są deklarowane jako ukończone w etapie 2.
 
 ## 11. Kryteria odbioru następnych etapów
 

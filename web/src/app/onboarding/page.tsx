@@ -69,7 +69,7 @@ export default function OnboardingPage() {
   const isLast = page === PAGES.length - 1;
 
   return (
-    <main className="fixed inset-0 flex flex-col bg-white dark:bg-[#0F1419]">
+    <div className="form-container flex flex-col bg-surface">
       <div className="flex justify-end p-4">
         <button
           onClick={finish}
@@ -117,6 +117,6 @@ export default function OnboardingPage() {
           {isLast ? 'Rozpocznij' : 'Dalej'}
         </button>
       </div>
-    </main>
+    </div>
   );
 }

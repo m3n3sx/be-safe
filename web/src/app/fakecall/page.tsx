@@ -16,11 +16,13 @@ export default function FakeCallPage() {
   const [scheduled, setScheduled] = useState<{ name: string; ringIn: number } | null>(null);
   const [callActive, setCallActive] = useState<{ name: string; startedAt: number } | null>(null);
   const [tickKey, setTickKey] = useState(0);
+  const [now, setNow] = useState(0);
+  const [accepted, setAccepted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (!scheduled) return;
-    const id = setInterval(() => setTickKey(k => k + 1), 1000);
+    const id = setInterval(() => { setTickKey(k => k + 1); setNow(Date.now()); }, 1000);
     return () => clearInterval(id);
   }, [scheduled]);
 
@@ -39,7 +41,7 @@ export default function FakeCallPage() {
 
   useEffect(() => {
     if (!callActive) return;
-    const id = setInterval(() => setTickKey(k => k + 1), 1000);
+    const id = setInterval(() => { setTickKey(k => k + 1); setNow(Date.now()); }, 1000);
     return () => clearInterval(id);
   }, [callActive]);
 
@@ -49,9 +51,12 @@ export default function FakeCallPage() {
 
   const accept = () => {
     if (!callActive) return;
-    // pretend we picked up - go to "in call" UI
+    setAccepted(true);
+    setNow(Date.now());
+    setCallActive({ ...callActive, startedAt: Date.now() });
   };
   const hangup = () => {
+    setAccepted(false);
     setCallActive(null);
     setScheduled(null);
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -60,13 +65,13 @@ export default function FakeCallPage() {
 
   // Faking ringing screen
   if (callActive) {
-    const dur = Math.floor((Date.now() - callActive.startedAt) / 1000);
+    const dur = Math.max(0, Math.floor((now - callActive.startedAt) / 1000));
     const mm = String(Math.floor(dur / 60)).padStart(2, '0');
     const ss = String(dur % 60).padStart(2, '0');
     return (
-      <div className="fixed inset-0 bg-[#1A2027] text-white flex flex-col items-center justify-between py-12 z-50">
+      <div className="min-h-[70dvh] bg-surface text-ink flex flex-col items-center justify-between py-12">
         <div className="text-center" key={tickKey}>
-          <p className="text-sm opacity-60 mb-2">Połączenie przychodzące</p>
+          <p className="text-sm text-ink-2 mb-2">{accepted ? 'Rozmowa — symulacja' : 'Połączenie przychodzące — symulacja'}</p>
           <div className="w-32 h-32 rounded-full bg-[#9DF4CB]/20 flex items-center justify-center mx-auto mb-4">
             <span className="text-5xl">{callActive.name[0]}</span>
           </div>
@@ -74,10 +79,10 @@ export default function FakeCallPage() {
           <p className="text-sm opacity-60">{mm}:{ss}</p>
         </div>
         <div className="flex gap-12">
-          <button onClick={hangup} className="w-20 h-20 rounded-full bg-red-500 flex items-center justify-center text-3xl shadow-2xl">
+          <button aria-label="Zakończ symulację" onClick={hangup} className="w-20 h-20 rounded-full bg-red-500 flex items-center justify-center text-3xl shadow-2xl">
             📞
           </button>
-          <button onClick={accept} className="w-20 h-20 rounded-full bg-[#9DF4CB] flex items-center justify-center text-3xl shadow-2xl">
+          <button aria-label="Odbierz symulowane połączenie" disabled={accepted} onClick={accept} className="w-20 h-20 rounded-full bg-[#9DF4CB] flex items-center justify-center text-3xl shadow-2xl">
             ✅
           </button>
         </div>

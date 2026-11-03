@@ -10,16 +10,14 @@ export default function RankingPage() {
   const [users, setUsers] = useState<RankingUser[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadRanking();
-  }, []);
-
   const loadRanking = async () => {
     setLoading(true);
     const res = await api.get<{ ranking: RankingUser[] }>('/users/ranking');
     if (!res.error && res.ranking) setUsers(res.ranking);
     setLoading(false);
   };
+
+  useEffect(() => { const timer = setTimeout(() => void loadRanking(), 0); return () => clearTimeout(timer); }, []);
 
   const medals = ['🥇', '🥈', '🥉'];
 

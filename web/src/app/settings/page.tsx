@@ -7,6 +7,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { t, getLang, setLang, availableLanguages } from '@/lib/i18n';
 import api from '@/lib/api';
+import { Dialog } from '@/components/ui/Dialog';
+import { TextField } from '@/components/ui/TextField';
+import { Button } from '@/components/ui/Button';
+import { ErrorState } from '@/components/ui/ErrorState';
 
 const NOTIF_KEYS = {
   alerts: 'besafe.notif.alerts',
@@ -27,6 +31,8 @@ export default function SettingsPage() {
   const [showChangeEmail, setShowChangeEmail] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showChangeUsername, setShowChangeUsername] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [newUsername, setNewUsername] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
@@ -41,14 +47,18 @@ export default function SettingsPage() {
   const [alertRadius, setAlertRadius] = useState<number>(user?.alert_radius_m ?? 2000);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
     setNotifAlerts(loadBool(NOTIF_KEYS.alerts));
     setNotifFamily(loadBool(NOTIF_KEYS.family));
     setNotifSound(loadBool(NOTIF_KEYS.sound));
     setNotifVibration(loadBool(NOTIF_KEYS.vibration));
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    if (user?.alert_radius_m) setAlertRadius(user.alert_radius_m);
+    const timer = setTimeout(() => { if (user?.alert_radius_m) setAlertRadius(user.alert_radius_m); }, 0);
+    return () => clearTimeout(timer);
   }, [user?.alert_radius_m]);
 
   const toggleNotif = (key: keyof typeof NOTIF_KEYS, value: boolean, setter: (v: boolean) => void) => {
@@ -64,7 +74,7 @@ export default function SettingsPage() {
 
   const handleChangeEmail = async () => {
     setError(null);
-    const res = await api.patch('/users/email', { email: newEmail, password: currentPassword });
+    const res = await api.post('/users/me/email', { email: newEmail, password: currentPassword });
     if ((res as { error?: string }).error) { setError((res as { error?: string }).error || 'Error'); return; }
     await refreshUser();
     setShowChangeEmail(false);
@@ -85,7 +95,7 @@ export default function SettingsPage() {
 
   const handleChangePassword = async () => {
     setError(null);
-    const res = await api.patch('/users/password', { current_password: currentPassword, new_password: newPassword });
+    const res = await api.post('/users/me/password', { current_password: currentPassword, new_password: newPassword });
     if ((res as { error?: string }).error) { setError((res as { error?: string }).error || 'Error'); return; }
     setShowChangePassword(false);
     setCurrentPassword('');
@@ -94,10 +104,11 @@ export default function SettingsPage() {
   };
 
   const handleDeleteAccount = async () => {
-    if (!confirm(t('delete_confirm'))) return;
-    if (!confirm(t('delete_confirm'))) return;
-    const res = await api.delete('/users/me');
-    if (!(res as { error?: string }).error) logout();
+    if (deleting || !currentPassword) return;
+    setDeleting(true);
+    const res = await api.post('/users/me/delete', { password: currentPassword });
+    if (!res.error) { setShowDelete(false); logout(); } else setError('Nie udało się usunąć konta. Sprawdź hasło.');
+    setDeleting(false);
   };
 
   const saveAlertRadius = async () => {
@@ -314,13 +325,14 @@ export default function SettingsPage() {
             Wyloguj się
           </button>
           <button
-            onClick={handleDeleteAccount}
+            onClick={() => { setCurrentPassword(''); setError(null); setShowDelete(true); }}
             className="w-full py-3 rounded-xl border-2 border-red-500/30 text-red-500 font-medium text-sm hover:bg-red-500/10 transition-colors"
           >
             {t('delete_account')}
           </button>
         </div>
 
+        <Dialog open={showDelete} title="Usunąć konto?" onClose={() => { if (!deleting) setShowDelete(false); }}><div className="space-y-4"><p>Ta operacja jest nieodwracalna. Potwierdź ją swoim hasłem.</p><TextField label="Aktualne hasło" type="password" autoComplete="current-password" value={currentPassword} onChange={event => setCurrentPassword(event.target.value)} />{error && <ErrorState message={error} />}<Button variant="danger" loading={deleting} disabled={!currentPassword} onClick={handleDeleteAccount}>Usuń konto</Button><Button variant="secondary" disabled={deleting} onClick={() => setShowDelete(false)}>Anuluj</Button></div></Dialog>
         <p className="text-center text-xs text-neutral-500 mt-6">{t('version')} 1.0.0 (web)</p>
       </div>
     </AppLayout>

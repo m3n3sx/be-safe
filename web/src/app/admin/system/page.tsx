@@ -23,7 +23,7 @@ export default function SystemPage() {
     if (!r.error) setSys(r);
     setRefreshing(false);
   }, []);
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { const timer = setTimeout(() => void load(), 0); return () => clearTimeout(timer); }, [load]);
 
   const proc = sys?.process as Record<string, number | string> | undefined;
 

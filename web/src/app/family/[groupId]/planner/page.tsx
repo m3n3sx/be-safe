@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import AppLayout from '@/components/ui/AppLayout';
 import api from '@/lib/api';
@@ -9,10 +9,10 @@ interface FamilyEvent {
   id: string;
   title: string;
   description?: string | null;
-  start_at: string;
-  end_at?: string | null;
+  starts_at: string;
+  ends_at?: string | null;
   location?: string | null;
-  created_by: string;
+  author_id: string;
   creator_username?: string;
 }
 
@@ -28,19 +28,19 @@ export default function FamilyPlannerPage() {
   const [startAt, setStartAt] = useState('');
   const [location, setLocation] = useState('');
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     const res = await api.get<{ events: FamilyEvent[] }>(`/family/groups/${groupId}/events`);
     if (!res.error && res.events) setEvents(res.events);
     setLoading(false);
-  };
+  }, [groupId]);
 
-  useEffect(() => { if (groupId) load(); }, [groupId]);
+  useEffect(() => { if (!groupId) return; const timer = setTimeout(() => void load(), 0); return () => clearTimeout(timer); }, [groupId, load]);
 
   const createEvent = async () => {
     if (!title.trim() || !startAt) return;
     const res = await api.post(`/family/groups/${groupId}/events`, {
-      title, description, start_at: new Date(startAt).toISOString(), location,
+      title, description, starts_at: new Date(startAt).toISOString(), location, reminder_minutes_before: 15,
     });
     if (!res.error) {
       setShowCreate(false);
@@ -60,7 +60,7 @@ export default function FamilyPlannerPage() {
       <div className="max-w-3xl mx-auto px-4 py-6">
         <div className="flex items-center gap-3 mb-6">
           <button onClick={() => router.push('/family')} className="text-2xl">←</button>
-          <h1 className="text-2xl font-bold">📅 Planner rodzinny</h1>
+          <h1 className="text-2xl font-bold">📅 Plan rodzinny</h1>
         </div>
 
         <button
@@ -83,7 +83,7 @@ export default function FamilyPlannerPage() {
                 <div>
                   <h3 className="font-semibold text-lg">{e.title}</h3>
                   <p className="text-sm text-[#1A2027]/70 dark:text-white/70">
-                    {new Date(e.start_at).toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })}
+                    {new Date(e.starts_at).toLocaleString('pl-PL', { dateStyle: 'short', timeStyle: 'short' })}
                   </p>
                   {e.location && <p className="text-sm text-neutral-500 mt-1">📍 {e.location}</p>}
                   {e.description && <p className="text-sm mt-2">{e.description}</p>}

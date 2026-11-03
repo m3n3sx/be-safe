@@ -15,30 +15,22 @@ interface AED {
 export default function AEDPage() {
   const [aeds, setAeds] = useState<AED[]>([]);
   const [loading, setLoading] = useState(true);
-  const [pos, setPos] = useState<{ lat: number; lng: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setError('Geolokalizacja niedostępna');
-      setLoading(false);
-      return;
+      const timer = setTimeout(() => { setError('Geolokalizacja niedostępna'); setLoading(false); }, 0);
+      return () => clearTimeout(timer);
     }
     navigator.geolocation.getCurrentPosition(
       async p => {
-        setPos({ lat: p.coords.latitude, lng: p.coords.longitude });
         const r = await api.get(`/aeds/nearby?lat=${p.coords.latitude}&lng=${p.coords.longitude}&radius_m=5000&limit=20`);
         setAeds((r.aeds as AED[]) || []);
         setLoading(false);
       },
       () => {
-        setError('Brak dostępu do lokalizacji. Pokażę przykładowy obszar Warszawy.');
-        const w = { lat: 52.2297, lng: 21.0122 };
-        setPos(w);
-        api.get(`/aeds/nearby?lat=${w.lat}&lng=${w.lng}&radius_m=5000&limit=20`).then(r => {
-          setAeds((r.aeds as AED[]) || []);
-          setLoading(false);
-        });
+        setError('Brak dostępu do lokalizacji. Zezwól na lokalizację i odśwież stronę.');
+        setLoading(false);
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
+import Link from 'next/link';
 
 // ─── Animated counter ───────────────────────────────────────
 function AnimatedNumber({ target, suffix = '' }: { target: number; suffix?: string }) {
@@ -101,18 +102,10 @@ function FeatureCard({ icon, title, description, delay }: { icon: React.ReactNod
 
 // ─── Main Landing Page ──────────────────────────────────────
 export default function LandingPage() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark') ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setDarkMode(isDark);
-  }, []);
-
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-950 text-neutral-900 dark:text-white overflow-x-hidden">
       {/* ═══════════ NAVBAR ═══════════ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-xl border-b border-neutral-100 dark:border-neutral-900">
+      <nav className="relative bg-surface border-b border-border">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-xl bg-red-500 flex items-center justify-center">
@@ -127,12 +120,12 @@ export default function LandingPage() {
             <a href="#stats" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Statystyki</a>
           </div>
           <div className="flex items-center gap-3">
-            <a
+            <Link
               href="/"
               className="hidden sm:inline-flex text-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
             >
               Zaloguj się
-            </a>
+            </Link>
             <a
               href="https://alert.u235.pl/api/v1/download"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
@@ -185,13 +178,13 @@ export default function LandingPage() {
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.523 2.152a.5.5 0 00-.378-.103l-.104.024-5.04 1.48-5.042-1.48a.5.5 0 00-.584.29l-.03.092L3.002 12l3.343 9.545a.5.5 0 00.41.335l.094.005.078-.009 5.073-1.49 5.073 1.49a.5.5 0 00.585-.289l.03-.092L21 12l-3.344-9.545a.5.5 0 00-.133-.303zM12 4.69l4.283 1.258L12 7.808 7.717 5.948 12 4.69zm-4.5 2.556L12 9.412l4.5-2.166L19.673 12l-3.173 4.754L12 14.588l-4.5 2.166L4.327 12l3.173-4.754zM7.717 18.052L12 16.192l4.283 1.86L12 19.31l-4.283-1.258z"/></svg>
                 Pobierz na Android
               </a>
-              <a
+              <Link
                 href="/"
                 className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-neutral-100 dark:bg-neutral-900 text-neutral-900 dark:text-white font-semibold text-lg hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-all border border-neutral-200 dark:border-neutral-800"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
                 Otwórz wersję web
-              </a>
+              </Link>
             </div>
           </FadeIn>
 
@@ -627,12 +620,12 @@ export default function LandingPage() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                     Pobierz APK na Android
                   </a>
-                  <a
+                  <Link
                     href="/"
                     className="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors"
                   >
                     Otwórz wersję webową
-                  </a>
+                  </Link>
                 </div>
                 <p className="text-xs text-neutral-400 mt-6">
                   Darmowe. Bez reklam. Open-source.
@@ -654,7 +647,7 @@ export default function LandingPage() {
             <span className="text-neutral-400 text-sm">— Community Safety Alert System</span>
           </div>
           <div className="flex items-center gap-6 text-sm text-neutral-500">
-            <a href="/" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Aplikacja webowa</a>
+            <Link href="/" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Aplikacja webowa</Link>
             <a href="https://alert.u235.pl/api/v1/download" className="hover:text-neutral-900 dark:hover:text-white transition-colors">Pobierz APK</a>
             <span>&copy; {new Date().getFullYear()} u235.pl</span>
           </div>

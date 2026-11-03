@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import AdminShell from '@/components/ui/AdminShell';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAdminAccess } from '@/hooks/useAdminAccess';
 import api from '@/lib/api';
 import type { User } from '@/types';
 
@@ -19,6 +20,7 @@ interface AdminUser extends User {
 
 export default function AdminUsersPage() {
   const { user } = useAuth();
+  const access = useAdminAccess();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [q, setQ] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,8 +34,10 @@ export default function AdminUsersPage() {
   }, []);
 
   useEffect(() => {
-    if (user?.is_admin) load('');
-  }, [user, load]);
+    if (!access.isAdmin) return;
+    const timer = setTimeout(() => void load(''), 0);
+    return () => clearTimeout(timer);
+  }, [access.isAdmin, load]);
 
   const patch = async (id: string, body: Record<string, unknown>) => {
     setBusy(id);
@@ -61,7 +65,7 @@ export default function AdminUsersPage() {
     patch(u.id, { is_admin: !u.is_admin });
   };
 
-  if (!user?.is_admin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
+  if (!user || !access.isAdmin) return <AdminShell><div className="p-8 text-center text-neutral-500">Brak dostępu</div></AdminShell>;
 
   return (
     <AdminShell>

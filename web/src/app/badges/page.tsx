@@ -6,10 +6,10 @@ import AppLayout from '@/components/ui/AppLayout';
 import api from '@/lib/api';
 
 interface Badge {
-  code: string;
+  id: string;
   name: string;
   description: string;
-  earned_at: string;
+  awarded_at?: string;
   icon?: string;
 }
 
@@ -17,11 +17,13 @@ export default function BadgesPage() {
   const router = useRouter();
   const [badges, setBadges] = useState<Badge[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     (async () => {
-      const res = await api.get<{ badges: Badge[] }>('/users/me/badges');
-      if (!res.error && res.badges) setBadges(res.badges);
+      const res = await api.get<{ earned: Badge[]; available: Badge[] }>('/me/badges');
+      if (!res.error && res.earned) setBadges([...res.earned, ...res.available]);
+      else setError('Nie udało się pobrać odznak. Odśwież stronę, aby spróbować ponownie.');
       setLoading(false);
     })();
   }, []);
@@ -35,7 +37,8 @@ export default function BadgesPage() {
         </div>
 
         {loading && <p className="text-neutral-500">Ładowanie…</p>}
-        {!loading && badges.length === 0 && (
+        {error && <p role="alert" className="text-danger">{error}</p>}
+        {!loading && !error && badges.length === 0 && (
           <div className="text-center py-12 text-neutral-500">
             <p className="text-6xl mb-3">🏅</p>
             <p>Brak odznak. Zgłaszaj alerty, pomagaj rodzinie i wracaj.</p>
@@ -44,11 +47,11 @@ export default function BadgesPage() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {badges.map(b => (
-            <div key={b.code} className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 text-center">
+            <div key={b.id} className="panel text-center">
               <p className="text-4xl mb-2">{b.icon || '🏅'}</p>
               <p className="font-semibold text-sm">{b.name}</p>
               <p className="text-xs text-neutral-500 mt-1">{b.description}</p>
-              <p className="text-[10px] text-neutral-400 mt-2">{new Date(b.earned_at).toLocaleDateString('pl-PL')}</p>
+              <p className="text-sm text-ink-2 mt-2">{b.awarded_at ? `Zdobyta ${new Date(b.awarded_at).toLocaleDateString('pl-PL')}` : 'Do zdobycia'}</p>
             </div>
           ))}
         </div>

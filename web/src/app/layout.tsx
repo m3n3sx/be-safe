@@ -10,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "be:Safe - Community Safety Alert System",
-  description: "Real-time community-driven safety alert system. Report and track dangers in your area.",
+  title: "be:Safe — W okolicy",
+  description: "Sprawdź zgłoszenia w okolicy, zadbaj o bliskich i znajdź pomoc.",
   icons: {
     icon: "/favicon.ico",
   },
@@ -24,7 +24,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pl" className={`${inter.variable} h-full`} suppressHydrationWarning>
-      <body className="h-full bg-neutral-50 dark:bg-neutral-950 font-sans antialiased">
+      <head><script dangerouslySetInnerHTML={{ __html: "try{var t=localStorage.getItem('theme_mode')||'system';document.documentElement.classList.toggle('dark',t==='dark'||(t==='system'&&matchMedia('(prefers-color-scheme: dark)').matches))}catch{}" }} /></head>
+      <body className="font-sans antialiased">
         <Providers>{children}</Providers>
         <Script
           src="https://accounts.google.com/gsi/client"

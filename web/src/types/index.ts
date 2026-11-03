@@ -92,6 +92,7 @@ export interface Alert {
   expires_at: string;
   created_at: string;
   author_username?: string;
+  author?: { username: string; reputation_score?: number; is_verified?: boolean; verified_role?: string; avatar_url?: string | null } | null;
 }
 
 export interface AlertComment {
@@ -101,6 +102,7 @@ export interface AlertComment {
   content: string;
   created_at: string;
   username?: string;
+  author?: { id: string; username: string; avatar_url?: string | null };
 }
 
 export interface FamilyGroup {

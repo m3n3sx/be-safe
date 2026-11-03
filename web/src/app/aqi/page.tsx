@@ -39,9 +39,8 @@ export default function AQIPage() {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setError('Geolokalizacja niedostępna');
-      setLoading(false);
-      return;
+      const timer = setTimeout(() => { setError('Geolokalizacja niedostępna'); setLoading(false); }, 0);
+      return () => clearTimeout(timer);
     }
     navigator.geolocation.getCurrentPosition(
       async p => {
@@ -50,11 +49,8 @@ export default function AQIPage() {
         setLoading(false);
       },
       () => {
-        setError('Brak dostępu do lokalizacji. Pokażę okolice Warszawy.');
-        api.get('/aqi/nearby?lat=52.2297&lng=21.0122&radius_m=50000&limit=5').then(r => {
-          setStations((r.stations as Station[]) || []);
-          setLoading(false);
-        });
+        setError('Brak dostępu do lokalizacji. Zezwól na lokalizację i odśwież stronę.');
+        setLoading(false);
       },
       { enableHighAccuracy: true, timeout: 8000 }
     );

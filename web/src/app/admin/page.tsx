@@ -49,7 +49,7 @@ export default function AdminDashboard() {
     if (!a.error && a.series) setSeries(a.series);
   }, []);
 
-  useEffect(() => { if (access.isAdmin) load(); }, [access.isAdmin, load]);
+  useEffect(() => { if (!access.isAdmin) return; const timer = setTimeout(() => void load(), 0); return () => clearTimeout(timer); }, [access.isAdmin, load]);
 
   return (
     <AdminShell>

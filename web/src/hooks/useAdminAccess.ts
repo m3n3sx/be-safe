@@ -30,7 +30,7 @@ export function useAdminAccess(): AdminAccess {
       }
       setState({
         loading: false,
-        isAdmin: (res.roles?.length ?? 0) > 0,
+        isAdmin: !!res.is_superadmin || (res.roles?.length ?? 0) > 0,
         isSuperadmin: !!res.is_superadmin,
         roles: res.roles ?? [],
         permissions: res.permissions ?? [],
