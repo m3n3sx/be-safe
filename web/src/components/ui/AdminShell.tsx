@@ -32,7 +32,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       <Link href="/" className="btn btn-quiet mb-4">
         ← Wróć do aplikacji
       </Link>
-      <nav aria-label="Administracja" className="flex flex-wrap gap-2 mb-6">
+      <nav aria-label="Administracja" className="scroll-tabs mb-6">
         {routes
           .filter(
             (route) =>

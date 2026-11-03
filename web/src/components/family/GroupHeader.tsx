@@ -7,7 +7,7 @@ export function GroupHeader({ id, title, name }: { id: string; title: string; na
         ← Wszystkie grupy
       </Link>
       <PageHeader title={title} description={name} />
-      <nav className="flex flex-wrap gap-2 mb-6" aria-label="Narzędzia grupy">
+      <nav className="scroll-tabs mb-6" aria-label="Narzędzia grupy">
         {[
           ['', 'Przegląd'],
           ['/chat', 'Czat'],

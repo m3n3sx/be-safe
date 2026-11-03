@@ -301,6 +301,35 @@ textarea {
   overflow: hidden;
   clip-path: inset(50%);
 }
+.scroll-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-inline: -16px;
+  padding: 2px 16px;
+  scroll-padding-inline: 16px;
+}
+.scroll-tabs::-webkit-scrollbar {
+  display: none;
+}
+.scroll-tabs > * {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+@media (min-width: 1024px) {
+  .scroll-tabs {
+    flex-wrap: wrap;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+}
+.segmented .btn {
+  min-height: 44px;
+  padding-inline: 14px;
+  border-radius: 10px;
+}
 .compact-search .btn {
   padding-inline: 12px;
 }

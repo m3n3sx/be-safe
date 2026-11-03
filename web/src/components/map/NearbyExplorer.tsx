@@ -269,8 +269,8 @@ function Explorer() {
             Pokaż wyniki ({filtered.length})
           </Button>
         </ModalBottomSheet>
-        <div className="flex items-center justify-between gap-2 mt-1">
-          <p className="text-sm text-ink-2">
+        <div className="flex flex-nowrap items-center justify-between gap-2 mt-2">
+          <p className="min-w-0 flex-1 text-sm leading-snug text-ink-2">
             {state.area?.label === 'Moja lokalizacja'
               ? 'Pokazuję: okolice Twojej lokalizacji'
               : 'Pokazuję: wybrany obszar'}
