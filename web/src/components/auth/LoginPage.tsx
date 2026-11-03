@@ -64,7 +64,7 @@ export default function LoginPage({ mode = 'login' }: { mode?: 'login' | 'regist
         const payload = JSON.parse(
           new TextDecoder().decode(Uint8Array.from(atob(encoded), (char) => char.charCodeAt(0))),
         );
-        const err = await loginWithGoogle(payload.email, payload.name, payload.picture);
+        const err = await loginWithGoogle(response.credential, payload.email, payload.name, payload.picture);
         if (err) setError(authError(err));
         else router.replace(returnTo);
       } catch {

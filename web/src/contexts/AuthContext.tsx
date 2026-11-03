@@ -17,6 +17,7 @@ interface AuthContextType {
     referralCode?: string,
   ) => Promise<string | null>;
   loginWithGoogle: (
+    idToken: string,
     email: string,
     displayName: string,
     avatarUrl?: string,
@@ -92,11 +93,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const loginWithGoogle = async (
+    idToken: string,
     email: string,
     displayName: string,
     avatarUrl?: string,
   ): Promise<string | null> => {
+    // Backend weryfikuje id_token i bierze dane z tokena; email/display_name/avatar_url
+    // zostają tylko dla zgodności ze starszym backendem.
     const res = await api.post<{ token: string; user: User }>('/auth/google', {
+      id_token: idToken,
       email,
       display_name: displayName,
       avatar_url: avatarUrl,

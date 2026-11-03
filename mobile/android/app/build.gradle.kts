@@ -15,6 +15,20 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+// Klucz Google Maps (Maps SDK for Android) — NIE commitujemy go.
+// Źródło (pierwsze niepuste): env GOOGLE_MAPS_ANDROID_API_KEY → android/local.properties
+// (MAPS_API_KEY=...). local.properties jest w .gitignore.
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
+}
+val mapsApiKey: String = System.getenv("GOOGLE_MAPS_ANDROID_API_KEY")?.takeIf { it.isNotBlank() }
+    ?: (localProperties.getProperty("MAPS_API_KEY") ?: "")
+if (mapsApiKey.isBlank()) {
+    logger.warn("WARNING: brak klucza Google Maps (GOOGLE_MAPS_ANDROID_API_KEY / local.properties MAPS_API_KEY) — mapa będzie pusta.")
+}
+
 android {
     namespace = "pl.u235.alertmap"
     compileSdk = flutter.compileSdkVersion
@@ -38,6 +52,7 @@ android {
         versionName = flutter.versionName
         testInstrumentationRunner = "pl.leancode.patrol.PatrolJUnitRunner"
         testInstrumentationRunnerArguments["clearPackageData"] = "true"
+        manifestPlaceholders["mapsApiKey"] = mapsApiKey
     }
 
     testOptions {
