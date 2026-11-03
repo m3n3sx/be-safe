@@ -1,4 +1,4 @@
-// be:Safe — bazowa karta (design system Serenity). Theme-aware przez tokeny.
+// Shared card surface, using the light/dark application tokens.
 import React from 'react';
 
 export function Card({
@@ -21,10 +21,22 @@ export function Card({
   );
 }
 
-export function CardTitle({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function CardTitle({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return <h3 className={`text-ink font-medium ${className}`}>{children}</h3>;
 }
 
-export function CardSubtitle({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+export function CardSubtitle({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return <p className={`text-ink-2 text-sm ${className}`}>{children}</p>;
 }

@@ -1,206 +1,235 @@
 'use client';
-
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { t, getLang, setLang } from '@/lib/i18n';
+import { safeReturnTo } from '@/lib/routes';
+import { Button } from '@/components/ui/Button';
+import { TextField } from '@/components/ui/TextField';
+import { ErrorState } from '@/components/ui/ErrorState';
 
 const GOOGLE_CLIENT_ID =
+  process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
   '1098119585965-1dmn79cgjbhsr84f1iu3dibvpilc906p.apps.googleusercontent.com';
-
-export default function LoginPage() {
-  const { login, register, loginWithGoogle } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+const authError = (text: string) =>
+  ({
+    'Invalid credentials': 'Nieprawidłowy e-mail lub hasło.',
+    'Email or username taken': 'Ten e-mail lub nazwa są już zajęte.',
+    'Password too short': 'Hasło musi mieć co najmniej 6 znaków.',
+  })[text] || 'Nie udało się zalogować lub utworzyć konta. Sprawdź dane i połączenie.';
+export default function LoginPage({ mode = 'login' }: { mode?: 'login' | 'register' }) {
+  const { login, register, loginWithGoogle, user } = useAuth();
+  const router = useRouter();
+  const path = usePathname();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const googleBtnRef = useRef<HTMLDivElement | null>(null);
-  const initializedRef = useRef(false);
-
+  const [referral, setReferral] = useState('');
+  const [returnTo, setReturnTo] = useState('/');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [consent, setConsent] = useState(false);
+  const [googleFailed, setGoogleFailed] = useState(false);
+  const googleRef = useRef<HTMLDivElement>(null);
+  const lock = useRef(false);
+  const registering = mode === 'register';
   useEffect(() => {
-    getLang();
-  }, []);
-
-  const handleCredential = useCallback(
+    const query = new URLSearchParams(window.location.search);
+    const timer = setTimeout(() => {
+      setReturnTo(
+        safeReturnTo(
+          query.get('returnTo') ||
+            (!['/', '/login', '/register'].includes(path)
+              ? `${path}${window.location.search}`
+              : '/'),
+        ),
+      );
+      setReferral(query.get('ref') || '');
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [path]);
+  useEffect(() => {
+    if (user && ['/login', '/register'].includes(path))
+      router.replace(safeReturnTo(new URLSearchParams(window.location.search).get('returnTo')));
+  }, [user, path, router]);
+  const credential = useCallback(
     async (response: { credential: string }) => {
+      if (lock.current) return;
+      lock.current = true;
+      setBusy(true);
+      setError('');
       try {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        setLoading(true);
-        const err = await loginWithGoogle(response.credential, payload.email, payload.name, payload.picture);
-        if (err) setError(err);
-      } catch (e) {
-        setError('Google Sign-In failed');
+        const encoded = response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(
+          new TextDecoder().decode(Uint8Array.from(atob(encoded), (char) => char.charCodeAt(0))),
+        );
+        const err = await loginWithGoogle(
+          response.credential,
+          payload.email,
+          payload.name,
+          payload.picture,
+        );
+        if (err) setError(authError(err));
+        else router.replace(returnTo);
+      } catch {
+        setError('Nie udało się zalogować przez Google. Spróbuj ponownie.');
       } finally {
-        setLoading(false);
+        lock.current = false;
+        setBusy(false);
       }
     },
-    [loginWithGoogle]
+    [loginWithGoogle, returnTo, router],
   );
-
-  // Initialize Google Identity Services once the GSI script is ready.
   useEffect(() => {
-    if (initializedRef.current) return;
-    let cancelled = false;
-
-    const tryInit = () => {
-      if (cancelled) return;
-      const w = window as unknown as {
-        google?: { accounts?: { id?: any } };
-      };
-      const id = w.google?.accounts?.id;
-      if (!id || !googleBtnRef.current) {
-        // Retry shortly — next/script might still be loading.
-        setTimeout(tryInit, 200);
-        return;
+    if (registering && !consent) return;
+    let attempts = 0;
+    const timer = setInterval(() => {
+      const id = window.google?.accounts?.id;
+      if (id && googleRef.current) {
+        clearInterval(timer);
+        id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: credential });
+        googleRef.current.replaceChildren();
+        id.renderButton(googleRef.current, {
+          theme: 'outline',
+          size: 'large',
+          text: 'continue_with',
+          locale: 'pl',
+          width: 280,
+        });
+      } else if (++attempts >= 40) {
+        clearInterval(timer);
+        setGoogleFailed(true);
       }
-      initializedRef.current = true;
-      id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredential,
-        use_fedcm_for_prompt: true,
-      });
-      id.renderButton(googleBtnRef.current, {
-        type: 'standard',
-        theme: 'outline',
-        size: 'large',
-        text: 'continue_with',
-        shape: 'pill',
-        logo_alignment: 'left',
-        width: googleBtnRef.current.offsetWidth || 320,
-      });
-    };
-
-    tryInit();
-    return () => {
-      cancelled = true;
-    };
-  }, [handleCredential]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    let err: string | null;
-    if (isLogin) {
-      err = await login(email, password);
-    } else {
-      err = await register(email, password, username);
-    }
-    if (err) setError(err);
-    setLoading(false);
-  };
-
+    }, 250);
+    return () => clearInterval(timer);
+  }, [credential, registering, consent]);
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (lock.current) return;
+    lock.current = true;
+    setBusy(true);
+    setError('');
+    const err = registering
+      ? await register(email, password, username, referral.trim())
+      : await login(email, password);
+    if (err) setError(authError(err));
+    else router.replace(returnTo);
+    setBusy(false);
+    lock.current = false;
+  }
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-950 px-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}{/* GSI script is loaded in app/layout.tsx (afterInteractive). */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-red-500 text-white text-2xl font-bold mb-4">
-            b:S
-          </div>
-          <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">be:Safe</h1>
-          <p className="text-neutral-500 mt-1">
-            {isLogin ? t('login') : t('register')}
-          </p>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-white dark:bg-neutral-900 rounded-2xl p-6 shadow-lg border border-neutral-200 dark:border-neutral-800 space-y-4">
-          {error && (
-            <div className="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
-              {error}
-            </div>
+    <div className="max-w-5xl mx-auto px-4 py-8 lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
+      <section className="self-center space-y-5">
+        <p className="text-primary font-semibold">Twoja okolica. Twoi bliscy.</p>
+        <h1 className="text-3xl lg:text-4xl font-bold leading-tight">
+          Wiedz, co dzieje się blisko Ciebie.
+        </h1>
+        <p className="text-ink-2 text-lg">
+          Sprawdzaj lokalne zgłoszenia, ostrzegaj innych i miej pomoc pod ręką.
+        </p>
+        <p className="text-ink-2">
+          Zaloguj się, aby zobaczyć mapę i zgłoszenia.
+          {returnTo === '/report' && ' Po zalogowaniu wrócisz do formularza zgłoszenia.'}
+        </p>
+        <Link href="/help" className="btn btn-secondary">
+          Potrzebujesz pomocy? Bez logowania →
+        </Link>
+      </section>
+      <section className="panel space-y-5">
+        <h2 className="text-2xl font-bold">
+          {registering ? 'Utwórz konto' : 'Dobrze Cię widzieć'}
+        </h2>
+        <form onSubmit={submit} className="space-y-4">
+          {registering && (
+            <TextField
+              label="Twoja nazwa"
+              autoComplete="nickname"
+              required
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
           )}
-
-          {!isLogin && (
-            <div>
-              <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-                {t('username')}
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                required
-                className="w-full rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-white focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 transition-colors"
+          <TextField
+            label="Adres e-mail"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+          <TextField
+            label="Hasło"
+            type={visible ? 'text' : 'password'}
+            minLength={6}
+            autoComplete={registering ? 'new-password' : 'current-password'}
+            required
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            hint={registering ? 'Co najmniej 6 znaków.' : undefined}
+          />
+          <Button variant="quiet" onClick={() => setVisible(!visible)} aria-pressed={visible}>
+            {visible ? 'Ukryj hasło' : 'Pokaż hasło'}
+          </Button>
+          {registering && (
+            <>
+              <TextField
+                label="Kod polecenia (opcjonalnie)"
+                value={referral}
+                onChange={(event) => setReferral(event.target.value)}
               />
-            </div>
+              <label className="flex items-start gap-3 min-h-12">
+                <input
+                  className="mt-1 size-5"
+                  type="checkbox"
+                  required
+                  checked={consent}
+                  onChange={(event) => setConsent(event.target.checked)}
+                />
+                <span>
+                  Mam co najmniej 13 lat i akceptuję{' '}
+                  <Link className="underline" href="/terms">
+                    regulamin
+                  </Link>
+                  . Zapoznałem/am się z{' '}
+                  <Link className="underline" href="/privacy">
+                    polityką prywatności
+                  </Link>
+                  .
+                </span>
+              </label>
+            </>
           )}
-
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-              {t('email')}
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              className="w-full rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-white focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 transition-colors"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1.5">
-              {t('password')}
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="w-full rounded-xl border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 px-4 py-2.5 text-sm text-neutral-900 dark:text-white focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 transition-colors"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2.5 rounded-xl bg-red-500 text-white font-medium text-sm hover:bg-red-600 disabled:opacity-50 transition-colors"
-          >
-            {loading ? t('loading') : (isLogin ? t('login') : t('register'))}
-          </button>
-
-          <div className="relative py-2">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-neutral-200 dark:border-neutral-800" />
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="bg-white dark:bg-neutral-900 px-3 text-neutral-500">{t('or_google')}</span>
-            </div>
-          </div>
-
-          {/* Google Identity Services native button (FedCM-compatible). */}
-          <div ref={googleBtnRef} className="flex justify-center min-h-[44px]" />
-
-          <p className="text-center text-sm text-neutral-500">
-            {isLogin ? t('no_account') : t('have_account')}{' '}
-            <button
-              type="button"
-              onClick={() => { setIsLogin(!isLogin); setError(null); }}
-              className="text-red-500 font-medium hover:underline"
-            >
-              {isLogin ? t('register') : t('login')}
-            </button>
-          </p>
+          {error && <ErrorState message={error} />}
+          <Button type="submit" loading={busy} className="w-full">
+            {registering ? 'Utwórz konto' : 'Zaloguj się'}
+          </Button>
+          {!registering && (
+            <Link href="/forgot-password" className="btn btn-quiet w-full">
+              Nie pamiętam hasła
+            </Link>
+          )}
         </form>
-
-        {/* Language switcher */}
-        <div className="flex justify-center gap-2 mt-4">
-          {(['pl', 'en'] as const).map(lang => (
-            <button
-              key={lang}
-              onClick={() => { setLang(lang); window.location.reload(); }}
-              className={`px-3 py-1 text-xs rounded-lg transition-colors ${getLang() === lang ? 'bg-red-500 text-white' : 'bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400'}`}
-            >
-              {lang.toUpperCase()}
-            </button>
-          ))}
+        <div className="border-t border-border pt-4">
+          <p className="text-center text-ink-2 mb-3">lub kontynuuj z Google</p>
+          {registering && !consent ? (
+            <p className="text-sm text-ink-2">Najpierw zaznacz deklarację powyżej.</p>
+          ) : (
+            <div ref={googleRef} className="flex justify-center min-h-12" />
+          )}
+          {googleFailed && (
+            <p className="text-sm text-ink-2">
+              Google jest teraz niedostępne. Możesz użyć e-maila i hasła.
+            </p>
+          )}
         </div>
-      </div>
+        <Link
+          className="btn btn-secondary w-full"
+          href={`${registering ? '/login' : '/register'}?returnTo=${encodeURIComponent(returnTo)}${referral ? `&ref=${encodeURIComponent(referral)}` : ''}`}
+        >
+          {registering ? 'Masz konto? Zaloguj się' : 'Nie masz konta? Zarejestruj się'}
+        </Link>
+      </section>
     </div>
   );
 }

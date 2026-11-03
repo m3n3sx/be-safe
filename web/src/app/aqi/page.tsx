@@ -1,125 +1,99 @@
 'use client';
-
-import React, { useEffect, useState } from 'react';
-import api from '@/lib/api';
-
-interface Station {
+import { asArray } from '@/lib/api';
+import { useState } from 'react';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { AreaControl, defaultArea } from '@/components/map/AreaControl';
+import { useApiResource } from '@/hooks/useApiResource';
+import { Button } from '@/components/ui/Button';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { distance } from '@/lib/format';
+type Station = {
   id: number;
   name: string;
-  city?: string | null;
-  address?: string | null;
-  lat: number;
-  lng: number;
+  city?: string;
+  address?: string;
   distance_m: number;
   aqi_index?: number | null;
-  aqi_label?: string | null;
+  aqi_label?: string;
   pm10?: number | null;
   pm25?: number | null;
   no2?: number | null;
   so2?: number | null;
   o3?: number | null;
-  measured_at?: string | null;
-}
-
-function aqiColor(idx: number | null | undefined): { bg: string; text: string; label: string } {
-  if (idx === null || idx === undefined || idx < 0) return { bg: 'bg-neutral-400', text: 'text-white', label: 'Brak danych' };
-  if (idx === 0) return { bg: 'bg-[#9DF4CB]', text: 'text-[#1A2027]', label: 'Bardzo dobry' };
-  if (idx === 1) return { bg: 'bg-green-400', text: 'text-white', label: 'Dobry' };
-  if (idx === 2) return { bg: 'bg-yellow-400', text: 'text-[#1A2027]', label: 'Umiarkowany' };
-  if (idx === 3) return { bg: 'bg-orange-500', text: 'text-white', label: 'Dostateczny' };
-  if (idx === 4) return { bg: 'bg-red-500', text: 'text-white', label: 'Zły' };
-  if (idx >= 5) return { bg: 'bg-purple-700', text: 'text-white', label: 'Bardzo zły' };
-  return { bg: 'bg-neutral-400', text: 'text-white', label: 'Brak danych' };
-}
-
-export default function AQIPage() {
-  const [stations, setStations] = useState<Station[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setError('Geolokalizacja niedostępna');
-      setLoading(false);
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      async p => {
-        const r = await api.get(`/aqi/nearby?lat=${p.coords.latitude}&lng=${p.coords.longitude}&radius_m=50000&limit=5`);
-        setStations((r.stations as Station[]) || []);
-        setLoading(false);
-      },
-      () => {
-        setError('Brak dostępu do lokalizacji. Pokażę okolice Warszawy.');
-        api.get('/aqi/nearby?lat=52.2297&lng=21.0122&radius_m=50000&limit=5').then(r => {
-          setStations((r.stations as Station[]) || []);
-          setLoading(false);
-        });
-      },
-      { enableHighAccuracy: true, timeout: 8000 }
-    );
-  }, []);
-
+  measured_at?: string;
+};
+export default function Page() {
+  const [area, setArea] = useState(defaultArea);
+  const { data, loading, error, reload } = useApiResource<{ stations: Station[] }>(
+    `/aqi/nearby?lat=${area.lat}&lng=${area.lng}&radius_m=50000&limit=5`,
+  );
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 px-4 py-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-light text-neutral-900 dark:text-white mb-2">💨 Jakość powietrza</h1>
-      <p className="text-sm text-neutral-500 mb-6">Najbliższe stacje GIOŚ</p>
-
-      {error && (
-        <div className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 rounded-xl p-3 text-sm mb-4">
-          {error}
+    <div className="page-container space-y-5">
+      <PageHeader title="Jakość powietrza" description="Najbliższe stacje GIOŚ w promieniu 50 km.">
+        <Button variant="secondary" onClick={reload}>
+          Odśwież pomiary
+        </Button>
+      </PageHeader>
+      <AreaControl area={area} onChange={setArea} />
+      {error && <ErrorState message={error} onRetry={reload} />}
+      {loading ? (
+        <Skeleton />
+      ) : data && !asArray(data.stations).length && !error ? (
+        <EmptyState
+          title="Brak stacji w wybranym obszarze"
+          description="Spróbuj wybrać inną miejscowość."
+        />
+      ) : (
+        <div className="grid md:grid-cols-2 gap-4">
+          {asArray(data?.stations).map((s) => (
+            <article className="panel space-y-3" key={s.id}>
+              <h2 className="text-xl font-bold">{s.name}</h2>
+              <p className="text-ink-2">
+                {s.city} {s.address} · {distance(Number(s.distance_m))}
+              </p>
+              <p className="text-xl font-semibold">
+                {s.aqi_label ||
+                  (s.aqi_index != null
+                    ? ['Bardzo dobry', 'Dobry', 'Umiarkowany', 'Dostateczny', 'Zły', 'Bardzo zły'][
+                        s.aqi_index
+                      ]
+                    : null) ||
+                  'Brak aktualnego indeksu'}
+              </p>
+              <dl className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {(
+                  [
+                    ['PM10', s.pm10],
+                    ['PM2,5', s.pm25],
+                    ['NO₂', s.no2],
+                    ['SO₂', s.so2],
+                    ['O₃', s.o3],
+                  ] as const
+                ).map(([label, value]) => (
+                  <div key={label}>
+                    <dt className="text-ink-2">{label}</dt>
+                    <dd className="font-semibold">
+                      {value == null
+                        ? 'Brak danych'
+                        : `${Number(value).toLocaleString('pl-PL', { maximumFractionDigits: 1 })} µg/m³`}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="text-sm text-ink-2">
+                {s.measured_at
+                  ? `Pomiar: ${new Date(s.measured_at).toLocaleString('pl-PL')}`
+                  : 'Brak czasu pomiaru'}
+              </p>
+            </article>
+          ))}
         </div>
       )}
-
-      {loading && <p className="text-center text-neutral-500 py-12">Ładowanie stacji...</p>}
-
-      <div className="space-y-3">
-        {stations.map(s => {
-          const c = aqiColor(s.aqi_index);
-          return (
-            <div key={s.id} className="bg-white dark:bg-neutral-900 rounded-2xl overflow-hidden">
-              <div className={`${c.bg} ${c.text} px-4 py-3 flex items-center justify-between`}>
-                <div>
-                  <div className="font-semibold">{s.name}</div>
-                  <div className="text-xs opacity-90">{s.city} · {Math.round(s.distance_m / 1000)} km</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-light">{s.aqi_label || c.label}</div>
-                  {s.aqi_index !== null && s.aqi_index !== undefined && s.aqi_index >= 0 && (
-                    <div className="text-xs opacity-90">Index {s.aqi_index}/5</div>
-                  )}
-                </div>
-              </div>
-              <div className="px-4 py-3 grid grid-cols-3 gap-3 text-xs">
-                <Metric label="PM10" value={s.pm10} unit="μg/m³" />
-                <Metric label="PM2.5" value={s.pm25} unit="μg/m³" />
-                <Metric label="NO₂" value={s.no2} unit="μg/m³" />
-              </div>
-              {s.measured_at && (
-                <div className="px-4 pb-3 text-[10px] text-neutral-400">
-                  Pomiar: {new Date(s.measured_at).toLocaleString('pl-PL')}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="mt-6 text-xs text-neutral-400 text-center">
-        Dane: Główny Inspektorat Ochrony Środowiska (GIOŚ)
-      </div>
-    </div>
-  );
-}
-
-function Metric({ label, value, unit }: { label: string; value: number | null | undefined; unit: string }) {
-  return (
-    <div>
-      <div className="text-neutral-500">{label}</div>
-      <div className="text-neutral-900 dark:text-white font-semibold">
-        {value !== null && value !== undefined ? Math.round(value) : '—'}
-        {value !== null && value !== undefined && <span className="text-[10px] text-neutral-400 ml-1">{unit}</span>}
-      </div>
+      <p className="text-sm text-ink-2">
+        Źródło: Główny Inspektorat Ochrony Środowiska. Pomiar opisuje warunki przy stacji.
+      </p>
     </div>
   );
 }

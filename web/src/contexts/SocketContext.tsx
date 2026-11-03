@@ -5,6 +5,7 @@ import { io, Socket } from 'socket.io-client';
 import { SOCKET_URL } from '@/lib/constants';
 import { useAuth } from './AuthContext';
 import type { Alert } from '@/types';
+import type { AlertComment } from '@/types';
 
 export interface FamilyMessage {
   id: string;
@@ -17,14 +18,26 @@ export interface FamilyMessage {
 }
 
 interface SocketContextType {
+  onEvent: (event: string, cb: (data: Record<string, unknown>) => void) => () => void;
   connected: boolean;
   onNewAlert: (cb: (alert: Alert) => void) => () => void;
-  onAlertUpdated: (cb: (data: { id: string; confirms: number; denies: number }) => void) => () => void;
+  onAlertUpdated: (
+    cb: (data: { id: string; confirms: number; denies: number }) => void,
+  ) => () => void;
   onAlertExpired: (cb: (data: { alert_id: string }) => void) => () => void;
-  onFamilyLocation: (cb: (data: { user_id: string; lat: number; lng: number; recorded_at: string }) => void) => () => void;
-  onGeofenceExit: (cb: (data: { user_id: string; username: string; geofence_name: string }) => void) => () => void;
+  onFamilyLocation: (
+    cb: (data: { user_id: string; lat: number; lng: number; recorded_at: string }) => void,
+  ) => () => void;
+  onGeofenceExit: (
+    cb: (data: { user_id: string; username: string; geofence_name: string }) => void,
+  ) => () => void;
   onFamilyMessage: (cb: (msg: FamilyMessage) => void) => () => void;
   updateLocation: (lat: number, lng: number) => void;
+  watchAlert: (
+    id: string,
+    onComment: (comment: AlertComment) => void,
+    onDelete: (id: string) => void,
+  ) => () => void;
 }
 
 const SocketContext = createContext<SocketContextType | null>(null);
@@ -33,13 +46,25 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const socketRef = useRef<Socket | null>(null);
   const [connected, setConnected] = useState(false);
+  const events = useRef(new Map<string, Set<(data: Record<string, unknown>) => void>>());
+  const onEvent = useCallback((event: string, cb: (data: Record<string, unknown>) => void) => {
+    if (!events.current.has(event)) events.current.set(event, new Set());
+    events.current.get(event)!.add(cb);
+    return () => {
+      events.current.get(event)?.delete(cb);
+    };
+  }, []);
 
   const listenersRef = useRef<{
     'alert:new': Set<(a: Alert) => void>;
     'alert:updated': Set<(d: { id: string; confirms: number; denies: number }) => void>;
     'alert:expired': Set<(d: { alert_id: string }) => void>;
-    'family:location': Set<(d: { user_id: string; lat: number; lng: number; recorded_at: string }) => void>;
-    'family:geofence_exit': Set<(d: { user_id: string; username: string; geofence_name: string }) => void>;
+    'family:location': Set<
+      (d: { user_id: string; lat: number; lng: number; recorded_at: string }) => void
+    >;
+    'family:geofence_exit': Set<
+      (d: { user_id: string; username: string; geofence_name: string }) => void
+    >;
     'family:message': Set<(m: FamilyMessage) => void>;
   }>({
     'alert:new': new Set(),
@@ -68,24 +93,34 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
     socket.on('connect', () => setConnected(true));
     socket.on('disconnect', () => setConnected(false));
+    socket.onAny((event: string, data: Record<string, unknown>) => {
+      if (!data || typeof data !== 'object' || Array.isArray(data)) return;
+      events.current.get(event)?.forEach((cb) => cb(data));
+    });
 
     socket.on('alert:new', (data: Alert) => {
-      listenersRef.current['alert:new'].forEach(cb => cb(data));
+      listenersRef.current['alert:new'].forEach((cb) => cb(data));
     });
     socket.on('alert:updated', (data: { id: string; confirms: number; denies: number }) => {
-      listenersRef.current['alert:updated'].forEach(cb => cb(data));
+      listenersRef.current['alert:updated'].forEach((cb) => cb(data));
     });
     socket.on('alert:expired', (data: { alert_id: string }) => {
-      listenersRef.current['alert:expired'].forEach(cb => cb(data));
+      listenersRef.current['alert:expired'].forEach((cb) => cb(data));
     });
-    socket.on('family:location', (data: { user_id: string; lat: number; lng: number; recorded_at: string }) => {
-      listenersRef.current['family:location'].forEach(cb => cb(data));
-    });
-    socket.on('family:geofence_exit', (data: { user_id: string; username: string; geofence_name: string }) => {
-      listenersRef.current['family:geofence_exit'].forEach(cb => cb(data));
-    });
+    socket.on(
+      'family:location',
+      (data: { user_id: string; lat: number; lng: number; recorded_at: string }) => {
+        listenersRef.current['family:location'].forEach((cb) => cb(data));
+      },
+    );
+    socket.on(
+      'family:geofence_exit',
+      (data: { user_id: string; username: string; geofence_name: string }) => {
+        listenersRef.current['family:geofence_exit'].forEach((cb) => cb(data));
+      },
+    );
     socket.on('family:message', (data: FamilyMessage) => {
-      listenersRef.current['family:message'].forEach(cb => cb(data));
+      listenersRef.current['family:message'].forEach((cb) => cb(data));
     });
 
     socketRef.current = socket;
@@ -99,9 +134,13 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
   const createListener = useCallback(<T,>(event: string) => {
     return (cb: (data: T) => void) => {
-      const set = listenersRef.current[event as keyof typeof listenersRef.current] as Set<(data: T) => void>;
+      const set = listenersRef.current[event as keyof typeof listenersRef.current] as Set<
+        (data: T) => void
+      >;
       set.add(cb);
-      return () => { set.delete(cb); };
+      return () => {
+        set.delete(cb);
+      };
     };
   }, []);
 
@@ -109,17 +148,54 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     socketRef.current?.emit('location:update', { lat, lng });
   }, []);
 
+  const watchAlert = useCallback(
+    (id: string, onComment: (comment: AlertComment) => void, onDelete: (id: string) => void) => {
+      const socket = socketRef.current;
+      const join = () => socket?.emit('alert:join', id);
+      const added = (comment: AlertComment) => {
+        if (comment?.alert_id === id && typeof comment.content === 'string') onComment(comment);
+      };
+      const deleted = (data: { alert_id: string; comment_id: string }) => {
+        if (data?.alert_id === id) onDelete(data.comment_id);
+      };
+      join();
+      socket?.on('connect', join);
+      socket?.on('comment:new', added);
+      socket?.on('comment:deleted', deleted);
+      return () => {
+        socket?.emit('alert:leave', id);
+        socket?.off('connect', join);
+        socket?.off('comment:new', added);
+        socket?.off('comment:deleted', deleted);
+      };
+    },
+    [],
+  );
+
   return (
     <SocketContext.Provider
       value={{
         connected,
+        onEvent,
         onNewAlert: createListener<Alert>('alert:new'),
-        onAlertUpdated: createListener<{ id: string; confirms: number; denies: number }>('alert:updated'),
+        onAlertUpdated: createListener<{ id: string; confirms: number; denies: number }>(
+          'alert:updated',
+        ),
         onAlertExpired: createListener<{ alert_id: string }>('alert:expired'),
-        onFamilyLocation: createListener<{ user_id: string; lat: number; lng: number; recorded_at: string }>('family:location'),
-        onGeofenceExit: createListener<{ user_id: string; username: string; geofence_name: string }>('family:geofence_exit'),
+        onFamilyLocation: createListener<{
+          user_id: string;
+          lat: number;
+          lng: number;
+          recorded_at: string;
+        }>('family:location'),
+        onGeofenceExit: createListener<{
+          user_id: string;
+          username: string;
+          geofence_name: string;
+        }>('family:geofence_exit'),
         onFamilyMessage: createListener<FamilyMessage>('family:message'),
         updateLocation,
+        watchAlert,
       }}
     >
       {children}

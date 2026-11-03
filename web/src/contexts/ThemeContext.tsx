@@ -13,25 +13,34 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeMode>('dark');
-  const [systemDark, setSystemDark] = useState(true);
+  const [theme, setThemeState] = useState<ThemeMode>('system');
+  const [systemDark, setSystemDark] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    for (const key of ['large-text', 'reduced-motion']) {
+      document.documentElement.classList.toggle(key, localStorage.getItem(`besafe.${key}`) === '1');
+    }
     const stored = localStorage.getItem('theme_mode') as ThemeMode | null;
-    if (stored) setThemeState(stored);
-
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    setSystemDark(mq.matches);
+    const timer = setTimeout(() => {
+      if (stored === 'light' || stored === 'dark' || stored === 'system') setThemeState(stored);
+      setSystemDark(mq.matches);
+      setReady(true);
+    }, 0);
     const handler = (e: MediaQueryListEvent) => setSystemDark(e.matches);
     mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
+    return () => {
+      clearTimeout(timer);
+      mq.removeEventListener('change', handler);
+    };
   }, []);
 
   const resolvedTheme = theme === 'system' ? (systemDark ? 'dark' : 'light') : theme;
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
-  }, [resolvedTheme]);
+    if (ready) document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
+  }, [resolvedTheme, ready]);
 
   const setTheme = (t: ThemeMode) => {
     setThemeState(t);

@@ -1,0 +1,24 @@
+import Link from 'next/link';
+import { PageHeader } from '@/components/layout/PageHeader';
+export function GroupHeader({ id, title, name }: { id: string; title: string; name?: string }) {
+  return (
+    <>
+      <Link className="btn btn-quiet mb-2" href="/family">
+        ← Wszystkie grupy
+      </Link>
+      <PageHeader title={title} description={name} />
+      <nav className="scroll-tabs mb-6" aria-label="Narzędzia grupy">
+        {[
+          ['', 'Przegląd'],
+          ['/chat', 'Czat'],
+          ['/planner', 'Plan rodzinny'],
+          ['/geofences', 'Bezpieczne strefy'],
+        ].map(([path, label]) => (
+          <Link key={path} className="btn btn-secondary" href={`/family/${id}${path}`}>
+            {label}
+          </Link>
+        ))}
+      </nav>
+    </>
+  );
+}

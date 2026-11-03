@@ -1,0 +1,20 @@
+export type Escort = {
+  id: string;
+  requester_id: string;
+  watcher_id: string;
+  group_id?: string;
+  requester_username: string;
+  watcher_username: string;
+  requester_phone?: string;
+  watcher_phone?: string;
+  destination_lat: number;
+  destination_lng: number;
+  destination_name?: string;
+  last_location_lat?: number | null;
+  last_location_lng?: number | null;
+  last_update_at?: string;
+  started_at: string;
+  completed_at?: string;
+  eta_seconds: number;
+  status: 'active' | 'completed' | 'expired' | 'panic';
+};

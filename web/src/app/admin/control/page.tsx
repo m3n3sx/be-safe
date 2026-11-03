@@ -1,146 +1,246 @@
 'use client';
-
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 import AdminShell from '@/components/ui/AdminShell';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { ResourceState } from '@/components/ui/ResourceState';
+import { Button } from '@/components/ui/Button';
+import { TextField, TextArea, Select } from '@/components/ui/FormField';
+import { Dialog } from '@/components/ui/Dialog';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { useApiResource, useMutation } from '@/hooks/useApiResource';
 import { useAdminAccess } from '@/hooks/useAdminAccess';
-import api from '@/lib/api';
-
-interface Cfg { key: string; value: unknown; description?: string }
-interface Flag { key: string; enabled: boolean; description?: string; segment?: string }
-
+import api, { asArray } from '@/lib/api';
+type Config = { key: string; value: unknown; description?: string };
+type Flag = { key: string; enabled: boolean; description?: string; segment?: string };
 export default function ControlPage() {
   const access = useAdminAccess();
-  const [config, setConfig] = useState<Cfg[]>([]);
-  const [flags, setFlags] = useState<Flag[]>([]);
-  const [msg, setMsg] = useState<string | null>(null);
-
-  const load = useCallback(async () => {
-    const [c, f] = await Promise.all([
-      api.get<{ config: Cfg[]; error?: string }>('/admin/config'),
-      api.get<{ flags: Flag[]; error?: string }>('/admin/flags'),
-    ]);
-    if (!c.error) setConfig(c.config);
-    if (!f.error) setFlags(f.flags);
-  }, []);
-  useEffect(() => { if (access.isAdmin) load(); }, [access.isAdmin, load]);
-
-  const flash = (m: string) => { setMsg(m); setTimeout(() => setMsg(null), 2500); };
-
-  const saveConfig = async (key: string, raw: string) => {
-    let value: unknown = raw;
-    try { value = JSON.parse(raw); } catch { /* string */ }
-    const r = await api.put(`/admin/config/${key}`, { value });
-    if (r.error) flash(`Błąd: ${r.error}`); else { flash(`Zapisano ${key}`); load(); }
-  };
-
-  const toggleFlag = async (f: Flag) => {
-    const r = await api.put(`/admin/flags/${f.key}`, { enabled: !f.enabled, segment: f.segment });
-    if (r.error) flash(`Błąd: ${r.error}`); else { flash(`${f.key}: ${!f.enabled ? 'ON' : 'OFF'}`); load(); }
-  };
-
-  const canConfigWrite = access.can('config.write');
-  const canFlags = access.can('flags.write');
-  const canBroadcast = access.can('broadcast.send');
-
+  const config = useApiResource<{ config: Config[] }>(access.isAdmin ? '/admin/config' : null);
+  const flags = useApiResource<{ flags: Flag[] }>(access.isAdmin ? '/admin/flags' : null);
+  const mutation = useMutation();
+  const [message, setMessage] = useState('');
   return (
     <AdminShell>
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-ink">Kontrola</h1>
-          <p className="text-sm text-ink-2">Konfiguracja runtime, feature flags i broadcast</p>
-        </div>
-        {msg && <div className="rounded-xl bg-mint/20 text-ink px-4 py-2 text-sm">{msg}</div>}
-
-        {/* Feature flags */}
+      <PageHeader
+        title="Konfiguracja"
+        description="Ustawienia działania aplikacji i komunikaty do użytkowników."
+      />
+      {message && (
+        <p role="status" className="panel mb-4 text-success">
+          {message}
+        </p>
+      )}
+      {mutation.error && <ErrorState message={mutation.error} />}
+      <div className="space-y-5">
         <Card>
-          <h2 className="font-medium text-ink mb-3">Feature flags</h2>
-          <div className="space-y-2">
-            {flags.map((f) => (
-              <div key={f.key} className="flex items-center justify-between py-1.5">
-                <div className="min-w-0">
-                  <p className="text-ink text-sm font-medium">{f.key} {f.segment && <Badge variant="aqua">{f.segment}</Badge>}</p>
-                  {f.description && <p className="text-ink-2 text-xs">{f.description}</p>}
+          <h2 className="text-xl font-bold mb-4">Dostępność funkcji</h2>
+          <ResourceState
+            {...flags}
+            empty={!asArray(flags.data?.flags).length}
+            onRetry={flags.reload}
+          />
+          <ul className="space-y-4">
+            {asArray(flags.data?.flags).map((flag) => (
+              <li
+                key={flag.key}
+                className="flex flex-wrap items-center gap-3 border-b border-border py-3"
+              >
+                <div className="flex-1 min-w-40">
+                  <h3 className="font-bold break-all">{flag.key}</h3>
+                  <p className="text-ink-2">{flag.description}</p>
+                  {flag.segment && (
+                    <p className="text-sm">
+                      Grupa odbiorców:{' '}
+                      {(
+                        {
+                          all: 'Wszyscy',
+                          normal: 'Standardowy widok',
+                          kids: 'Dzieci',
+                          senior: 'Seniorzy',
+                        } as Record<string, string>
+                      )[flag.segment] || flag.segment}
+                    </p>
+                  )}
                 </div>
-                <button disabled={!canFlags} onClick={() => toggleFlag(f)}
-                  className={`relative w-12 h-7 rounded-full transition disabled:opacity-40 ${f.enabled ? 'bg-mint' : 'bg-surface-2'}`}>
-                  <span className={`absolute top-1 w-5 h-5 rounded-full bg-navy transition-all ${f.enabled ? 'left-6' : 'left-1'}`} />
-                </button>
-              </div>
+                <Button
+                  variant="secondary"
+                  aria-pressed={flag.enabled === true}
+                  disabled={!access.can('flags.write') || mutation.busy}
+                  onClick={() =>
+                    void mutation.run(
+                      () =>
+                        api.put(`/admin/flags/${flag.key}`, {
+                          enabled: !flag.enabled,
+                          segment: flag.segment,
+                        }),
+                      async () => {
+                        setMessage('Zapisano dostępność funkcji.');
+                        await flags.reload();
+                      },
+                    )
+                  }
+                >
+                  {flag.enabled ? 'Włączona — wyłącz' : 'Wyłączona — włącz'}
+                </Button>
+              </li>
             ))}
-            {!canFlags && <p className="text-ink-2 text-xs">Brak uprawnienia flags.write — podgląd tylko.</p>}
-          </div>
+          </ul>
         </Card>
-
-        {/* Config */}
         <Card>
-          <h2 className="font-medium text-ink mb-3">Konfiguracja runtime</h2>
-          <div className="space-y-3">
-            {config.map((c) => (
-              <ConfigRow key={c.key} cfg={c} editable={canConfigWrite} onSave={saveConfig} />
+          <h2 className="text-xl font-bold mb-4">Parametry aplikacji</h2>
+          <ResourceState
+            {...config}
+            empty={!asArray(config.data?.config).length}
+            onRetry={config.reload}
+          />
+          <div className="space-y-5">
+            {asArray(config.data?.config).map((item) => (
+              <ConfigRow
+                key={`${item.key}:${JSON.stringify(item.value)}`}
+                config={item}
+                editable={access.can('config.write')}
+                onDone={config.reload}
+              />
             ))}
           </div>
         </Card>
-
-        {/* Broadcast */}
-        {canBroadcast && <BroadcastCard onFlash={flash} />}
+        {access.can('broadcast.send') && <Broadcast />}
       </div>
     </AdminShell>
   );
 }
-
-function ConfigRow({ cfg, editable, onSave }: { cfg: Cfg; editable: boolean; onSave: (k: string, v: string) => void }) {
-  const [val, setVal] = useState(JSON.stringify(cfg.value));
+function ConfigRow({
+  config,
+  editable,
+  onDone,
+}: {
+  config: Config;
+  editable: boolean;
+  onDone: () => Promise<void>;
+}) {
+  const [value, setValue] = useState(JSON.stringify(config.value) ?? '');
+  const [message, setMessage] = useState('');
+  const mutation = useMutation();
   return (
-    <div className="flex items-center gap-3">
-      <div className="flex-1 min-w-0">
-        <p className="text-ink text-sm font-medium">{cfg.key}</p>
-        {cfg.description && <p className="text-ink-2 text-xs">{cfg.description}</p>}
-      </div>
-      <input value={val} onChange={(e) => setVal(e.target.value)} disabled={!editable}
-        className="w-28 px-3 py-1.5 rounded-lg bg-surface-2 text-ink text-sm border border-border disabled:opacity-50" />
-      {editable && <button onClick={() => onSave(cfg.key, val)} className="px-3 py-1.5 rounded-lg bg-navy text-white text-xs">Zapisz</button>}
-    </div>
+    <form
+      className="space-y-3 border-b border-border pb-4"
+      onSubmit={(e) => {
+        e.preventDefault();
+        let parsed: unknown = value;
+        try {
+          parsed = JSON.parse(value);
+        } catch {
+          /* Plain strings are supported by the existing API. */
+        }
+        void mutation.run(
+          () => api.put(`/admin/config/${config.key}`, { value: parsed }),
+          async () => {
+            setMessage('Zapisano parametr.');
+            await onDone();
+          },
+        );
+      }}
+    >
+      <TextField
+        label={config.key}
+        hint={config.description}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        disabled={!editable}
+      />
+      {mutation.error && <ErrorState message={mutation.error} />}
+      {message && <p role="status">{message}</p>}
+      {editable && (
+        <Button variant="secondary" loading={mutation.busy}>
+          Zapisz parametr
+        </Button>
+      )}
+    </form>
   );
 }
-
-function BroadcastCard({ onFlash }: { onFlash: (m: string) => void }) {
+function Broadcast() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [segment, setSegment] = useState('all');
-  const [sending, setSending] = useState(false);
-
-  const send = async () => {
-    if (!title || !body) return onFlash('Wypełnij tytuł i treść');
-    if (!confirm(`Wysłać broadcast do segmentu "${segment}"?`)) return;
-    setSending(true);
-    const r = await api.post('/admin/broadcast', { title, body, segment, confirm: true });
-    setSending(false);
-    if (r.error) onFlash(`Błąd: ${r.error}`);
-    else { onFlash(`Wysłano do ${(r as { recipients?: number }).recipients ?? '?'} odbiorców`); setTitle(''); setBody(''); }
-  };
-
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const mutation = useMutation();
   return (
     <Card>
-      <h2 className="font-medium text-ink mb-3">📢 Broadcast</h2>
-      <div className="space-y-2">
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Tytuł powiadomienia"
-          className="w-full px-3 py-2 rounded-lg bg-surface-2 text-ink text-sm border border-border" />
-        <textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Treść" rows={3}
-          className="w-full px-3 py-2 rounded-lg bg-surface-2 text-ink text-sm border border-border" />
-        <div className="flex items-center gap-3">
-          <select value={segment} onChange={(e) => setSegment(e.target.value)}
-            className="px-3 py-2 rounded-lg bg-surface-2 text-ink text-sm border border-border">
-            <option value="all">Wszyscy</option><option value="normal">Normal</option>
-            <option value="kids">Dzieci</option><option value="senior">Seniorzy</option>
-          </select>
-          <button onClick={send} disabled={sending} className="ml-auto px-5 py-2 rounded-full bg-coral text-white text-sm disabled:opacity-50">
-            {sending ? 'Wysyłam…' : 'Wyślij broadcast'}
-          </button>
+      <h2 className="text-xl font-bold mb-4">Komunikat do użytkowników</h2>
+      <form
+        className="space-y-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          mutation.setError('');
+          setOpen(true);
+        }}
+      >
+        <TextField
+          label="Tytuł powiadomienia"
+          required
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <TextArea
+          label="Treść komunikatu"
+          required
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+        />
+        <Select label="Odbiorcy" value={segment} onChange={(e) => setSegment(e.target.value)}>
+          <option value="all">Wszyscy</option>
+          <option value="normal">Widok standardowy</option>
+          <option value="kids">Widok dziecka</option>
+          <option value="senior">Widok seniora</option>
+        </Select>
+        <Button disabled={!title.trim() || !body.trim()}>Sprawdź i wyślij</Button>
+        <p className="text-sm text-ink-2">
+          Komunikat trafia do skrzynki i obsługiwanych urządzeń. Obowiązuje limit wysyłek; przyjęcie
+          nie potwierdza odczytu.
+        </p>
+        {message && <p role="status">{message}</p>}
+      </form>
+      <Dialog
+        open={open}
+        title="Wysłać komunikat?"
+        onClose={() => {
+          if (!mutation.busy) setOpen(false);
+        }}
+      >
+        <div className="space-y-4">
+          <p className="font-bold">{title}</p>
+          <p className="whitespace-pre-wrap">{body}</p>
+          {mutation.error && <ErrorState message={mutation.error} />}
+          <Button
+            loading={mutation.busy}
+            onClick={() =>
+              void mutation.run(
+                () =>
+                  api.post<{ recipients?: number }>('/admin/broadcast', {
+                    title,
+                    body,
+                    segment,
+                    confirm: true,
+                  }),
+                (result) => {
+                  setMessage(
+                    `Przyjęto komunikat. Liczba odbiorców: ${result.recipients ?? 'brak danych'}.`,
+                  );
+                  setOpen(false);
+                  setTitle('');
+                  setBody('');
+                },
+              )
+            }
+          >
+            Potwierdzam wysyłkę
+          </Button>
+          <Button variant="secondary" disabled={mutation.busy} onClick={() => setOpen(false)}>
+            Anuluj
+          </Button>
         </div>
-        <p className="text-ink-2 text-xs">Push trafia do powiadomień + urządzeń. Rate-limit obowiązuje.</p>
-      </div>
+      </Dialog>
     </Card>
   );
 }
