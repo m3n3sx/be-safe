@@ -85,7 +85,16 @@ class AuthProvider extends ChangeNotifier {
       if (account == null) {
         return false;
       }
+      // Backend weryfikuje id_token (aud = serverClientId) i bierze email z tokena.
+      // email/display_name/avatar_url zostają tylko dla zgodności ze starszym backendem.
+      final authentication = await account.authentication;
+      final idToken = authentication.idToken;
+      if (idToken == null) {
+        debugPrint('Google Sign-In error: brak idToken (sprawdź serverClientId / SHA-1)');
+        return false;
+      }
       final body = <String, dynamic>{
+        'id_token': idToken,
         'email': account.email,
         'display_name': account.displayName ?? account.email.split('@')[0],
         'avatar_url': account.photoUrl,

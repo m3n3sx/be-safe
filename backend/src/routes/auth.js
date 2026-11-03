@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const db = require('../config/db');
 const auth = require('../middleware/auth');
 const email = require('../services/email');
+const googleAuth = require('../services/google_auth');
 
 const APP_URL = process.env.APP_URL || 'https://besafe.org.pl';
 
@@ -95,10 +96,39 @@ router.post('/login', async (req, res) => {
 
 // ------ GOOGLE ------
 router.post('/google', async (req, res) => {
+  // Email/nazwa/avatar bierzemy WYŁĄCZNIE ze zweryfikowanego tokena Google,
+  // nigdy z body (wcześniej każdy mógł zalogować się na dowolny email — P0.2).
+  const idToken = req.body.id_token || req.body.idToken || req.body.credential;
+  const { referral_code } = req.body;
+  let userEmail;
+  let display_name;
+  let avatar_url;
   try {
-    const { email: userEmail, display_name, avatar_url, referral_code } = req.body;
-    if (!userEmail) return res.status(400).json({ error: 'Email required' });
+    if (idToken) {
+      const g = await googleAuth.verifyGoogleIdToken(idToken);
+      userEmail = g.email;
+      display_name = g.name;
+      avatar_url = g.picture;
+    } else if (googleAuth.isLegacyEmailOnlyEnabled()) {
+      // Tymczasowa ścieżka dla starych buildów apki (bez id_token).
+      // Do wyłączenia, gdy nowa apka będzie u wszystkich.
+      userEmail = req.body.email;
+      display_name = req.body.display_name;
+      avatar_url = req.body.avatar_url;
+      if (!userEmail) return res.status(400).json({ error: 'Email required' });
+      console.warn('[auth/google] LEGACY email-only login (no id_token) — GOOGLE_AUTH_LEGACY_EMAIL_ONLY=true; ip=%s', req.ip);
+    } else {
+      return res.status(401).json({ error: 'id_token required' });
+    }
+  } catch (e) {
+    if (e instanceof googleAuth.GoogleAuthError) {
+      return res.status(e.status).json({ error: e.message });
+    }
+    console.error('[auth/google] verification error:', e.message);
+    return res.status(500).json({ error: 'Google verification failed' });
+  }
 
+  try {
     const { rows: existing } = await db.query(`SELECT id FROM users WHERE email = $1`, [userEmail]);
     if (existing[0]) {
       const uid = existing[0].id;
@@ -112,12 +142,12 @@ router.post('/google', async (req, res) => {
     }
 
     const username = display_name || userEmail.split('@')[0];
-    const hash = await bcrypt.hash(Math.random().toString(36), 10);
+    const hash = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 10);
     const myCode = genReferralCode();
 
     let referredBy = null;
     if (referral_code) {
-      const { rows: ref } = await db.query(`SELECT id FROM users WHERE referral_code = $1`, [referral_code.toUpperCase()]);
+      const { rows: ref } = await db.query(`SELECT id FROM users WHERE referral_code = $1`, [String(referral_code).toUpperCase()]);
       if (ref[0]) referredBy = ref[0].id;
     }
 
@@ -136,10 +166,11 @@ router.post('/google', async (req, res) => {
     res.status(201).json({ token: signToken(rows[0]), user: rows[0] });
   } catch (e) {
     if (e.code === '23505') {
-      const { rows } = await db.query(`SELECT id, email, username, avatar_url, email_verified, referral_code FROM users WHERE email = $1`, [req.body.email]);
+      const { rows } = await db.query(`SELECT id, email, username, avatar_url, email_verified, referral_code FROM users WHERE email = $1`, [userEmail]);
       if (rows[0]) return res.json({ token: signToken(rows[0]), user: rows[0] });
     }
-    res.status(500).json({ error: e.message });
+    console.error('[auth/google] error:', e.message);
+    res.status(500).json({ error: 'Google login failed' });
   }
 });
 

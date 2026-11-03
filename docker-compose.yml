@@ -29,6 +29,8 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER:-besafe}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-besafe}
       JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      GOOGLE_CLIENT_IDS: ${GOOGLE_CLIENT_IDS:-}
+      GOOGLE_AUTH_LEGACY_EMAIL_ONLY: ${GOOGLE_AUTH_LEGACY_EMAIL_ONLY:-false}
       FIREBASE_SERVICE_ACCOUNT: /app/firebase-admin.json
     ports:
       - "${BACKEND_PORT:-8081}:8080"
