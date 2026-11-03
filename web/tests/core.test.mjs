@@ -99,3 +99,42 @@ test('Google Maps configuration has only the public environment source', () => {
   assert.match(source, /process\.env\.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY/);
   assert.doesNotMatch(source, /AIza[\w-]{20,}/);
 });
+
+test('SOS uses the existing recognition contract and only the supplied location', async () => {
+  const calls = [];
+  const transport = { post: async (url, body) => { calls.push({ url, body }); return { id: 'sos-id' }; } };
+  const { sendSos } = load('src/lib/sos.ts', { require: name => { assert.equal(name, './api'); return { default: transport }; } });
+  const result = await sendSos({ lat: 51.123, lng: 17.456 });
+  assert.equal(result.id, 'sos-id');
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].url, '/alerts');
+  assert.equal(calls[0].body.category, 'aggression');
+  assert.ok(calls[0].body.title.includes('🆘'));
+  assert.equal(calls[0].body.lat, 51.123);
+  assert.equal(calls[0].body.lng, 17.456);
+  assert.equal(calls[0].body.radius_m, 500);
+  assert.equal('recipients' in calls[0].body, false);
+});
+
+test('notification fixtures route to the actual task, without trusting URLs in payloads', () => {
+  const { notificationHref } = load('src/lib/notification-routes.ts');
+  const fixtures = [
+    [{ type: 'family_ping', data: { ping_id: 'p', group_id: 'g' } }, '/family/pings/p'],
+    [{ type: 'ping_response', data: { ping_id: 'p', status: 'expired' } }, '/family/pings/p'],
+    [{ type: 'family_sos', data: { group_id: 'g', alert_id: 'a' } }, '/family/g/sos/a'],
+    [{ type: 'kpp_responder_call', data: { alert_id: 'a' } }, '/alerts/a'],
+    [{ type: 'escort_panic', data: { escort_id: 'e' } }, '/escort/e'],
+    [{ type: 'family_message', data: { group_id: 'g', message_id: 'm' } }, '/family/g/chat'],
+    [{ type: 'family_event_reminder', data: { group_id: 'g', event_id: 'e' } }, '/family/g/planner#event-e'],
+    [{ type: 'route_exit', data: { group_id: 'g', user_id: 'u', route_id: 'r' } }, '/family/g/members/u/safe-routes/r'],
+    [{ type: 'child_low_battery', data: { group_id: 'g', child_id: 'u' } }, '/family/g/members/u'],
+    [{ type: 'checkin_reminder', data: {} }, '/family'],
+    [{ type: 'broadcast', data: { url: 'https://untrusted.invalid' } }, null],
+    [{ type: 'new_alert', data: { alert_id: 'a?redirect=//untrusted.invalid' } }, '/alerts/a%3Fredirect%3D%2F%2Funtrusted.invalid'],
+  ];
+  for (const [item, expected] of fixtures) assert.equal(notificationHref(item), expected);
+  const pets = notificationHref({ type: 'pet_lost_nearby', data: { pet_id: 'p', lat: '51', lng: '19' } });
+  const url = new URL(pets, 'https://test.invalid');
+  assert.equal(url.pathname, '/pets'); assert.equal(url.searchParams.get('view'), 'lost');
+  assert.equal(url.searchParams.get('lat'), '51'); assert.equal(url.hash, '#pet-p');
+});

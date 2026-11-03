@@ -9,7 +9,7 @@ export type AlertCategory =
 
 export type AlertStatus = 'active' | 'expired' | 'hidden' | 'removed';
 export type VoteType = 'confirm' | 'deny';
-export type FamilyRole = 'parent' | 'child';
+export type FamilyRole = 'parent' | 'child' | 'senior' | 'guardian' | 'family_member' | 'partner' | 'friend' | 'other';
 
 export interface AlertCategoryInfo {
   key: AlertCategory;
@@ -112,6 +112,7 @@ export interface FamilyGroup {
   invite_code: string;
   created_at: string;
   role?: FamilyRole;
+  your_role?: FamilyRole;
 }
 
 export interface FamilyMember {
@@ -120,8 +121,8 @@ export interface FamilyMember {
   username: string;
   role: FamilyRole;
   tracking_enabled: boolean;
-  lat?: number;
-  lng?: number;
+  lat?: number | null;
+  lng?: number | null;
   last_lat?: number;
   last_lng?: number;
   last_location_at?: string;
@@ -131,6 +132,9 @@ export interface FamilyMember {
   phone?: string | null;
   app_mode?: string | null;
   school_hours_silent?: boolean;
+  ghost_until?: string | null;
+  is_ghosting?: boolean;
+  _visibility?: Record<string, boolean>;
 }
 
 export interface Geofence {

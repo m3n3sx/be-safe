@@ -18,6 +18,7 @@ export interface FamilyMessage {
 }
 
 interface SocketContextType {
+  onEvent: (event: string, cb: (data: Record<string, unknown>) => void) => () => void;
   connected: boolean;
   onNewAlert: (cb: (alert: Alert) => void) => () => void;
   onAlertUpdated: (cb: (data: { id: string; confirms: number; denies: number }) => void) => () => void;
@@ -35,6 +36,12 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const socketRef = useRef<Socket | null>(null);
   const [connected, setConnected] = useState(false);
+  const events = useRef(new Map<string, Set<(data: Record<string, unknown>) => void>>());
+  const onEvent = useCallback((event: string, cb: (data: Record<string, unknown>) => void) => {
+    if (!events.current.has(event)) events.current.set(event, new Set());
+    events.current.get(event)!.add(cb);
+    return () => { events.current.get(event)?.delete(cb); };
+  }, []);
 
   const listenersRef = useRef<{
     'alert:new': Set<(a: Alert) => void>;
@@ -70,6 +77,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
     socket.on('connect', () => setConnected(true));
     socket.on('disconnect', () => setConnected(false));
+    socket.onAny((event: string, data: Record<string, unknown>) => { events.current.get(event)?.forEach(cb => cb(data)); });
 
     socket.on('alert:new', (data: Alert) => {
       listenersRef.current['alert:new'].forEach(cb => cb(data));
@@ -124,6 +132,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     <SocketContext.Provider
       value={{
         connected,
+        onEvent,
         onNewAlert: createListener<Alert>('alert:new'),
         onAlertUpdated: createListener<{ id: string; confirms: number; denies: number }>('alert:updated'),
         onAlertExpired: createListener<{ alert_id: string }>('alert:expired'),

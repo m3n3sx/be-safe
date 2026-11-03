@@ -59,9 +59,13 @@ input, select, textarea { font-size: 16px; }
 .sos-link { min-height: 56px; }
 .dialog { width: min(640px, calc(100% - 24px)); max-height: calc(100dvh - 24px); margin: auto; padding: 24px; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow-y: auto; }
 .dialog::backdrop { background: rgb(10 20 30 / .55); }
-.explorer-map { min-height: 180px; height: clamp(180px, calc(100dvh - 640px), 360px); position: relative; overflow: hidden; }
+.compact-search label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.compact-search .btn { padding-inline: 12px; }
+.explorer-map { min-height: 260px; height: max(38dvh, calc(100dvh - 500px)); position: relative; overflow: hidden; }
+.modal-sheet { margin: auto auto 0; width: min(640px, 100%); border-radius: 20px 20px 0 0; max-height: 85dvh; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
 .nearby-sheet { background: var(--surface); border: 1px solid var(--border); border-radius: 18px 18px 0 0; position: relative; }
-.nearby-sheet[data-size=peek] .sheet-body { max-height: 110px; overflow-y: auto; }
+.nearby-sheet[data-size=peek] .sheet-body { max-height: 260px; overflow-y: auto; }
+.nearby-sheet[data-size=peek] .alert-card { padding: 12px; }
 .nearby-sheet[data-size=half] .sheet-body { max-height: 36dvh; overflow-y: auto; }
 .nearby-sheet[data-size=full] .sheet-body { min-height: 45dvh; }
 .explorer-workspace[data-full=true] .explorer-map { display: none; }
