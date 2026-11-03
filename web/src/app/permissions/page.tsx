@@ -1,97 +1,151 @@
 'use client';
+import { useCallback, useEffect, useState } from 'react';
+import api from '@/lib/api';
+import { useApiResource, useMutation } from '@/hooks/useApiResource';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button } from '@/components/ui/Button';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { Icon } from '@/components/ui/Icon';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import AppLayout from '@/components/ui/AppLayout';
-
-const PERMISSIONS = [
-  { key: 'geolocation', label: 'Lokalizacja', icon: '📍', desc: 'Pokaż okolicę i blisko-położone zagrożenia' },
-  { key: 'notifications', label: 'Powiadomienia', icon: '🔔', desc: 'Otrzymuj alerty w pobliżu i sygnały rodziny' },
-  { key: 'camera', label: 'Kamera', icon: '📷', desc: 'Dodawanie zdjęć do zgłoszeń' },
-  { key: 'microphone', label: 'Mikrofon', icon: '🎤', desc: 'Audio SOS (RODO consent)' },
-];
-
+const permissions = [
+  [
+    'location',
+    'geolocation',
+    'Lokalizacja',
+    'Pozwala wybrać okolicę i świadomie udostępniać pozycję.',
+  ],
+  [
+    'notifications',
+    'notifications',
+    'Powiadomienia',
+    'Komunikaty w otwartej aplikacji, bez gwarancji działania w tle.',
+  ],
+  ['camera', 'camera', 'Kamera', 'Dodawanie zdjęć do zgłoszeń.'],
+  ['microphone', 'microphone', 'Mikrofon', 'Dobrowolne nagranie przy SOS, przechowywane lokalnie.'],
+] as const;
+const labels: Record<string, string> = {
+  granted: 'Dozwolone',
+  denied: 'Zablokowane',
+  prompt: 'Zapytaj przy użyciu',
+  unknown: 'Brak odczytu stanu',
+  unsupported: 'Niedostępne',
+};
 export default function PermissionsPage() {
-  const router = useRouter();
+  const account = useApiResource<{ capabilities: Record<string, boolean> }>('/permissions');
+  const mutation = useMutation();
   const [status, setStatus] = useState<Record<string, string>>({});
-
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState('');
   const check = useCallback(async () => {
-    const out: Record<string, string> = {};
-    for (const p of PERMISSIONS) {
+    const next: Record<string, string> = {};
+    for (const [, name] of permissions) {
+      const supported =
+        name === 'geolocation'
+          ? !!navigator.geolocation
+          : name === 'notifications'
+            ? 'Notification' in window
+            : !!navigator.mediaDevices?.getUserMedia;
+      if (!supported) {
+        next[name] = 'unsupported';
+        continue;
+      }
       try {
-        const r = await navigator.permissions?.query({ name: p.key as PermissionName });
-        out[p.key] = r?.state || 'unknown';
+        next[name] =
+          name === 'notifications'
+            ? Notification.permission === 'default'
+              ? 'prompt'
+              : Notification.permission
+            : (await navigator.permissions.query({ name: name as PermissionName })).state;
       } catch {
-        out[p.key] = 'unsupported';
+        next[name] = 'unknown';
       }
     }
-    setStatus(out);
+    setStatus(next);
   }, []);
-
-  useEffect(() => { const timer = setTimeout(() => void check(), 0); return () => clearTimeout(timer); }, [check]);
-
-  const request = async (key: string) => {
-    if (key === 'geolocation') {
-      navigator.geolocation?.getCurrentPosition(() => check(), () => check(), { timeout: 5000 });
-    } else if (key === 'notifications') {
-      await Notification.requestPermission();
-      check();
-    } else if (key === 'camera') {
-      try {
-        const s = await navigator.mediaDevices?.getUserMedia({ video: true });
-        s?.getTracks().forEach(t => t.stop());
-      } catch {}
-      check();
-    } else if (key === 'microphone') {
-      try {
-        const s = await navigator.mediaDevices?.getUserMedia({ audio: true });
-        s?.getTracks().forEach(t => t.stop());
-      } catch {}
-      check();
+  useEffect(() => {
+    const timer = setTimeout(() => void check(), 0);
+    window.addEventListener('focus', check);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('focus', check);
+    };
+  }, [check]);
+  async function request(name: string) {
+    setError('');
+    setBusy(name);
+    try {
+      if (name === 'geolocation')
+        await new Promise((resolve, reject) =>
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 }),
+        );
+      else if (name === 'notifications') await Notification.requestPermission();
+      else {
+        const stream = await navigator.mediaDevices.getUserMedia(
+          name === 'camera' ? { video: true } : { audio: true },
+        );
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    } catch {
+      setError('Nie uzyskano dostępu. Sprawdź ustawienia tej witryny w przeglądarce.');
     }
-  };
-
-  const badge = (s: string) => {
-    if (s === 'granted') return { txt: 'Włączone', cls: 'bg-emerald-100 text-emerald-700' };
-    if (s === 'denied') return { txt: 'Zablokowane', cls: 'bg-red-100 text-red-700' };
-    if (s === 'prompt') return { txt: 'Nie ustawione', cls: 'bg-amber-100 text-amber-700' };
-    return { txt: 'Niedostępne', cls: 'bg-neutral-200 text-neutral-700' };
-  };
-
+    await check();
+    setBusy('');
+  }
   return (
-    <AppLayout>
-      <div className="max-w-2xl mx-auto px-4 py-6">
-        <div className="flex items-center gap-3 mb-6">
-          <button onClick={() => router.push('/settings')} className="text-2xl">←</button>
-          <h1 className="text-2xl font-bold">🔐 Uprawnienia</h1>
-        </div>
-        <p className="text-sm text-neutral-500 mb-6">Włącz potrzebne uprawnienia przeglądarki. Zablokowane uprawnienia odblokowuj w ustawieniach przeglądarki.</p>
-
-        <div className="space-y-3">
-          {PERMISSIONS.map(p => {
-            const b = badge(status[p.key] || 'unknown');
-            return (
-              <div key={p.key} className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-4 flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-[#9DF4CB]/20 flex items-center justify-center text-2xl">{p.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-semibold">{p.label}</p>
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${b.cls}`}>{b.txt}</span>
-                  </div>
-                  <p className="text-xs text-neutral-500">{p.desc}</p>
-                </div>
-                <button
-                  onClick={() => request(p.key)}
-                  disabled={status[p.key] === 'denied'}
-                  className="px-3 py-1.5 rounded-lg bg-[#1A2027] text-white text-sm disabled:opacity-40"
-                >
-                  {status[p.key] === 'granted' ? '✓' : 'Włącz'}
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </AppLayout>
+    <div className="form-container space-y-4">
+      <PageHeader
+        title="Uprawnienia i zgody"
+        description="Zgoda na koncie i dostęp na tym urządzeniu to dwa osobne ustawienia. Cofnięcie zgody nie zmienia uprawnień przeglądarki."
+      />
+      {account.loading && <Skeleton />}
+      {account.error && <ErrorState message={account.error} onRetry={account.reload} />}
+      {(error || mutation.error) && <ErrorState message={error || mutation.error} />}
+      {permissions.map(([capability, name, label, description]) => (
+        <section key={name} className="panel space-y-3">
+          <div className="flex gap-3 items-center">
+            <Icon name="shield" />
+            <h2 className="text-xl font-bold">{label}</h2>
+          </div>
+          <p>{description}</p>
+          <p className="text-sm text-ink-2">
+            Przeglądarka: {labels[status[name]] || 'Sprawdzanie…'}
+          </p>
+          <Button
+            variant="secondary"
+            disabled={!!busy || ['unsupported', 'denied', 'granted'].includes(status[name])}
+            loading={busy === name}
+            onClick={() => void request(name)}
+          >
+            Poproś o dostęp: {label.toLocaleLowerCase('pl-PL')}
+          </Button>
+          {status[name] === 'denied' && (
+            <p className="text-sm">Odblokuj dostęp w ustawieniach witryny w przeglądarce.</p>
+          )}
+          <label className="flex items-center gap-3 min-h-12">
+            <input
+              className="size-5"
+              type="checkbox"
+              disabled={!account.data || mutation.busy}
+              checked={account.data?.capabilities?.[capability] === true}
+              onChange={(e) =>
+                void mutation.run(
+                  () => api.put('/permissions', { capability, granted: e.target.checked }),
+                  account.reload,
+                )
+              }
+            />
+            Zgoda zapisana na koncie: {label.toLocaleLowerCase('pl-PL')}
+          </label>
+        </section>
+      ))}
+      <section className="panel">
+        <h2 className="font-bold mb-2">Blokada i czujniki</h2>
+        <p>
+          Ta wersja korzysta z hasła lub logowania Google. Nie wykrywa upadków ani potrząśnięcia.
+          SOS pozostaje dostępne w górnym pasku; do ochrony urządzenia użyj jego blokady ekranu.
+        </p>
+      </section>
+    </div>
   );
 }

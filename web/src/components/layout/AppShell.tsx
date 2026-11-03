@@ -10,7 +10,32 @@ import { AppTopBar } from './AppTopBar';
 import { MobileTabBar } from './MobileTabBar';
 import { DesktopRail } from './DesktopRail';
 export function AppShell({ children }: { children: ReactNode }) {
-  const { user, loading, sessionError, refreshUser } = useAuth(); const path = usePathname();
+  const { user, loading, sessionError, refreshUser } = useAuth();
+  const path = usePathname();
   const protectedPage = routeFor(path)?.public !== true && !!routeFor(path);
-  return <div className={`app-frame ${user ? 'authenticated' : ''}`}><a className="skip-link" href="#main-content">Przejdź do treści</a>{user && <DesktopRail />}<AppTopBar /><main id="main-content" tabIndex={-1} className="app-main">{loading && protectedPage ? <Skeleton label="Przywracanie sesji…" /> : !user && protectedPage ? sessionError ? <div className="form-container"><ErrorState message={sessionError} onRetry={refreshUser} /></div> : <LoginPage /> : children}</main>{user && <MobileTabBar />}</div>;
+  return (
+    <div className={`app-frame ${user ? 'authenticated' : ''}`}>
+      <a className="skip-link" href="#main-content">
+        Przejdź do treści
+      </a>
+      {user && <DesktopRail />}
+      <AppTopBar />
+      <main id="main-content" tabIndex={-1} className="app-main">
+        {loading && protectedPage ? (
+          <Skeleton label="Przywracanie sesji…" />
+        ) : !user && protectedPage ? (
+          sessionError ? (
+            <div className="form-container">
+              <ErrorState message={sessionError} onRetry={refreshUser} />
+            </div>
+          ) : (
+            <LoginPage />
+          )
+        ) : (
+          children
+        )}
+      </main>
+      {user && <MobileTabBar />}
+    </div>
+  );
 }

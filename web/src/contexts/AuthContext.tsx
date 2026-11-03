@@ -10,8 +10,17 @@ interface AuthContextType {
   loading: boolean;
   sessionError: string | null;
   login: (email: string, password: string) => Promise<string | null>;
-  register: (email: string, password: string, username: string, referralCode?: string) => Promise<string | null>;
-  loginWithGoogle: (email: string, displayName: string, avatarUrl?: string) => Promise<string | null>;
+  register: (
+    email: string,
+    password: string,
+    username: string,
+    referralCode?: string,
+  ) => Promise<string | null>;
+  loginWithGoogle: (
+    email: string,
+    displayName: string,
+    avatarUrl?: string,
+  ) => Promise<string | null>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -43,9 +52,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const timer = setTimeout(() => void fetchUser(), 0);
-    const expired = () => { api.setToken(null); setUser(null); };
+    const expired = () => {
+      api.setToken(null);
+      setUser(null);
+    };
     window.addEventListener('besafe:session-expired', expired);
-    return () => { clearTimeout(timer); window.removeEventListener('besafe:session-expired', expired); };
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('besafe:session-expired', expired);
+    };
   }, [fetchUser]);
 
   const login = async (email: string, password: string): Promise<string | null> => {
@@ -57,8 +72,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   };
 
-  const register = async (email: string, password: string, username: string, referralCode?: string): Promise<string | null> => {
-    const res = await api.post<{ token: string; user: User }>('/auth/register', { email, password, username, ...(referralCode ? { referral_code: referralCode } : {}) });
+  const register = async (
+    email: string,
+    password: string,
+    username: string,
+    referralCode?: string,
+  ): Promise<string | null> => {
+    const res = await api.post<{ token: string; user: User }>('/auth/register', {
+      email,
+      password,
+      username,
+      ...(referralCode ? { referral_code: referralCode } : {}),
+    });
     if (res.error) return res.error;
     if (!res.token || !res.user?.id) return 'Nieprawidłowa odpowiedź serwera.';
     api.setToken(res.token);
@@ -66,7 +91,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return null;
   };
 
-  const loginWithGoogle = async (email: string, displayName: string, avatarUrl?: string): Promise<string | null> => {
+  const loginWithGoogle = async (
+    email: string,
+    displayName: string,
+    avatarUrl?: string,
+  ): Promise<string | null> => {
     const res = await api.post<{ token: string; user: User }>('/auth/google', {
       email,
       display_name: displayName,
@@ -91,7 +120,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, sessionError, login, register, loginWithGoogle, logout, refreshUser }}>
+    <AuthContext.Provider
+      value={{ user, loading, sessionError, login, register, loginWithGoogle, logout, refreshUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -2,4 +2,50 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { PhoneDirectory } from '@/components/safety/PhoneDirectory';
 import { EmergencyCall } from '@/components/safety/EmergencyCall';
 import { mentalNumbers } from '@/lib/content/help.pl';
-export default function Page() { return <div className="page-container"><PageHeader title="Wsparcie w kryzysie" description="Nie musisz przechodzić przez to w pojedynkę. Możesz zacząć od rozmowy." /><div className="panel mb-6 space-y-3"><h2 className="font-bold text-xl">Potrzebujesz pomocy teraz?</h2><p>Jeśli Twoje życie lub życie innej osoby jest bezpośrednio zagrożone, zadzwoń pod 112. Jeśli możesz, poproś zaufaną osobę, by została z Tobą.</p><EmergencyCall /></div><PhoneDirectory numbers={mentalNumbers} /><nav className="flex flex-wrap gap-3 mt-6" aria-label="Dalsze wsparcie"><a className="btn btn-secondary" href="https://116sos.pl" target="_blank" rel="noreferrer">Wsparcie dla dorosłych — 116sos.pl</a><a className="btn btn-secondary" href="https://116111.pl" target="_blank" rel="noreferrer">Wsparcie dla młodzieży — 116111.pl</a><a className="btn btn-secondary" href="https://centrumwsparcia.pl" target="_blank" rel="noreferrer">Centrum Wsparcia</a><a className="btn btn-quiet" href="https://www.psycholodzy.pl" target="_blank" rel="noreferrer">Znajdź psychologa</a></nav><p className="text-sm text-ink-2 mt-4">Linki otwierają serwisy zewnętrzne. Aktualne formy i godziny wsparcia znajdziesz u operatora infolinii.</p></div>; }
+export default function Page() {
+  return (
+    <div className="page-container">
+      <PageHeader
+        title="Wsparcie w kryzysie"
+        description="Nie musisz przechodzić przez to w pojedynkę. Możesz zacząć od rozmowy."
+      />
+      <div className="panel mb-6 space-y-3">
+        <h2 className="font-bold text-xl">Potrzebujesz pomocy teraz?</h2>
+        <p>
+          Jeśli Twoje życie lub życie innej osoby jest bezpośrednio zagrożone, zadzwoń pod 112.
+          Jeśli możesz, poproś zaufaną osobę, by została z Tobą.
+        </p>
+        <EmergencyCall />
+      </div>
+      <PhoneDirectory numbers={mentalNumbers} />
+      <nav className="flex flex-wrap gap-3 mt-6" aria-label="Dalsze wsparcie">
+        <a className="btn btn-secondary" href="https://116sos.pl" target="_blank" rel="noreferrer">
+          Wsparcie dla dorosłych — 116sos.pl
+        </a>
+        <a className="btn btn-secondary" href="https://116111.pl" target="_blank" rel="noreferrer">
+          Wsparcie dla młodzieży — 116111.pl
+        </a>
+        <a
+          className="btn btn-secondary"
+          href="https://centrumwsparcia.pl"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Centrum Wsparcia
+        </a>
+        <a
+          className="btn btn-quiet"
+          href="https://www.psycholodzy.pl"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Znajdź psychologa
+        </a>
+      </nav>
+      <p className="text-sm text-ink-2 mt-4">
+        Linki otwierają serwisy zewnętrzne. Aktualne formy i godziny wsparcia znajdziesz u operatora
+        infolinii.
+      </p>
+    </div>
+  );
+}

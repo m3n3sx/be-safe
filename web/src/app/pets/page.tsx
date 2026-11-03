@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import api from '@/lib/api';
+import api, { asArray } from '@/lib/api';
 import type { Pet } from '@/lib/api/pets';
 import { speciesLabels } from '@/lib/api/pets';
 import type { FamilyGroup } from '@/types';
@@ -19,10 +19,188 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
 export default function Page() {
-  const { user } = useAuth(); const [tab, setTab] = useState<'mine' | 'lost'>('mine'); const [area, setArea] = useState(defaultArea); const [create, setCreate] = useState(false); const [action, setAction] = useState<{ pet: Pet; kind: 'lost' | 'sighting' } | null>(null);
-  const mine = useApiResource<{ pets: Pet[] }>('/pets/mine'); const groups = useApiResource<{ groups: FamilyGroup[] }>('/family/groups'); const lost = useApiResource<{ pets: Pet[] }>(tab === 'lost' ? `/pets/lost/nearby?lat=${area.lat}&lng=${area.lng}&radius_m=20000` : null);
-  useEffect(() => { const timer = setTimeout(() => { const query = new URLSearchParams(window.location.search); if (query.get('view') === 'lost') setTab('lost'); const p = { lat: Number(query.get('lat')), lng: Number(query.get('lng')) }; if (query.has('lat') && query.has('lng') && isPoint(p)) setArea({ ...p, label: 'Obszar z powiadomienia' }); }, 0); return () => clearTimeout(timer); }, []);
-  const resource = tab === 'mine' ? mine : lost; const pets = resource.data?.pets || [];
-  const refresh = async () => { await Promise.all([mine.reload(), lost.reload()]); };
-  return <div className="page-container space-y-5"><PageHeader title="Zwierzęta" description="Pupile Twoich grup i zaginione zwierzęta w okolicy.">{!!groups.data?.groups.length && <Button onClick={() => setCreate(true)}>Dodaj zwierzę</Button>}</PageHeader><SegmentedControl label="Lista zwierząt" value={tab} onChange={setTab} options={[{ value: 'mine', label: 'Moje grupy' }, { value: 'lost', label: 'Zaginione w okolicy' }]} />{tab === 'lost' && <AreaControl area={area} onChange={setArea} />}{groups.error && <ErrorState message={groups.error} onRetry={groups.reload} />}{resource.error && <ErrorState message={resource.error} onRetry={resource.reload} />}{resource.loading ? <Skeleton /> : resource.data && <>{tab === 'lost' && <PlacesMap places={pets.flatMap(p => p.last_seen_lat != null && p.last_seen_lng != null ? [{ id: p.id, label: p.name, lat: Number(p.last_seen_lat), lng: Number(p.last_seen_lng) }] : [])} onSelect={id => document.getElementById(`pet-${id}`)?.focus()} />}{!pets.length && !resource.error && <EmptyState title={tab === 'mine' ? 'Nie ma jeszcze zwierząt w Twoich grupach' : 'Brak zgłoszonych zaginięć w tym obszarze'} description={tab === 'mine' ? 'Dodaj pupila do wspólnej grupy.' : 'Możesz wybrać inny obszar.'}>{tab === 'mine' && !groups.data?.groups.length && <Link className="btn btn-secondary" href="/family">Utwórz grupę lub dołącz</Link>}</EmptyState>}<ul className="grid sm:grid-cols-2 gap-4">{pets.map(p => <li id={`pet-${p.id}`} tabIndex={-1} className="panel space-y-3" key={p.id}>{p.photo_url && <img className="w-full h-48 rounded-xl object-cover" alt={p.name} src={p.photo_url} />}<h2 className="font-bold text-xl">{p.name}</h2><p className={p.status === 'lost' ? 'text-danger font-bold' : 'text-ink-2'}>{p.status === 'lost' ? 'Zaginione' : 'W domu'}</p><p>{speciesLabels[p.species] || p.species}{p.breed && ` · ${p.breed}`}{p.color && ` · ${p.color}`}{p.age_years != null && ` · ${p.age_years} lat`}</p><p className="text-sm text-ink-2">Opiekun: {p.owner_username || 'brak danych'}{p.group_name && ` · ${p.group_name}`}</p>{tab === 'mine' && p.microchip && <p>Mikroczip: {p.microchip}</p>}{p.notes && <p>{p.notes}</p>}{p.lost_description && <p>{p.lost_description}</p>}{p.lost_at && <p>Zaginięcie: {new Date(p.lost_at).toLocaleString('pl-PL')}</p>}{p.last_seen_at && <p>Ostatnio widziane: {new Date(p.last_seen_at).toLocaleString('pl-PL')}</p>}{p.distance_m != null && <p>{Math.round(p.distance_m)} m od wybranego obszaru</p>}<div className="flex flex-wrap gap-2">{tab === 'mine' ? <>{p.status === 'lost' ? <ConfirmAction label="Zwierzę odnalezione" description={`Potwierdzasz odnalezienie ${p.name}? Grupa zostanie powiadomiona.`} action={() => api.post(`/pets/${p.id}/found`)} onDone={refresh} /> : <Button variant="secondary" onClick={() => setAction({ pet: p, kind: 'lost' })}>Zgłoś zaginięcie</Button>}{p.owner_id === user?.id && <ConfirmAction label="Usuń zwierzę" description={`Usunąć profil ${p.name}?`} action={() => api.delete(`/pets/${p.id}`)} onDone={refresh} />}</> : <Button variant="secondary" onClick={() => setAction({ pet: p, kind: 'sighting' })}>Widziałem / widziałam to zwierzę</Button>}</div></li>)}</ul></>}{create && <PetForm groups={groups.data?.groups || []} onClose={() => setCreate(false)} onDone={async () => { setCreate(false); await mine.reload(); }} />}{action && <PetLocationAction pet={action.pet} kind={action.kind} onClose={() => setAction(null)} onDone={async () => { setAction(null); await refresh(); }} />}</div>;
+  const { user } = useAuth();
+  const [tab, setTab] = useState<'mine' | 'lost'>('mine');
+  const [area, setArea] = useState(defaultArea);
+  const [create, setCreate] = useState(false);
+  const [action, setAction] = useState<{ pet: Pet; kind: 'lost' | 'sighting' } | null>(null);
+  const mine = useApiResource<{ pets: Pet[] }>('/pets/mine');
+  const groups = useApiResource<{ groups: FamilyGroup[] }>('/family/groups');
+  const lost = useApiResource<{ pets: Pet[] }>(
+    tab === 'lost' ? `/pets/lost/nearby?lat=${area.lat}&lng=${area.lng}&radius_m=20000` : null,
+  );
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const query = new URLSearchParams(window.location.search);
+      if (query.get('view') === 'lost') setTab('lost');
+      const p = { lat: Number(query.get('lat')), lng: Number(query.get('lng')) };
+      if (query.has('lat') && query.has('lng') && isPoint(p))
+        setArea({ ...p, label: 'Obszar z powiadomienia' });
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+  const resource = tab === 'mine' ? mine : lost;
+  const pets = asArray(resource.data?.pets);
+  const refresh = async () => {
+    await Promise.all([mine.reload(), lost.reload()]);
+  };
+  return (
+    <div className="page-container space-y-5">
+      <PageHeader
+        title="Zwierzęta"
+        description="Pupile Twoich grup i zaginione zwierzęta w okolicy."
+      >
+        {!!asArray(groups.data?.groups).length && (
+          <Button onClick={() => setCreate(true)}>Dodaj zwierzę</Button>
+        )}
+      </PageHeader>
+      <SegmentedControl
+        label="Lista zwierząt"
+        value={tab}
+        onChange={setTab}
+        options={[
+          { value: 'mine', label: 'Moje grupy' },
+          { value: 'lost', label: 'Zaginione w okolicy' },
+        ]}
+      />
+      {tab === 'lost' && <AreaControl area={area} onChange={setArea} />}
+      {groups.error && <ErrorState message={groups.error} onRetry={groups.reload} />}
+      {resource.error && <ErrorState message={resource.error} onRetry={resource.reload} />}
+      {resource.loading ? (
+        <Skeleton />
+      ) : (
+        resource.data && (
+          <>
+            {tab === 'lost' && (
+              <PlacesMap
+                places={pets.flatMap((p) =>
+                  p.last_seen_lat != null && p.last_seen_lng != null
+                    ? [
+                        {
+                          id: p.id,
+                          label: p.name,
+                          lat: Number(p.last_seen_lat),
+                          lng: Number(p.last_seen_lng),
+                        },
+                      ]
+                    : [],
+                )}
+                onSelect={(id) => document.getElementById(`pet-${id}`)?.focus()}
+              />
+            )}
+            {!pets.length && !resource.error && (
+              <EmptyState
+                title={
+                  tab === 'mine'
+                    ? 'Nie ma jeszcze zwierząt w Twoich grupach'
+                    : 'Brak zgłoszonych zaginięć w tym obszarze'
+                }
+                description={
+                  tab === 'mine' ? 'Dodaj pupila do wspólnej grupy.' : 'Możesz wybrać inny obszar.'
+                }
+              >
+                {tab === 'mine' && !asArray(groups.data?.groups).length && (
+                  <Link className="btn btn-secondary" href="/family">
+                    Utwórz grupę lub dołącz
+                  </Link>
+                )}
+              </EmptyState>
+            )}
+            <ul className="grid sm:grid-cols-2 gap-4">
+              {pets.map((p) => (
+                <li id={`pet-${p.id}`} tabIndex={-1} className="panel space-y-3" key={p.id}>
+                  {p.photo_url && (
+                    <img
+                      className="w-full h-48 rounded-xl object-cover"
+                      alt={p.name}
+                      src={p.photo_url}
+                    />
+                  )}
+                  <h2 className="font-bold text-xl">{p.name}</h2>
+                  <p className={p.status === 'lost' ? 'text-danger font-bold' : 'text-ink-2'}>
+                    {p.status === 'lost' ? 'Zaginione' : 'W domu'}
+                  </p>
+                  <p>
+                    {speciesLabels[p.species] || p.species}
+                    {p.breed && ` · ${p.breed}`}
+                    {p.color && ` · ${p.color}`}
+                    {p.age_years != null && ` · ${p.age_years} lat`}
+                  </p>
+                  <p className="text-sm text-ink-2">
+                    Opiekun: {p.owner_username || 'brak danych'}
+                    {p.group_name && ` · ${p.group_name}`}
+                  </p>
+                  {tab === 'mine' && p.microchip && <p>Mikroczip: {p.microchip}</p>}
+                  {p.notes && <p>{p.notes}</p>}
+                  {p.lost_description && <p>{p.lost_description}</p>}
+                  {p.lost_at && <p>Zaginięcie: {new Date(p.lost_at).toLocaleString('pl-PL')}</p>}
+                  {p.last_seen_at && (
+                    <p>Ostatnio widziane: {new Date(p.last_seen_at).toLocaleString('pl-PL')}</p>
+                  )}
+                  {p.distance_m != null && <p>{Math.round(p.distance_m)} m od wybranego obszaru</p>}
+                  <div className="flex flex-wrap gap-2">
+                    {tab === 'mine' ? (
+                      <>
+                        {p.status === 'lost' ? (
+                          <ConfirmAction
+                            label="Zwierzę odnalezione"
+                            description={`Potwierdzasz odnalezienie ${p.name}? Grupa zostanie powiadomiona.`}
+                            action={() => api.post(`/pets/${p.id}/found`)}
+                            onDone={refresh}
+                          />
+                        ) : (
+                          <Button
+                            variant="secondary"
+                            onClick={() => setAction({ pet: p, kind: 'lost' })}
+                          >
+                            Zgłoś zaginięcie
+                          </Button>
+                        )}
+                        {p.owner_id === user?.id && (
+                          <ConfirmAction
+                            label="Usuń zwierzę"
+                            description={`Usunąć profil ${p.name}?`}
+                            action={() => api.delete(`/pets/${p.id}`)}
+                            onDone={refresh}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <Button
+                        variant="secondary"
+                        onClick={() => setAction({ pet: p, kind: 'sighting' })}
+                      >
+                        Widziałem / widziałam to zwierzę
+                      </Button>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      )}
+      {create && (
+        <PetForm
+          groups={asArray(groups.data?.groups)}
+          onClose={() => setCreate(false)}
+          onDone={async () => {
+            setCreate(false);
+            await mine.reload();
+          }}
+        />
+      )}
+      {action && (
+        <PetLocationAction
+          pet={action.pet}
+          kind={action.kind}
+          onClose={() => setAction(null)}
+          onDone={async () => {
+            setAction(null);
+            await refresh();
+          }}
+        />
+      )}
+    </div>
+  );
 }

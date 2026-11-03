@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url);
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 function load(relative, globals = {}) {
   const source = fs.readFileSync(path.join(root, relative), 'utf8');
-  const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+  const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX } }).outputText;
   const exports = {};
   vm.runInNewContext(code, { exports, require, URL, URLSearchParams, FormData, AbortSignal, Event, process: { env: {} }, ...globals });
   return exports;
@@ -74,6 +74,79 @@ test('transport handles non-JSON rate limiting and ambiguous network failure', a
   const offline = load('src/lib/api.ts', { fetch: async () => { calls++; throw new Error('offline'); } }).api;
   assert.equal((await offline.post('/alerts')).httpStatus, 0);
   assert.equal(calls, 1);
+});
+
+test('malformed API lists become recoverable errors; valid empty lists remain empty', async () => {
+  const endpoints = [
+    ['/family/groups/g/checkins/today', 'members'],
+    ['/family/groups/g/members', 'members'],
+    ['/family/groups', 'groups'],
+    ['/family/pings/pending', 'pings'],
+    ['/family/groups/g/messages', 'messages'],
+    ['/family/groups/g/events?upcoming=1', 'events'],
+    ['/family/groups/g/geofences', 'geofences'],
+    ['/family/groups/g/members/u/location/history', 'history'],
+    ['/family/groups/g/members/u/safe-routes', 'routes'],
+    ['/escort/active', 'sessions'], ['/pets/mine', 'pets'],
+    ['/notifications', 'notifications'], ['/alerts/mine', 'alerts'],
+    ['/alerts/a/comments', 'comments'], ['/posts', 'posts'],
+    ['/users/ranking', 'ranking'], ['/admin/audit-log', 'entries'],
+    ['/admin/config', 'config'], ['/admin/flags', 'flags'],
+    ['/aeds/nearby', 'aeds'], ['/aqi/nearby', 'stations'],
+  ];
+  let body;
+  const { api } = load('src/lib/api.ts', { fetch: async () => new Response(JSON.stringify(body)) });
+  for (const [endpoint, field] of endpoints) {
+    for (const value of [undefined, null, {}, 'unexpected', [null]]) {
+      body = { [field]: value };
+      assert.ok((await api.get(endpoint)).error, `${endpoint}: ${JSON.stringify(value)}`);
+    }
+    body = { [field]: [] };
+    const result = await api.get(endpoint);
+    assert.equal(result.error, undefined, endpoint);
+    assert.equal(result[field].length, 0);
+  }
+  body = { earned: [], available: null };
+  assert.ok((await api.get('/me/badges')).error);
+  body = { by_category: [], trend: [] };
+  assert.ok((await api.get('/alerts/stats')).error);
+  body = { totals: { today: {} }, by_category: [], trend: [] };
+  assert.ok((await api.get('/alerts/stats')).error);
+  body = {};
+  assert.ok((await api.get('/admin/stats')).error);
+  body = { members: [{ username: { unexpected: true } }] };
+  assert.ok((await api.get('/family/groups/g/members')).error);
+  body = { matrix: [{ viewer_id: 'u', visibility: { location: false } }] };
+  assert.equal((await api.get('/family/groups/g/visibility-matrix/c')).error, undefined);
+});
+
+test('GroupOverview renders missing or unexpected checkins without crashing', () => {
+  const React = require('react');
+  const { renderToStaticMarkup } = require('react-dom/server');
+  const transport = load('src/lib/api.ts');
+  for (const checkins of [{}, { members: null }, { members: {} }, { members: 'unexpected' }, { members: [] }]) {
+    const { GroupOverview } = load('src/components/family/GroupOverview.tsx', {
+      require: name => {
+        if (name === 'react' || name === 'react/jsx-runtime') return require(name);
+        if (name === '@/lib/api') return transport;
+        if (name === 'next/navigation') return { useRouter: () => ({ push() {} }) };
+        if (name === '@/lib/api/family') return {
+          groupPath: id => `/family/groups/${id}`,
+          memberPlace: () => null,
+          useGroup: () => ({ group: { name: 'Bliscy', invite_code: 'TEST' }, owner: false }),
+        };
+        if (name === '@/hooks/useApiResource') return {
+          useApiResource: path => ({ data: path.endsWith('/checkins/today') ? checkins : { members: [{ user_id: 'u', username: 'Ala' }] }, loading: false, error: '', reload() {} }),
+        };
+        if (name === '@/hooks/useForegroundLocation') return { useForegroundLocation: () => ({}) };
+        if (name === '@/contexts/SocketContext') return { useSocket: () => ({ onEvent() {}, updateLocation() {} }) };
+        if (name === './PersonCard') return { PersonCard: ({ member }) => React.createElement('p', null, member.username) };
+        const Stub = ({ children }) => React.createElement('div', null, children);
+        return new Proxy({}, { get: () => Stub });
+      },
+    });
+    assert.match(renderToStaticMarkup(React.createElement(GroupOverview, { id: 'g' })), /Ala/);
+  }
 });
 
 test('light and dark core token pairs meet text and control contrast', () => {

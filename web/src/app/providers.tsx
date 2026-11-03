@@ -13,7 +13,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <ThemeProvider>
       <AuthProvider>
         <SocketProvider>
-          <NotificationsProvider><ToastProvider><AppShell>{children}</AppShell></ToastProvider></NotificationsProvider>
+          <NotificationsProvider>
+            <ToastProvider>
+              <AppShell>{children}</AppShell>
+            </ToastProvider>
+          </NotificationsProvider>
         </SocketProvider>
       </AuthProvider>
     </ThemeProvider>

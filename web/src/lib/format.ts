@@ -1,6 +1,8 @@
 export function distance(meters?: number) {
   if (meters === undefined || !Number.isFinite(Number(meters))) return 'Odległość nieznana';
-  return meters < 1000 ? `${Math.round(meters)} m` : `${(meters / 1000).toLocaleString('pl-PL', { maximumFractionDigits: 1 })} km`;
+  return meters < 1000
+    ? `${Math.round(meters)} m`
+    : `${(meters / 1000).toLocaleString('pl-PL', { maximumFractionDigits: 1 })} km`;
 }
 export function relativeTime(iso: string) {
   const seconds = (new Date(iso).getTime() - Date.now()) / 1000;

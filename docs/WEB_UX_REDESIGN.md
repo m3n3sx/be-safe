@@ -1,6 +1,23 @@
 # be:Safe — przeprojektowanie UX/UI web
 
-**Etap 1: badanie kodu i projekt, bez implementacji.** Stan repozytorium: 3 listopada 2026.
+## Implementation status — etap 4
+
+**Stan implementacji: 3 listopada 2026.** Etapy 2–4 wdrożyły nową powłokę, podstawowe przepływy okolicy, pomocy i bliskich oraz redesign pozostałych ekranów i ośmiu stron administracji. Profil i Pomoc mają uporządkowane sekcje z opisami. Odpowiedzi list API są sprawdzane na granicy transportu, a komponenty korzystają z bezpiecznych tablic; brak `members` w meldunkach grupy daje stan błędu zamiast awarii.
+
+**Nie jest to deklaracja pełnego parytetu z mobile.** Faktyczny stan opisuje tabela §8: brak trwałego cache offline, demo web, warstw AED/bliskich na głównej mapie, osobnych stron odbiorcy `/track/[token]` i aktualności `/news/[postId]`, pełnego konfiguratora oraz pełnych ustawień dostępności/koloru. Są natomiast osobne mapy AED, grup i zwierząt, pełna treść aktualności na liście, zwrócony przez backend link lokalizacji, podstawowe powiększenie tekstu i ograniczenie ruchu. Funkcje wymagające pracy w tle mają jawne ograniczenia przeglądarki. K01–K12 z §9.2 pozostają aktualne.
+
+**Weryfikacja:** testy transportu i regresji renderowania grupy korzystają z atrap danych. Końcowe wyniki lint/build/testów zapisano w §10.8. Testy integracyjne z rzeczywistym API, przegląd przy 320–1440 px i czytnik ekranu pozostają do wykonania.
+
+Sekcje 1–7 i 10.1–10.5 dokumentują pierwotny projekt; „web przed” opisuje stan sprzed etapu 2. Źródłem informacji o tym, co jest teraz wdrożone, są §8 i podsumowania etapów 10.6–10.8.
+
+### Co się zmieniło i dlaczego
+
+- Mapa i lista dzielą obszar oraz filtry; wybór obszaru nie udaje aktualizacji pozycji użytkownika.
+- Dolne zakładki i zwarta szyna z górnym SOS zastąpiły rozbudowaną boczną nawigację. Jasny i ciemny motyw używają wspólnych tokenów.
+- Profil prowadzi przez „Moją aktywność”, prywatność, ustawienia, społeczność i informacje; Pomoc rozdziela pilną pomoc od codziennych narzędzi. Alias `/alerts` działa, ale nie dubluje widocznej listy zadań.
+- Ustawienia pokazują, co zapisuje się na koncie, a co na urządzeniu. Uprawnienia przeglądarki i zgody konta są oddzielne; tryb aplikacji nie nadaje uprawnień.
+- Dane błędne lub niepełne nie są przedstawiane jako sukces ani jako dowód bezpieczeństwa. Panel administracji ma dostępne formularze, potwierdzenia, polskie etykiety i jawne błędy odczytu.
+- Kod ekranów i komponentów etapów 2–4 sformatowano Prettier 3, aby ułatwić dalszą konserwację.
 
 ## 1. Cel, zakres i najważniejsze decyzje
 
@@ -391,16 +408,16 @@ Każdy komponent ma wariant loading/disabled/error i focus-visible. Toast potwie
 
 ## 8. Tabela zgodności funkcji
 
-**J** = jest w kodzie; **C** = częściowe/usterka; **—** = brak UI; **B** = odpowiednik przeglądarkowy; **N** = funkcja natywna niedostępna w planowanym web; **K** = ograniczenie kontraktu, dokładnie opisane w §9. Planowane J oznacza pełny zakres zadania w granicach istniejącego API. Odniesienia wskazują endpointy w inwentarzu.
+**J** = jest w kodzie; **C** = częściowe/usterka; **—** = brak UI; **B** = odpowiednik przeglądarkowy; **N** = funkcja natywna niedostępna w web; **K** = ograniczenie kontraktu, dokładnie opisane w §9. Kolumna „Web po” opisuje implementację po etapie 4, nie plan. J nie oznacza potwierdzonego testu produkcyjnego ani pełnego audytu dostępności. Odniesienia wskazują endpointy w inwentarzu.
 
-| Funkcja | Mobile | Web przed | Web po (plan) |
+| Funkcja | Mobile | Web przed | Web po (implementacja) |
 |---|---|---|---|
 | Logowanie/rejestracja/sesja/wylogowanie (M01/W01) | J | J, rozproszona bramka | J, dedykowane URL i powrót do zadania |
 | Google (M01) | J, obecny kontrakt profilowy | J, obecny kontrakt profilowy | J, jeden flow; uwaga kontraktowa §9.2 |
-| Demo i kod przy rejestracji (M01/M32) | J | —; kod tylko do udostępnienia | J, jawne demo i `referral_code` |
+| Demo i kod przy rejestracji (M01/M32) | J | —; kod tylko do udostępnienia | C: `referral_code` działa w rejestracji; brak przycisku demo i wywołania `/auth/demo` |
 | Reset hasła / weryfikacja e-mail | Prośba resetu; linki web | J | J, spójne publiczne strony i resend |
-| Onboarding / konfigurator (M03/M04) | J/C zapis promienia | C, same slajdy | J, opcjonalny i możliwy do ponowienia |
-| Standardowy/dziecko/senior (M05–M08/M15) | J | C, tylko zapis trybu | J, realne warianty przy zachowaniu funkcji |
+| Onboarding / konfigurator (M03/M04) | J/C zapis promienia | C, same slajdy | C: opcjonalne, powtarzalne wprowadzenie z linkami do ustawień/grupy/widoku; brak zintegrowanego konfiguratora stref i grup |
+| Standardowy/dziecko/senior (M05–M08/M15) | J | C, tylko zapis trybu | C/B: zapis trybu, skróty i meldunek na stronie głównej dziecka/seniora, senior SOS bez przytrzymania; brak podglądu aktywnej trasy dziecka na home |
 | Mapa, klastry, pozycja, filtry (M09) | J | C, zły parametr promienia | J, wspólny stan listy i mapy |
 | Wyszukiwanie miejsc / zmiana obszaru | J, Nominatim | — w UI | J, Google Places/Geocoding z env |
 | Lista alertów w okolicy | J, przełączana | — jako pełny widok okolicy | J, domyślnie odsłonięty panel + pełna lista |
@@ -416,15 +433,15 @@ Każdy komponent ma wariant loading/disabled/error i focus-visible. Toast potwie
 | Kamera / zdjęcie z pliku | J | C, plik i oddzielny upload | B, file/capture, multipart, błąd zdjęcia widoczny |
 | Anonimowa nazwa przy zgłoszeniu | J | — | J, `is_anonymous`; konto nadal wymagane |
 | Moje zgłoszenia: lista/opis/+3 h/usuń | J | C, rozproszone listy/panel | J, jedna kanoniczna lista, stary alias zachowany |
-| Odczyt ostatnich alertów przy słabej sieci | J, cache SQLite | — | B, mały cache danych z czasem odczytu; bez obietnicy map offline |
+| Odczyt ostatnich alertów przy słabej sieci | J, cache SQLite | — | C: poprzedni odczyt w pamięci otwartego widoku z czasem; brak trwałego cache alertów i map offline |
 | SOS wysłanie / 112 | J/C obietnice i GPS fallback | C, dwa różne flow | J w granicach K: wspólny flow, brak fikcyjnej pozycji/odbiorców |
 | Wybór odbiorców SOS / alarm całej rodziny | C/K, przełączniki nie sterują backendem | C/K | K, jawne ograniczenie; poprawne osobne kontakty, rozszerzenie §9.2 |
-| Audio SOS, zgoda/usuwanie | J, lokalne | —, tylko prośba o mikrofon | B, MediaRecorder w aktywnej karcie, lokalne pliki; bez uploadu |
+| Audio SOS, zgoda/usuwanie | J, lokalne | —, tylko prośba o mikrofon | B: ręczne nagranie do 30 s, zgoda/odsłuch/pobranie/usunięcie; znika po opuszczeniu strony bez pobrania; brak automatycznego nagrywania przy alarmie i uploadu |
 | Shake-to-SOS | J, otwiera SOS | — | N; stale dostępny przycisk SOS |
 | Wykrywanie wypadku/upadku | J, sensor + anulowanie 30 s | — | N; brak pozornego przełącznika automatycznego wykrywania |
 | Rodzinne grupy, zaproszenie, role przy dołączaniu | J | C, prostsze dołączenie | J, wszystkie role i kopiowanie kodu |
 | Usuwanie grupy / członka, zmiana roli | J, właściciel | C, tylko część działań członka | J według uprawnień API |
-| Mapa bliskich / przypięte 3 osoby | J | C, lista/linki | J, warstwa + lista; przypięcia lokalne |
+| Mapa bliskich / przypięte 3 osoby | J | C, lista/linki | C/B: mapa i lista grupy oraz lokalne przypięcia; brak warstwy bliskich na głównej mapie |
 | Avatar, śledzenie, cisza szkolna | J | C, głównie odczyt | J, upload i `PATCH M` z prawami właściciela/opiekuna |
 | Historia lokalizacji z wyborem dnia | J | C, ostatnie 24 h | J, mapa + lista + data |
 | Bezpieczne strefy, dodanie/usunięcie | J | C, formularz współrzędnych | J, wygodny wybór punktu/promienia |
@@ -432,8 +449,8 @@ Każdy komponent ma wariant loading/disabled/error i focus-visible. Toast potwie
 | Widoczność pól / czasowe ukrycie lokalizacji | J/C/K | C, problem self matrix, brak czasowego ukrycia | J dla wspieranych macierzy i ghost; K dla odczytu własnej dorosłej macierzy |
 | Lokalizacja na pierwszym planie | J | J przez socket na mapie | B, świadoma zgoda i aktywna karta; REST/socket zgodnie z zadaniem |
 | Lokalizacja w tle, strefy/trasy przy zamkniętej aplikacji | Zależne od OS/zgód | — | B/K: zarządzanie i odbiór danych z mobile; własne śledzenie tylko aktywna karta |
-| Wykrywanie podszytej lokalizacji | Heurystyka `isMocked` i skoków | — | N dla `isMocked`; walidacja czasu/dokładności, bez obietnicy równoważności |
-| Bateria bliskich / własna bateria | Odczyt i `PUT battery` | Odczyt | B, odczyt wartości mobile; własny pomiar tylko jeśli wspierany, inaczej „Brak danych” |
+| Wykrywanie podszytej lokalizacji | Heurystyka `isMocked` i skoków | — | N: brak `isMocked` i detekcji fałszowania; walidacja współrzędnych nie jest detekcją podszycia |
+| Bateria bliskich / własna bateria | Odczyt i `PUT battery` | Odczyt | B/C: odczyt udostępnionej baterii; brak pomiaru i wysyłania własnej baterii z web |
 | Sygnał do grupy i odpowiedź | J | C, wysłanie bez odpowiedzi, mylący target | J, jawnie grupowy sygnał, pending i `/family/pings/[pingId]` |
 | Odbiór SOS bliskiego | J | — dedykowanego flow | J, powiadomienie → osoba/alert/mapa/telefon |
 | Meldunek „Jestem bezpieczny”, stan dziś | J | — | J, profil/bliscy/widok uproszczony |
@@ -444,24 +461,24 @@ Każdy komponent ma wariant loading/disabled/error i focus-visible. Toast potwie
 | Fałszywy telefon | J, konfiguracja/odebranie | C, `accept()` puste | B, kompletna symulacja w aktywnej karcie, bez systemowego połączenia |
 | Zwierzęta: profil, zaginięcie, odnalezienie, usuń | J | J, inne pola formularza | J, suma pól obu klientów bez utraty danych |
 | Zaginione zwierzęta w okolicy | — osobnej listy | J | J, zachować przewagę web; kandydat do późniejszego wyrównania mobile |
-| Zgłoszenie zauważenia zwierzęcia | — UI, API istnieje | — UI | Poza podstawowym parytetem; nie deklarować jako już istniejącej funkcji |
+| Zgłoszenie zauważenia zwierzęcia | — UI, API istnieje | — UI | J: formularz zauważenia na liście zaginionych zwierząt, istniejące API |
 | Skrzynka powiadomień / licznik / usuń / odczyt | J | — | J, `/notifications`, §9 dla brakujących pobliskich wpisów bez FCM |
 | Push i przejście do konkretnego zadania | J, FCM | —; tylko zgoda przeglądarki | B, in-app + Notifications API tam, gdzie działa; zamknięta karta wymaga osobnej integracji push |
 | Alerty rodzinne/strefy/trasy/KPP/bateria/przypomnienia | J, odbiór FCM/inbox | C, część socketów | B, inbox + istniejące sockety/polling i linki typów |
-| AED, nawigacja piesza | J, warstwa i metadane | J, lista | J, lista + mapa + dane dostępności |
+| AED, nawigacja piesza | J, warstwa i metadane | J, lista | C/B: osobna lista i mapa `/aed`, metadane i trasa piesza; brak warstwy na głównej mapie |
 | Jakość powietrza | J, widget najbliższej stacji | J, więcej stacji/pomiarów | J, zachować dane web i skrót na mapie |
 | Numery / wsparcie psychiczne / poradnik | J | J | J/B, czytelne publiczne treści, `tel:` z numerem do skopiowania |
 | Cyber / zewnętrzna kontrola rodzicielska | J | J | J, te same cele i jawne linki zewnętrzne |
 | Reputacja / odznaki / ranking / polecenia | J | C, odznaki i niepełne polecenia | J, poprawny kontrakt, druga warstwa Profilu |
-| Aktualności / statystyki | J | C, endpointy/model | J, pełna treść i poprawny zakres danych |
+| Aktualności / statystyki | J | C, endpointy/model | J dla podstawowego zakresu: pełna treść na liście `/news`, statystyki obszaru z poprawnym modelem; brak osobnego deep linku `/news/[postId]` |
 | Profil: nazwa/e-mail/hasło/telefon/KPP/usunięcie | J | C, błędne operacje i brak telefonu/KPP | J, właściwe API i stany błędów |
-| Czasowy link lokalizacji | J, zewnętrzna strona backendu | C, zły endpoint i pole | J/B, poprawny `url`, opcjonalny nowy odbiorca `/track/[token]` |
-| Motyw/kolor, język, dostępność | J | C, motyw i języki bez pełnej a11y | J, polski domyślny/kompletny, zachować istniejący wybór języka jako opcję; pełna a11y |
+| Czasowy link lokalizacji | J, zewnętrzna strona backendu | C, zły endpoint i pole | B/K: poprawne `url,expires_at`, pole do skopiowania; brak własnego `/track/[token]`, docelowa domena zależy od backendu (K09) |
+| Motyw/kolor, język, dostępność | J | C, motyw i języki bez pełnej a11y | C/B: jasny/ciemny/systemowy, powiększenie tekstu, ograniczenie ruchu, systemowy forced-colors; język polski i zachowana preferencja częściowego angielskiego; brak wyboru akcentu/pogrubienia/osobnego kontrastu i pełnego audytu a11y |
 | Zgody konta vs uprawnienia urządzenia | J/C | C, wyłącznie browser | B, oba stany osobno, tylko obsługiwane capabilities |
 | Biometryczna blokada aplikacji | J | — | N w niezmienionym kontrakcie; hasło/Google i blokada urządzenia. WebAuthn to osobne rozszerzenie |
 | Widgety Androida / deep linki | J | — | B, skróty wewnątrz aplikacji i adresy URL; nie obiecywać natywnych widgetów |
 | Aktualizacja APK / wersja | J, natywna | Link pobrania na landing | B, aktualizacja web przez wdrożenie/odświeżenie, link pobrania mobile |
-| Analityka użycia | `POST /events` | — klienta zdarzeń | J opcjonalnie przez istniejące API, bez lokalizacji/treści alarmów w zdarzeniach UX |
+| Analityka użycia | `POST /events` | — klienta zdarzeń | — brak klienta zdarzeń UX; wykres administracyjny odczytuje istniejącą analitykę serwera |
 | Dokumenty / kontakt / informacja o aplikacji | J | J | J, publiczne i odkrywalne |
 | Administracja i wszystkie `/admin/*` | —, web jest narzędziem administratora | J | J, zachować cały zakres; nie wymaga nowego panelu Flutter |
 
@@ -492,6 +509,9 @@ Każdy komponent ma wariant loading/disabled/error i focus-visible. Toast potwie
 | Zdjęcie | JSON + osobny upload bez obsługi błędu | Preferowany pojedynczy multipart `POST /alerts`; istniejący `POST A/photo` zachować do kontrolowanej próby dodania zdjęcia do istniejącego alertu |
 | Auth z e-maila | `fetch('/api/v1/…')` zależny od proxy | Ten sam env-aware `api` co reszta, te same ścieżki i payloady |
 | Uprawnienia | Jedynie browser permission | Istniejące `GET/PUT /permissions` jako zgoda konta, osobno rzeczywisty stan OS/przeglądarki |
+| Meldunki grupy — etap 4 | `data?.members.find` chroni tylko `data`, nie `members` | `GET G/checkins/today` zwraca `{members}`; błąd serwera `{error}`. Sprawdzenie tablic na granicy API + `asArray` w komponencie; błędna odpowiedź daje ponowienie, prawidłowa pusta tablica daje pusty stan |
+| Audyt administratora — etap 4 | Oczekiwane `{log}` | `GET /admin/audit-log?limit=200` zwraca `{entries}` |
+| Edycja użytkownika przez administratora — etap 4 | Oczekiwane `{user}` | `PATCH /admin/users/:id` zwraca bezpośrednio częściowy obiekt konta; po zapisie ponownie pobieramy listę |
 
 Źródła weryfikacji: `backend/src/index.js`, `routes/alerts.js`, `users.js`, `family.js`, `community.js`, `auth.js`, `permissions.js`. Nie dodawać aliasów backendu, aby utrzymywać błędne wywołania web.
 
@@ -521,6 +541,8 @@ Poniższe pozycje **nie są częścią implementacji z niezmienionym kontraktem*
 **Etap 3 — uwagi implementacyjne:** wszystkie podstawowe funkcje wskazane w tym etapie (meldunki, sygnały i odpowiedzi, historia, strefy, trasy, sąsiedzi, eskorta, zwierzęta i skrzynka) mają istniejące endpointy. Backend i mobile pozostają bez zmian. Własna macierz udostępniania dorosłego jest jawnie niedostępna w UI (K04); dostępne są macierz dziecka dla rodzica/opiekuna i czasowe ukrycie lokalizacji. Sygnał jest zawsze grupowy (K05). Powiadomienia serwerowe odczytywane są okresowo oraz po zdarzeniach socketu; nieutrwalane zdarzenia tej sesji są oznaczone osobno. Notifications API wymaga świadomego opt-in i nie oznacza Web Push po zamknięciu karty (K02). Nagranie SOS jest dobrowolne, lokalne, do 30 s, z odtwarzaniem/pobraniem/usunięciem i zatrzymaniem po ukryciu karty; nie ma endpointu uploadu audio.
 
 **Ograniczenia platformowe, których sam backend nie naprawi:** niezawodna lokalizacja po zamknięciu karty, shake/crash detection w tle, natywne widgety, blokada całej aplikacji biometrią. Nie są ukrytymi obietnicami kolejnego endpointu.
+
+**Etap 4 — bez nowych wymagań backendowych:** normalizacja odpowiedzi i korekty meldunków/audytu/edycji konta są wyłącznie naprawami klienta. Zgody konta używają istniejącego `/permissions`; lokalizacja mapy nadal nie włącza udostępniania. Żadna pozycja K01–K12 nie została rozwiązana przez zmianę serwera. Niewdrożone elementy UI z §8 (np. cache, demo, warstwy, konfigurator i własny odbiorca linku) są zaległościami web, a nie dodatkowymi żądaniami zmian backendu.
 
 **Spójność produktów do rozstrzygnięcia:** deklaracja wieku w rejestracji vs opis trybu dziecięcego; zakres SOS dla seniora/opiekuna; różnice w opisach godzin infolinii między klientami. Treści pomocy powinny otrzymać wspólne źródło i datę weryfikacji w implementacji. Dokument nie stwierdza aktualności zewnętrznych numerów/godzin na podstawie samego kodu.
 
@@ -647,6 +669,19 @@ Wynik końcowy sesji: **7/7 testów zaliczonych**, **lint: 0 błędów, 7 ostrze
 **Walidacja do wykonania na środowisku testowym:** rzeczywiste mutacje rodzinne/SOS, mapy z kluczem wdrożeniowym, uprawnienia przeglądarek, przegląd przy 320–1440 px oraz czytnik ekranu. W tej sesji nie wykonywano wysyłek do produkcyjnego API. Ograniczenia kontraktu K01–K12 nie są deklarowane jako usunięte.
 
 **Weryfikacja końcowa etapu 3:** `npm run lint` — 0 błędów, 7 ostrzeżeń; `npm run build` — sukces; `node --test tests/core.test.mjs` — 9/9 testów zaliczonych (w tym payload SOS oraz deep linki rzeczywistych typów powiadomień); `git diff --check` — bez błędów. Testy kontraktu korzystają z atrap transportu, nie wysyłają alarmów ani mutacji na serwer.
+
+### 10.8. Stan implementacji — etap 4 (domknięcie redesignu)
+
+- **Odporność danych:** `api.ts` sprawdza obiekt odpowiedzi, kolekcje istniejących endpointów i pola prezentacyjne; niepoprawna kolekcja zwraca błąd, poprawna pusta lista pozostaje pusta. `asArray` zabezpiecza listy w grupach/meldunkach, czatach, historii, strefach, trasach, eskorcie, zwierzętach, powiadomieniach, mapach, statystykach i administracji. Zachowano HTTP statusy i brak automatycznego ponawiania mutacji.
+- **Profil/Pomoc:** wspólny `HubSection`, inline SVG i opisy zadań, avatar/inicjały, reputacja i statystyki własnych zgłoszeń, meldunek, link lokalizacji, wejście administracyjne wyłącznie po potwierdzeniu `/admin/me`. Dawny alias zgłoszeń ukryty w listach. Home ma znaczący opis oglądanego obszaru zamiast luźnego „Moja lokalizacja”.
+- **Pozostałe ekrany:** ustawienia w pięciu sekcjach (Konto, Powiadomienia i promień, Prywatność, Wygląd i dostępność, Niebezpieczna strefa), formularze nazw/e-maila/hasła/telefonu/KPP/usunięcia, prawdziwe stany zapisu. Uprawnienia rozdzielają przeglądarkę i `/permissions`. Wprowadzenie można uruchomić ponownie. Widok dziecka/seniora dodaje skróty i meldunek na home. Odznaki, ranking, polecenia, aktualności, statystyki, własne zgłoszenia, dokumenty, odzyskiwanie konta i landing korzystają ze wspólnych nagłówków/tokenów/stanów; strony statyczne nie mają sztucznego ładowania.
+- **Administracja:** osiem zachowanych stron, `AdminShell`, „Wróć do aplikacji”, wspólny SOS, polskie nazwy, bez formularzy `prompt/alert/confirm`. Zachowane wyszukiwanie, blokada z powodem, nadawanie/odbieranie admina, filtry/usuwanie zdarzeń, moderacja nadużyć, usuwanie grup, konfiguracja/segmenty/przełączanie funkcji/komunikaty, metryki/integracje/kopie/wykres i audyt. Mutacje respektują uprawnienia API. Audyt czyta `entries`, a po zmianie użytkownika lista jest odświeżana.
+- **Formatowanie:** wszystkie zmienione w etapach 2–4 pliki TS/TSX/CSS w `web/src` przechodzą Prettier 3 z `printWidth: 100`, `singleQuote: true`, bez dodawania zależności do projektu.
+- **Testy regresji:** dodano błędne/brakujące/null/nietablicowe kolekcje dla 21 endpointów oraz renderowanie `GroupOverview` z istniejącą osobą i pięcioma wariantami brakujących meldunków. Testy obejmują też niepełne statystyki i zachowanie poprawnej macierzy prywatności.
+
+**Odbiór automatyczny etapu 4:** `npm run lint` — **0 błędów, 9 ostrzeżeń** (obrazy `img` i zastany typ Google); `npm run build` — **sukces** (Next.js 16.2.4); `node --test web/tests` — **11/11 testów zaliczonych**; `git diff --check` — **bez błędów**. Lint i build uruchomiono w `web/`, testy z katalogu repozytorium. Nie dodano zależności do manifestu projektu.
+
+**Pozostaje:** elementy C/—/N z §8, ograniczenia K01–K12, testy rzeczywistych kont/API/map/uprawnień i przegląd dostępności w przeglądarkach. Pełna treść dokumentów prawnych oraz historyczny adres pobierania APK wymagają osobnej weryfikacji właściciela produktu; zachowano istniejące odnośniki i treść, zmieniając prezentację.
 
 ## 11. Kryteria odbioru następnych etapów
 

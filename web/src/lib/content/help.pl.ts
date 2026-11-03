@@ -14,7 +14,17 @@ export const emergencyNumbers = [
   ['601100300', '601 100 300', 'Ratownictwo górskie', 'Pomoc w górach.'],
 ] as const;
 export const mentalNumbers = [
-  ['116123', '116 123', 'Wsparcie dla dorosłych', 'Kryzys emocjonalny, samotność, trudna sytuacja.'],
-  ['116111', '116 111', 'Telefon zaufania dla dzieci i młodzieży', 'Możesz porozmawiać o tym, co Cię martwi.'],
+  [
+    '116123',
+    '116 123',
+    'Wsparcie dla dorosłych',
+    'Kryzys emocjonalny, samotność, trudna sytuacja.',
+  ],
+  [
+    '116111',
+    '116 111',
+    'Telefon zaufania dla dzieci i młodzieży',
+    'Możesz porozmawiać o tym, co Cię martwi.',
+  ],
   ['800702222', '800 70 22 22', 'Centrum Wsparcia', 'Wsparcie dla osób w kryzysie psychicznym.'],
 ] as const;

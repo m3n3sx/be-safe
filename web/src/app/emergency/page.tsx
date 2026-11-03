@@ -1,4 +1,22 @@
 import { PageHeader } from '@/components/layout/PageHeader';
 import { PhoneDirectory } from '@/components/safety/PhoneDirectory';
 import { emergencyNumbers } from '@/lib/content/help.pl';
-export default function Page() { return <div className="page-container"><PageHeader title="Numery pomocy" description="Wybierz numer, aby zadzwonić. Możesz też zaznaczyć i skopiować numer." /><PhoneDirectory numbers={emergencyNumbers} /><section className="panel mt-6"><h2 className="text-xl font-bold mb-3">Podczas rozmowy</h2><ul className="list-disc pl-5 space-y-2"><li>Podaj miejsce zdarzenia, co się stało i ilu jest poszkodowanych.</li><li>Odpowiadaj na pytania operatora. Nie rozłączaj się, dopóki Cię o to nie poprosi.</li><li>Alarm w be:Safe nie jest telefonicznym zgłoszeniem do służb.</li></ul></section></div>; }
+export default function Page() {
+  return (
+    <div className="page-container">
+      <PageHeader
+        title="Numery pomocy"
+        description="Wybierz numer, aby zadzwonić. Możesz też zaznaczyć i skopiować numer."
+      />
+      <PhoneDirectory numbers={emergencyNumbers} />
+      <section className="panel mt-6">
+        <h2 className="text-xl font-bold mb-3">Podczas rozmowy</h2>
+        <ul className="list-disc pl-5 space-y-2">
+          <li>Podaj miejsce zdarzenia, co się stało i ilu jest poszkodowanych.</li>
+          <li>Odpowiadaj na pytania operatora. Nie rozłączaj się, dopóki Cię o to nie poprosi.</li>
+          <li>Alarm w be:Safe nie jest telefonicznym zgłoszeniem do służb.</li>
+        </ul>
+      </section>
+    </div>
+  );
+}

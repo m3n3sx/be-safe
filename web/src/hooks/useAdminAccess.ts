@@ -2,11 +2,11 @@
 
 // RBAC w UI — pobiera /admin/me (role + uprawnienia) i daje can(permission).
 import { useEffect, useState, useCallback } from 'react';
-import api from '@/lib/api';
+import api, { asArray } from '@/lib/api';
 
 export interface AdminAccess {
   loading: boolean;
-  isAdmin: boolean;          // ma jakąkolwiek rolę admina
+  isAdmin: boolean; // ma jakąkolwiek rolę admina
   isSuperadmin: boolean;
   roles: { key: string; name: string }[];
   permissions: string[];
@@ -16,32 +16,51 @@ export interface AdminAccess {
 
 export function useAdminAccess(): AdminAccess {
   const [state, setState] = useState<Omit<AdminAccess, 'can'>>({
-    loading: true, isAdmin: false, isSuperadmin: false, roles: [], permissions: [],
+    loading: true,
+    isAdmin: false,
+    isSuperadmin: false,
+    roles: [],
+    permissions: [],
   });
 
   useEffect(() => {
     let alive = true;
     (async () => {
-      const res = await api.get<{ roles?: { key: string; name: string }[]; permissions?: string[]; is_superadmin?: boolean; error?: string }>('/admin/me');
+      const res = await api.get<{
+        roles?: { key: string; name: string }[];
+        permissions?: string[];
+        is_superadmin?: boolean;
+        error?: string;
+      }>('/admin/me');
       if (!alive) return;
       if (res.error) {
-        setState({ loading: false, isAdmin: false, isSuperadmin: false, roles: [], permissions: [], error: res.error });
+        setState({
+          loading: false,
+          isAdmin: false,
+          isSuperadmin: false,
+          roles: [],
+          permissions: [],
+          error: res.error,
+        });
         return;
       }
       setState({
         loading: false,
-        isAdmin: !!res.is_superadmin || (res.roles?.length ?? 0) > 0,
-        isSuperadmin: !!res.is_superadmin,
-        roles: res.roles ?? [],
-        permissions: res.permissions ?? [],
+        isAdmin: res.is_superadmin === true || asArray(res.roles).length > 0,
+        isSuperadmin: res.is_superadmin === true,
+        roles: asArray(res.roles),
+        permissions: asArray(res.permissions),
       });
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
   const can = useCallback(
-    (perm: string) => state.isSuperadmin || state.permissions.includes('*') || state.permissions.includes(perm),
-    [state.isSuperadmin, state.permissions]
+    (perm: string) =>
+      state.isSuperadmin || state.permissions.includes('*') || state.permissions.includes(perm),
+    [state.isSuperadmin, state.permissions],
   );
 
   return { ...state, can };

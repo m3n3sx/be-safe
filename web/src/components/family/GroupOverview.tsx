@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import api from '@/lib/api';
+import api, { asArray } from '@/lib/api';
 import type { FamilyMember } from '@/types';
 import { groupPath, memberPlace, useGroup } from '@/lib/api/family';
 import { useApiResource } from '@/hooks/useApiResource';
@@ -20,11 +20,140 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Skeleton } from '@/components/ui/Skeleton';
 export function GroupOverview({ id }: { id: string }) {
-  const group = useGroup(id); const members = useApiResource<{ members: FamilyMember[] }>(`${groupPath(id)}/members`, 30000); const checkins = useApiResource<{ members: { user_id: string; checked_in_today: boolean; last_checkin_at: string | null }[] }>(`${groupPath(id)}/checkins/today`, 60000);
-  const { onEvent, updateLocation } = useSocket(); const router = useRouter(); const [copied, setCopied] = useState(''); const [sharing, setSharing] = useState(false);
-  const gps = useForegroundLocation(sharing, async p => { const r = await api.put('/users/me/location', { lat: p.lat, lng: p.lng }); if (r.error) throw new Error(r.error); updateLocation(p.lat, p.lng); });
-  const reload = members.reload, reloadCheckins = checkins.reload;
-  useEffect(() => { const a = onEvent('family:location', () => void reload()); const b = onEvent('family:checkin', () => void reloadCheckins()); return () => { a(); b(); }; }, [onEvent, reload, reloadCheckins]);
-  const places = (members.data?.members || []).flatMap(m => { const p = memberPlace(m); return p ? [p] : []; });
-  return <div className="page-container space-y-5"><GroupHeader id={id} title={group.group?.name || 'Grupa bliskich'} />{group.error && <ErrorState message={group.error} onRetry={group.reload} />}{group.loading && <Skeleton />}{!group.loading && !group.error && !group.group && <EmptyState title="Grupa niedostępna" description="Sprawdź, czy nadal należysz do tej grupy." />}{group.group && <><div className="grid lg:grid-cols-2 gap-4"><section className="panel space-y-3"><h2 className="font-bold text-xl">Zaproś bliskich</h2><TextField label="Kod zaproszenia" readOnly value={group.group.invite_code} onFocus={e => e.target.select()} /><Button variant="secondary" onClick={async () => { try { await navigator.clipboard.writeText(group.group!.invite_code); setCopied('Kod skopiowany.'); } catch { setCopied('Zaznacz kod w polu i skopiuj go ręcznie.'); } }}>Kopiuj kod</Button><p role="status">{copied}</p><GroupPingAction groupId={id} /></section><CheckinAction onDone={() => void checkins.reload()} /></div>{members.error && <ErrorState message={members.error} onRetry={members.reload} />}{members.loading ? <Skeleton /> : <><h2 className="font-bold text-xl">Ostatnie znane lokalizacje</h2><PlacesMap places={places} onSelect={memberId => router.push(`/family/${id}/members/${memberId}`)} />{!places.length && <p className="text-ink-2">Brak udostępnionych pozycji. Lista osób jest dostępna poniżej.</p>}{checkins.error && <ErrorState message={checkins.error} onRetry={checkins.reload} />}<ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{members.data?.members.map(m => <li key={m.user_id}><PersonCard member={m} groupId={id} checkin={checkins.data?.members.find(c => c.user_id === m.user_id)} /></li>)}</ul>{members.data?.members.length === 0 && <EmptyState title="Brak członków do wyświetlenia" />}</>}<section className="panel space-y-3"><h2 className="font-bold">Twoja lokalizacja w aktywnej karcie</h2><p>Włącz świadomie, aby aktualizować swoją pozycję na koncie. Udostępnianie zależy od ustawień prywatności. Po ukryciu lub zamknięciu karty aktualizacje ustają.</p><Button variant="secondary" onClick={() => setSharing(!sharing)}>{sharing ? 'Zatrzymaj GPS w tej karcie' : 'Włącz GPS w tej karcie'}</Button>{gps.error && <ErrorState message={gps.error} />}{sharing && gps.last && <p>Wysłano pozycję: {new Date(gps.last.timestamp!).toLocaleTimeString('pl-PL')}</p>}</section><div className="flex flex-wrap gap-2"><Link href="/pets" className="btn btn-secondary">Zwierzęta grupy</Link><Link href="/escort" className="btn btn-secondary">Bezpieczny powrót</Link>{group.owner && <ConfirmAction label="Usuń grupę" description="Grupa zostanie usunięta dla wszystkich członków." action={() => api.delete(groupPath(id))} onDone={() => router.push('/family')} />}</div></>}</div>;
+  const group = useGroup(id);
+  const members = useApiResource<{ members: FamilyMember[] }>(`${groupPath(id)}/members`, 30000);
+  const checkins = useApiResource<{
+    members: { user_id: string; checked_in_today: boolean; last_checkin_at: string | null }[];
+  }>(`${groupPath(id)}/checkins/today`, 60000);
+  const { onEvent, updateLocation } = useSocket();
+  const router = useRouter();
+  const [copied, setCopied] = useState('');
+  const [sharing, setSharing] = useState(false);
+  const gps = useForegroundLocation(sharing, async (p) => {
+    const r = await api.put('/users/me/location', { lat: p.lat, lng: p.lng });
+    if (r.error) throw new Error(r.error);
+    updateLocation(p.lat, p.lng);
+  });
+  const reload = members.reload,
+    reloadCheckins = checkins.reload;
+  useEffect(() => {
+    const a = onEvent('family:location', () => void reload());
+    const b = onEvent('family:checkin', () => void reloadCheckins());
+    return () => {
+      a();
+      b();
+    };
+  }, [onEvent, reload, reloadCheckins]);
+  const memberList = asArray(members.data?.members);
+  const checkinList = asArray(checkins.data?.members);
+  const places = memberList.flatMap((m) => {
+    const p = memberPlace(m);
+    return p ? [p] : [];
+  });
+  return (
+    <div className="page-container space-y-5">
+      <GroupHeader id={id} title={group.group?.name || 'Grupa bliskich'} />
+      {group.error && <ErrorState message={group.error} onRetry={group.reload} />}
+      {group.loading && <Skeleton />}
+      {!group.loading && !group.error && !group.group && (
+        <EmptyState
+          title="Grupa niedostępna"
+          description="Sprawdź, czy nadal należysz do tej grupy."
+        />
+      )}
+      {group.group && (
+        <>
+          <div className="grid lg:grid-cols-2 gap-4">
+            <section className="panel space-y-3">
+              <h2 className="font-bold text-xl">Zaproś bliskich</h2>
+              <TextField
+                label="Kod zaproszenia"
+                readOnly
+                value={group.group.invite_code}
+                onFocus={(e) => e.target.select()}
+              />
+              <Button
+                variant="secondary"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(group.group!.invite_code);
+                    setCopied('Kod skopiowany.');
+                  } catch {
+                    setCopied('Zaznacz kod w polu i skopiuj go ręcznie.');
+                  }
+                }}
+              >
+                Kopiuj kod
+              </Button>
+              <p role="status">{copied}</p>
+              <GroupPingAction groupId={id} />
+            </section>
+            <CheckinAction onDone={() => void checkins.reload()} />
+          </div>
+          {members.error && <ErrorState message={members.error} onRetry={members.reload} />}
+          {members.loading ? (
+            <Skeleton />
+          ) : (
+            <>
+              <h2 className="font-bold text-xl">Ostatnie znane lokalizacje</h2>
+              <PlacesMap
+                places={places}
+                onSelect={(memberId) => router.push(`/family/${id}/members/${memberId}`)}
+              />
+              {!places.length && (
+                <p className="text-ink-2">
+                  Brak udostępnionych pozycji. Lista osób jest dostępna poniżej.
+                </p>
+              )}
+              {checkins.error && <ErrorState message={checkins.error} onRetry={checkins.reload} />}
+              <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {memberList.map((m) => (
+                  <li key={m.user_id}>
+                    <PersonCard
+                      member={m}
+                      groupId={id}
+                      checkin={checkinList.find((c) => c.user_id === m.user_id)}
+                    />
+                  </li>
+                ))}
+              </ul>
+              {!members.error && memberList.length === 0 && (
+                <EmptyState title="Brak członków do wyświetlenia" />
+              )}
+            </>
+          )}
+          <section className="panel space-y-3">
+            <h2 className="font-bold">Twoja lokalizacja w aktywnej karcie</h2>
+            <p>
+              Włącz świadomie, aby aktualizować swoją pozycję na koncie. Udostępnianie zależy od
+              ustawień prywatności. Po ukryciu lub zamknięciu karty aktualizacje ustają.
+            </p>
+            <Button variant="secondary" onClick={() => setSharing(!sharing)}>
+              {sharing ? 'Zatrzymaj GPS w tej karcie' : 'Włącz GPS w tej karcie'}
+            </Button>
+            {gps.error && <ErrorState message={gps.error} />}
+            {sharing && gps.last && (
+              <p>Wysłano pozycję: {new Date(gps.last.timestamp!).toLocaleTimeString('pl-PL')}</p>
+            )}
+          </section>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/pets" className="btn btn-secondary">
+              Zwierzęta grupy
+            </Link>
+            <Link href="/escort" className="btn btn-secondary">
+              Bezpieczny powrót
+            </Link>
+            {group.owner && (
+              <ConfirmAction
+                label="Usuń grupę"
+                description="Grupa zostanie usunięta dla wszystkich członków."
+                action={() => api.delete(groupPath(id))}
+                onDone={() => router.push('/family')}
+              />
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
 }

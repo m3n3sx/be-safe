@@ -18,6 +18,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    for (const key of ['large-text', 'reduced-motion']) {
+      document.documentElement.classList.toggle(key, localStorage.getItem(`besafe.${key}`) === '1');
+    }
     const stored = localStorage.getItem('theme_mode') as ThemeMode | null;
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const timer = setTimeout(() => {
@@ -27,7 +30,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }, 0);
     const handler = (e: MediaQueryListEvent) => setSystemDark(e.matches);
     mq.addEventListener('change', handler);
-    return () => { clearTimeout(timer); mq.removeEventListener('change', handler); };
+    return () => {
+      clearTimeout(timer);
+      mq.removeEventListener('change', handler);
+    };
   }, []);
 
   const resolvedTheme = theme === 'system' ? (systemDark ? 'dark' : 'light') : theme;

@@ -1,15 +1,15 @@
-// be:Safe — Badge (design system Serenity). Warianty kolorystyczne + RBAC role.
+// Semantic badges; legacy variant names are retained for existing callers.
 import React from 'react';
 
 type Variant = 'neutral' | 'mint' | 'aqua' | 'coral' | 'navy' | 'volt';
 
 const VARIANTS: Record<Variant, string> = {
   neutral: 'bg-surface-2 text-ink-2',
-  mint: 'bg-[var(--serenity-mint)]/25 text-[#0F7252] dark:text-[var(--serenity-mint)]',
-  aqua: 'bg-[var(--serenity-aqua)]/25 text-[#0a6b6c] dark:text-[var(--serenity-aqua)]',
-  coral: 'bg-[var(--serenity-coral)]/20 text-[#b3261e] dark:text-[var(--serenity-coral)]',
-  navy: 'bg-[var(--serenity-navy)] text-white',
-  volt: 'bg-[var(--serenity-volt)] text-[#1A2206]',
+  mint: 'bg-surface-2 text-success',
+  aqua: 'bg-surface-2 text-primary',
+  coral: 'bg-surface-2 text-danger',
+  navy: 'bg-surface-2 text-ink',
+  volt: 'bg-surface-2 text-warning',
 };
 
 export function Badge({
@@ -23,7 +23,7 @@ export function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium ${VARIANTS[variant]} ${className}`}
     >
       {children}
     </span>
@@ -33,8 +33,22 @@ export function Badge({
 /// Badge dla roli RBAC (kolor wg klucza roli).
 export function RoleBadge({ role }: { role: string }) {
   const v: Variant =
-    role === 'superadmin' ? 'coral' : role === 'moderator' ? 'navy' : role === 'support' ? 'aqua' : 'mint';
+    role === 'superadmin'
+      ? 'coral'
+      : role === 'moderator'
+        ? 'navy'
+        : role === 'support'
+          ? 'aqua'
+          : 'mint';
   const label =
-    role === 'superadmin' ? 'Super Admin' : role === 'moderator' ? 'Moderator' : role === 'support' ? 'Wsparcie' : role === 'analyst' ? 'Analityk' : role;
+    role === 'superadmin'
+      ? 'Super Admin'
+      : role === 'moderator'
+        ? 'Moderator'
+        : role === 'support'
+          ? 'Wsparcie'
+          : role === 'analyst'
+            ? 'Analityk'
+            : role;
   return <Badge variant={v}>{label}</Badge>;
 }

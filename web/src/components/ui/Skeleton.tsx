@@ -1,1 +1,10 @@
-export function Skeleton({ label = 'Ładowanie danych…' }: { label?: string }) { return <div role="status" className="space-y-3 p-4"><span className="sr-only">{label}</span><div className="skeleton" /><div className="skeleton" /><div className="skeleton" /></div>; }
+export function Skeleton({ label = 'Ładowanie danych…' }: { label?: string }) {
+  return (
+    <div role="status" className="space-y-3 p-4">
+      <span className="sr-only">{label}</span>
+      <div className="skeleton" />
+      <div className="skeleton" />
+      <div className="skeleton" />
+    </div>
+  );
+}
