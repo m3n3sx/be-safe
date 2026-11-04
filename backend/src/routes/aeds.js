@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const auth = require('../middleware/auth');
+const { ATTRIBUTION } = require('../services/aeds');
 
 router.use(auth);
 
@@ -28,7 +29,7 @@ router.get('/nearby', async (req, res) => {
        LIMIT 200`,
       [lat, lng, radius]
     );
-    res.json({ aeds: rows });
+    res.json({ aeds: rows, attribution: ATTRIBUTION });
   } catch (e) {
     console.error('[aeds/nearby]', e.message);
     res.status(500).json({ error: 'Server error' });

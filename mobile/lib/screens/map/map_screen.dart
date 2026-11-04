@@ -219,7 +219,10 @@ class _MapScreenState extends State<MapScreen> {
             if (indoor != null) _aedDetailRow(
               indoor ? Icons.meeting_room_outlined : Icons.park_outlined,
               indoor ? 'Wewnątrz budynku' : 'Na zewnątrz'),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
+            Text('Dane: © współtwórcy OpenStreetMap (ODbL)',
+                style: TextStyle(fontSize: 11, color: context.iosSecondaryLabel)),
+            const SizedBox(height: 12),
             Row(children: [
               Expanded(child: FilledButton.icon(
                 onPressed: () async {

@@ -522,7 +522,7 @@ setInterval(async () => {
 }, 60 * 1000);
 
 // IMGW weather warnings sync every 15 min
-// F11: AED sync co 24h (initial fetch po 30s startu)
+// F11: AED sync co 24h (po starcie tylko gdy dane starsze niż AED_SYNC_MIN_INTERVAL_HOURS, domyślnie 20 h)
 const { syncAeds } = require('./services/aeds');
 setTimeout(() => { syncAeds().catch(() => {}); }, 30 * 1000);
 setInterval(() => syncAeds().catch(() => {}), 24 * 60 * 60 * 1000);
