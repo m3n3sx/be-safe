@@ -112,6 +112,20 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                   setState(() => _scanning = false);
                   _preview();
                 },
+                errorBuilder: (context, error) {
+                  final denied = error.errorCode == MobileScannerErrorCode.permissionDenied;
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        denied
+                            ? 'Brak zgody na aparat. Wpisz kod albo link poniżej.'
+                            : 'Nie udało się otworzyć aparatu. Wpisz kod albo link poniżej.',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           if (_error != null) Padding(padding: const EdgeInsets.only(top: 12), child: Text(_error!, style: const TextStyle(color: SerenityColors.error))),

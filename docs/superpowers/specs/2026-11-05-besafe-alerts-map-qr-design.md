@@ -83,4 +83,4 @@ Nie ma nowych zmiennych środowiskowych. Dalej używane, jeśli już są: `DATAB
 
 Cofnięcie kodu do poprzedniego wydania jest możliwe bez usuwania kolumn: stary kod ignoruje `alerts.kind` i `invite_expires_at`, a push czyta `users.fcm_token`, który nowy kod nadal uzupełnia. `user_push_tokens` można zostawić. Nie wolno obiecywać, że po cofnięciu stare aplikacje pokażą nowy czerwony ekran.
 
-Android: `minSdk` 23, plugin `mobile_scanner`, do pushy nadal potrzebny `google-services.json`. iOS: `pod install` po `mobile_scanner`, opis kamery obejmuje QR. Entitlement APNs nie został dodany. Darmowy sideload nadal nie dostarcza pushy w tle.
+Android: `minSdk` 23. iOS deployment target projektu i Codemagic to 14.0. Skaner to `mobile_scanner` 7.0.1 (Apple Vision, bez GoogleMLKit, CameraX 1.4.2). 5.2.3 ciągnie GoogleDataTransport &lt; 10 i kłóci się z Firebase 11.15. Linia 6 wymaga iOS 15.5 przez MLKit 7. Od 7.1 CameraX wymaga compileSdk 36, którego AGP 8.7 z Fluttera 3.29 nie składa. Entitlement APNs nie został dodany. Darmowy sideload nadal nie dostarcza pushy w tle.

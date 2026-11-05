@@ -39,7 +39,9 @@ workflows:
       - name: Force iOS 14.0 deployment target in Podfile
         working_directory: mobile/ios
         script: |
-          # Firebase 11.x wymaga iOS 14+. Domyślny Podfile ma platform skomentowany lub 12.0.
+          # Projekt (pbxproj) i ten Podfile są na 14.0.
+          # Firebase 11 wymaga 14. mobile_scanner 7.0.1 używa Vision i sam deklaruje 12,
+          # więc nie podnosimy platformy do 15.5 (to byłby MLKit 7 ze skanera 6).
           if [ -f Podfile ]; then
             # Odkomentuj/zamień linię platform
             sed -i.bak -E "s/# *platform :ios.*/platform :ios, '14.0'/" Podfile

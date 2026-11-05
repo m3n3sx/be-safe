@@ -33,7 +33,7 @@ jobs:
         working-directory: mobile/ios
         run: |
           if [ -f Podfile ]; then
-            # Odkomentuj i ustaw wersję platformy na 14.0 (firebase_* wymaga ≥13)
+            # iOS 14.0: Firebase 11. mobile_scanner 7 (Vision) nie wymaga 15.5.
             sed -i '' "s/# platform :ios, '[0-9.]*'/platform :ios, '14.0'/" Podfile || true
             sed -i '' "s/platform :ios, '[0-9.]*'/platform :ios, '14.0'/" Podfile || true
             echo "=== Podfile po modyfikacji ==="
