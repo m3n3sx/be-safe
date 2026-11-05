@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: ${POSTGRES_DB:-besafe}
     ports:
-      - "${POSTGRES_PORT:-5433}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
     volumes:
       - besafe_postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -33,7 +33,7 @@ services:
       GOOGLE_AUTH_LEGACY_EMAIL_ONLY: ${GOOGLE_AUTH_LEGACY_EMAIL_ONLY:-false}
       FIREBASE_SERVICE_ACCOUNT: /app/firebase-admin.json
     ports:
-      - "${BACKEND_PORT:-8081}:8080"
+      - "127.0.0.1:${BACKEND_PORT:-8081}:8080"
     volumes:
       - besafe_uploads:/app/uploads
       - ./backend/firebase-admin.json:/app/firebase-admin.json:ro
@@ -57,7 +57,7 @@ services:
       PORT: 8080
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://besafe.org.pl/api/v1}
     ports:
-      - "${WEB_PORT:-8080}:8080"
+      - "127.0.0.1:${WEB_PORT:-8080}:8080"
     depends_on:
       backend:
         condition: service_started

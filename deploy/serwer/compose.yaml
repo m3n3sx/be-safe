@@ -1,0 +1,64 @@
+# be:Safe (besafe.org.pl) - zmigrowane z Scaleway VPS 151.115.167.237 (2026-10-29)
+# Start: cd /srv/besafe && podman-compose up -d --build
+# Sekrety: /srv/besafe/.env (chmod 600), /srv/besafe/secrets/firebase-admin.json
+# Porty TYLKO na 127.0.0.1 (Caddy -> Cloudflare Tunnel). Postgres bez portu na hoscie.
+services:
+  postgres:
+    image: docker.io/postgis/postgis:15-3.3-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-besafe}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-besafe}
+    volumes:
+      - ./data/pgdata:/var/lib/postgresql/data:Z
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: always
+    networks: [besafe]
+
+  backend:
+    build:
+      context: ./source/backend
+      dockerfile: Dockerfile
+    image: localhost/besafe-backend:latest
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      DATABASE_URL: postgres://${POSTGRES_USER:-besafe}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-besafe}
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      FIREBASE_SERVICE_ACCOUNT: /app/firebase-admin.json
+    ports:
+      - "127.0.0.1:8311:8080"
+    volumes:
+      - ./data/uploads:/app/uploads:Z
+      - ./secrets/firebase-admin.json:/app/firebase-admin.json:ro,Z
+      - ./files/AlertMap.apk:/app/AlertMap.apk:ro,Z
+    depends_on: [postgres]
+    restart: always
+    networks: [besafe]
+
+  web:
+    build:
+      context: ./source/web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:-}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://besafe.org.pl/api/v1}
+        NEXT_PUBLIC_SOCKET_URL: ${NEXT_PUBLIC_SOCKET_URL:-https://besafe.org.pl}
+    image: localhost/besafe-web:latest
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      HOSTNAME: 0.0.0.0
+    ports:
+      - "127.0.0.1:8310:8080"
+    depends_on: [backend]
+    restart: always
+    networks: [besafe]
+
+networks:
+  besafe: {}

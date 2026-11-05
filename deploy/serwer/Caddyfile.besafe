@@ -1,0 +1,37 @@
+Valid configuration
+# ---- be:Safe (besafe.org.pl) -> /srv/besafe (podman-compose), dodane 2026-10-29 ----
+# web (Next.js prod) 127.0.0.1:8310, backend 127.0.0.1:8311. TLS na Cloudflare, tu HTTP z tunelu.
+# Rollback: przywroc /etc/caddy/Caddyfile.bak-besafe-* i systemctl reload caddy
+http://besafe.org.pl, http://www.besafe.org.pl {
+	encode zstd gzip
+	request_body {
+		max_size 25MB
+	}
+	handle /api/health {
+		rewrite * /health
+		reverse_proxy 127.0.0.1:8311 {
+			header_up X-Forwarded-Proto https
+			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+		}
+	}
+	@backend path /api/* /version /download /uploads/* /socket.io/*
+	handle @backend {
+		reverse_proxy 127.0.0.1:8311 {
+			header_up X-Forwarded-Proto https
+			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+			flush_interval -1
+		}
+	}
+	handle /download/local-sync {
+		root * /srv/besafe/static
+		rewrite * /besafe-local-sync.tgz
+		header Content-Disposition "attachment; filename=\"besafe-local-sync.tgz\""
+		file_server
+	}
+	handle {
+		reverse_proxy 127.0.0.1:8310 {
+			header_up X-Forwarded-Proto https
+			header_up X-Forwarded-For {http.request.header.CF-Connecting-IP}
+		}
+	}
+}
