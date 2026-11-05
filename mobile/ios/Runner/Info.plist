@@ -60,7 +60,7 @@
 	<string>be:Safe używa kontaktów tylko aby pomóc Ci zaprosić znajomych do grupy rodzinnej.</string>
 
 	<key>NSCameraUsageDescription</key>
-	<string>Kamera jest używana tylko gdy dodajesz zdjęcie do zgłoszenia zagrożenia.</string>
+	<string>Kamera służy do zdjęć w zgłoszeniach oraz do skanowania kodu QR grupy rodzinnej.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Galeria jest otwierana gdy chcesz dołączyć zdjęcie do zgłoszenia zagrożenia.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

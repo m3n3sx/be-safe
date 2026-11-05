@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'join_group_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 import '../../services/api_service.dart';
@@ -98,6 +99,7 @@ Future<String?> pickRole(
   BuildContext context, {
   String? title,
   String? current,
+  bool excludeGuardians = false,
 }) async {
   return showModalBottomSheet<String>(
     context: context,
@@ -133,7 +135,7 @@ Future<String?> pickRole(
                 style: SerenityText.headlineHeroMobile.copyWith(fontSize: 20),
               ),
             ),
-            for (final r in _kRoleOptions)
+            for (final r in _kRoleOptions.where((role) => !excludeGuardians || (role['value'] != 'parent' && role['value'] != 'guardian')))
               ListTile(
                 leading: Icon(
                   r['icon'] as IconData,
@@ -478,27 +480,11 @@ class _FamilyScreenState extends State<FamilyScreen> {
   }
 
   Future<void> _joinGroup() async {
-    final code = await _showInputDialog('Kod zaproszenia');
-    if (code == null || code.isEmpty) return;
-    if (!mounted) return;
-    final role = await pickRole(
+    final joined = await Navigator.push<bool>(
       context,
-      title: 'Twoja rola w tej rodzinie',
+      MaterialPageRoute(builder: (_) => const JoinGroupScreen()),
     );
-    if (role == null) return;
-    if (!mounted) return;
-    try {
-      await context.read<ApiService>().post('/family/groups/join', {
-        'invite_code': code,
-        'role': role,
-      });
-      _loadGroups();
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Nie udało się dołączyć: $e')),
-      );
-    }
+    if (joined == true) _loadGroups();
   }
 
   /// F35: otwiera profil członka. Dla 'child' jeśli ja jestem parent/guardian
@@ -575,7 +561,7 @@ class _FamilyScreenState extends State<FamilyScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: QrImageView(
-                data: 'besafe://family/join/$code',
+                data: 'https://besafe.org.pl/family/join?code=$code',
                 size: 200,
                 backgroundColor: Colors.white,
               ),
@@ -606,12 +592,15 @@ class _FamilyScreenState extends State<FamilyScreen> {
     HapticFeedback.mediumImpact();
     try {
       final api = context.read<ApiService>();
-      await api.post('/family/groups/${_groups[_activeGroup]['id']}/ping', {});
+      final res = await api.post('/family/groups/${_groups[_activeGroup]['id']}/ping', {});
       if (!mounted) return;
+      final message = res['error']?.toString() ??
+          res['message']?.toString() ??
+          'Nie udało się odczytać wyniku sygnału.';
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: SerenityColors.secondary,
-          content: const Text('Sygnał wysłany do członków rodziny'),
+          backgroundColor: res['error'] != null ? SerenityColors.error : SerenityColors.secondary,
+          content: Text(message),
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.all(16),
           shape: RoundedRectangleBorder(

@@ -13,6 +13,7 @@ import { useAuth } from './AuthContext';
 import { useSocket } from './SocketContext';
 import { useApiResource } from '@/hooks/useApiResource';
 import type { InboxItem } from '@/lib/notification-routes';
+import { shouldPresentSignal } from '@/lib/safetyContracts';
 type State = {
   unread: number;
   items: InboxItem[];
@@ -22,6 +23,10 @@ type State = {
   refresh: () => Promise<void>;
   clearSession: () => void;
   markSessionRead: () => void;
+  banner: InboxItem | null;
+  sos: InboxItem | null;
+  dismissBanner: () => void;
+  dismissSos: () => void;
 };
 const Context = createContext<State>({
   unread: 0,
@@ -32,6 +37,10 @@ const Context = createContext<State>({
   refresh: async () => {},
   clearSession: () => {},
   markSessionRead: () => {},
+  banner: null,
+  sos: null,
+  dismissBanner: () => {},
+  dismissSos: () => {},
 });
 function StateProvider({ userId, children }: { userId?: string; children: ReactNode }) {
   const inbox = useApiResource<{ notifications: InboxItem[] }>(
@@ -43,18 +52,22 @@ function StateProvider({ userId, children }: { userId?: string; children: ReactN
     30000,
   );
   const [sessionItems, setSessionItems] = useState<InboxItem[]>([]);
-  const { onEvent } = useSocket();
+  const [banner, setBanner] = useState<InboxItem | null>(null);
+  const [sos, setSos] = useState<InboxItem | null>(null);
+  const { onEvent, connected } = useSocket();
   const inboxReload = inbox.reload,
     countReload = count.reload;
   const refresh = useCallback(async () => {
     await Promise.all([inboxReload(), countReload()]);
   }, [inboxReload, countReload]);
   const seen = useRef(new Set<string>());
+  const signals = useRef(new Set<string>());
   useEffect(() => {
     if (!userId) return;
     let timer: ReturnType<typeof setTimeout> | undefined;
     const events = [
       'alert:new',
+      'notification:new',
       'family:ping',
       'family:ping_response',
       'family:message',
@@ -74,37 +87,59 @@ function StateProvider({ userId, children }: { userId?: string; children: ReactN
         const key = `${event}:${data.id || data.ping_id || data.escort_id || data.user_id || ''}:${data.sent_at || data.created_at || data.status || ''}`;
         if (seen.current.has(key)) return;
         seen.current.add(key);
-        const title =
-          event === 'alert:new'
-            ? 'Nowe zgłoszenie w be:Safe'
-            : event.startsWith('escort:')
-              ? 'Aktualizacja bezpiecznego powrotu'
-              : 'Wiadomość od bliskich';
-        if (
-          ['alert:new', 'family:checkin', 'family:geofence_exit', 'escort:cancelled'].includes(
-            event,
-          )
-        ) {
-          const item: InboxItem = {
-            id: key,
-            title,
-            body:
-              typeof data.title === 'string'
-                ? data.title
-                : event === 'family:checkin'
-                  ? `${data.username || 'Bliska osoba'} przesłała meldunek.`
-                  : event === 'escort:cancelled'
-                    ? 'Sesja powrotu została anulowana.'
-                    : `${data.username || 'Bliska osoba'} opuściła strefę ${data.geofence_name || ''}.`,
-            type: event.replace(':', '_'),
-            is_read: false,
-            created_at: new Date().toISOString(),
-            data: { ...data, ...(event === 'alert:new' ? { alert_id: data.id } : {}) },
-          };
-          setSessionItems((old) => [item, ...old].slice(0, 100));
+        const rawType = event === 'notification:new' ? String(data.type || 'generic') : event.replace(':', '_');
+        const signal = {
+          id: data.id || data.ping_id,
+          type: rawType,
+          ping_id: data.ping_id,
+          alert_id: data.alert_id || (data.data && typeof data.data === 'object' ? (data.data as { alert_id?: string }).alert_id : undefined),
+          data: data.data && typeof data.data === 'object' ? data.data : data,
+        };
+        if ((rawType === 'family_sos' || rawType === 'family_ping' || event === 'notification:new' || event === 'family:ping') && !shouldPresentSignal(signal, signals.current)) {
+          return;
         }
+        const title =
+          typeof data.title === 'string'
+            ? data.title
+            : event === 'alert:new'
+              ? 'Nowe zgłoszenie w be:Safe'
+              : event.startsWith('escort:')
+                ? 'Aktualizacja bezpiecznego powrotu'
+                : event === 'family:ping' || rawType === 'family_ping'
+                  ? 'Prośba o kontakt w be:Safe'
+                  : 'Wiadomość od bliskich';
+        const nested = data.data && typeof data.data === 'object' ? (data.data as Record<string, unknown>) : {};
+        const body =
+          typeof data.body === 'string'
+            ? data.body
+            : event === 'family:checkin'
+              ? `${data.username || 'Bliska osoba'} przesłała meldunek.`
+              : event === 'escort:cancelled'
+                ? 'Sesja powrotu została anulowana.'
+                : event === 'family:geofence_exit'
+                  ? `${data.username || 'Bliska osoba'} opuściła strefę ${data.geofence_name || ''}.`
+                  : typeof data.title === 'string' && event === 'alert:new'
+                    ? data.title
+                    : 'Otwórz be:Safe, aby zobaczyć szczegóły.';
+        const item: InboxItem = {
+          id: String(data.notification_id || data.id || key),
+          title,
+          body,
+          type: rawType,
+          is_read: false,
+          created_at: new Date().toISOString(),
+          data: {
+            ...nested,
+            ...data,
+            ...(event === 'alert:new' ? { alert_id: data.id } : {}),
+          },
+        };
+        if (rawType === 'family_sos') setSos(item);
+        else if (rawType === 'family_ping' || event === 'family:ping') setBanner(item);
+        setSessionItems((old) => [item, ...old].slice(0, 100));
         try {
           if (
+            document.visibilityState !== 'visible' &&
             'Notification' in window &&
             Notification.permission === 'granted' &&
             localStorage.getItem('besafe.browser-notifications') === 'enabled' &&
@@ -113,7 +148,7 @@ function StateProvider({ userId, children }: { userId?: string; children: ReactN
             ) !== '0'
           ) {
             const notification = new Notification(title, {
-              body: 'Otwórz centrum powiadomień w be:Safe.',
+              body,
               tag: key,
               silent: localStorage.getItem('besafe.notif.sound') === '0',
             });
@@ -143,6 +178,9 @@ function StateProvider({ userId, children }: { userId?: string; children: ReactN
       document.removeEventListener('visibilitychange', visible);
     };
   }, [userId, onEvent, refresh]);
+  useEffect(() => {
+    if (connected) void refresh();
+  }, [connected, refresh]);
   const items = asArray(inbox.data?.notifications);
   const local = sessionItems.filter(
     (item) =>
@@ -159,6 +197,10 @@ function StateProvider({ userId, children }: { userId?: string; children: ReactN
         refresh,
         clearSession: () => setSessionItems([]),
         markSessionRead: () => setSessionItems((old) => old.map((i) => ({ ...i, is_read: true }))),
+        banner,
+        sos,
+        dismissBanner: () => setBanner(null),
+        dismissSos: () => setSos(null),
       }}
     >
       {children}

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../theme/ios_surfaces.dart';
 import 'package:provider/provider.dart';
 import '../../services/api_service.dart';
-import '../../services/fcm_service.dart' show appNavigatorKey;
+import '../../services/fcm_service.dart' show FcmService, appNavigatorKey;
 import '../../theme/design_tokens.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -34,8 +34,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         _items = (res['notifications'] as List? ?? []).cast<Map<String, dynamic>>();
         _loading = false;
       });
-      // Oznacz wszystkie jako przeczytane (best-effort) — zeruje badge.
-      api.post('/notifications/read', {}).catchError((_) => <String, dynamic>{});
+      // Nie oznaczaj całej skrzynki przy samym otwarciu. Odczyt jest per wpis.
     } catch (_) {
       if (mounted) setState(() => _loading = false);
     }
@@ -111,6 +110,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   // Routing po tapnięciu — zgodnie z mapą tras FCM.
   void _open(Map<String, dynamic> n) {
+    final id = n['id']?.toString();
+    if (id != null && id.isNotEmpty) {
+      context.read<ApiService>().post('/notifications/$id/read', {});
+    }
     final data = (n['data'] as Map?)?.cast<String, dynamic>() ?? {};
     final type = (n['type'] ?? '').toString();
     final nav = appNavigatorKey.currentState;
@@ -178,7 +181,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
         ],
       ),
-      body: _loading
+      body: Column(
+        children: [
+          if (!FcmService.available)
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text('Powiadomienia systemowe są niedostępne na tej instalacji. Skrzynka w aplikacji działa. Darmowy sideload iOS nie dostarcza pushy w tle i aplikacja nie omija wyciszenia.'),
+            ),
+          Expanded(child: _loading
           ? const Center(child: CircularProgressIndicator())
           : _items.isEmpty
               ? _buildEmpty()
@@ -193,6 +203,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     itemBuilder: (_, i) => _buildTile(_items[i]),
                   ),
                 ),
+          ),
+        ],
+      ),
     );
   }
 

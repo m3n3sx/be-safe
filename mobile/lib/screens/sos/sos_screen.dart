@@ -118,6 +118,7 @@ class _SosScreenState extends State<SosScreen>
       if (_notifyCommunity || _notifyFamily) {
         await api.post('/alerts', {
           'category': 'aggression',
+          'kind': 'sos',
           'title': '🆘 SOS — Potrzebuję pomocy!',
           'description': _notifyFamily
               ? 'Alarm SOS — powiadomiono rodzinę i społeczność'
@@ -137,7 +138,7 @@ class _SosScreenState extends State<SosScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: SerenityColors.secondary,
-          content: const Text('Alarm SOS wysłany. Pomoc w drodze.'),
+          content: const Text('Alarm zapisany w be:Safe. To nie jest wezwanie służb ani potwierdzenie, że ktoś go zobaczył.'),
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.all(16),
           shape: RoundedRectangleBorder(

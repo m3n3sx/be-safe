@@ -253,6 +253,7 @@ export interface Alert {
   distance_m?: number;
   trust_score?: number;
   is_anonymous?: boolean;
+  kind?: 'alert' | 'sos';
   expires_at: string;
   created_at: string;
   author_username?: string;
@@ -280,6 +281,7 @@ export interface FamilyGroup {
   name: string;
   owner_id: string;
   invite_code: string;
+  invite_expires_at?: string | null;
   created_at: string;
   role?: FamilyRole;
   your_role?: FamilyRole;

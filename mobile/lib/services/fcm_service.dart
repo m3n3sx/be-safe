@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'api_service.dart';
+import 'signal_dedup.dart';
 
 @pragma('vm:entry-point')
 Future<void> _fcmBackgroundHandler(RemoteMessage message) async {
@@ -25,7 +26,9 @@ void registerFcmPayloadHandler(FcmPayloadHandler handler) {
 
 class FcmService {
   static final _local = FlutterLocalNotificationsPlugin();
+  static final dedup = SignalDedup();
   static bool _initialized = false;
+  static bool available = false;
 
   /// Inicjalizuje Firebase + FCM. Wywołać po zalogowaniu użytkownika.
   static Future<void> init(ApiService api) async {
@@ -35,6 +38,7 @@ class FcmService {
       }
     } catch (e) {
       debugPrint('[FCM] Firebase init failed (skipping): $e');
+      available = false;
       return;
     }
 
@@ -101,11 +105,20 @@ class FcmService {
       WidgetsBinding.instance.addPostFrameCallback((_) => _dispatch(initial.data));
     }
 
+    available = true;
     _initialized = true;
   }
 
   static Future<void> _showLocal(RemoteMessage msg) async {
     final n = msg.notification;
+    final data = Map<String, dynamic>.from(msg.data);
+    if (!dedup.present({'id': data['notification_id'], 'type': data['type'], 'alert_id': data['alert_id'], 'ping_id': data['ping_id'], 'data': data})) {
+      return;
+    }
+    if (data['type'] == 'family_sos') {
+      appNavigatorKey.currentState?.pushNamed('/family-sos', arguments: data);
+      return;
+    }
     if (n == null) return;
     final payload = jsonEncode(Map<String, dynamic>.from(msg.data));
     await _local.show(

@@ -79,6 +79,7 @@ class _SosSeniorScreenState extends State<SosSeniorScreen> {
 
       await api.post('/alerts', {
         'category': 'aggression',
+        'kind': 'sos',
         'title': '🆘 SOS — Potrzebuję pomocy!',
         'description': 'Alarm SOS — powiadomiono rodzinę',
         'lat': loc.latitude,

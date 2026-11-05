@@ -10,6 +10,7 @@ import '../../theme/design_tokens.dart';
 /// Ekran wyświetlany rodzicowi po tapnięciu powiadomienia SOS od dziecka (type=family_sos).
 /// Pokazuje lokalizację dziecka na mapie + dwa wielkie przyciski: Zadzwoń + Wyślij sygnał.
 class FamilySosScreen extends StatefulWidget {
+  static final Set<String> dismissedThisProcess = {};
   final String childId;
   final String childUsername;
   final String groupId;
@@ -48,32 +49,66 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
   String? _childPhone;
   bool _signalling = false;
 
+  bool _contextReady = false;
+  String? _contextError;
+  double? _resolvedLat;
+  double? _resolvedLng;
+  String? _senderName;
+  String? _sentAt;
+  String? _notificationId;
+  String _alertStatus = 'active';
+
   @override
   void initState() {
     super.initState();
-    _loadChildPhone();
+    _loadContext();
   }
 
-  Future<void> _loadChildPhone() async {
-    try {
-      final res = await _api.get('/family/groups/${widget.groupId}/members');
-      if (res is Map && res['members'] is List) {
-        for (final m in res['members']) {
-          if (m is Map && m['user_id']?.toString() == widget.childId) {
-            final phone = m['phone'];
-            if (phone is String && phone.isNotEmpty) {
-              setState(() => _childPhone = phone);
-            }
-            break;
-          }
-        }
-      }
-    } catch (_) {}
+  Future<void> _loadContext() async {
+    if (widget.alertId.isEmpty) {
+      setState(() {
+        _contextError = 'Brak identyfikatora alarmu.';
+        _contextReady = true;
+      });
+      return;
+    }
+    final res = await _api.get('/alerts/${widget.alertId}/sos-context');
+    if (!mounted) return;
+    if (res['error'] != null || res['lat'] is! num || res['lng'] is! num) {
+      setState(() {
+        _contextError = res['error']?.toString() ?? 'Nie można pokazać miejsca alarmu.';
+        _contextReady = true;
+      });
+      return;
+    }
+    setState(() {
+      _contextReady = true;
+      _resolvedLat = (res['lat'] as num).toDouble();
+      _resolvedLng = (res['lng'] as num).toDouble();
+      _senderName = res['sender_username']?.toString() ?? widget.childUsername;
+      _sentAt = res['sent_at']?.toString();
+      _childPhone = res['phone']?.toString();
+      _notificationId = res['notification_id']?.toString();
+      _alertStatus = res['status']?.toString() ?? 'active';
+    });
+  }
+
+  Future<void> _ack() async {
+    if (_notificationId != null && _notificationId!.isNotEmpty) {
+      await _api.post('/notifications/$_notificationId/ack', {});
+    }
+    if (mounted) Navigator.maybePop(context);
+  }
+
+  void _dismiss() {
+    FamilySosScreen.dismissedThisProcess.add(widget.alertId);
+    Navigator.maybePop(context);
   }
 
   Future<void> _call() async {
+    if (_childPhone == null || _childPhone!.isEmpty) return;
     HapticFeedback.mediumImpact();
-    final number = _childPhone ?? '112';
+    final number = _childPhone!;
     final uri = Uri.parse('tel:$number');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
@@ -88,10 +123,10 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
     HapticFeedback.lightImpact();
     setState(() => _signalling = true);
     try {
-      await _api.post('/family/groups/${widget.groupId}/ping', {});
+      final res = await _api.post('/family/groups/${widget.groupId}/ping', {});
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sygnał wysłany do całej rodziny')),
+          SnackBar(content: Text(res['message']?.toString() ?? res['error']?.toString() ?? 'Nie udało się odczytać wyniku sygnału.')),
         );
       }
     } catch (_) {
@@ -117,31 +152,39 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
     return Scaffold(
       backgroundColor: context.iosBackground,
       appBar: AppBar(
-        title: Text('🆘 SOS od ${widget.childUsername}'),
-        backgroundColor: SerenityColors.glowAlertCoral,
+        title: const Text('be:Safe · SOS'),
+        backgroundColor: const Color(0xFF7A1212),
         foregroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           tooltip: 'Wróć',
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.maybePop(context),
+          onPressed: _dismiss,
         ),
       ),
       body: Column(
         children: [
           Expanded(
             flex: 5,
-            child: GoogleMap(
+            child: !_contextReady
+                ? const Center(child: CircularProgressIndicator(color: Colors.white))
+                : _resolvedLat == null || _resolvedLng == null
+                    ? Center(child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Text(_contextError ?? 'Nie można pokazać miejsca alarmu.', textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.white, fontSize: 18)),
+                      ))
+                    : GoogleMap(
               style: Theme.of(context).brightness == Brightness.dark ? kDarkMapStyle : null,
               initialCameraPosition: CameraPosition(
-                target: LatLng(widget.lat, widget.lng),
+                target: LatLng(_resolvedLat!, _resolvedLng!),
                 zoom: 16,
               ),
               onMapCreated: (_) {},
               markers: {
                 Marker(
                   markerId: const MarkerId('child_sos'),
-                  position: LatLng(widget.lat, widget.lng),
+                  position: LatLng(_resolvedLat!, _resolvedLng!),
                   icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueRed,
                   ),
@@ -154,7 +197,7 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
               circles: {
                 Circle(
                   circleId: const CircleId('sos_radius'),
-                  center: LatLng(widget.lat, widget.lng),
+                  center: LatLng(_resolvedLat!, _resolvedLng!),
                   radius: 250,
                   fillColor: SerenityColors.glowAlertCoral.withValues(alpha: 0.15),
                   strokeColor: SerenityColors.glowAlertCoral.withValues(alpha: 0.6),
@@ -195,7 +238,7 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
                         const Icon(Icons.warning_amber_rounded, color: SerenityColors.glowAlertCoral, size: 18),
                         const SizedBox(width: 6),
                         Text(
-                          'Dziecko wzywa pomocy',
+                          _alertStatus == 'active' ? 'Alarm w aplikacji be:Safe' : 'Alarm wygasł',
                           style: TextStyle(
                             color: SerenityColors.glowAlertCoral,
                             fontWeight: FontWeight.w700,
@@ -208,12 +251,12 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    widget.childUsername,
+                    _senderName ?? widget.childUsername,
                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _childPhone != null ? 'Tel: $_childPhone' : 'Numer telefonu nieznany',
+                    _sentAt ?? 'Miejsce wysłania alarmu',
                     style: TextStyle(fontSize: 13, color: scheme.onSurfaceVariant),
                   ),
                   const SizedBox(height: 20),
@@ -223,10 +266,10 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
                         child: SizedBox(
                           height: 64,
                           child: FilledButton.icon(
-                            onPressed: _call,
+                            onPressed: _childPhone == null ? null : _call,
                             icon: const Icon(Icons.call, size: 28),
                             label: Text(
-                              _childPhone != null ? 'Zadzwoń' : 'Zadzwoń 112',
+                              _childPhone != null ? 'Zadzwoń' : 'Brak numeru',
                               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                             ),
                             style: FilledButton.styleFrom(
@@ -261,11 +304,21 @@ class _FamilySosScreenState extends State<FamilySosScreen> {
                   const SizedBox(height: 12),
                   SizedBox(
                     width: double.infinity,
+                    child: FilledButton(
+                      onPressed: _ack,
+                      style: FilledButton.styleFrom(backgroundColor: const Color(0xFF7A1212), foregroundColor: Colors.white),
+                      child: const Text('Widzę ten alarm'),
+                    ),
+                  ),
+                  TextButton(onPressed: _dismiss, child: const Text('Zamknij')),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
                     child: OutlinedButton.icon(
                       onPressed: _open112,
                       icon: const Icon(Icons.emergency, color: SerenityColors.glowAlertCoral),
                       label: const Text(
-                        'Wezwij 112',
+                        'Zadzwoń pod 112 samodzielnie',
                         style: TextStyle(color: SerenityColors.glowAlertCoral, fontWeight: FontWeight.w600),
                       ),
                       style: OutlinedButton.styleFrom(

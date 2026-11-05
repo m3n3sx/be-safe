@@ -23,10 +23,21 @@ class ApiService {
   };
 
   Map<String, dynamic> _decode(http.Response res) {
-    if (res.statusCode >= 400 || !res.body.trimLeft().startsWith('{') && !res.body.trimLeft().startsWith('[')) {
-      return {'error': 'HTTP ${res.statusCode}'};
+    final trimmed = res.body.trimLeft();
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+      try {
+        final decoded = jsonDecode(res.body);
+        if (decoded is Map) {
+          final map = Map<String, dynamic>.from(decoded);
+          if (res.statusCode >= 400 && map['error'] == null) {
+            map['error'] = 'HTTP ${res.statusCode}';
+          }
+          return map;
+        }
+      } catch (_) {}
     }
-    try { return jsonDecode(res.body); } catch (_) { return {'error': 'Invalid response'}; }
+    if (res.statusCode >= 400) return {'error': 'HTTP ${res.statusCode}'};
+    return {'error': 'Invalid response'};
   }
 
   /// Retry helper with exponential backoff.

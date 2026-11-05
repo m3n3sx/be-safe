@@ -24,6 +24,8 @@ const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
 const db = require('./config/db');
 const { notifyUser } = require('./services/fcm');
+const { canReceivePassiveLocation, shouldEmitLocation } = require('./domain/safetyContracts');
+const locationEmitAt = new Map();
 const auth = require('./middleware/auth');
 
 // In-memory geofence state per (childId:geofenceId) → 'inside' | 'outside'
@@ -109,6 +111,8 @@ app.get('/version', (_, res) => res.json({ version: 137, url: 'https://besafe.or
 
 app.get('/download', (_, res) => {
   const path = require('path');
+const { canReceivePassiveLocation, shouldEmitLocation } = require('./domain/safetyContracts');
+const locationEmitAt = new Map();
   res.download(path.join(__dirname, '..', 'AlertMap.apk'), 'AlertMap.apk');
 });
 
@@ -162,19 +166,38 @@ io.on('connection', (socket) => {
       [socket.user.id, lat, lng]
     );
 
-    // Notify parents in family groups
-    const { rows: groups } = await db.query(
-      `SELECT m2.user_id AS parent_id, g.id AS group_id
-       FROM family_members m1
-       JOIN family_members m2 ON m1.group_id = m2.group_id
-       JOIN family_groups g ON g.id = m1.group_id
-       WHERE m1.user_id = $1 AND m1.role = 'child' AND m2.role = 'parent' AND m1.tracking_enabled = TRUE`,
-      [socket.user.id]
-    );
-    for (const g of groups) {
-      io.to(`user:${g.parent_id}`).emit('family:location', {
-        user_id: socket.user.id, lat, lng, recorded_at: new Date(),
-      });
+    // Lokalizacja pasywna tylko dla członków, którym widoczność jej nie odbiera i którzy nie są w ghost mode.
+    const prevEmit = locationEmitAt.get(socket.user.id);
+    const nowMs = Date.now();
+    if (shouldEmitLocation({ prev: prevEmit, next: { lat, lng }, now: nowMs })) {
+      locationEmitAt.set(socket.user.id, { at: nowMs, lat, lng });
+      const { rows: viewers } = await db.query(
+        `SELECT m2.user_id AS viewer_id,
+                COALESCE(v.granted, TRUE) AS location_granted,
+                (u.ghost_until IS NOT NULL AND u.ghost_until > NOW()) AS ghosting
+           FROM family_members m1
+           JOIN family_members m2 ON m2.group_id = m1.group_id AND m2.user_id <> m1.user_id
+           JOIN users u ON u.id = m1.user_id
+           LEFT JOIN family_visibility v
+             ON v.group_id = m1.group_id AND v.viewer_id = m2.user_id
+            AND v.target_id = m1.user_id AND v.field = 'location'
+          WHERE m1.user_id = $1`,
+        [socket.user.id]
+      );
+      const sentTo = new Set();
+      for (const viewer of viewers) {
+        if (sentTo.has(viewer.viewer_id)) continue;
+        if (!canReceivePassiveLocation({
+          viewerId: viewer.viewer_id,
+          targetId: socket.user.id,
+          locationGranted: viewer.location_granted === true || viewer.location_granted === 't',
+          ghosting: viewer.ghosting === true || viewer.ghosting === 't',
+        })) continue;
+        sentTo.add(viewer.viewer_id);
+        io.to(`user:${viewer.viewer_id}`).emit('family:location', {
+          user_id: socket.user.id, lat, lng, recorded_at: new Date(),
+        });
+      }
     }
 
     // Check geofences — wykrywamy transitions outside↔inside per (child, geofence)

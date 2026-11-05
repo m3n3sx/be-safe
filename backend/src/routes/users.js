@@ -93,7 +93,34 @@ router.delete('/me/ghost', async (req, res) => {
 });
 
 router.put('/me/fcm-token', async (req, res) => {
-  await db.query(`UPDATE users SET fcm_token = $1 WHERE id = $2`, [req.body.fcm_token, req.user.id]);
+  const token = req.body?.fcm_token;
+  if (typeof token !== 'string' || token.length < 10 || token.length > 4096) {
+    return res.status(400).json({ error: 'Invalid token' });
+  }
+  const platform = ['android', 'ios', 'web', 'unknown'].includes(req.body?.platform) ? req.body.platform : 'unknown';
+  const deviceId = typeof req.body?.device_id === 'string' ? req.body.device_id.slice(0, 128) : null;
+  await db.query(
+    `INSERT INTO user_push_tokens (user_id, token, platform, device_id, last_seen_at, disabled_at)
+     VALUES ($1, $2, $3, $4, NOW(), NULL)
+     ON CONFLICT (token) DO UPDATE
+       SET user_id = EXCLUDED.user_id,
+           platform = EXCLUDED.platform,
+           device_id = COALESCE(EXCLUDED.device_id, user_push_tokens.device_id),
+           last_seen_at = NOW(),
+           disabled_at = NULL`,
+    [req.user.id, token, platform, deviceId]
+  );
+  await db.query(`UPDATE users SET fcm_token = $1 WHERE id = $2`, [token, req.user.id]);
+  await db.query(
+    `UPDATE user_push_tokens SET disabled_at = NOW()
+      WHERE user_id = $1 AND disabled_at IS NULL AND id IN (
+        SELECT id FROM user_push_tokens
+         WHERE user_id = $1 AND disabled_at IS NULL
+         ORDER BY last_seen_at DESC
+         OFFSET 10
+      )`,
+    [req.user.id]
+  );
   res.json({ ok: true });
 });
 

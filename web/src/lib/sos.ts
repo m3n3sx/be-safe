@@ -4,6 +4,7 @@ import type { Point } from './location';
 export function sendSos(place: Point) {
   return api.post<Alert>('/alerts', {
     category: 'aggression',
+    kind: 'sos',
     title: '🆘 SOS — Potrzebuję pomocy!',
     description: 'Alarm SOS wysłany z be:Safe.',
     lat: place.lat,

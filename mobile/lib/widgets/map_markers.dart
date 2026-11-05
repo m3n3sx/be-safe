@@ -69,6 +69,21 @@ class MapMarkers {
     return _memo(key, () => _drawClusterPin(count, bucket));
   }
 
+  static BitmapDescriptor? peekAlert(AlertCategory category, {AlertPinVariant variant = AlertPinVariant.defaultV}) {
+    return _cache['alert_${category.apiValue}_${variant.name}_0'];
+  }
+
+  static BitmapDescriptor? peekCluster(int count) {
+    final bucket = _clusterBucket(count);
+    final quantised = count < 10
+        ? count
+        : count < 50 ? (count ~/ 2) * 2
+        : count < 100 ? (count ~/ 5) * 5
+        : count < 200 ? (count ~/ 10) * 10
+        : (count ~/ 25) * 25;
+    return _cache['cluster_${bucket.name}_$quantised'];
+  }
+
   /// User position — small navy dot inside aqua radial halo.
   static Future<BitmapDescriptor> userPin() =>
       _memo('user_pos', _drawUserPin);

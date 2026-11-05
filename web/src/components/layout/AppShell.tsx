@@ -9,6 +9,7 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { AppTopBar } from './AppTopBar';
 import { MobileTabBar } from './MobileTabBar';
 import { DesktopRail } from './DesktopRail';
+import { SignalLayer } from '@/components/notifications/SignalLayer';
 export function AppShell({ children }: { children: ReactNode }) {
   const { user, loading, sessionError, refreshUser } = useAuth();
   const path = usePathname();
@@ -20,6 +21,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </a>
       {user && <DesktopRail />}
       <AppTopBar />
+      {user && <SignalLayer />}
       <main id="main-content" tabIndex={-1} className="app-main">
         {loading && protectedPage ? (
           <Skeleton label="Przywracanie sesji…" />
