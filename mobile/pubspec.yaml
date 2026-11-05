@@ -13,7 +13,8 @@ dependencies:
   google_maps_flutter: ^2.6.1
   google_sign_in: ^6.2.1
   flutter_contacts: ^1.1.9+2
-  dynamic_color: ^1.7.0
+  # 1.9.0 wymaga Kotlina, którego ten Flutter/Gradle nie składa, i podnosi minSdk do 24.
+  dynamic_color: 1.7.0
   sentry_flutter: ^8.14.2
   firebase_core: ^3.6.0
   firebase_messaging: ^15.1.3

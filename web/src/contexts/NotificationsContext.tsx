@@ -152,11 +152,6 @@ function StateProvider({ userId, children }: { userId?: string; children: ReactN
               tag: key,
               silent: localStorage.getItem('besafe.notif.sound') === '0',
             });
-            if (
-              document.visibilityState === 'visible' &&
-              localStorage.getItem('besafe.notif.vibration') !== '0'
-            )
-              navigator.vibrate?.(150);
             notification.onclick = () => {
               window.focus();
               window.location.assign('/notifications');

@@ -78,7 +78,9 @@ function Canvas({ places, line: rawLine = [], onSelect, onPick }: Props) {
       }}
     >
       {groups.map((group) => {
-        const first = group.items[0] as MapPlace & { kind: string };
+        const members = valid.filter((place) => group.ids.includes(place.id));
+        const first = members[0];
+        if (!first) return null;
         return (
           <MarkerF
             key={group.ids.join(':')}
@@ -86,7 +88,7 @@ function Canvas({ places, line: rawLine = [], onSelect, onPick }: Props) {
             title={group.displayOnly ? `W tym miejscu: ${group.items.length}` : first.label}
             label={group.displayOnly ? { text: String(group.items.length), color: '#fff', fontWeight: '700' } : undefined}
             onClick={() => {
-              if (group.displayOnly) setSheet(group.items as MapPlace[]);
+              if (group.displayOnly) setSheet(members);
               else onSelect?.(first.id);
             }}
           />

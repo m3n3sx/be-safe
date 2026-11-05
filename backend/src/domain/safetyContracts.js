@@ -95,7 +95,7 @@ function parseInvite(input) {
   let url;
   try {
     url = new URL(raw);
-  } catch (_) {
+  } catch {
     return null;
   }
   let code = null;
