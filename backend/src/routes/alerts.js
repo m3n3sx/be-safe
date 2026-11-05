@@ -11,6 +11,7 @@ const upload = multer({
 });
 
 const { notifyNearbyUsers, notifyUser } = require('../services/fcm');
+const { resolveAlertKind, sosPushText } = require('../domain/safetyContracts');
 const { moderate } = require('../services/moderation');
 const { moderateText: aiModerate } = require('../services/ai_moderation');
 const { moderateImage } = require('../services/image_moderation');
@@ -43,9 +44,57 @@ router.get('/new', async (req, res) => {
 
 const ALERT_COLS = `a.id, a.author_id, a.category, a.title, a.description, a.photo_url,
   ST_Y(a.location::geometry) AS lat, ST_X(a.location::geometry) AS lng,
-  a.radius_m, a.status, a.confirms, a.denies, a.trust_score, a.expires_at, a.created_at, a.is_anonymous`;
+  a.radius_m, a.status, a.confirms, a.denies, a.trust_score, a.expires_at, a.created_at, a.is_anonymous, a.kind`;
 
 // F17: gdy is_anonymous=TRUE -> ukryj author info dla innych (poza autorem)
+async function notifyFamilySos(req, alert) {
+  const { rows: names } = await db.query(`SELECT username FROM users WHERE id = $1`, [req.user.id]);
+  const senderName = names[0]?.username || 'bliska osoba';
+  const text = sosPushText({ senderName });
+  const { rows } = await db.query(
+    `SELECT DISTINCT ON (m2.user_id) m2.user_id, m1.group_id
+       FROM family_members m1
+       JOIN family_members m2 ON m2.group_id = m1.group_id AND m2.user_id <> m1.user_id
+      WHERE m1.user_id = $1
+      ORDER BY m2.user_id, m1.group_id`,
+    [req.user.id]
+  );
+  const io = req.app.get('io');
+  const userIds = [];
+  let fcmAccepted = 0;
+  for (const row of rows) {
+    const result = await notifyUser(row.user_id, text.title, text.body, {
+      type: 'family_sos',
+      source_id: String(alert.id),
+      alert_id: String(alert.id),
+      group_id: String(row.group_id),
+      from_user_id: req.user.id,
+      from_username: senderName,
+      sent_at: alert.created_at ? new Date(alert.created_at).toISOString() : new Date().toISOString(),
+      lat: alert.lat != null ? String(alert.lat) : '',
+      lng: alert.lng != null ? String(alert.lng) : '',
+    });
+    userIds.push(row.user_id);
+    fcmAccepted += result?.fcmAccepted || 0;
+    if (io && result && !result.duplicate && result.notificationId) {
+      io.to(`user:${row.user_id}`).emit('notification:new', {
+        id: result.notificationId,
+        type: 'family_sos',
+        title: text.title,
+        body: text.body,
+        source_id: String(alert.id),
+        data: {
+          alert_id: String(alert.id),
+          group_id: String(row.group_id),
+          from_username: senderName,
+          notification_id: result.notificationId,
+        },
+      });
+    }
+  }
+  return { userIds, fcmAccepted, recipients: rows.length };
+}
+
 const authorJson = `CASE WHEN a.is_anonymous AND a.author_id != $1 THEN NULL
   ELSE json_build_object('username', u.username, 'reputation_score', u.reputation_score, 'is_verified', u.is_verified, 'verified_role', u.verified_role, 'avatar_url', u.avatar_url) END AS author`;
 
@@ -134,7 +183,9 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) => {
-  const { category, title, description, lat, lng, radius_m = 100, duration_hours = 3, is_anonymous = false } = req.body;
+  const { category, title, description, lat, lng, radius_m = 100, duration_hours = 3, is_anonymous = false, kind } = req.body;
+  const resolvedKind = resolveAlertKind({ kind, category, title });
+  const alertKind = resolvedKind.kind;
   // F17: anonimowe zgłoszenia - flaga zapisywana w DB, author_id zostaje dla moderacji
   const anonymous = is_anonymous === true || is_anonymous === 'true' || is_anonymous === 1 || is_anonymous === '1';
   const expires = new Date(Date.now() + duration_hours * 3600000).toISOString();
@@ -142,7 +193,7 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
   let imageReview = false; // F06: zdjęcie wymaga przeglądu (review) → status hidden
   if (req.file) {
     // F06: Vision SafeSearch PRZED uploadem — block odrzuca zdjęcie zanim trafi do GCS.
-    const isSosImg = category === 'aggression' && typeof title === 'string' && title.includes('🆘');
+    const isSosImg = alertKind === 'sos';
     if (!isSosImg) {
       const img = await moderateImage(req.file.buffer);
       if (img.action === 'block') {
@@ -162,7 +213,7 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
   }
 
   // F05: Heurystyka (skip dla SOS - aggression z 🆘)
-  const isSosBypass = category === 'aggression' && typeof title === 'string' && title.includes('🆘');
+  const isSosBypass = alertKind === 'sos';
   const moderation = isSosBypass ? { action: 'allow', score: 0, reasons: [] } : moderate({ title, description });
   if (moderation.action === 'block') {
     console.log(`[moderation] BLOCK by ${req.user.id}: score=${moderation.score} reasons=${moderation.reasons.join(',')}`);
@@ -192,12 +243,12 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
   const initialStatus = (moderation.action === 'flag' || aiNeedsReview || imageReview) ? 'hidden' : 'active';
 
   const { rows } = await db.query(
-    `INSERT INTO alerts (author_id, category, title, description, photo_url, location, radius_m, expires_at, status, is_anonymous)
-     VALUES ($1, $2, $3, $4, $5, ST_MakePoint($7, $6)::geography, $8, $9, $10, $11)
+    `INSERT INTO alerts (author_id, category, title, description, photo_url, location, radius_m, expires_at, status, is_anonymous, kind)
+     VALUES ($1, $2, $3, $4, $5, ST_MakePoint($7, $6)::geography, $8, $9, $10, $11, $12)
      RETURNING id, author_id, category, title, description, photo_url,
        ST_Y(location::geometry) AS lat, ST_X(location::geometry) AS lng,
-       radius_m, status, confirms, denies, expires_at, created_at, is_anonymous`,
-    [req.user.id, category, title, description, photo_url, lat, lng, radius_m, expires, initialStatus, anonymous]
+       radius_m, status, confirms, denies, expires_at, created_at, is_anonymous, kind`,
+    [req.user.id, category, title, description, photo_url, lat, lng, radius_m, expires, initialStatus, anonymous, alertKind]
   );
 
   if (initialStatus === 'hidden') {
@@ -245,50 +296,23 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
     );
     for (const u of nearby) io.to(`user:${u.id}`).emit('alert:new', rows[0]);
   }
-  notifyNearbyUsers(rows[0]).catch(() => {});
+  let sosRecipientIds = [];
+  if (alertKind === 'sos') {
+    try {
+      const fan = await notifyFamilySos(req, rows[0]);
+      sosRecipientIds = fan.userIds;
+      console.log(`[family_sos] ${req.user.id} -> ${fan.recipients} members (FCM accepted: ${fan.fcmAccepted})`);
+    } catch (e) {
+      console.error('[family_sos]', e.message);
+    }
+  }
+  notifyNearbyUsers(rows[0], { excludeUserIds: sosRecipientIds }).catch(() => {});
 
-  // === RODZICIELSKIE POWIADOMIENIA (I.2B + I.4) ===
-  // I.2B: znajdź dzieci w pobliżu nowego alertu (w jego promieniu) i powiadom ich rodziców
-  // I.4:  jeśli to SOS (kategoria aggression + tytuł zawiera 🆘) i autor jest dzieckiem w grupie,
-  //       powiadom WSZYSTKICH parentów grupy niezależnie od ich lokalizacji
+  // Dzieci w pobliżu alertu nadal powiadamiają rodziców. SOS idzie osobno do całej grupy.
   (async () => {
     const alert = rows[0];
     try {
-      // I.4 - SOS dziecka
-      const isSOS = (alert.category === 'aggression' &&
-        typeof alert.title === 'string' && alert.title.includes('🆘'));
-
-      if (isSOS) {
-        const { rows: parents } = await db.query(
-          `SELECT DISTINCT p.user_id, u.username AS parent_username, c.username AS child_username, fm.group_id, g.name AS group_name
-           FROM family_members fm
-           JOIN family_members p ON p.group_id = fm.group_id AND p.role = 'parent' AND p.user_id != fm.user_id
-           JOIN users u ON u.id = p.user_id
-           JOIN users c ON c.id = fm.user_id
-           JOIN family_groups g ON g.id = fm.group_id
-           WHERE fm.user_id = $1 AND fm.role = 'child' AND fm.tracking_enabled = true`,
-          [req.user.id]
-        );
-        let fcmSent = 0;
-        for (const p of parents) {
-          const ok = await notifyUser(
-            p.user_id,
-            `🆘 SOS od ${p.child_username}`,
-            `${p.child_username} wzywa pomoc! Tap aby zobaczyć lokalizację.`,
-            {
-              type: 'family_sos',
-              alert_id: alert.id,
-              child_id: req.user.id,
-              child_username: p.child_username,
-              group_id: p.group_id,
-              lat: String(alert.lat),
-              lng: String(alert.lng),
-            }
-          );
-          if (ok) fcmSent++;
-        }
-        console.log(`[family_sos] ${parents[0]?.child_username || req.user.id} -> ${parents.length} parents (FCM: ${fcmSent})`);
-
+      if (alertKind === 'sos') {
         // F12: KPP responders (Kwalifikowana Pierwsza Pomoc) w promieniu 2km - osobny push
         const kppRadius = 2000;
         const { rows: kppNearby } = await db.query(
@@ -304,19 +328,20 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
         );
         let kppSent = 0;
         for (const r of kppNearby) {
-          const ok = await notifyUser(
+          const result = await notifyUser(
             r.id,
             '🚑 KPP: ktoś potrzebuje pomocy',
             `Wezwanie ratownika w odległości ${Math.round(r.distance_m)}m. Możesz zareagować?`,
             {
               type: 'kpp_responder_call',
+              source_id: `${alert.id}:${r.id}`,
               alert_id: alert.id,
               lat: String(alert.lat),
               lng: String(alert.lng),
               distance_m: String(Math.round(r.distance_m)),
             }
           );
-          if (ok) kppSent++;
+          kppSent += result?.fcmAccepted || 0;
         }
         if (kppNearby.length > 0) {
           console.log(`[kpp] ${kppNearby.length} responders within ${kppRadius}m (FCM: ${kppSent})`);
@@ -346,12 +371,13 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
         const dedupKey = `${r.parent_id}:${alert.id}:${r.child_id}`;
         if (sentToParent.has(dedupKey)) continue;
         sentToParent.add(dedupKey);
-        const ok = await notifyUser(
+        const result = await notifyUser(
           r.parent_id,
           `⚠️ Zagrożenie obok ${r.child_username}`,
           `${alert.title || 'Nowe zgłoszenie'} — w pobliżu lokalizacji dziecka.`,
           {
             type: 'family_alert_near_child',
+            source_id: `${alert.id}:${r.child_id}`,
             alert_id: alert.id,
             child_id: r.child_id,
             child_username: r.child_username,
@@ -360,7 +386,7 @@ router.post('/', createAlertLimiter, upload.single('photo'), async (req, res) =>
             lng: String(alert.lng),
           }
         );
-        if (ok) parentNotified++;
+        parentNotified += result?.fcmAccepted || 0;
       }
       if (childrenInArea.length) {
         console.log(`[alert_near_child] alert ${alert.id} -> ${childrenInArea.length} child-parent pairs, ${parentNotified} pushed`);
@@ -533,6 +559,80 @@ router.post('/:id/report', async (req, res) => {
     if (e.code === '23505') return res.status(409).json({ error: 'Already reported' });
     res.status(500).json({ error: e.message });
   }
+});
+
+router.get('/:id/sos-context', async (req, res) => {
+  const { rows } = await db.query(
+    `SELECT a.id, a.author_id, a.status, a.expires_at, a.created_at, a.kind, a.category, a.title,
+            ST_Y(a.location::geometry) AS lat, ST_X(a.location::geometry) AS lng, u.username
+       FROM alerts a JOIN users u ON u.id = a.author_id
+      WHERE a.id = $1`,
+    [req.params.id]
+  );
+  const alert = rows[0];
+  if (!alert || resolveAlertKind(alert).kind !== 'sos') {
+    return res.status(404).json({ error: 'Nie znaleziono alarmu' });
+  }
+  let groupId = null;
+  if (alert.author_id !== req.user.id) {
+    const { rows: mem } = await db.query(
+      `SELECT author.group_id
+         FROM family_members author
+         JOIN family_members viewer ON viewer.group_id = author.group_id AND viewer.user_id = $2
+        WHERE author.user_id = $1
+        LIMIT 1`,
+      [alert.author_id, req.user.id]
+    );
+    if (!mem[0]) return res.status(404).json({ error: 'Nie znaleziono alarmu' });
+    groupId = mem[0].group_id;
+  }
+  let phone = null;
+  if (alert.author_id !== req.user.id) {
+    const { rows: groups } = await db.query(
+      `SELECT author.group_id
+         FROM family_members author
+         JOIN family_members viewer ON viewer.group_id = author.group_id AND viewer.user_id = $2
+        WHERE author.user_id = $1`,
+      [alert.author_id, req.user.id]
+    );
+    const { rows: phones } = await db.query(`SELECT phone FROM users WHERE id = $1`, [alert.author_id]);
+    const rawPhone = phones[0]?.phone || null;
+    if (rawPhone) {
+      for (const group of groups) {
+        const { rows: vis } = await db.query(
+          `SELECT granted FROM family_visibility
+            WHERE group_id = $1 AND viewer_id = $2 AND target_id = $3 AND field = 'phone'`,
+          [group.group_id, req.user.id, alert.author_id]
+        );
+        const granted = vis.length ? vis[0].granted === true : true;
+        if (granted) {
+          phone = rawPhone;
+          if (!groupId) groupId = group.group_id;
+          break;
+        }
+      }
+    }
+  }
+  const { rows: notes } = await db.query(
+    `SELECT id, acknowledged_at FROM notifications
+      WHERE user_id = $1 AND type = 'family_sos' AND source_id = $2
+      LIMIT 1`,
+    [req.user.id, String(alert.id)]
+  );
+  res.json({
+    alert_id: alert.id,
+    status: alert.status,
+    expires_at: alert.expires_at,
+    sent_at: alert.created_at,
+    lat: alert.lat,
+    lng: alert.lng,
+    sender_username: alert.username,
+    group_id: groupId,
+    phone,
+    notification_id: notes[0]?.id || null,
+    acknowledged_at: notes[0]?.acknowledged_at || null,
+    location_label: 'Miejsce wysłania alarmu',
+  });
 });
 
 module.exports = router;

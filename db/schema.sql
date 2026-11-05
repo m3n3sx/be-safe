@@ -17,7 +17,7 @@ CREATE TABLE users (
     reputation_score INT NOT NULL DEFAULT 100,
     is_child BOOLEAN NOT NULL DEFAULT FALSE,
     phone VARCHAR(20),
-    fcm_token TEXT,
+    fcm_token TEXT, -- ostatni token; fan-out idzie przez user_push_tokens
     last_location GEOGRAPHY(POINT, 4326),
     last_location_at TIMESTAMPTZ,
     last_seen_at TIMESTAMPTZ,
@@ -61,6 +61,7 @@ CREATE TABLE alerts (
     denies INT NOT NULL DEFAULT 0,
     trust_score REAL NOT NULL DEFAULT 0,
     expires_at TIMESTAMPTZ NOT NULL,
+    kind TEXT NOT NULL DEFAULT 'alert',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -102,10 +103,26 @@ CREATE TABLE IF NOT EXISTS notifications (
     title TEXT NOT NULL,
     body TEXT,
     data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    source_id TEXT,
     is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    acknowledged_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at DESC);
+CREATE UNIQUE INDEX IF NOT EXISTS notifications_user_type_source_uidx
+  ON notifications (user_id, type, source_id)
+  WHERE source_id IS NOT NULL;
+
+CREATE TABLE IF NOT EXISTS user_push_tokens (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token TEXT NOT NULL UNIQUE,
+  platform TEXT NOT NULL DEFAULT 'unknown',
+  device_id TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  last_seen_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  disabled_at TIMESTAMPTZ
+);
 
 -- ============================================
 -- RBAC ADMINÓW (role + uprawnienia granularne + przypisania)
@@ -158,6 +175,7 @@ CREATE TABLE family_groups (
     name VARCHAR(100) NOT NULL,
     owner_id UUID NOT NULL REFERENCES users(id),
     invite_code VARCHAR(8) UNIQUE NOT NULL,
+    invite_expires_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -183,6 +201,17 @@ CREATE TABLE family_members (
     school_hours_silent BOOLEAN NOT NULL DEFAULT FALSE,
     joined_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE(group_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS family_pings (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  group_id UUID NOT NULL REFERENCES family_groups(id) ON DELETE CASCADE,
+  sender_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  recipient_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  response_status TEXT,
+  response_at TIMESTAMPTZ,
+  response_message TEXT
 );
 
 -- ============================================

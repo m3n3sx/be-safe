@@ -471,13 +471,13 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
     if (_pinging) return;
     setState(() => _pinging = true);
     try {
-      await context
+      final res = await context
           .read<ApiService>()
           .post('/family/groups/${widget.groupId}/ping', {});
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Sygnał wysłany — dziecko otrzyma powiadomienie.'),
+        SnackBar(
+          content: Text(res['message']?.toString() ?? res['error']?.toString() ?? 'Nie udało się odczytać wyniku sygnału.'),
           behavior: SnackBarBehavior.floating,
         ),
       );

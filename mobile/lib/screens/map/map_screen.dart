@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../theme/ios_surfaces.dart';
 import 'package:flutter/services.dart';
-import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart' as gcm;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -21,15 +21,8 @@ import '../family/child_profile_screen.dart';
 import '../family/member_profile_screen.dart';
 import '../../theme/design_tokens.dart';
 import '../../widgets/map_markers.dart';
-
-/// Wrapper for AlertModel to satisfy ClusterItem contract.
-class _ClusterableAlert with gcm.ClusterItem {
-  final AlertModel alert;
-  _ClusterableAlert(this.alert);
-
-  @override
-  LatLng get location => alert.location;
-}
+import '../../map/marker_collision.dart';
+import '../../services/socket_service.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -68,10 +61,9 @@ class _MapScreenState extends State<MapScreen> {
   BitmapDescriptor? _aedIcon;
   bool _loadingAeds = false;
 
-  // Clustering state
-  gcm.ClusterManager<_ClusterableAlert>? _clusterManager;
-  Set<Marker> _clusterMarkers = {};
-  String _lastAlertsFingerprint = '';
+  double _zoom = 15;
+  LatLng _cameraTarget = const LatLng(52.325, 17.565);
+  StreamSubscription<Map<String, dynamic>>? _locationSub;
 
   @override
   void initState() {
@@ -81,13 +73,25 @@ class _MapScreenState extends State<MapScreen> {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ));
-    _clusterManager = gcm.ClusterManager<_ClusterableAlert>(
-      const [],
-      _updateClusterMarkers,
-      markerBuilder: _buildClusterMarker,
-      stopClusteringZoom: 16.0,
-    );
     _initLocation();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _locationSub = context.read<SocketService>().familyLocations.listen((data) {
+        final id = data['user_id']?.toString();
+        final lat = data['lat'];
+        final lng = data['lng'];
+        if (id == null || lat is! num || lng is! num) return;
+        final index = _familyMembers.indexWhere((m) => m['user_id'].toString() == id);
+        if (index < 0 || !mounted) return;
+        setState(() {
+          _familyMembers[index] = {
+            ..._familyMembers[index],
+            'lat': lat.toDouble(),
+            'lng': lng.toDouble(),
+          };
+        });
+      });
+    });
     _precacheIcons();
     _loadFamilyMembers();
     _loadPinned();
@@ -99,34 +103,10 @@ class _MapScreenState extends State<MapScreen> {
     setState(() => _pinnedIds = list);
   }
 
-  void _updateClusterMarkers(Set<Marker> markers) {
-    if (mounted) setState(() => _clusterMarkers = markers);
-  }
-
-  Future<Marker> _buildClusterMarker(gcm.Cluster<_ClusterableAlert> cluster) async {
-    if (cluster.isMultiple) {
-      return Marker(
-        markerId: MarkerId(cluster.getId()),
-        position: cluster.location,
-        icon: await MapMarkers.clusterPin(cluster.count),
-        onTap: () {
-          HapticFeedback.selectionClick();
-          _zoomToCluster(cluster);
-        },
-      );
-    }
-    // Single item → render as alert pin with category-aware icon + variant.
-    final a = cluster.items.first.alert;
-    final variant = _variantFor(a);
-    return Marker(
-      markerId: MarkerId(a.id),
-      position: a.location,
-      icon: await MapMarkers.alertPin(a.category, variant: variant),
-      onTap: () {
-        HapticFeedback.selectionClick();
-        Navigator.push(context, MaterialPageRoute(builder: (_) => AlertDetailScreen(alert: a)));
-      },
-    );
+  @override
+  void dispose() {
+    _locationSub?.cancel();
+    super.dispose();
   }
 
   Future<void> _precacheIcons() async {
@@ -275,48 +255,6 @@ class _MapScreenState extends State<MapScreen> {
     return AlertPinVariant.defaultV;
   }
 
-  /// Tap on a cluster → fit the camera to the bounding box of all items in it
-  /// so the individual pins reveal themselves. Falls back to a step-zoom when
-  /// every alert sits on the same coordinate.
-  Future<void> _zoomToCluster(gcm.Cluster<_ClusterableAlert> cluster) async {
-    final ctl = _mapController;
-    if (ctl == null) return;
-
-    final positions = cluster.items.map((c) => c.alert.location).toList();
-    if (positions.isEmpty) return;
-
-    if (positions.length == 1) {
-      await ctl.animateCamera(CameraUpdate.newLatLngZoom(positions.first, 16));
-      return;
-    }
-
-    double minLat = positions.first.latitude;
-    double maxLat = positions.first.latitude;
-    double minLng = positions.first.longitude;
-    double maxLng = positions.first.longitude;
-    for (final p in positions) {
-      if (p.latitude < minLat) minLat = p.latitude;
-      if (p.latitude > maxLat) maxLat = p.latitude;
-      if (p.longitude < minLng) minLng = p.longitude;
-      if (p.longitude > maxLng) maxLng = p.longitude;
-    }
-
-    // All alerts at virtually the same spot → just zoom in two steps.
-    if ((maxLat - minLat).abs() < 1e-6 && (maxLng - minLng).abs() < 1e-6) {
-      final z = await ctl.getZoomLevel();
-      await ctl.animateCamera(
-        CameraUpdate.newLatLngZoom(cluster.location, (z + 2).clamp(3.0, 19.0)),
-      );
-      return;
-    }
-
-    final bounds = LatLngBounds(
-      southwest: LatLng(minLat, minLng),
-      northeast: LatLng(maxLat, maxLng),
-    );
-    await ctl.animateCamera(CameraUpdate.newLatLngBounds(bounds, 80));
-  }
-
   Future<void> _initLocation() async {
     final pos = await _locationService.getCurrentPosition();
     if (pos != null && mounted) {
@@ -406,21 +344,155 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  /// Push current alerts into the ClusterManager if the list has changed.
-  void _syncClusterItems(List<AlertModel> alerts) {
-    final fp = alerts.map((a) => a.id).join(',');
-    if (fp == _lastAlertsFingerprint) return;
-    _lastAlertsFingerprint = fp;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _clusterManager?.setItems(alerts.map(_ClusterableAlert.new).toList());
-    });
+  void _openMember(Map<String, dynamic> c) {
+    final role = c['role']?.toString();
+    final isChild = role == 'child';
+    final groupId = c['group_id'] as String?;
+    final userId = c['user_id'] as String?;
+    final name = (c['username'] as String?) ?? '?';
+    final myRole = c['your_role'] as String?;
+    if (groupId == null || userId == null) return;
+    final lat = (c['lat'] as num?)?.toDouble();
+    final lng = (c['lng'] as num?)?.toDouble();
+    if (isChild && myRole == 'parent') {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => ChildProfileScreen(
+          groupId: groupId, userId: userId, userName: name, initialLat: lat, initialLng: lng,
+        ),
+      ));
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => MemberProfileScreen(
+          groupId: groupId, userId: userId, userName: name, role: role, initialLat: lat, initialLng: lng,
+        ),
+      ));
+    }
+  }
+
+  void _openCollision(CollisionGroup group) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            const ListTile(title: Text('W tym miejscu', style: TextStyle(fontWeight: FontWeight.w700))),
+            for (final item in group.items)
+              ListTile(
+                title: Text(item.kind == 'sos' ? 'SOS · ${item.payload['title'] ?? item.payload['username'] ?? ''}' : '${item.payload['title'] ?? item.payload['username'] ?? item.kind}'),
+                subtitle: Text('${item.lat.toStringAsFixed(5)}, ${item.lng.toStringAsFixed(5)}'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  if (item.kind == 'member') {
+                    _openMember(item.payload);
+                  } else if (item.kind == 'aed') {
+                    _showAedDetail(item.payload);
+                  } else if (item.payload['alert'] is AlertModel) {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (_) => AlertDetailScreen(alert: item.payload['alert'] as AlertModel),
+                    ));
+                  }
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Set<Marker> _collisionMarkers(List<AlertModel> alerts, double width, double height) {
+    final items = <CollisionItem>[
+      for (final a in alerts)
+        CollisionItem(
+          id: a.id,
+          lat: a.location.latitude,
+          lng: a.location.longitude,
+          kind: a.category == AlertCategory.aggression && a.title.contains('🆘') ? 'sos' : 'hazard',
+          payload: {'title': a.title, 'alert': a},
+        ),
+      for (final c in _familyMembers)
+        if (c['lat'] is num && c['lng'] is num)
+          CollisionItem(
+            id: 'member_${c['user_id']}',
+            lat: (c['lat'] as num).toDouble(),
+            lng: (c['lng'] as num).toDouble(),
+            kind: 'member',
+            payload: Map<String, dynamic>.from(c),
+          ),
+      if (_aedsVisible)
+        for (final aed in _aeds)
+          if (aed['lat'] is num && aed['lng'] is num)
+            CollisionItem(
+              id: 'aed_${aed['id']}',
+              lat: (aed['lat'] as num).toDouble(),
+              lng: (aed['lng'] as num).toDouble(),
+              kind: 'aed',
+              payload: Map<String, dynamic>.from(aed),
+            ),
+    ];
+    final groups = clusterItems(
+      items,
+      project: mercatorProject(
+        lat: _cameraTarget.latitude,
+        lng: _cameraTarget.longitude,
+        zoom: _zoom,
+        width: width,
+        height: height,
+      ),
+    );
+    return groups.map((group) {
+      final first = group.items.first;
+      final sos = group.items.any((item) => item.kind == 'sos');
+      if (!group.displayOnly && first.kind == 'member') {
+        return Marker(
+          markerId: MarkerId(first.id),
+          position: LatLng(first.lat, first.lng),
+          icon: _memberIconCache[first.payload['user_id'].toString()] ?? BitmapDescriptor.defaultMarker,
+          onTap: () {
+            HapticFeedback.selectionClick();
+            _openMember(first.payload);
+          },
+        );
+      }
+      if (!group.displayOnly && first.kind == 'aed') {
+        return Marker(
+          markerId: MarkerId(first.id),
+          position: LatLng(first.lat, first.lng),
+          icon: _aedIcon ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          onTap: () => _showAedDetail(first.payload),
+        );
+      }
+      final alert = first.payload['alert'];
+      final singleIcon = !group.displayOnly && alert is AlertModel
+          ? (MapMarkers.peekAlert(alert.category, variant: _variantFor(alert)) ??
+              BitmapDescriptor.defaultMarkerWithHue(sos ? BitmapDescriptor.hueRed : BitmapDescriptor.hueAzure))
+          : (MapMarkers.peekCluster(group.items.length) ??
+              BitmapDescriptor.defaultMarkerWithHue(sos ? BitmapDescriptor.hueRed : BitmapDescriptor.hueOrange));
+      return Marker(
+        markerId: MarkerId(group.displayOnly ? 'col:${group.items.map((e) => e.id).join('|')}' : first.id),
+        position: LatLng(group.displayOnly ? group.anchorLat : first.lat, group.displayOnly ? group.anchorLng : first.lng),
+        icon: singleIcon,
+        infoWindow: InfoWindow(title: group.displayOnly ? '${group.items.length} w tym miejscu' : first.payload['title']?.toString()),
+        zIndexInt: sos ? 4 : 1,
+        onTap: () {
+          HapticFeedback.selectionClick();
+          if (group.displayOnly) {
+            _openCollision(group);
+          } else if (first.payload['alert'] is AlertModel) {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (_) => AlertDetailScreen(alert: first.payload['alert'] as AlertModel),
+            ));
+          }
+        },
+      );
+    }).toSet();
   }
 
   @override
   Widget build(BuildContext context) {
     final alertProv = context.watch<AlertProvider>();
     final alerts = alertProv.alerts;
-    _syncClusterItems(alerts);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cs = Theme.of(context).colorScheme;
     final width = MediaQuery.of(context).size.width;
@@ -433,69 +505,18 @@ class _MapScreenState extends State<MapScreen> {
             initialCameraPosition: CameraPosition(target: _currentPos, zoom: 15),
             onMapCreated: (c) {
               _mapController = c;
-              _clusterManager?.setMapId(c.mapId);
             },
-            onCameraMove: (pos) => _clusterManager?.onCameraMove(pos),
-            onCameraIdle: () => _clusterManager?.updateMap(),
+            onCameraMove: (pos) {
+              _zoom = pos.zoom;
+              _cameraTarget = pos.target;
+            },
+            onCameraIdle: () {
+              if (mounted) setState(() {});
+            },
             onTap: (_) => _dismissOverlays(),
             myLocationEnabled: true, myLocationButtonEnabled: false,
             zoomControlsEnabled: false, mapToolbarEnabled: false,
-            markers: {
-              ..._clusterMarkers,
-              if (_aedsVisible) ..._aeds.map((aed) => Marker(
-                markerId: MarkerId('aed_${aed['id']}'),
-                position: LatLng((aed['lat'] as num).toDouble(), (aed['lng'] as num).toDouble()),
-                icon: _aedIcon ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-                onTap: () => _showAedDetail(aed),
-                zIndexInt: 1,
-              )),
-              ..._familyMembers.map((c) {
-                final role = c['role']?.toString();
-                final isChild = role == 'child';
-                final icon = _memberIconCache[c['user_id'].toString()] ??
-                    BitmapDescriptor.defaultMarker;
-                return Marker(
-                  markerId: MarkerId('member_${c['user_id']}'),
-                  position: LatLng(c['lat'], c['lng']),
-                  icon: icon,
-                  onTap: () {
-                    HapticFeedback.selectionClick();
-                    final groupId = c['group_id'] as String?;
-                    final userId = c['user_id'] as String?;
-                    final name = (c['username'] as String?) ?? '?';
-                    final myRole = c['your_role'] as String?;
-                    if (groupId == null || userId == null) return;
-                    final lat = (c['lat'] as num?)?.toDouble();
-                    final lng = (c['lng'] as num?)?.toDouble();
-                    // Pełny profil dziecka (z trasami/historią) — tylko dla rodzica.
-                    // Pozostali członkowie (inni rodzice, dzieci patrzące na rodzica
-                    // lub na inne dziecko) dostają zwykły MemberProfileScreen.
-                    if (isChild && myRole == 'parent') {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => ChildProfileScreen(
-                          groupId: groupId,
-                          userId: userId,
-                          userName: name,
-                          initialLat: lat,
-                          initialLng: lng,
-                        ),
-                      ));
-                    } else {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => MemberProfileScreen(
-                          groupId: groupId,
-                          userId: userId,
-                          userName: name,
-                          role: role,
-                          initialLat: lat,
-                          initialLng: lng,
-                        ),
-                      ));
-                    }
-                  },
-                );
-              }),
-            },
+            markers: _collisionMarkers(alerts, width, MediaQuery.of(context).size.height),
             circles: {
               ...alerts.map((a) => _zoneCircle(a, alerts, isDark)),
               ..._familyMembers.map((c) => Circle(circleId: CircleId('member_${c['user_id']}'), center: LatLng(c['lat'], c['lng']),

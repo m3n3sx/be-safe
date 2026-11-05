@@ -514,8 +514,32 @@ class _SetupWizardScreenState extends State<SetupWizardScreen> {
     if (code.isEmpty) return;
     setState(() => _familyBusy = true);
     try {
-      await context.read<ApiService>().post('/family/groups/join', {'invite_code': code});
-      if (mounted) setState(() => _familyMsg = 'Dołączono do grupy!');
+      final api = context.read<ApiService>();
+      final preview = await api.post('/family/groups/join/preview', {'invite_code': code});
+      if (!mounted) return;
+      if (preview['error'] != null || preview['group_name'] == null) {
+        setState(() => _familyMsg = preview['error']?.toString() ?? 'Kod jest nieprawidłowy lub wygasł');
+        return;
+      }
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Dołączyć do ${preview['group_name']}?'),
+          content: const Text('Rola początkowa to członek rodziny. Rodzica wyznacza właściciel grupy.'),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Anuluj')),
+            TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Dołącz')),
+          ],
+        ),
+      );
+      if (ok != true || !mounted) return;
+      final res = await api.post('/family/groups/join', {'invite_code': code});
+      if (!mounted) return;
+      if (res['error'] != null) {
+        setState(() => _familyMsg = res['error'].toString());
+        return;
+      }
+      setState(() => _familyMsg = 'Dołączono do grupy!');
       _loadGroups();
     } catch (_) {
       if (mounted) setState(() => _familyMsg = 'Nieprawidłowy kod lub błąd.');

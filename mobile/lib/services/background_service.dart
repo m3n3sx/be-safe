@@ -35,6 +35,8 @@ class BackgroundService {
   final _battery = Battery();
   final Set<String> _notifiedAlertIds = {};
   bool _configured = false;
+  StreamSubscription<Map<String, dynamic>>? _alertSub;
+  StreamSubscription<Map<String, dynamic>>? _geoSub;
 
   BackgroundService(this._api, this._socket);
 
@@ -123,26 +125,25 @@ class BackgroundService {
       }, onError: (e) => debugPrint('[BG] GPS stream error: $e'));
     });
 
-    // WebSocket — real-time gdy apka otwarta (nie wymaga lokalizacji)
-    _socket.connect(token,
-      onNewAlert: (data) async {
-        final id = data['id']?.toString() ?? '';
-        if (id.isNotEmpty) _notifiedAlertIds.add(id);
-        if (!await _prefEnabled('notif_alerts')) return;
-        _showDangerNotification(
-          '⚠️ ${_categoryLabel(data['category']?.toString())}',
-          data['title'] ?? 'Nowe zagrożenie w okolicy',
-          data['description']?.toString(),
-        );
-      },
-      onGeofenceExit: (data) async {
-        if (!await _prefEnabled('notif_family')) return;
-        _showFamilyNotification(
-          '🚨 Dziecko opuściło bezpieczną strefę!',
-          '${data['username'] ?? 'Dziecko'} opuścił/a strefę "${data['geofence_name'] ?? ''}"',
-        );
-      },
-    );
+    // Jedno gniazdo współdzielone z AlertProvider. Drugie connect() zrywało pierwsze.
+    _socket.ensureConnected(token);
+    _alertSub ??= _socket.alerts.listen((data) async {
+      final id = data['id']?.toString() ?? '';
+      if (id.isNotEmpty) _notifiedAlertIds.add(id);
+      if (!await _prefEnabled('notif_alerts')) return;
+      _showDangerNotification(
+        '⚠️ ${_categoryLabel(data['category']?.toString())}',
+        data['title'] ?? 'Nowe zagrożenie w okolicy',
+        data['description']?.toString(),
+      );
+    });
+    _geoSub ??= _socket.geofenceExits.listen((data) async {
+      if (!await _prefEnabled('notif_family')) return;
+      _showFamilyNotification(
+        '🚨 Dziecko opuściło bezpieczną strefę!',
+        '${data['username'] ?? 'Dziecko'} opuścił/a strefę "${data['geofence_name'] ?? ''}"',
+      );
+    });
 
     _startPolling();
     _reportBattery();
@@ -187,6 +188,10 @@ class BackgroundService {
     _locationSub?.cancel();
     _pollTimer?.cancel();
     _batteryTimer?.cancel();
+    _alertSub?.cancel();
+    _geoSub?.cancel();
+    _alertSub = null;
+    _geoSub = null;
     _socket.disconnect();
     FlutterBackgroundService().invoke('stopService');
   }

@@ -22,6 +22,8 @@ export const routes: RouteEntry[] = [
   { href: '/stats', label: 'Statystyki okolicy', section: 'nearby' },
   { href: '/news', label: 'Aktualności', section: 'nearby' },
   { href: '/family', label: 'Grupy i bliscy', section: 'family' },
+  { href: '/family/join', label: 'Dołącz do grupy', section: 'family' },
+  { href: '/family/join/[code]', label: 'Dołącz do grupy', section: 'family', dynamic: true },
   { href: '/family/[groupId]', label: 'Przegląd grupy', section: 'family', dynamic: true },
   {
     href: '/family/[groupId]/geofences',

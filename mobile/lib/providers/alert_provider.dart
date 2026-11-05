@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/alert.dart';
@@ -11,6 +12,7 @@ class AlertProvider extends ChangeNotifier {
   List<AlertModel> _alerts = [];
   Set<AlertCategory> _activeFilters = {};
   bool _loading = false;
+  StreamSubscription<Map<String, dynamic>>? _alertSub;
 
   AlertProvider(this._api, this._socket);
 
@@ -77,7 +79,8 @@ class AlertProvider extends ChangeNotifier {
   }
 
   void connectSocket(String token) {
-    _socket.connect(token, onNewAlert: (data) {
+    _socket.ensureConnected(token);
+    _alertSub ??= _socket.alerts.listen((data) {
       try {
         _alerts.insert(0, AlertModel.fromJson(data));
         notifyListeners();
@@ -85,5 +88,9 @@ class AlertProvider extends ChangeNotifier {
     });
   }
 
-  void disconnectSocket() => _socket.disconnect();
+  void disconnectSocket() {
+    _alertSub?.cancel();
+    _alertSub = null;
+    _socket.disconnect();
+  }
 }

@@ -319,22 +319,7 @@ class _HomeKidsScreenState extends State<HomeKidsScreen> {
                       color: context.iosLabel,
                       size: 30,
                     ),
-                    Positioned(
-                      top: 10,
-                      right: 12,
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: SerenityColors.secondaryContainer,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: context.iosCardSurface,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
+                    const SizedBox.shrink(),
                   ],
                 ),
               ),

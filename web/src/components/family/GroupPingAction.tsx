@@ -9,6 +9,7 @@ import { ErrorState } from '@/components/ui/ErrorState';
 export function GroupPingAction({ groupId }: { groupId: string }) {
   const [open, setOpen] = useState(false);
   const [result, setResult] = useState<number | null>(null);
+  const [message, setMessage] = useState('');
   const mutation = useMutation();
   return (
     <div>
@@ -17,7 +18,7 @@ export function GroupPingAction({ groupId }: { groupId: string }) {
       </Button>
       {result !== null && (
         <p role="status" className="mt-2 text-sm">
-          Zapisano prośbę dla {result} osób. To nie jest potwierdzenie odczytania.
+          {message || `Zapisano prośbę dla ${result} osób. To nie jest potwierdzenie odczytania.`}
         </p>
       )}
       <Dialog
@@ -33,9 +34,10 @@ export function GroupPingAction({ groupId }: { groupId: string }) {
           loading={mutation.busy}
           onClick={() =>
             mutation.run(
-              () => api.post<{ recipients: number }>(`${groupPath(groupId)}/ping`),
+              () => api.post<{ recipients: number; message?: string }>(`${groupPath(groupId)}/ping`),
               (r) => {
                 setResult(r.recipients);
+                setMessage(r.message || '');
                 setOpen(false);
               },
             )

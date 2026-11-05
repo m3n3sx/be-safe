@@ -108,6 +108,7 @@ class _SosKidsScreenState extends State<SosKidsScreen>
       // Powiadom rodzinę + społeczność (kids mode = obie warstwy)
       await api.post('/alerts', {
         'category': 'aggression',
+        'kind': 'sos',
         'title': '🆘 SOS — Dziecko potrzebuje pomocy!',
         'description': 'Alarm SOS od dziecka — powiadomiono rodzinę i społeczność',
         'lat': loc.latitude,

@@ -85,7 +85,21 @@ export function GroupOverview({ id }: { id: string }) {
               >
                 Kopiuj kod
               </Button>
+              <p className="text-sm break-all">
+                Link:{' '}
+                {`https://besafe.org.pl/family/join?code=${group.group.invite_code}`}
+              </p>
               <p role="status">{copied}</p>
+              {group.owner && (
+                <Button
+                  variant="quiet"
+                  onClick={() =>
+                    void api.post(`/family/groups/${id}/invite/rotate`).then(() => group.reload())
+                  }
+                >
+                  Odnów kod
+                </Button>
+              )}
               <GroupPingAction groupId={id} />
             </section>
             <CheckinAction onDone={() => void checkins.reload()} />

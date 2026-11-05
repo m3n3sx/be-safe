@@ -376,6 +376,43 @@ class _AuthGateState extends State<_AuthGate> {
           }
         });
         FcmService.init(api);
+        context.read<SocketService>().notifications.listen((event) {
+          if (!FcmService.dedup.present(event)) return;
+          final nav = appNavigatorKey.currentState;
+          if (nav == null) return;
+          final type = event['type']?.toString();
+          final data = event['data'] is Map
+              ? Map<String, dynamic>.from(event['data'] as Map)
+              : Map<String, dynamic>.from(event);
+          if (type == 'family_sos') {
+            data['type'] = 'family_sos';
+            data['notification_id'] ??= event['id'];
+            final alertId = data['alert_id']?.toString() ?? '';
+            if (FamilySosScreen.dismissedThisProcess.contains(alertId)) return;
+            nav.pushNamed('/family-sos', arguments: data);
+            return;
+          }
+          final messenger = ScaffoldMessenger.maybeOf(nav.context);
+          messenger?.clearMaterialBanners();
+          messenger?.showMaterialBanner(MaterialBanner(
+            content: Text('${event['title'] ?? 'be:Safe'}\n${event['body'] ?? ''}'),
+            actions: [
+              TextButton(onPressed: () => messenger.hideCurrentMaterialBanner(), child: const Text('Zamknij')),
+            ],
+          ));
+        });
+        api.get('/notifications/unacked-sos').then((pending) {
+          final list = pending['notifications'];
+          if (list is! List || list.isEmpty) return;
+          final first = Map<String, dynamic>.from(list.first as Map);
+          final data = first['data'] is Map ? Map<String, dynamic>.from(first['data'] as Map) : <String, dynamic>{};
+          data['type'] = 'family_sos';
+          data['notification_id'] = first['id'];
+          final alertId = data['alert_id']?.toString() ?? '';
+          if (FamilySosScreen.dismissedThisProcess.contains(alertId)) return;
+          FcmService.dedup.present({'id': first['id'], 'type': 'family_sos', 'alert_id': alertId, 'data': data});
+          appNavigatorKey.currentState?.pushNamed('/family-sos', arguments: data);
+        }).catchError((_) {});
         // F04: Crash detection init (opt-in z SharedPreferences)
         CrashDetectionService.navigatorKey = appNavigatorKey;
         CrashDetectionService().init(api: api);

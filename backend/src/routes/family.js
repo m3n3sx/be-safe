@@ -3,6 +3,16 @@ const crypto = require('crypto');
 const db = require('../config/db');
 const auth = require('../middleware/auth');
 const { notifyUser } = require('../services/fcm');
+const {
+  parseInvite,
+  inviteExpiryForNew,
+  isInviteActive,
+  joinRoleDecision,
+  publicInviteFailure,
+  signalReceipt,
+} = require('../domain/safetyContracts');
+const rateLimit = require('express-rate-limit');
+const invitePreviewLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20 });
 
 router.use(auth);
 
@@ -194,9 +204,10 @@ router.put('/groups/:id/visibility/:targetId', memberOf, async (req, res) => {
 
 router.post('/groups', async (req, res) => {
   const code = crypto.randomBytes(4).toString('hex').toUpperCase();
+  const expires = inviteExpiryForNew(Date.now());
   const { rows } = await db.query(
-    `INSERT INTO family_groups (name, owner_id, invite_code) VALUES ($1, $2, $3) RETURNING *`,
-    [req.body.name, req.user.id, code]
+    `INSERT INTO family_groups (name, owner_id, invite_code, invite_expires_at) VALUES ($1, $2, $3, $4) RETURNING *`,
+    [req.body.name, req.user.id, code, expires.toISOString()]
   );
   await db.query(
     `INSERT INTO family_members (group_id, user_id, role) VALUES ($1, $2, 'parent')`,
@@ -213,26 +224,54 @@ router.get('/groups', async (req, res) => {
   res.json({ groups: rows });
 });
 
-router.post('/groups/join', async (req, res) => {
-  const { rows: groups } = await db.query(`SELECT id FROM family_groups WHERE invite_code = $1`, [req.body.invite_code]);
-  if (!groups[0]) return res.status(404).json({ error: 'Invalid code' });
+async function groupByInvite(raw) {
+  const code = parseInvite(typeof raw === 'string' ? raw : '');
+  if (!code) return null;
+  const { rows } = await db.query(
+    `SELECT id, name, invite_expires_at FROM family_groups WHERE invite_code = $1`,
+    [code]
+  );
+  const group = rows[0];
+  if (!group || !isInviteActive(group.invite_expires_at, Date.now())) return null;
+  return group;
+}
 
-  // F35: role wybierana przez dołączającego. Default 'family_member' (najbezpieczniejszy).
-  const requestedRole = req.body.role || 'family_member';
-  if (!ALLOWED_ROLES.has(requestedRole)) {
-    return res.status(400).json({ error: 'Invalid role', allowed: Array.from(ALLOWED_ROLES) });
-  }
+router.post('/groups/join/preview', invitePreviewLimiter, async (req, res) => {
+  const group = await groupByInvite(req.body?.invite_code || req.body?.code);
+  if (!group) return res.status(publicInviteFailure().status).json({ error: publicInviteFailure().error });
+  res.json({ group_name: group.name, group_id: group.id });
+});
+
+router.post('/groups/:id/invite/rotate', ownerOnly, async (req, res) => {
+  const code = crypto.randomBytes(4).toString('hex').toUpperCase();
+  const expires = inviteExpiryForNew(Date.now()).toISOString();
+  const { rows } = await db.query(
+    `UPDATE family_groups SET invite_code = $1, invite_expires_at = $2 WHERE id = $3 RETURNING invite_code, invite_expires_at`,
+    [code, expires, req.params.id]
+  );
+  if (!rows[0]) return res.status(404).json({ error: 'Group not found' });
+  res.json(rows[0]);
+});
+
+router.post('/groups/join', async (req, res) => {
+  const group = await groupByInvite(req.body?.invite_code || req.body?.code);
+  if (!group) return res.status(publicInviteFailure().status).json({ error: publicInviteFailure().error });
+
+  // Dołączający nie nadaje sobie roli rodzica ani opiekuna. Właściciel zmienia ją później.
+  const decision = joinRoleDecision(req.body?.role);
+  if (!decision.ok) return res.status(403).json({ error: decision.error });
+  const requestedRole = decision.role;
 
   try {
     await db.query(
       `INSERT INTO family_members (group_id, user_id, role) VALUES ($1, $2, $3)`,
-      [groups[0].id, req.user.id, requestedRole]
+      [group.id, req.user.id, requestedRole]
     );
     // is_child=TRUE tylko gdy faktycznie role='child' (do filtrów na liście dzieci itp.)
     if (requestedRole === 'child') {
       await db.query(`UPDATE users SET is_child = TRUE WHERE id = $1`, [req.user.id]);
     }
-    res.json({ ok: true, group_id: groups[0].id, role: requestedRole });
+    res.json({ ok: true, group_id: group.id, role: requestedRole, group_name: group.name });
   } catch (e) {
     if (e.code === '23505') return res.status(409).json({ error: 'Already a member' });
     res.status(500).json({ error: e.message });
@@ -345,29 +384,41 @@ router.post('/groups/:id/ping', memberOf, async (req, res) => {
     const pingId = pingRow[0].id;
     pingIds.push(pingId);
 
-    if (io) {
-      io.to(`user:${m.user_id}`).emit('family:ping', {
-        ping_id: pingId,
-        from_user_id: req.user.id,
-        from_username: senderName,
-        group_id: req.params.id,
-        group_name: groupName,
-        sent_at: pingRow[0].sent_at,
-      });
-    }
     const result = await notifyUser(m.user_id, title, body, {
       type: 'family_ping',
+      source_id: pingId,
       ping_id: pingId,
       group_id: req.params.id,
       group_name: groupName,
       from_user_id: req.user.id,
       from_username: senderName,
     });
-    if (result) sent++;
+    sent += result?.fcmAccepted || 0;
+    if (io) {
+      io.to(`user:${m.user_id}`).emit('family:ping', {
+        ping_id: pingId,
+        notification_id: result?.notificationId || null,
+        from_user_id: req.user.id,
+        from_username: senderName,
+        group_id: req.params.id,
+        group_name: groupName,
+        sent_at: pingRow[0].sent_at,
+      });
+      if (result && !result.duplicate && result.notificationId) {
+        io.to(`user:${m.user_id}`).emit('notification:new', {
+          id: result.notificationId,
+          type: 'family_ping',
+          title,
+          body,
+          source_id: pingId,
+          data: { ping_id: pingId, notification_id: result.notificationId, group_id: req.params.id, from_username: senderName },
+        });
+      }
+    }
   }
 
-  console.log(`[ping] ${senderName} → ${members.length} members in ${req.params.id} (FCM sent: ${sent})`);
-  res.json({ ok: true, recipients: members.length, fcm_sent: sent, ping_ids: pingIds });
+  console.log(`[ping] ${senderName} → ${members.length} members in ${req.params.id} (FCM accepted: ${sent})`);
+  res.json({ ok: true, ping_ids: pingIds, ...signalReceipt({ recipients: members.length, fcmAccepted: sent }) });
 });
 
 // --- Pending pings: lista nieodpowiedzianych ping'ów do mnie (np. po zalogowaniu) ---
@@ -453,6 +504,7 @@ router.post('/pings/:pingId/respond', async (req, res) => {
     : (status === 'ok' ? 'Odpowiedział na Twój sygnał.' : 'Sprawdź czy nic się nie stało.');
   await notifyUser(ping.sender_id, title, body, {
     type: 'ping_response',
+    source_id: ping.id,
     ping_id: ping.id,
     status,
     from_user_id: req.user.id,

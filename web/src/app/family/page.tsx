@@ -74,6 +74,9 @@ export default function Page() {
         >
           Dołącz kodem
         </Button>
+        <Link href="/family/join" className="btn btn-quiet">
+          Sprawdź kod lub link
+        </Link>
       </div>
       {pending.error && <ErrorState message={pending.error} onRetry={pending.reload} />}
       {asArray(pending.data?.pings).map((p) => (
@@ -153,7 +156,9 @@ export default function Page() {
                 value={role}
                 onChange={(e) => setRole(e.target.value as FamilyRole)}
               >
-                {Object.entries(roleLabels).map(([value, label]) => (
+                {Object.entries(roleLabels)
+                  .filter(([value]) => value !== 'parent' && value !== 'guardian')
+                  .map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
                   </option>
